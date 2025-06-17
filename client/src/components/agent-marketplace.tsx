@@ -38,18 +38,17 @@ export default function AgentMarketplace() {
         </div>
 
         {/* Category Filters */}
-        <div className="flex flex-wrap justify-center gap-3 mb-16">
+        <div className="flex flex-wrap justify-center gap-4 mb-20">
           {categories.map((category) => (
             <Button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
               className={
                 selectedCategory === category.id
-                  ? "sage-gradient text-white shadow-lg shadow-green-500/20 border-none"
-                  : "bg-muted/50 hover:bg-muted text-foreground border border-muted-foreground/20 hover:border-green-400/40"
+                  ? "electric-gradient text-white shadow-xl shadow-orange-500/30 border-none font-bold text-lg px-8 py-4 animate-power-glow"
+                  : "bg-foreground/10 hover:bg-foreground/20 text-foreground border-2 border-orange-400/30 hover:border-orange-400/60 font-bold text-lg px-8 py-4"
               }
               variant={selectedCategory === category.id ? "default" : "outline"}
-              size="sm"
             >
               {category.label}
             </Button>

@@ -35,21 +35,22 @@ export default function Footer() {
   return (
     <>
       {/* CTA Section */}
-      <section className="py-24 gradient-mesh">
-        <div className="max-w-4xl mx-auto text-center px-6">
-          <h2 className="text-5xl font-light mb-8 text-foreground tracking-tight">Begin Your Mindful Journey</h2>
-          <p className="text-xl text-muted-foreground mb-12 font-light leading-relaxed">
-            Join a community of conscious professionals who have embraced intentional technology for authentic productivity.
+      <section className="py-32 aggressive-mesh relative overflow-hidden">
+        <div className="max-w-5xl mx-auto text-center px-6 relative z-10">
+          <h2 className="text-6xl md:text-7xl font-black mb-12 text-foreground tracking-tight">READY TO DOMINATE?</h2>
+          <p className="text-2xl md:text-3xl text-foreground mb-16 font-bold leading-relaxed">
+            Join the elite circle of <span className="electric-gradient bg-clip-text text-transparent">aggressive achievers</span> who've mastered the art of 
+            <span className="fire-gradient bg-clip-text text-transparent"> mindful domination</span> through AI warfare.
           </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Button className="sage-gradient px-12 py-4 rounded-full text-lg font-medium hover:shadow-xl hover:shadow-green-500/20 transition-all duration-500 transform hover:scale-105 text-white">
-              Start Your Practice
+          <div className="flex flex-col sm:flex-row gap-8 justify-center">
+            <Button className="electric-gradient px-16 py-6 rounded-full text-2xl font-black hover:shadow-2xl hover:shadow-orange-500/40 transition-all duration-500 transform hover:scale-110 text-white animate-power-glow">
+              UNLEASH YOUR POWER
             </Button>
             <Button 
               variant="outline"
-              className="border-muted-foreground/30 px-12 py-4 rounded-full text-lg font-medium hover:bg-muted/50 transition-all duration-300"
+              className="border-foreground/40 px-16 py-6 rounded-full text-2xl font-black hover:bg-foreground/10 transition-all duration-300 fire-gradient text-white border-none"
             >
-              Connect With Us
+              JOIN THE REVOLUTION
             </Button>
           </div>
         </div>
