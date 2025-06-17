@@ -118,11 +118,21 @@ The application follows a full-stack architecture with clear separation between 
 
 ```
 Changelog:
-- June 17, 2025. Initial setup
+- June 17, 2025. Initial setup with dark cyberpunk theme
+- June 17, 2025. Complete redesign with Alo Yoga-inspired aesthetic
+  * Transformed color palette to earthy, zen tones (sage green, warm beige, dusty rose, ocean mist)
+  * Enhanced animations with breathing, floating, and fade-in effects
+  * Updated agent data with mindful, wellness-oriented naming and descriptions
+  * Redesigned UI components for minimalist, light aesthetic
+  * Added new agent categories including "Wellness" 
+  * Implemented zen-inspired gradients and glass morphism effects
 ```
 
 ## User Preferences
 
 ```
 Preferred communication style: Simple, everyday language.
+Design aesthetic: Alo Yoga-inspired - minimalist, earthy, zen, wellness-focused
+Animation style: Subtle, breathing, organic movements
+Target audience: Mindful professionals seeking conscious technology
 ```
