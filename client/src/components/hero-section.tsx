@@ -12,42 +12,42 @@ export default function HeroSection() {
 
   return (
     <section className="relative min-h-screen gradient-mesh flex items-center justify-center overflow-hidden">
-      {/* Floating particles background */}
+      {/* Floating organic elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-2 h-2 bg-purple-500 rounded-full animate-float" />
-        <div className="absolute top-40 right-20 w-3 h-3 bg-cyan-500 rounded-full animate-float" style={{ animationDelay: '1s' }} />
-        <div className="absolute bottom-40 left-20 w-1 h-1 bg-green-500 rounded-full animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute bottom-20 right-10 w-2 h-2 bg-blue-500 rounded-full animate-float" style={{ animationDelay: '3s' }} />
+        <div className="absolute top-20 left-10 w-3 h-3 bg-green-400/40 rounded-full animate-float blur-sm" />
+        <div className="absolute top-40 right-20 w-4 h-4 bg-stone-400/30 rounded-full animate-float blur-sm" style={{ animationDelay: '2s' }} />
+        <div className="absolute bottom-40 left-20 w-2 h-2 bg-rose-300/40 rounded-full animate-float blur-sm" style={{ animationDelay: '4s' }} />
+        <div className="absolute bottom-20 right-10 w-3 h-3 bg-blue-300/30 rounded-full animate-float blur-sm" style={{ animationDelay: '6s' }} />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
-        <div className="animate-slide-up">
-          <h1 className="text-6xl md:text-8xl font-black mb-6 leading-tight">
-            The Future of{' '}
-            <span className="bg-gradient-to-r from-purple-500 via-cyan-500 to-green-500 bg-clip-text text-transparent">
-              AI Agents
+        <div className="animate-fade-in-up">
+          <h1 className="text-6xl md:text-8xl font-light mb-8 leading-tight tracking-tight">
+            Mindful{' '}
+            <span className="bg-gradient-to-r from-green-600 via-green-500 to-stone-600 bg-clip-text text-transparent font-medium">
+              AI Nomads
             </span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Discover, deploy, and scale intelligent AI agents that transform your digital workflow. 
-            From email automation to social media management.
+          <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed font-light">
+            Discover intelligent agents that flow seamlessly into your digital practice. 
+            Designed for intentional living and mindful productivity.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <Button
               onClick={scrollToMarketplace}
-              className="bg-gradient-to-r from-purple-500 to-cyan-500 px-8 py-4 rounded-full text-lg font-semibold hover:shadow-2xl hover:shadow-purple-500/50 transition-all transform hover:scale-105"
+              className="sage-gradient px-8 py-4 rounded-full text-lg font-medium hover:shadow-xl hover:shadow-green-500/20 transition-all duration-500 transform hover:scale-105 text-white"
               size="lg"
             >
               <Rocket className="mr-2" />
-              Explore Agents
+              Explore Collection
             </Button>
             <Button
               variant="outline"
-              className="border-white/30 px-8 py-4 rounded-full text-lg font-semibold hover:bg-white/10 transition-all"
+              className="border-muted-foreground/30 px-8 py-4 rounded-full text-lg font-medium hover:bg-muted/50 transition-all duration-300"
               size="lg"
             >
               <Play className="mr-2" />
-              Watch Demo
+              Experience
             </Button>
           </div>
         </div>

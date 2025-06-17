@@ -18,10 +18,10 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 sage-gradient rounded-2xl flex items-center justify-center animate-breathe">
               <Bot className="text-white text-lg" />
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-purple-500 to-cyan-500 bg-clip-text text-transparent">
+            <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent">
               AI Nomads
             </span>
           </div>
@@ -29,23 +29,23 @@ export default function Navigation() {
           <div className="hidden md:flex items-center space-x-8">
             <button
               onClick={() => scrollToSection('marketplace')}
-              className="text-gray-300 hover:text-white transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors duration-300"
             >
               Marketplace
             </button>
             <button
               onClick={() => scrollToSection('agents')}
-              className="text-gray-300 hover:text-white transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors duration-300"
             >
               Agents
             </button>
             <button
               onClick={() => scrollToSection('features')}
-              className="text-gray-300 hover:text-white transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors duration-300"
             >
               Features
             </button>
-            <Button className="bg-gradient-to-r from-purple-500 to-cyan-500 hover:shadow-lg hover:shadow-purple-500/50 transition-all">
+            <Button className="sage-gradient hover:shadow-lg hover:shadow-green-500/20 transition-all duration-300 text-white rounded-full px-6">
               Get Started
             </Button>
           </div>
