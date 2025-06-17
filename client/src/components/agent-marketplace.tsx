@@ -25,14 +25,15 @@ export default function AgentMarketplace() {
     : allAgents.filter(agent => agent.category === selectedCategory);
 
   return (
-    <section id="marketplace" className="py-24 bg-gradient-to-br from-background via-muted/30 to-background">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-20">
-          <h2 className="text-5xl font-light mb-8 bg-gradient-to-r from-green-600 to-stone-600 bg-clip-text text-transparent tracking-tight">
-            Nomad Collection
+    <section id="marketplace" className="py-32 aggressive-mesh relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="text-center mb-24">
+          <h2 className="text-6xl md:text-7xl font-black mb-8 bg-gradient-to-r from-orange-500 via-green-600 to-purple-600 bg-clip-text text-transparent tracking-tight animate-shimmer">
+            POWER COLLECTION
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-light leading-relaxed">
-            Curated with intention for mindful professionals seeking balance in their digital practice. Each agent flows seamlessly into your conscious workflow.
+          <p className="text-2xl md:text-3xl text-foreground max-w-4xl mx-auto font-bold leading-relaxed">
+            Unleash <span className="fire-gradient bg-clip-text text-transparent">ruthless efficiency</span> while maintaining your inner zen. 
+            Each agent is forged to <span className="electric-gradient bg-clip-text text-transparent">dominate workflows</span> with conscious intention.
           </p>
         </div>
 
