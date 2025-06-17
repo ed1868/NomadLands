@@ -35,21 +35,21 @@ export default function Footer() {
   return (
     <>
       {/* CTA Section */}
-      <section className="py-20 gradient-mesh">
+      <section className="py-24 gradient-mesh">
         <div className="max-w-4xl mx-auto text-center px-6">
-          <h2 className="text-5xl font-bold mb-6 text-white">Ready to Transform Your Workflow?</h2>
-          <p className="text-xl text-gray-300 mb-12">
-            Join thousands of professionals who have revolutionized their productivity with AI Nomads.
+          <h2 className="text-5xl font-light mb-8 text-foreground tracking-tight">Begin Your Mindful Journey</h2>
+          <p className="text-xl text-muted-foreground mb-12 font-light leading-relaxed">
+            Join a community of conscious professionals who have embraced intentional technology for authentic productivity.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Button className="bg-gradient-to-r from-purple-500 to-cyan-500 px-12 py-4 rounded-full text-lg font-semibold hover:shadow-2xl hover:shadow-purple-500/50 transition-all transform hover:scale-105">
-              Start Free Trial
+            <Button className="sage-gradient px-12 py-4 rounded-full text-lg font-medium hover:shadow-xl hover:shadow-green-500/20 transition-all duration-500 transform hover:scale-105 text-white">
+              Start Your Practice
             </Button>
             <Button 
               variant="outline"
-              className="border-white/30 px-12 py-4 rounded-full text-lg font-semibold hover:bg-white/10 transition-all text-white"
+              className="border-muted-foreground/30 px-12 py-4 rounded-full text-lg font-medium hover:bg-muted/50 transition-all duration-300"
             >
-              Contact Sales
+              Connect With Us
             </Button>
           </div>
         </div>

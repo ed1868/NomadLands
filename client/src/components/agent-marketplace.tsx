@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button";
 import type { Agent } from "@shared/schema";
 
 const categories = [
-  { id: "all", label: "All Agents" },
+  { id: "all", label: "All Nomads" },
   { id: "productivity", label: "Productivity" },
   { id: "communication", label: "Communication" },
   { id: "business", label: "Business" },
   { id: "lifestyle", label: "Lifestyle" },
+  { id: "wellness", label: "Wellness" },
 ];
 
 export default function AgentMarketplace() {
@@ -24,29 +25,30 @@ export default function AgentMarketplace() {
     : allAgents.filter(agent => agent.category === selectedCategory);
 
   return (
-    <section id="marketplace" className="py-20 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <section id="marketplace" className="py-24 bg-gradient-to-br from-background via-muted/30 to-background">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-5xl font-bold mb-6 bg-gradient-to-r from-purple-500 to-cyan-500 bg-clip-text text-transparent">
-            Agent Marketplace
+        <div className="text-center mb-20">
+          <h2 className="text-5xl font-light mb-8 bg-gradient-to-r from-green-600 to-stone-600 bg-clip-text text-transparent tracking-tight">
+            Nomad Collection
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Choose from our extensive library of specialized AI agents designed to automate and enhance every aspect of your digital workflow.
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-light leading-relaxed">
+            Curated with intention for mindful professionals seeking balance in their digital practice. Each agent flows seamlessly into your conscious workflow.
           </p>
         </div>
 
         {/* Category Filters */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
+        <div className="flex flex-wrap justify-center gap-3 mb-16">
           {categories.map((category) => (
             <Button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
               className={
                 selectedCategory === category.id
-                  ? "bg-gradient-to-r from-purple-500 to-cyan-500 text-white"
-                  : "bg-white/10 hover:bg-white/20 text-white border border-white/20"
+                  ? "sage-gradient text-white shadow-lg shadow-green-500/20 border-none"
+                  : "bg-muted/50 hover:bg-muted text-foreground border border-muted-foreground/20 hover:border-green-400/40"
               }
               variant={selectedCategory === category.id ? "default" : "outline"}
+              size="sm"
             >
               {category.label}
             </Button>
