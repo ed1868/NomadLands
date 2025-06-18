@@ -590,7 +590,7 @@ export default function SignupPremium() {
               <div className="text-center mt-6">
                 <p className="text-gray-400">
                   Already have an account?{" "}
-                  <Link href="/login" className="text-emerald-400 hover:text-emerald-300 transition-colors">
+                  <Link href="/signin" className="text-emerald-400 hover:text-emerald-300 transition-colors">
                     Sign in
                   </Link>
                 </p>
