@@ -32,13 +32,13 @@ export default function AgentMarketplace() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-6xl font-extralight mb-8 text-gray-200 tracking-wide fade-in-luxury">
-            Shadow Archives
+            Agents Built Like Legends.
           </h2>
           <div className="slide-up-luxury" style={{ animationDelay: '0.4s' }}>
             <p className="text-lg md:text-xl text-gray-500 max-w-4xl mx-auto font-extralight leading-relaxed">
-              Forged in darkness, refined by intelligence.
+              Molded in silence. Trained for war. Released into the wild.
               <br className="hidden md:block" />
-              <span className="knight-text font-light">Each agent emerges from the void.</span>
+              <span className="knight-text font-light">Every AI agent here? A shadow with a purpose.</span>
             </p>
           </div>
         </div>
