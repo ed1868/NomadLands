@@ -4,8 +4,35 @@ import { storage } from "./storage";
 import { ethers } from "ethers";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import type { Request, Response, NextFunction } from "express";
 import { signupUserSchema, loginUserSchema } from "@shared/schema";
 import { z } from "zod";
+
+// JWT Authentication Middleware
+interface AuthenticatedRequest extends Request {
+  user?: {
+    userId: string;
+    username?: string;
+    email?: string;
+  };
+}
+
+const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ message: 'Access token required' });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET || "fallback-secret", (err: any, user: any) => {
+    if (err) {
+      return res.status(403).json({ message: 'Invalid or expired token' });
+    }
+    req.user = user;
+    next();
+  });
+};
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Seed database with agents on startup
@@ -375,6 +402,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error("Login error:", error);
       res.status(400).json({ message: error.message || "Login failed" });
+    }
+  });
+
+  // Signin endpoint for username-based authentication
+  app.post("/api/auth/signin", async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      
+      if (!username || !password) {
+        return res.status(400).json({ message: "Username and password are required" });
+      }
+      
+      const user = await storage.getUserByUsername(username);
+      if (!user || !user.password) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+      
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      if (!isValidPassword) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+      
+      // Update last login
+      await storage.updateLastLogin(user.id);
+      
+      // Generate JWT token
+      const token = jwt.sign(
+        { userId: user.id, username: user.username },
+        process.env.JWT_SECRET || "fallback-secret",
+        { expiresIn: "7d" }
+      );
+      
+      res.json({ 
+        user: { ...user, password: undefined }, 
+        token 
+      });
+    } catch (error: any) {
+      console.error("Signin error:", error);
+      res.status(400).json({ message: error.message || "Signin failed" });
+    }
+  });
+
+  // Get current authenticated user
+  app.get("/api/auth/user", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      if (!req.user?.userId) {
+        return res.status(401).json({ message: "User not authenticated" });
+      }
+
+      const user = await storage.getUser(req.user.userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Return user without password
+      res.json({ ...user, password: undefined });
+    } catch (error) {
+      console.error("Error fetching authenticated user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
     }
   });
 
