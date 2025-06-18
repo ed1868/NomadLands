@@ -1,6 +1,8 @@
 import Navigation from "@/components/navigation";
 import HeroSection from "@/components/hero-section";
 import AgentMarketplace from "@/components/agent-marketplace";
+import NomadLandsShowcase from "@/components/nomad-lands-showcase";
+import SmartContractsShowcase from "@/components/smart-contracts-showcase";
 import UsedBySection from "@/components/used-by-section";
 import FeaturesSection from "@/components/features-section";
 import Footer from "@/components/footer";
@@ -12,6 +14,8 @@ export default function Home() {
       <Navigation />
       <HeroSection />
       <AgentMarketplace />
+      <NomadLandsShowcase />
+      <SmartContractsShowcase />
       <UsedBySection />
       <FeaturesSection />
       <Footer />
