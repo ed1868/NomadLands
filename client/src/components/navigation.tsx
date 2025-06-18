@@ -77,6 +77,20 @@ export default function Navigation() {
               API
             </a>
             
+            {/* Dashboard link for connected users */}
+            {isConnected && (
+              <a
+                href="/dashboard"
+                className={`font-extralight tracking-wide transition-all duration-500 ${
+                  isScrolled 
+                    ? 'text-gray-500 hover:text-gray-300' 
+                    : 'text-gray-500 hover:text-gray-300'
+                }`}
+              >
+                Dashboard
+              </a>
+            )}
+            
             {/* Wallet Connection */}
             {isConnected ? (
               <button

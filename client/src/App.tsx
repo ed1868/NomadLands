@@ -8,6 +8,7 @@ import Marketplace from "@/pages/marketplace";
 import NomadFleets from "@/pages/nomad-fleets";
 import ApiDocs from "@/pages/api-docs";
 import Signup from "@/pages/signup";
+import Dashboard from "@/pages/dashboard";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/nomad-fleets" component={NomadFleets} />
       <Route path="/api-docs" component={ApiDocs} />
       <Route path="/signup" component={Signup} />
+      <Route path="/dashboard" component={Dashboard} />
       <Route component={NotFound} />
     </Switch>
   );
