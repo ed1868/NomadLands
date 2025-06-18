@@ -1115,173 +1115,267 @@ export default function Dashboard() {
     }
   }, [activeTab, selectedTemplate, nodes.length]);
 
-  // Voronoi Stippling Visualization (based on Observable HQ example)
+  // Neural Hive Mind Network Visualization
   useEffect(() => {
     if (activeTab === 'ecosystem') {
-      console.log('Starting Voronoi stippling visualization...');
+      console.log('Starting neural hive mind visualization...');
       const container = d3.select('#voronoi-ecosystem');
       container.selectAll('*').remove();
 
       const width = 800;
       const height = 500;
 
-      // Create SVG
+      // Create SVG with glowing effects
       const svg = container
         .append('svg')
         .attr('width', '100%')
         .attr('height', '100%')
         .attr('viewBox', `0 0 ${width} ${height}`)
-        .style('background', '#000000')
+        .style('background', 'radial-gradient(circle at center, #0a0a0a 0%, #000000 100%)')
         .style('border-radius', '8px');
 
-      // Create density function based on agent performance data
-      const createDensity = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        const context = canvas.getContext('2d')!;
-        
-        // Fill with base density
-        context.fillStyle = 'rgba(255, 255, 255, 0.1)';
-        context.fillRect(0, 0, width, height);
-        
-        // Add density hotspots for each agent based on their performance
-        mockAgents.forEach((agent: any) => {
-          const intensity = agent.runs / 50000; // Scale intensity
-          const radius = Math.max(30, Math.min(80, agent.success * 0.8));
-          
-          // Create multiple density spots per agent
-          for (let i = 0; i < 3; i++) {
-            const x = Math.random() * (width - 100) + 50;
-            const y = Math.random() * (height - 100) + 50;
-            
-            const gradient = context.createRadialGradient(x, y, 0, x, y, radius);
-            gradient.addColorStop(0, `rgba(255, 255, 255, ${intensity})`);
-            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-            
-            context.fillStyle = gradient;
-            context.fillRect(x - radius, y - radius, radius * 2, radius * 2);
-          }
-        });
-        
-        return context.getImageData(0, 0, width, height);
-      };
+      // Add glow filter definitions
+      const defs = svg.append('defs');
+      
+      const glowFilter = defs.append('filter')
+        .attr('id', 'glow')
+        .attr('width', '300%')
+        .attr('height', '300%')
+        .attr('x', '-100%')
+        .attr('y', '-100%');
+      
+      glowFilter.append('feGaussianBlur')
+        .attr('stdDeviation', '3')
+        .attr('result', 'coloredBlur');
+      
+      const feMerge = glowFilter.append('feMerge');
+      feMerge.append('feMergeNode').attr('in', 'coloredBlur');
+      feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
 
-      const imageData = createDensity();
-      const data = imageData.data;
+      const pulseFilter = defs.append('filter')
+        .attr('id', 'pulse')
+        .attr('width', '400%')
+        .attr('height', '400%')
+        .attr('x', '-150%')
+        .attr('y', '-150%');
+      
+      pulseFilter.append('feGaussianBlur')
+        .attr('stdDeviation', '6')
+        .attr('result', 'coloredBlur');
+      
+      const pulseMerge = pulseFilter.append('feMerge');
+      pulseMerge.append('feMergeNode').attr('in', 'coloredBlur');
+      pulseMerge.append('feMergeNode').attr('in', 'SourceGraphic');
 
-      // Generate initial random points
-      let points = Array.from({ length: 2000 }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: 0,
-        vy: 0
+      // Create network nodes from agent data
+      const nodes = mockAgents.map((agent: any, index: number) => ({
+        id: `agent-${index}`,
+        name: agent.name,
+        x: Math.random() * (width - 100) + 50,
+        y: Math.random() * (height - 100) + 50,
+        runs: agent.runs,
+        success: agent.success,
+        radius: Math.max(8, Math.min(25, (agent.runs / 2000) + (agent.success / 10))),
+        color: agent.success >= 95 ? '#ff00ff' : 
+               agent.success >= 90 ? '#00ffff' : 
+               agent.success >= 85 ? '#ff0080' : '#8000ff',
+        connections: Math.floor(agent.runs / 3000) + 2
       }));
 
-      // Voronoi stippling algorithm
-      const stipple = () => {
-        // Create Voronoi diagram
-        const delaunay = d3.Delaunay.from(points, d => d.x, d => d.y);
-        const voronoi = delaunay.voronoi([0, 0, width, height]);
+      // Add some hub nodes for central connectivity
+      const hubNodes = [
+        { id: 'hub1', name: 'Central Core', x: width * 0.3, y: height * 0.3, radius: 20, color: '#ff00ff', connections: 8, isHub: true },
+        { id: 'hub2', name: 'Neural Bridge', x: width * 0.7, y: height * 0.7, radius: 18, color: '#00ffff', connections: 6, isHub: true },
+        { id: 'hub3', name: 'Data Nexus', x: width * 0.5, y: height * 0.5, radius: 22, color: '#ff0080', connections: 10, isHub: true }
+      ];
 
-        // Calculate weighted centroids
-        for (let i = 0; i < points.length; i++) {
-          const cell = voronoi.cellPolygon(i);
-          if (cell) {
-            let x = 0, y = 0, weight = 0;
+      const allNodes = [...nodes, ...hubNodes];
 
-            // Sample points within the cell
-            const minX = Math.max(0, Math.floor(Math.min(...cell.map(p => p[0]))));
-            const maxX = Math.min(width - 1, Math.ceil(Math.max(...cell.map(p => p[0]))));
-            const minY = Math.max(0, Math.floor(Math.min(...cell.map(p => p[1]))));
-            const maxY = Math.min(height - 1, Math.ceil(Math.max(...cell.map(p => p[1]))));
-
-            for (let py = minY; py <= maxY; py += 2) {
-              for (let px = minX; px <= maxX; px += 2) {
-                if (d3.polygonContains(cell, [px, py])) {
-                  const density = data[(py * width + px) * 4] / 255;
-                  x += px * density;
-                  y += py * density;
-                  weight += density;
-                }
-              }
-            }
-
-            if (weight > 0) {
-              points[i].vx = (x / weight - points[i].x) * 0.1;
-              points[i].vy = (y / weight - points[i].y) * 0.1;
-            }
-          }
-        }
-
-        // Update positions
-        points.forEach(point => {
-          point.x += point.vx;
-          point.y += point.vy;
-          point.x = Math.max(5, Math.min(width - 5, point.x));
-          point.y = Math.max(5, Math.min(height - 5, point.y));
-        });
-      };
-
-      // Run stippling iterations
-      for (let i = 0; i < 100; i++) {
-        stipple();
-      }
-
-      // Color points based on density and agent performance
-      const coloredPoints = points.map(point => {
-        const pixel = Math.floor(point.y) * width + Math.floor(point.x);
-        const density = data[pixel * 4] / 255;
-        
-        // Find nearest agent influence
-        let nearestAgent = mockAgents[0];
-        let minDistance = Infinity;
-        
-        mockAgents.forEach(agent => {
-          const agentX = (agent.id / mockAgents.length) * width;
-          const agentY = (agent.success / 100) * height;
-          const distance = Math.sqrt((point.x - agentX) ** 2 + (point.y - agentY) ** 2);
-          if (distance < minDistance) {
-            minDistance = distance;
-            nearestAgent = agent;
+      // Generate connections based on proximity and performance
+      const links: any[] = [];
+      
+      // Connect each agent to nearest hubs
+      nodes.forEach(node => {
+        hubNodes.forEach(hub => {
+          const distance = Math.sqrt((node.x - hub.x) ** 2 + (node.y - hub.y) ** 2);
+          if (distance < 200 || Math.random() < 0.3) {
+            links.push({
+              source: node.id,
+              target: hub.id,
+              strength: Math.random() * 0.8 + 0.2,
+              color: node.color
+            });
           }
         });
-
-        return {
-          ...point,
-          r: Math.max(0.5, density * 4),
-          color: nearestAgent.success >= 95 ? '#10b981' : 
-                 nearestAgent.success >= 90 ? '#3b82f6' : 
-                 nearestAgent.success >= 85 ? '#f59e0b' : '#ef4444',
-          opacity: Math.max(0.3, density)
-        };
       });
 
-      // Render stippling points
-      svg.selectAll('circle')
-        .data(coloredPoints.filter(d => d.r > 0.5))
+      // Connect high-performance agents to each other
+      nodes.forEach((source, i) => {
+        nodes.slice(i + 1).forEach(target => {
+          const distance = Math.sqrt((source.x - target.x) ** 2 + (source.y - target.y) ** 2);
+          const performanceBonus = (source.success + target.success) / 200;
+          
+          if (distance < 150 && Math.random() < (0.1 + performanceBonus)) {
+            links.push({
+              source: source.id,
+              target: target.id,
+              strength: Math.random() * 0.6 + 0.2,
+              color: source.success > target.success ? source.color : target.color
+            });
+          }
+        });
+      });
+
+      // Connect hubs to each other
+      hubNodes.forEach((source, i) => {
+        hubNodes.slice(i + 1).forEach(target => {
+          links.push({
+            source: source.id,
+            target: target.id,
+            strength: 0.9,
+            color: '#ffffff'
+          });
+        });
+      });
+
+      // Create force simulation
+      const simulation = d3.forceSimulation(allNodes)
+        .force('link', d3.forceLink(links).id((d: any) => d.id).strength((d: any) => d.strength * 0.3))
+        .force('charge', d3.forceManyBody().strength(-100))
+        .force('center', d3.forceCenter(width / 2, height / 2))
+        .force('collision', d3.forceCollide().radius((d: any) => d.radius + 5));
+
+      // Draw connections with animated glow
+      const linkGroup = svg.append('g').attr('class', 'links');
+      
+      const link = linkGroup.selectAll('line')
+        .data(links)
+        .enter()
+        .append('line')
+        .attr('stroke', (d: any) => d.color)
+        .attr('stroke-width', (d: any) => Math.max(1, d.strength * 3))
+        .attr('stroke-opacity', 0)
+        .attr('filter', 'url(#glow)');
+
+      // Draw background network web
+      const backgroundLinks = linkGroup.selectAll('.bg-line')
+        .data(links)
+        .enter()
+        .append('line')
+        .attr('class', 'bg-line')
+        .attr('stroke', '#333333')
+        .attr('stroke-width', 0.5)
+        .attr('stroke-opacity', 0.2);
+
+      // Draw nodes with pulsing effect
+      const nodeGroup = svg.append('g').attr('class', 'nodes');
+      
+      const node = nodeGroup.selectAll('circle')
+        .data(allNodes)
         .enter()
         .append('circle')
-        .attr('cx', d => d.x)
-        .attr('cy', d => d.y)
-        .attr('r', 0)
-        .attr('fill', d => d.color)
-        .attr('opacity', 0)
-        .transition()
-        .duration(2000)
-        .delay((d, i) => i * 1)
-        .attr('r', d => d.r)
-        .attr('opacity', d => d.opacity);
+        .attr('r', (d: any) => d.radius)
+        .attr('fill', (d: any) => d.color)
+        .attr('filter', (d: any) => d.isHub ? 'url(#pulse)' : 'url(#glow)')
+        .attr('opacity', 0);
+
+      // Add node labels for hubs
+      const labels = nodeGroup.selectAll('text')
+        .data(hubNodes)
+        .enter()
+        .append('text')
+        .attr('text-anchor', 'middle')
+        .attr('dy', '.35em')
+        .attr('fill', '#ffffff')
+        .attr('font-size', '10px')
+        .attr('font-weight', 'bold')
+        .text((d: any) => d.name)
+        .attr('opacity', 0);
+
+      // Animation timeline
+      simulation.on('tick', () => {
+        link
+          .attr('x1', (d: any) => d.source.x)
+          .attr('y1', (d: any) => d.source.y)
+          .attr('x2', (d: any) => d.target.x)
+          .attr('y2', (d: any) => d.target.y);
+
+        backgroundLinks
+          .attr('x1', (d: any) => d.source.x)
+          .attr('y1', (d: any) => d.source.y)
+          .attr('x2', (d: any) => d.target.x)
+          .attr('y2', (d: any) => d.target.y);
+
+        node
+          .attr('cx', (d: any) => d.x)
+          .attr('cy', (d: any) => d.y);
+
+        labels
+          .attr('x', (d: any) => d.x)
+          .attr('y', (d: any) => d.y);
+      });
+
+      // Animate network activation
+      setTimeout(() => {
+        // Fade in nodes
+        node.transition()
+          .duration(1500)
+          .attr('opacity', 0.9)
+          .delay((d: any, i: number) => i * 50);
+
+        // Animate connections appearing
+        link.transition()
+          .duration(2000)
+          .attr('stroke-opacity', (d: any) => d.strength * 0.8)
+          .delay((d: any, i: number) => i * 30);
+
+        // Show hub labels
+        labels.transition()
+          .duration(1000)
+          .attr('opacity', 0.8)
+          .delay(1000);
+
+        // Add pulsing animation to hubs
+        setInterval(() => {
+          nodeGroup.selectAll('circle')
+            .filter((d: any) => d.isHub)
+            .transition()
+            .duration(1500)
+            .attr('r', (d: any) => d.radius * 1.3)
+            .transition()
+            .duration(1500)
+            .attr('r', (d: any) => d.radius);
+        }, 3000);
+
+        // Add data flow animation
+        setInterval(() => {
+          const randomLink = links[Math.floor(Math.random() * links.length)];
+          const flowParticle = svg.append('circle')
+            .attr('r', 2)
+            .attr('fill', randomLink.color)
+            .attr('filter', 'url(#glow)')
+            .attr('cx', randomLink.source.x)
+            .attr('cy', randomLink.source.y);
+
+          flowParticle.transition()
+            .duration(1000)
+            .attr('cx', randomLink.target.x)
+            .attr('cy', randomLink.target.y)
+            .attr('opacity', 0)
+            .remove();
+        }, 200);
+
+      }, 500);
 
       // Add legend
       const legend = svg.append('g')
         .attr('transform', `translate(${width - 140}, 20)`);
 
       const legendData = [
-        { color: '#10b981', label: 'High (95%+)' },
-        { color: '#3b82f6', label: 'Good (90%+)' },
-        { color: '#f59e0b', label: 'Medium (85%+)' },
-        { color: '#ef4444', label: 'Low (<85%)' }
+        { color: '#ff00ff', label: 'Neural Core' },
+        { color: '#00ffff', label: 'Data Bridge' },
+        { color: '#ff0080', label: 'Process Hub' },
+        { color: '#8000ff', label: 'Agent Node' }
       ];
 
       legend.selectAll('.legend-item')
@@ -1298,6 +1392,7 @@ export default function Dashboard() {
             .attr('cy', 0)
             .attr('r', 4)
             .attr('fill', d.color)
+            .attr('filter', 'url(#glow)')
             .attr('opacity', 0.8);
             
           group.append('text')
@@ -1312,19 +1407,20 @@ export default function Dashboard() {
       svg.append('text')
         .attr('x', 20)
         .attr('y', 30)
-        .attr('fill', '#10b981')
+        .attr('fill', '#ff00ff')
         .attr('font-size', '14px')
         .attr('font-weight', 'bold')
-        .text('Agent Performance Ecosystem');
+        .attr('filter', 'url(#glow)')
+        .text('Neural Hive Mind Network');
 
       svg.append('text')
         .attr('x', 20)
         .attr('y', 50)
         .attr('fill', '#888888')
         .attr('font-size', '11px')
-        .text(`Voronoi stippling • ${coloredPoints.filter(d => d.r > 0.5).length} points`);
+        .text(`${allNodes.length} nodes • ${links.length} connections • Live data flow`);
 
-      console.log('Voronoi stippling complete');
+      console.log('Neural hive mind visualization complete');
     }
   }, [activeTab]);
 
