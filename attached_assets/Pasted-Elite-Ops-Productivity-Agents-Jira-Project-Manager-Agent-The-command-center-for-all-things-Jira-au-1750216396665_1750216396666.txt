@@ -1,0 +1,46 @@
+Elite Ops & Productivity Agents
+Jira Project Manager Agent
+The command center for all things Jira—automates ticket creation, updates, and status flows like a pro. Think of it as your personal agile overlord.
+
+GMAIL Data Classification Agent
+Scans, tags, and classifies emails with surgical precision. Built to filter signal from noise and feed downstream systems with clean, structured intel.
+
+MultiAgent Triage System
+Your digital war room. Deploys multiple agents to instantly triage tasks, messages, or incidents based on urgency, complexity, or domain. No chaos—just clarity.
+
+InvoiceGenerationAndEmailAgent
+Fires off polished, accurate invoices and dispatches them like clockwork. Zero errors. Zero delays. Cash flow? Handled.
+
+Senior PipeLine Agent
+Orchestrates complex data and deployment pipelines at scale. This agent doesn’t run jobs—it commands the infrastructure like a seasoned general.
+
+Scalable Multi-Agent Chat Using @mentions
+Turns ordinary chat into mission control. Drop an @mention, summon specialized agents, and coordinate responses like a digital strike team.
+
+🧠 High-IQ Learning & Prep Agents
+LeetCode Meta Interview Hack Agent
+The ultimate LeetCode killer. Trained to prep for Meta-level interviews with tailored problems, walkthroughs, and simulated pressure tests. Step in green, walk out ready to dominate.
+
+NeuroTune Agent
+Tunes your mind like a race car engine—think focus hacks, habit reinforcement, brain-training loops. Mental performance? Boosted.
+
+📅 Tactical Scheduling & Utility Agents
+SchedulingAgent
+Your AI calendar sniper. Manages bookings, resolves conflicts, reschedules like a boss—and always keeps your time sharp.
+
+🧬 Experimental & Creative Intelligence Agents
+BRAINWAVE Agent
+Innovation on demand. This agent sparks next-gen ideas, breaks creative blocks, and ideates across domains like a digital muse on caffeine.
+
+AI Nomads: SMS Testing Agent
+Full-spectrum SMS testing unit. Simulates sends, reads, and replies—stress tests your pipeline before it ever hits prod.
+
+NOMAD Email Copilot: AI Drafts, You Approve
+Ghostwriter mode: engaged. This agent drafts email replies that sound just like you—so you stay in control, but save serious time.
+
+Nomad Social Media Agent
+Automates content curation, scheduling, and engagement across platforms. Part analyst, part strategist, all hustle.
+
+Nomad Video Agent
+From raw scripts to ready-to-publish clips—this agent handles video like a Hollywood post-house. Think auto-editing, captions, and smart exports.
+
