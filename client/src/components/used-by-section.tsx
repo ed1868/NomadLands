@@ -20,14 +20,14 @@ export default function UsedBySection() {
     return () => observer.disconnect();
   }, []);
   const companies = [
-    { name: "Google", logo: "https://logos-world.net/wp-content/uploads/2020/09/Google-Logo.png" },
-    { name: "Microsoft", logo: "https://logoeps.com/wp-content/uploads/2013/03/microsoft-vector-logo.png" },
-    { name: "Apple", logo: "https://logos-world.net/wp-content/uploads/2020/04/Apple-Logo.png" },
-    { name: "Amazon", logo: "https://logos-world.net/wp-content/uploads/2020/04/Amazon-Logo.png" },
-    { name: "Meta", logo: "https://logos-world.net/wp-content/uploads/2021/10/Meta-Logo.png" },
-    { name: "Netflix", logo: "https://logos-world.net/wp-content/uploads/2020/04/Netflix-Logo.png" },
-    { name: "Tesla", logo: "https://logos-world.net/wp-content/uploads/2021/08/Tesla-Logo.png" },
-    { name: "Spotify", logo: "https://logos-world.net/wp-content/uploads/2020/06/Spotify-Logo.png" }
+    { name: "Google", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
+    { name: "Microsoft", logo: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
+    { name: "Apple", logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" },
+    { name: "Amazon", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
+    { name: "Meta", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" },
+    { name: "Netflix", logo: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" },
+    { name: "Tesla", logo: "https://upload.wikimedia.org/wikipedia/commons/b/bb/Tesla_T_symbol.svg" },
+    { name: "Spotify", logo: "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" }
   ];
 
   return (
@@ -51,7 +51,7 @@ export default function UsedBySection() {
       }`}></div>
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-6xl font-extralight mb-8 text-gray-200 tracking-wide fade-in-luxury">
+          <h2 className="text-4xl md:text-6xl font-extralight mb-8 text-white tracking-wide fade-in-luxury">
             Trusted by Industry Leaders
           </h2>
           <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto font-extralight leading-relaxed">

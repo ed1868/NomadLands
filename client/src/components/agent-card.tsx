@@ -3,6 +3,7 @@ import { Mail, Cloud, Receipt, Search, Share, Calendar, Database, Heart, Sun, Wi
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Agent } from "@shared/schema";
+import agentPlaceholderImage from '@assets/pl_1750269418635.png';
 
 const iconMap = {
   "fas fa-envelope": Mail,
@@ -27,16 +28,16 @@ const gradientClasses = {
   "charcoal": "obsidian-gradient",
 };
 
-// Dark Knight architectural images - inspired by your references
+// All agents now use the unified emerald wave aesthetic
 const agentImages = {
-  "Mindful Email Curator": "@assets/Screenshot 2025-06-17 at 21.43.12_1750210995781.png",
-  "CloudFlow Orchestrator": "@assets/Screenshot 2025-06-17 at 21.43.26_1750211011505.png",
-  "Invoice Intelligence": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop&crop=center", // Dark modern architecture
-  "Talent Scout Pro": "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=400&h=300&fit=crop&crop=center", // Moody building
-  "Social Harmony Bot": "https://images.unsplash.com/photo-1600607688960-e095cb4bd6b8?w=400&h=300&fit=crop&crop=center", // Dark architectural detail
-  "Schedule Sage": "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?w=400&h=300&fit=crop&crop=center", // Minimal dark structure
-  "Data Whisperer": "https://images.unsplash.com/photo-1600607688960-e095cb4bd6b8?w=400&h=300&fit=crop&crop=center", // Dark tech aesthetic
-  "Wellness Guardian": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop&crop=center", // Serene dark space
+  "Mindful Email Curator": agentPlaceholderImage,
+  "CloudFlow Orchestrator": agentPlaceholderImage,
+  "Invoice Intelligence": agentPlaceholderImage,
+  "Talent Scout Pro": agentPlaceholderImage,
+  "Social Harmony Bot": agentPlaceholderImage,
+  "Schedule Sage": agentPlaceholderImage,
+  "Data Whisperer": agentPlaceholderImage,
+  "Wellness Guardian": agentPlaceholderImage,
 };
 
 interface AgentCardProps {
@@ -49,7 +50,7 @@ export default function AgentCard({ agent }: AgentCardProps) {
   
   const IconComponent = iconMap[agent.icon as keyof typeof iconMap] || Mail;
   const gradientClass = gradientClasses[agent.gradientFrom as keyof typeof gradientClasses] || "velvet-gradient";
-  const agentImage = agentImages[agent.name as keyof typeof agentImages] || agentImages["Mindful Email Curator"];
+  const agentImage = agentImages[agent.name as keyof typeof agentImages] || agentPlaceholderImage;
 
   const handleDeploy = async () => {
     setIsDeploying(true);
