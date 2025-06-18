@@ -23,16 +23,16 @@ import { ethers } from "ethers";
 
 export interface IStorage {
   // User operations
-  getUser(id: number): Promise<User | undefined>;
+  getUser(id: string): Promise<User | undefined>;
   getUserByWallet(walletAddress: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   upsertUser(user: UpsertUser): Promise<User>;
-  updateUserPhone(userId: number, phoneNumber: string, verificationCode: string, expiry: Date): Promise<void>;
-  verifyUserPhone(userId: number, code: string): Promise<boolean>;
-  updateUserPassword(userId: number, hashedPassword: string): Promise<void>;
-  updateLastLogin(userId: number): Promise<void>;
+  updateUserPhone(userId: string, phoneNumber: string, verificationCode: string, expiry: Date): Promise<void>;
+  verifyUserPhone(userId: string, code: string): Promise<boolean>;
+  updateUserPassword(userId: string, hashedPassword: string): Promise<void>;
+  updateLastLogin(userId: string): Promise<void>;
   
   // Agent operations
   getAllAgents(): Promise<Agent[]>;
@@ -131,6 +131,49 @@ export class DatabaseStorage implements IStorage {
     }
 
     return false;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
+  }
+
+  async createUser(userData: InsertUser): Promise<User> {
+    const userId = Date.now().toString() + Math.random().toString(36).substr(2, 9);
+    
+    const [user] = await db
+      .insert(users)
+      .values({
+        ...userData,
+        id: userId,
+      })
+      .returning();
+    return user;
+  }
+
+  async updateUserPassword(userId: string, hashedPassword: string): Promise<void> {
+    await db
+      .update(users)
+      .set({
+        password: hashedPassword,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId));
+  }
+
+  async updateLastLogin(userId: string): Promise<void> {
+    await db
+      .update(users)
+      .set({
+        lastLoginAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId));
   }
 
   // Agent operations

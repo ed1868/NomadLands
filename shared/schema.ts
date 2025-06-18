@@ -27,7 +27,7 @@ export const sessions = pgTable(
 
 // Users table with Web3 wallet integration and authentication
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
+  id: varchar("id").primaryKey().notNull(),
   walletAddress: varchar("wallet_address", { length: 42 }).unique(),
   email: varchar("email").unique(),
   username: varchar("username").unique(),
@@ -302,6 +302,11 @@ export const signupUserSchema = createInsertSchema(users).pick({
   path: ["confirmPassword"],
 });
 
+export const loginUserSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(1, "Password is required"),
+});
+
 export const insertAgentSchema = createInsertSchema(agents).pick({
   name: true,
   description: true,
@@ -352,6 +357,7 @@ export const insertTagRelationSchema = createInsertSchema(agentTagRelations).pic
 
 // Type exports
 export type UpsertUser = z.infer<typeof upsertUserSchema>;
+export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type InsertAgent = z.infer<typeof insertAgentSchema>;
 export type Agent = typeof agents.$inferSelect;
