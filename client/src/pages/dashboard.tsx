@@ -58,7 +58,6 @@ import {
   ArrowDownRight,
   Timer,
   Coins,
-  Menu,
   ChevronLeft,
   ChevronRight
 } from "lucide-react";
@@ -740,7 +739,7 @@ export default function Dashboard() {
               </button>
 
               <button
-                onClick={() => setActiveTab('agents')}
+                onClick={() => { setActiveTab('agents'); setIsMobileSidebarOpen(false); }}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
                   activeTab === 'agents' 
                     ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20' 
@@ -752,7 +751,7 @@ export default function Dashboard() {
               </button>
 
               <button
-                onClick={() => setActiveTab('performance')}
+                onClick={() => { setActiveTab('performance'); setIsMobileSidebarOpen(false); }}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
                   activeTab === 'performance' 
                     ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20' 
@@ -764,7 +763,7 @@ export default function Dashboard() {
               </button>
 
               <button
-                onClick={() => setActiveTab('fleet')}
+                onClick={() => { setActiveTab('fleet'); setIsMobileSidebarOpen(false); }}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
                   activeTab === 'fleet' 
                     ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20' 
@@ -784,19 +783,19 @@ export default function Dashboard() {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-8 bg-gradient-to-br from-gray-950/30 via-black/20 to-gray-900/40">
+        <div className="flex-1 p-4 lg:p-8 bg-gradient-to-br from-gray-950/30 via-black/20 to-gray-900/40 lg:ml-0">
           {/* Header */}
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-6 lg:mb-8 space-y-4 lg:space-y-0">
             <div>
-              <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">Dashboard</h1>
-              <p className="text-gray-300 font-medium">Manage your AI agents, contracts, and files in the Nomad Lands ecosystem</p>
+              <h1 className="text-2xl lg:text-4xl font-bold text-white mb-2 tracking-tight">Dashboard</h1>
+              <p className="text-gray-300 font-medium text-sm lg:text-base">Manage your AI agents, contracts, and files in the Nomad Lands ecosystem</p>
             </div>
-            <div className="flex space-x-3">
-              <Button variant="outline" className="border-gray-600/50 text-gray-300 hover:bg-gray-800/60 hover:border-gray-500 font-semibold">
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+              <Button variant="outline" className="border-gray-600/50 text-gray-300 hover:bg-gray-800/60 hover:border-gray-500 font-semibold text-sm lg:text-base">
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Refresh
               </Button>
-              <Button className="bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white shadow-lg shadow-emerald-500/20 font-semibold border-0">
+              <Button className="bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white shadow-lg shadow-emerald-500/20 font-semibold border-0 text-sm lg:text-base">
                 <Download className="w-4 h-4 mr-2" />
                 Export
               </Button>
