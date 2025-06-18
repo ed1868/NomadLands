@@ -3,6 +3,8 @@ import {
   agents,
   userPurchases,
   transactions,
+  agentTags,
+  agentTagRelations,
   type User,
   type Agent,
   type UpsertUser,
@@ -10,6 +12,10 @@ import {
   type Transaction,
   type InsertPurchase,
   type InsertTransaction,
+  type AgentTag,
+  type InsertTag,
+  type AgentTagRelation,
+  type InsertTagRelation,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and } from "drizzle-orm";
@@ -26,8 +32,15 @@ export interface IStorage {
   // Agent operations
   getAllAgents(): Promise<Agent[]>;
   getAgentsByCategory(category: string): Promise<Agent[]>;
+  getAgentsByTag(tagSlug: string): Promise<Agent[]>;
   getFeaturedAgents(): Promise<Agent[]>;
   getAgent(id: number): Promise<Agent | undefined>;
+  
+  // Tag operations
+  getAllTags(): Promise<AgentTag[]>;
+  getTag(slug: string): Promise<AgentTag | undefined>;
+  createTag(tag: InsertTag): Promise<AgentTag>;
+  addTagToAgent(agentId: number, tagId: number): Promise<AgentTagRelation>;
   
   // Purchase operations
   getUserPurchases(userId: string): Promise<(UserPurchase & { agent: Agent })[]>;
@@ -131,6 +144,42 @@ export class DatabaseStorage implements IStorage {
   async getAgent(id: number): Promise<Agent | undefined> {
     const [agent] = await db.select().from(agents).where(eq(agents.id, id));
     return agent;
+  }
+
+  async getAgentsByTag(tagSlug: string): Promise<Agent[]> {
+    return await db
+      .select({ agents })
+      .from(agents)
+      .innerJoin(agentTagRelations, eq(agents.id, agentTagRelations.agentId))
+      .innerJoin(agentTags, eq(agentTagRelations.tagId, agentTags.id))
+      .where(eq(agentTags.slug, tagSlug))
+      .then(results => results.map(row => row.agents));
+  }
+
+  // Tag operations
+  async getAllTags(): Promise<AgentTag[]> {
+    return await db.select().from(agentTags);
+  }
+
+  async getTag(slug: string): Promise<AgentTag | undefined> {
+    const [tag] = await db.select().from(agentTags).where(eq(agentTags.slug, slug));
+    return tag;
+  }
+
+  async createTag(tag: InsertTag): Promise<AgentTag> {
+    const [newTag] = await db
+      .insert(agentTags)
+      .values(tag)
+      .returning();
+    return newTag;
+  }
+
+  async addTagToAgent(agentId: number, tagId: number): Promise<AgentTagRelation> {
+    const [relation] = await db
+      .insert(agentTagRelations)
+      .values({ agentId, tagId })
+      .returning();
+    return relation;
   }
 
   // Purchase operations
@@ -400,6 +449,115 @@ export class DatabaseStorage implements IStorage {
     ];
 
     await db.insert(agents).values(seedAgents);
+    
+    // Seed tags after agents
+    await this.seedTags();
+  }
+
+  async seedTags(): Promise<void> {
+    // Check if tags already exist
+    const existingTags = await db.select().from(agentTags);
+    if (existingTags.length > 0) {
+      return;
+    }
+
+    // Create tag categories
+    const tagCategories = [
+      {
+        name: "Productivity",
+        slug: "productivity",
+        description: "Agents that enhance workflow efficiency and task automation",
+        color: "#10b981"
+      },
+      {
+        name: "Communications",
+        slug: "communications", 
+        description: "Email, messaging, and communication workflow agents",
+        color: "#3b82f6"
+      },
+      {
+        name: "Business",
+        slug: "business",
+        description: "Enterprise operations and business process automation",
+        color: "#8b5cf6"
+      },
+      {
+        name: "Finance",
+        slug: "finance",
+        description: "Financial operations, invoicing, and cash flow management",
+        color: "#f59e0b"
+      },
+      {
+        name: "Engineering",
+        slug: "engineering",
+        description: "Development, deployment, and technical infrastructure",
+        color: "#ef4444"
+      },
+      {
+        name: "Operations",
+        slug: "operations",
+        description: "System monitoring, incident response, and operational workflows",
+        color: "#06b6d4"
+      },
+      {
+        name: "Marketing",
+        slug: "marketing",
+        description: "Content creation, social media, and marketing automation",
+        color: "#ec4899"
+      },
+      {
+        name: "Analytics",
+        slug: "analytics",
+        description: "Data analysis, reporting, and business intelligence",
+        color: "#84cc16"
+      }
+    ];
+
+    // Insert tags
+    const createdTags = await db.insert(agentTags).values(tagCategories).returning();
+
+    // Map agent names to their appropriate tags
+    const agentTagMappings = [
+      { agentName: "Jira Project Manager Agent", tags: ["productivity", "engineering", "operations"] },
+      { agentName: "GMAIL Data Classification Agent", tags: ["productivity", "communications"] },
+      { agentName: "MultiAgent Triage System", tags: ["operations", "business"] },
+      { agentName: "InvoiceGenerationAndEmailAgent", tags: ["finance", "business", "communications"] },
+      { agentName: "CloudWatch Deployment Agent", tags: ["engineering", "operations"] },
+      { agentName: "SocialMediaPostAgent", tags: ["marketing", "communications"] },
+      { agentName: "TaskManager AI Agent", tags: ["productivity", "business"] },
+      { agentName: "EmailClassificationAgent", tags: ["communications", "productivity"] },
+      { agentName: "CustomerSupportAgent", tags: ["communications", "business"] },
+      { agentName: "DataAnalysisAgent", tags: ["analytics", "business"] },
+      { agentName: "InventoryManagementAgent", tags: ["business", "operations"] },
+      { agentName: "ContentCreatorAgent", tags: ["marketing", "communications"] },
+      { agentName: "SecurityMonitoringAgent", tags: ["operations", "engineering"] },
+      { agentName: "AutomatedVideoEditingAgent", tags: ["marketing", "productivity"] }
+    ];
+
+    // Get all agents to map IDs
+    const allAgents = await db.select().from(agents);
+    const tagLookup = Object.fromEntries(createdTags.map(tag => [tag.slug, tag.id]));
+
+    // Create agent-tag relationships
+    const agentTagRelationships = [];
+    for (const mapping of agentTagMappings) {
+      const agent = allAgents.find(a => a.name === mapping.agentName);
+      if (agent) {
+        for (const tagSlug of mapping.tags) {
+          const tagId = tagLookup[tagSlug];
+          if (tagId) {
+            agentTagRelationships.push({
+              agentId: agent.id,
+              tagId: tagId
+            });
+          }
+        }
+      }
+    }
+
+    if (agentTagRelationships.length > 0) {
+      await db.insert(agentTagRelations).values(agentTagRelationships);
+    }
   }
 }
 
