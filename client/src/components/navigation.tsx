@@ -23,59 +23,59 @@ export default function Navigation() {
   }, []);
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-700 ${
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${
       isScrolled 
-        ? 'bg-slate-900/95 backdrop-blur-xl shadow-2xl border-b border-emerald-600/20' 
+        ? 'bg-black/98 backdrop-blur-xl modern-shadow border-b border-green-400/20' 
         : 'bg-transparent'
     }`}>
       <div className="max-w-7xl mx-auto px-8 py-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className={`w-10 h-10 forest-gradient rounded-full flex items-center justify-center transition-all duration-500 ${isScrolled ? 'shadow-lg shadow-emerald-500/30' : ''}`}>
-              <Bot className="text-white text-lg" />
+            <div className={`w-12 h-12 bright-gradient rounded-2xl flex items-center justify-center transition-all duration-300 elastic-hover ${isScrolled ? 'bright-border' : ''}`}>
+              <Bot className="text-white text-xl" />
             </div>
-            <span className={`text-2xl font-light tracking-wide transition-all duration-500 ${
+            <span className={`text-3xl font-black tracking-tight transition-all duration-300 ${
               isScrolled 
                 ? 'text-white' 
-                : 'text-white drop-shadow-sm'
+                : 'text-white drop-shadow-lg'
             }`}>
-              AI Nomads
+              AI NOMADS
             </span>
           </div>
           
-          <div className="hidden md:flex items-center space-x-12">
+          <div className="hidden md:flex items-center space-x-8">
             <button
               onClick={() => scrollToSection('marketplace')}
-              className={`font-light tracking-wide transition-all duration-500 hover:scale-105 ${
+              className={`font-bold tracking-wide transition-all duration-300 elastic-hover ${
                 isScrolled 
-                  ? 'text-gray-300 hover:text-emerald-400' 
-                  : 'text-gray-300 hover:text-emerald-400'
+                  ? 'text-white hover:text-green-400' 
+                  : 'text-white hover:text-green-400'
               }`}
             >
-              Collection
+              AGENTS
             </button>
             <button
               onClick={() => scrollToSection('features')}
-              className={`font-light tracking-wide transition-all duration-500 hover:scale-105 ${
+              className={`font-bold tracking-wide transition-all duration-300 elastic-hover ${
                 isScrolled 
-                  ? 'text-gray-300 hover:text-emerald-400' 
-                  : 'text-gray-300 hover:text-emerald-400'
+                  ? 'text-white hover:text-green-400' 
+                  : 'text-white hover:text-green-400'
               }`}
             >
-              Features
+              FEATURES
             </button>
             <button
               onClick={() => scrollToSection('features')}
-              className={`font-light tracking-wide transition-all duration-500 hover:scale-105 ${
+              className={`font-bold tracking-wide transition-all duration-300 elastic-hover ${
                 isScrolled 
-                  ? 'text-gray-300 hover:text-emerald-400' 
-                  : 'text-gray-300 hover:text-emerald-400'
+                  ? 'text-white hover:text-green-400' 
+                  : 'text-white hover:text-green-400'
               }`}
             >
-              Story
+              ABOUT
             </button>
-            <Button className="forest-gradient hover:shadow-xl hover:shadow-emerald-500/30 hover:scale-105 transition-all duration-500 border-none rounded-full px-8 py-3 font-medium text-white magnetic-hover">
-              Begin Journey
+            <Button className="bright-gradient hover:shadow-xl hover:shadow-green-500/40 transition-all duration-300 border-none rounded-full px-10 py-4 font-black text-white elastic-hover pulse-bright">
+              GET STARTED
             </Button>
           </div>
           
@@ -91,28 +91,28 @@ export default function Navigation() {
         
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className={`md:hidden mt-6 pb-6 border-t ${isScrolled ? 'border-emerald-600/30' : 'border-emerald-600/30'}`}>
+          <div className={`md:hidden mt-6 pb-6 border-t ${isScrolled ? 'border-green-400/30' : 'border-green-400/30'}`}>
             <div className="flex flex-col space-y-6 pt-6">
               <button
                 onClick={() => scrollToSection('marketplace')}
-                className="text-gray-300 hover:text-emerald-400 transition-colors text-left font-light tracking-wide"
+                className="text-white hover:text-green-400 transition-colors text-left font-bold tracking-wide"
               >
-                Collection
+                AGENTS
               </button>
               <button
                 onClick={() => scrollToSection('features')}
-                className="text-gray-300 hover:text-emerald-400 transition-colors text-left font-light tracking-wide"
+                className="text-white hover:text-green-400 transition-colors text-left font-bold tracking-wide"
               >
-                Features
+                FEATURES
               </button>
               <button
                 onClick={() => scrollToSection('features')}
-                className="text-gray-300 hover:text-emerald-400 transition-colors text-left font-light tracking-wide"
+                className="text-white hover:text-green-400 transition-colors text-left font-bold tracking-wide"
               >
-                Story
+                ABOUT
               </button>
-              <Button className="forest-gradient w-full py-4 rounded-full font-medium text-white">
-                Begin Journey
+              <Button className="bright-gradient w-full py-4 rounded-full font-black text-white">
+                GET STARTED
               </Button>
             </div>
           </div>

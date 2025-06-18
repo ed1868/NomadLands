@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import type { Agent } from "@shared/schema";
 
 const categories = [
-  { id: "all", label: "All Nomads" },
-  { id: "productivity", label: "Productivity" },
-  { id: "communication", label: "Communication" },
-  { id: "business", label: "Business" },
-  { id: "lifestyle", label: "Lifestyle" },
-  { id: "wellness", label: "Wellness" },
+  { id: "all", label: "ALL AGENTS" },
+  { id: "productivity", label: "PRODUCTIVITY" },
+  { id: "communication", label: "COMMUNICATION" },
+  { id: "business", label: "BUSINESS" },
+  { id: "lifestyle", label: "LIFESTYLE" },
+  { id: "wellness", label: "WELLNESS" },
 ];
 
 export default function AgentMarketplace() {
@@ -25,31 +25,33 @@ export default function AgentMarketplace() {
     : allAgents.filter(agent => agent.category === selectedCategory);
 
   return (
-    <section id="marketplace" className="py-24 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <section id="marketplace" className="py-32 bg-white">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-20">
-          <h2 className="text-5xl font-light mb-8 bg-gradient-to-r from-emerald-400 to-emerald-300 bg-clip-text text-transparent tracking-tight">
-            Nomad Collection
+        <div className="text-center mb-24">
+          <h2 className="text-6xl md:text-8xl font-black mb-8 text-black tracking-tight bounce-in">
+            AGENT ARSENAL
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto font-light leading-relaxed">
-            Curated with intention for mindful professionals seeking balance. 
-            <span className="text-emerald-400">Each agent flows seamlessly into your conscious workflow.</span>
-          </p>
+          <div className="slide-up" style={{ animationDelay: '0.3s' }}>
+            <p className="text-2xl md:text-3xl text-black max-w-4xl mx-auto font-bold leading-relaxed">
+              Next-generation AI agents that work <span className="text-green-600">brilliantly</span> and autonomously.
+              <br className="hidden md:block" />
+              <span className="text-green-500">Choose your digital workforce.</span>
+            </p>
+          </div>
         </div>
 
         {/* Category Filters */}
-        <div className="flex flex-wrap justify-center gap-3 mb-16">
+        <div className="flex flex-wrap justify-center gap-4 mb-20">
           {categories.map((category) => (
             <Button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
               className={
                 selectedCategory === category.id
-                  ? "forest-gradient text-white shadow-lg shadow-emerald-500/20 border-none font-medium"
-                  : "bg-slate-800/60 hover:bg-slate-700/60 text-emerald-300 border border-emerald-600/30 hover:border-emerald-500/50 backdrop-blur-sm font-light"
+                  ? "bright-gradient text-white shadow-lg shadow-green-500/30 border-none font-black px-8 py-4 text-lg rounded-full elastic-hover"
+                  : "bg-white border-2 border-green-600 text-green-600 hover:bg-green-50 font-black px-8 py-4 text-lg rounded-full elastic-hover"
               }
               variant={selectedCategory === category.id ? "default" : "outline"}
-              size="sm"
             >
               {category.label}
             </Button>
