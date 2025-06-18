@@ -75,7 +75,7 @@ export default function SignupNew() {
     try {
       await signupMutation.mutateAsync({
         ...data,
-        walletAddress: isConnected ? address : undefined,
+        walletAddress: isConnected && address ? address : undefined,
       });
     } catch (error) {
       console.error("Signup error:", error);
