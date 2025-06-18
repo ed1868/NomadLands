@@ -365,10 +365,10 @@ export default function Dashboard() {
                 </Card>
 
                 {/* Wallet Connection */}
-                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg shadow-xl">
                   <CardHeader>
-                    <CardTitle className="text-white flex items-center">
-                      <Wallet className="w-5 h-5 mr-2" />
+                    <CardTitle className="text-white flex items-center font-bold text-lg tracking-tight">
+                      <Wallet className="w-5 h-5 mr-2 text-emerald-400" />
                       Wallet Connection
                     </CardTitle>
                   </CardHeader>
@@ -376,23 +376,23 @@ export default function Dashboard() {
                     {isConnected ? (
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
-                          <span className="text-gray-400">Status</span>
-                          <Badge className="bg-emerald-600 text-white">Connected</Badge>
+                          <span className="text-gray-300 font-semibold">Status</span>
+                          <Badge className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 font-semibold">Connected</Badge>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-gray-400">Network</span>
-                          <span className="text-white">Ethereum Mainnet</span>
+                          <span className="text-gray-300 font-semibold">Network</span>
+                          <span className="text-white font-medium">Ethereum Mainnet</span>
                         </div>
                         <div className="text-center pt-4">
-                          <p className="text-emerald-400 font-mono text-sm">
+                          <p className="text-emerald-400 font-mono text-sm bg-gray-800/50 px-3 py-2 rounded-lg">
                             {address?.slice(0, 6)}...{address?.slice(-4)}
                           </p>
                         </div>
                       </div>
                     ) : (
                       <div className="text-center py-4">
-                        <Wallet className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                        <p className="text-gray-400 mb-4">Connect your wallet to access full features</p>
+                        <Wallet className="w-12 h-12 text-emerald-400/30 mx-auto mb-4" />
+                        <p className="text-gray-300 mb-4 font-medium">Connect your wallet to access full features</p>
                         <Button
                           onClick={connectWallet}
                           className="bg-emerald-600 hover:bg-emerald-700"
