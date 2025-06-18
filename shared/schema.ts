@@ -88,6 +88,27 @@ export const transactions = pgTable("transactions", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Agent tags table
+export const agentTags = pgTable("agent_tags", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 100 }).notNull().unique(),
+  slug: varchar("slug", { length: 100 }).notNull().unique(),
+  description: text("description"),
+  color: varchar("color", { length: 7 }).default("#10b981"), // emerald-500 default
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Many-to-many relationship between agents and tags
+export const agentTagRelations = pgTable("agent_tag_relations", {
+  id: serial("id").primaryKey(),
+  agentId: integer("agent_id").notNull().references(() => agents.id),
+  tagId: integer("tag_id").notNull().references(() => agentTags.id),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => [
+  index("idx_agent_tag_agent").on(table.agentId),
+  index("idx_agent_tag_tag").on(table.tagId),
+]);
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   purchases: many(userPurchases),
@@ -97,6 +118,7 @@ export const usersRelations = relations(users, ({ many }) => ({
 export const agentsRelations = relations(agents, ({ many }) => ({
   purchases: many(userPurchases),
   transactions: many(transactions),
+  tagRelations: many(agentTagRelations),
 }));
 
 export const userPurchasesRelations = relations(userPurchases, ({ one }) => ({
@@ -118,6 +140,22 @@ export const transactionsRelations = relations(transactions, ({ one }) => ({
   agent: one(agents, {
     fields: [transactions.agentId],
     references: [agents.id],
+  }),
+}));
+
+// Tag relations
+export const agentTagsRelations = relations(agentTags, ({ many }) => ({
+  agentRelations: many(agentTagRelations),
+}));
+
+export const agentTagRelationsRelations = relations(agentTagRelations, ({ one }) => ({
+  agent: one(agents, {
+    fields: [agentTagRelations.agentId],
+    references: [agents.id],
+  }),
+  tag: one(agentTags, {
+    fields: [agentTagRelations.tagId],
+    references: [agentTags.id],
   }),
 }));
 
@@ -175,6 +213,18 @@ export const insertTransactionSchema = createInsertSchema(transactions).pick({
   status: true,
 });
 
+export const insertTagSchema = createInsertSchema(agentTags).pick({
+  name: true,
+  slug: true,
+  description: true,
+  color: true,
+});
+
+export const insertTagRelationSchema = createInsertSchema(agentTagRelations).pick({
+  agentId: true,
+  tagId: true,
+});
+
 // Type exports
 export type UpsertUser = z.infer<typeof upsertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -184,3 +234,7 @@ export type InsertPurchase = z.infer<typeof insertPurchaseSchema>;
 export type UserPurchase = typeof userPurchases.$inferSelect;
 export type InsertTransaction = z.infer<typeof insertTransactionSchema>;
 export type Transaction = typeof transactions.$inferSelect;
+export type InsertTag = z.infer<typeof insertTagSchema>;
+export type AgentTag = typeof agentTags.$inferSelect;
+export type InsertTagRelation = z.infer<typeof insertTagRelationSchema>;
+export type AgentTagRelation = typeof agentTagRelations.$inferSelect;
