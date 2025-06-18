@@ -347,6 +347,23 @@ export default function Dashboard() {
                 <BarChart3 className="w-5 h-5" />
                 <span className="font-medium">Performance</span>
               </button>
+
+              <button
+                onClick={() => setActiveTab('fleet')}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
+                  activeTab === 'fleet' 
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20' 
+                    : 'text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/30 border border-transparent'
+                }`}
+              >
+                <Target className="w-5 h-5" />
+                <div className="flex items-center space-x-2">
+                  <span className="font-medium">My Fleet</span>
+                  <Badge className="bg-emerald-500/20 text-emerald-300 text-xs px-2 py-0.5 border border-emerald-400/40">
+                    BETA
+                  </Badge>
+                </div>
+              </button>
             </nav>
           </div>
         </div>
@@ -965,6 +982,220 @@ export default function Dashboard() {
                   </div>
                 </CardContent>
               </Card>
+            </div>
+          )}
+
+          {/* Fleet Management Tab */}
+          {activeTab === 'fleet' && (
+            <div className="space-y-8">
+              {/* Fleet Header */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-3xl font-bold text-white tracking-tight">Fleet Management</h2>
+                  <p className="text-gray-300 mt-2">Build and orchestrate enterprise-scale agent networks</p>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">
+                    <Bot className="w-4 h-4 mr-2" />
+                    Add Agent
+                  </Button>
+                  <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800">
+                    Save Fleet
+                  </Button>
+                </div>
+              </div>
+
+              {/* Agent Palette */}
+              <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg">
+                <CardHeader>
+                  <CardTitle className="text-white font-bold">Agent Types</CardTitle>
+                  <p className="text-gray-400 text-sm">Drag agents onto the canvas to build your fleet</p>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-4 gap-4">
+                    {[
+                      { type: 'Agent Boss', icon: '👑', color: 'from-purple-500 to-purple-600', description: 'Orchestrates team workflows' },
+                      { type: 'Agent Worker', icon: '⚡', color: 'from-blue-500 to-blue-600', description: 'Executes specific tasks' },
+                      { type: 'Agent LLC', icon: '🏢', color: 'from-green-500 to-green-600', description: 'Manages business logic' },
+                      { type: 'Agent Data', icon: '📊', color: 'from-orange-500 to-orange-600', description: 'Handles data processing' },
+                    ].map((agent, index) => (
+                      <div
+                        key={index}
+                        className={`p-4 rounded-lg bg-gradient-to-br ${agent.color} cursor-move hover:scale-105 transition-transform border border-white/10`}
+                        draggable
+                      >
+                        <div className="text-2xl mb-2 text-center">{agent.icon}</div>
+                        <h3 className="text-white font-semibold text-sm text-center">{agent.type}</h3>
+                        <p className="text-white/80 text-xs text-center mt-1">{agent.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Fleet Canvas */}
+              <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg">
+                <CardHeader>
+                  <CardTitle className="text-white font-bold">Fleet Canvas</CardTitle>
+                  <p className="text-gray-400 text-sm">Design your agent network topology</p>
+                </CardHeader>
+                <CardContent>
+                  <div 
+                    className="relative bg-gray-900/50 rounded-lg border-2 border-dashed border-gray-600/50 min-h-[600px] p-8"
+                    style={{
+                      backgroundImage: 'radial-gradient(circle at 20px 20px, rgba(75, 85, 99, 0.3) 1px, transparent 0)',
+                      backgroundSize: '40px 40px'
+                    }}
+                  >
+                    {/* Sample Fleet Network */}
+                    <div className="absolute top-20 left-20">
+                      <div className="bg-gradient-to-br from-purple-500 to-purple-600 p-4 rounded-lg border border-white/20 shadow-lg min-w-[180px]">
+                        <div className="flex items-center space-x-3">
+                          <span className="text-2xl">👑</span>
+                          <div>
+                            <h3 className="text-white font-semibold">Agent Boss</h3>
+                            <p className="text-white/80 text-xs">main_orchestrator</p>
+                          </div>
+                        </div>
+                      </div>
+                      {/* Connection line */}
+                      <svg className="absolute top-1/2 left-full" width="100" height="2">
+                        <line x1="0" y1="0" x2="100" y2="0" stroke="#10b981" strokeWidth="2" />
+                        <circle cx="100" cy="0" r="3" fill="#10b981" />
+                      </svg>
+                    </div>
+
+                    <div className="absolute top-20 left-80">
+                      <div className="bg-gradient-to-br from-green-500 to-green-600 p-4 rounded-lg border border-white/20 shadow-lg min-w-[180px]">
+                        <div className="flex items-center space-x-3">
+                          <span className="text-2xl">🏢</span>
+                          <div>
+                            <h3 className="text-white font-semibold">Agent LLC</h3>
+                            <p className="text-white/80 text-xs">business_logic</p>
+                          </div>
+                        </div>
+                      </div>
+                      {/* Connection lines */}
+                      <svg className="absolute top-1/2 left-full" width="100" height="2">
+                        <line x1="0" y1="0" x2="100" y2="0" stroke="#10b981" strokeWidth="2" />
+                        <circle cx="100" cy="0" r="3" fill="#10b981" />
+                      </svg>
+                      <svg className="absolute top-full left-1/2 -translate-x-1/2" width="2" height="100">
+                        <line x1="0" y1="0" x2="0" y2="100" stroke="#10b981" strokeWidth="2" />
+                        <circle cx="0" cy="100" r="3" fill="#10b981" />
+                      </svg>
+                    </div>
+
+                    <div className="absolute top-20 left-[540px]">
+                      <div className="bg-gradient-to-br from-orange-500 to-orange-600 p-4 rounded-lg border border-white/20 shadow-lg min-w-[180px]">
+                        <div className="flex items-center space-x-3">
+                          <span className="text-2xl">📊</span>
+                          <div>
+                            <h3 className="text-white font-semibold">Agent Data</h3>
+                            <p className="text-white/80 text-xs">data_processor</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="absolute top-60 left-80">
+                      <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-4 rounded-lg border border-white/20 shadow-lg min-w-[180px]">
+                        <div className="flex items-center space-x-3">
+                          <span className="text-2xl">⚡</span>
+                          <div>
+                            <h3 className="text-white font-semibold">Agent Worker</h3>
+                            <p className="text-white/80 text-xs">task_executor</p>
+                          </div>
+                        </div>
+                      </div>
+                      {/* Connection line */}
+                      <svg className="absolute top-1/2 left-full" width="100" height="2">
+                        <line x1="0" y1="0" x2="100" y2="0" stroke="#10b981" strokeWidth="2" />
+                        <circle cx="100" cy="0" r="3" fill="#10b981" />
+                      </svg>
+                    </div>
+
+                    <div className="absolute top-60 left-[540px]">
+                      <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-4 rounded-lg border border-white/20 shadow-lg min-w-[180px]">
+                        <div className="flex items-center space-x-3">
+                          <span className="text-2xl">⚡</span>
+                          <div>
+                            <h3 className="text-white font-semibold">Agent Worker</h3>
+                            <p className="text-white/80 text-xs">api_handler</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Canvas Instructions */}
+                    <div className="absolute bottom-8 left-8 text-gray-400 text-sm">
+                      <p>💡 Drag agents from the palette above to build your fleet</p>
+                      <p>🔗 Click and drag between agents to create connections</p>
+                      <p>⚙️ Double-click agents to configure their properties</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Fleet Configuration */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg">
+                  <CardHeader>
+                    <CardTitle className="text-white font-bold">Fleet Configuration</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <label className="text-gray-300 text-sm font-medium">Fleet Name</label>
+                      <input 
+                        type="text" 
+                        className="w-full mt-1 bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2 text-white"
+                        placeholder="Enterprise Data Pipeline"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-gray-300 text-sm font-medium">Description</label>
+                      <textarea 
+                        className="w-full mt-1 bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2 text-white h-24"
+                        placeholder="Automated enterprise data processing and analysis fleet"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-gray-300 text-sm font-medium">Execution Mode</label>
+                      <select className="w-full mt-1 bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2 text-white">
+                        <option>Sequential</option>
+                        <option>Parallel</option>
+                        <option>Event-Driven</option>
+                      </select>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg">
+                  <CardHeader>
+                    <CardTitle className="text-white font-bold">Fleet Metrics</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-gray-800/30 p-4 rounded-lg">
+                        <p className="text-gray-400 text-sm">Active Agents</p>
+                        <p className="text-2xl font-bold text-emerald-400">5</p>
+                      </div>
+                      <div className="bg-gray-800/30 p-4 rounded-lg">
+                        <p className="text-gray-400 text-sm">Connections</p>
+                        <p className="text-2xl font-bold text-blue-400">4</p>
+                      </div>
+                      <div className="bg-gray-800/30 p-4 rounded-lg">
+                        <p className="text-gray-400 text-sm">Est. Cost/Hour</p>
+                        <p className="text-2xl font-bold text-yellow-400">$2.40</p>
+                      </div>
+                      <div className="bg-gray-800/30 p-4 rounded-lg">
+                        <p className="text-gray-400 text-sm">Complexity</p>
+                        <p className="text-2xl font-bold text-purple-400">Medium</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           )}
         </div>

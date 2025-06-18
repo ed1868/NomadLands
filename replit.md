@@ -165,6 +165,15 @@ Changelog:
   * Created transparent left sidebar with emerald green hover effects on navigation tabs
   * Fixed navigation component imports and routing functionality
   * Enhanced typography with bold fonts and improved visual hierarchy throughout
+- June 18, 2025. My Fleet (beta) drag-and-drop playground for enterprise agent networks
+  * Added "My Fleet (beta)" tab with Target icon and beta badge in left sidebar navigation
+  * Created comprehensive drag-and-drop canvas inspired by Marquez lineage UI design
+  * Built agent palette with Agent Boss, Agent Worker, Agent LLC, and Agent Data types
+  * Implemented visual fleet canvas with grid background and sample connected agent network
+  * Added fleet configuration panel with name, description, and execution mode settings
+  * Created fleet metrics dashboard showing active agents, connections, cost estimates, and complexity
+  * Designed enterprise-scale agent network topology with visual connections and SVG line connectors
+  * Integrated drag-and-drop instructions and interactive elements for building agent hierarchies
 ```
 
 ## User Preferences
