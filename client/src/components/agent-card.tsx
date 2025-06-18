@@ -73,7 +73,7 @@ export default function AgentCard({ agent }: AgentCardProps) {
         onClick={handleCardClick}
       >
         {/* Agent Image */}
-        <div className="relative overflow-hidden h-48">
+        <div className="relative overflow-hidden h-40 sm:h-48">
           <img 
             src={agentImage} 
             alt={agent.name}
@@ -86,7 +86,7 @@ export default function AgentCard({ agent }: AgentCardProps) {
           </div>
         </div>
         
-        <div className="p-5">
+        <div className="p-4 sm:p-5">
           <div className="flex items-start justify-between mb-4">
             <h3 className="text-lg font-light text-gray-200 tracking-tight">{agent.name}</h3>
             <div className="text-right">

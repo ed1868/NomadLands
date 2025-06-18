@@ -36,10 +36,10 @@ export default function HeroSection() {
       {/* Subtle depth effects */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,black_60%)]"></div>
 
-      <div className="max-w-6xl mx-auto px-8 text-center relative z-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         <div className={`${isVisible ? 'fade-in-luxury' : 'opacity-0'}`}>
           {/* Main Headline */}
-          <h1 className="text-5xl md:text-7xl font-extralight mb-8 leading-[0.9] tracking-wide text-gray-200">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extralight mb-6 sm:mb-8 leading-[0.9] tracking-wide text-gray-200">
             AI
             <br />
             <span className="knight-text font-light">

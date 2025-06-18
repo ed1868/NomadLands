@@ -154,7 +154,7 @@ export default function Marketplace() {
 
         {/* Agent Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {[...Array(8)].map((_, i) => (
               <div key={i} className="bg-black/40 border border-gray-800 rounded h-96 animate-pulse" />
             ))}
@@ -162,8 +162,8 @@ export default function Marketplace() {
         ) : (
           <div className={
             viewMode === "grid" 
-              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
-              : "space-y-6"
+              ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8"
+              : "space-y-4 sm:space-y-6"
           }>
             {filteredAgents.map((agent: Agent) => (
               <AgentCard key={agent.id} agent={agent} />

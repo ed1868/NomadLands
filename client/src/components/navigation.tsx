@@ -157,6 +157,17 @@ export default function Navigation() {
                 API
               </a>
               
+              {/* Dashboard link for mobile */}
+              {isConnected && (
+                <a
+                  href="/dashboard"
+                  className="text-gray-500 hover:text-gray-300 transition-colors text-left font-extralight tracking-wide"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Dashboard
+                </a>
+              )}
+              
               {/* Mobile Wallet Connection */}
               {isConnected ? (
                 <button
