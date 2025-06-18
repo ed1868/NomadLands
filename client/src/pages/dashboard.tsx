@@ -26,7 +26,19 @@ import {
   BarChart3,
   PieChart,
   Upload,
-  Download
+  Download,
+  RefreshCw,
+  MapPin,
+  Users,
+  Building2,
+  Cpu,
+  Network,
+  Shield,
+  Calendar,
+  ArrowUpRight,
+  ArrowDownRight,
+  Timer,
+  Coins
 } from "lucide-react";
 import {
   Card,
@@ -39,15 +51,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   LineChart,
   Line,
@@ -68,24 +72,111 @@ import Navigation from "@/components/navigation";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
-// Mock data for KPIs - in real app would come from API
-const mockRevenue = [
-  { month: 'Jan', revenue: 2400, contracts: 14 },
-  { month: 'Feb', revenue: 1398, contracts: 18 },
-  { month: 'Mar', revenue: 9800, contracts: 24 },
-  { month: 'Apr', revenue: 3908, contracts: 28 },
-  { month: 'May', revenue: 4800, contracts: 35 },
-  { month: 'Jun', revenue: 3800, contracts: 42 }
+// Mock data for analytics
+const mockPerformanceData = [
+  { month: 'Jan', earnings: 2400, hires: 14, hired: 8 },
+  { month: 'Feb', earnings: 1398, hires: 18, hired: 12 },
+  { month: 'Mar', earnings: 9800, hires: 24, hired: 18 },
+  { month: 'Apr', earnings: 3908, hires: 28, hired: 22 },
+  { month: 'May', earnings: 4800, hires: 35, hired: 28 },
+  { month: 'Jun', earnings: 3800, hires: 42, hired: 35 }
 ];
 
-const mockAgentPerformance = [
-  { name: 'Email Classifier', runs: 1240, success: 98, revenue: 2400 },
-  { name: 'Cloud Manager', runs: 890, success: 95, revenue: 3200 },
-  { name: 'Data Processor', runs: 567, success: 97, revenue: 1800 },
-  { name: 'Security Monitor', runs: 234, success: 99, revenue: 4200 }
+const mockNomadAgents = [
+  { 
+    id: 1, 
+    name: 'Email Classifier Pro', 
+    status: 'Working', 
+    earnings: 2340, 
+    hires: 127, 
+    rating: 4.9,
+    location: 'Cloud-US-East',
+    uptime: 99.8
+  },
+  { 
+    id: 2, 
+    name: 'Data Processor Elite', 
+    status: 'Available', 
+    earnings: 1890, 
+    hires: 89, 
+    rating: 4.7,
+    location: 'Cloud-EU-West',
+    uptime: 97.2
+  },
+  { 
+    id: 3, 
+    name: 'Security Monitor', 
+    status: 'Hired', 
+    earnings: 3240, 
+    hires: 156, 
+    rating: 4.8,
+    location: 'Cloud-Asia',
+    uptime: 98.9
+  }
 ];
 
-const COLORS = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b'];
+const mockContracts = [
+  {
+    id: 1,
+    name: 'Agent Revenue Share v2',
+    status: 'Active',
+    value: '5.2 ETH',
+    earnings: 12450,
+    expires: '2025-12-01',
+    penalties: 0
+  },
+  {
+    id: 2,
+    name: 'Data Processing License',
+    status: 'Pending',
+    value: '2.8 ETH',
+    earnings: 4560,
+    expires: '2025-08-15',
+    penalties: 0
+  },
+  {
+    id: 3,
+    name: 'API Access Rights',
+    status: 'Completed',
+    value: '1.5 ETH',
+    earnings: 8900,
+    expires: '2024-10-30',
+    penalties: 150
+  }
+];
+
+const mockUserAgents = [
+  {
+    id: 1,
+    name: 'Custom Email Parser',
+    category: 'Data Processing',
+    uploaded: '2024-12-15',
+    runs: 1240,
+    success: 98.4,
+    revenue: 2340,
+    status: 'Active'
+  },
+  {
+    id: 2,
+    name: 'Invoice Analyzer',
+    category: 'Finance',
+    uploaded: '2024-11-20',
+    runs: 890,
+    success: 96.7,
+    revenue: 1890,
+    status: 'Active'
+  },
+  {
+    id: 3,
+    name: 'Document Classifier',
+    category: 'Document Processing',
+    uploaded: '2024-10-05',
+    runs: 567,
+    success: 99.1,
+    revenue: 3240,
+    status: 'Paused'
+  }
+];
 
 export default function Dashboard() {
   const { user, isLoading } = useAuth();
@@ -93,52 +184,12 @@ export default function Dashboard() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  const [isEditingProfile, setIsEditingProfile] = useState(false);
-  const [profileData, setProfileData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phoneNumber: ''
-  });
+  const [activeTab, setActiveTab] = useState('wallet');
 
   // Fetch user's purchased agents
   const { data: userPurchases } = useQuery({
     queryKey: ["/api/user/purchases"],
     enabled: !!user
-  });
-
-  // Initialize profile data when user loads
-  useEffect(() => {
-    if (user) {
-      setProfileData({
-        firstName: user.firstName || '',
-        lastName: user.lastName || '',
-        email: user.email || '',
-        phoneNumber: user.phoneNumber || ''
-      });
-    }
-  }, [user]);
-
-  const updateProfileMutation = useMutation({
-    mutationFn: async (data: typeof profileData) => {
-      const response = await apiRequest("PATCH", "/api/auth/profile", data);
-      return response.json();
-    },
-    onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Profile updated successfully"
-      });
-      setIsEditingProfile(false);
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
-    },
-    onError: (error: Error) => {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to update profile",
-        variant: "destructive"
-      });
-    }
   });
 
   if (isLoading) {
@@ -164,60 +215,326 @@ export default function Dashboard() {
     );
   }
 
-  const totalRevenue = mockRevenue.reduce((sum, month) => sum + month.revenue, 0);
-  const totalContracts = mockRevenue.reduce((sum, month) => sum + month.contracts, 0);
-  const activeAgents = Array.isArray(userPurchases) ? userPurchases.length : 0;
+  const totalEarnings = mockPerformanceData.reduce((sum, month) => sum + month.earnings, 0);
+  const totalHires = mockPerformanceData.reduce((sum, month) => sum + month.hires, 0);
+  const totalHired = mockPerformanceData.reduce((sum, month) => sum + month.hired, 0);
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900/95 to-black"></div>
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-          <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-emerald-300 rounded-full animate-pulse delay-1000"></div>
-          <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse delay-2000"></div>
-        </div>
-        <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-emerald-400/30 to-transparent"></div>
-        <div className="absolute top-0 right-1/3 w-px h-full bg-gradient-to-b from-transparent via-emerald-300/30 to-transparent"></div>
-      </div>
-
       <Navigation />
 
-      <div className="relative z-10 container mx-auto px-6 py-12 pt-24">
-        <div className="max-w-7xl mx-auto">
+      <div className="flex">
+        {/* Left Sidebar */}
+        <div className="w-80 min-h-screen bg-gradient-to-b from-gray-900/60 via-gray-900/40 to-gray-900/60 backdrop-blur-sm border-r border-gray-800/50">
+          <div className="p-6">
+            {/* User Info */}
+            <div className="mb-8">
+              <div className="flex items-center space-x-4 mb-4">
+                <Avatar className="w-16 h-16 border-2 border-emerald-500/30">
+                  <AvatarImage src={user.profileImageUrl || ''} />
+                  <AvatarFallback className="bg-emerald-600 text-white text-xl">
+                    {user.firstName?.[0] || 'U'}{user.lastName?.[0] || 'S'}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <h3 className="text-xl font-semibold text-white">
+                    {user.firstName} {user.lastName}
+                  </h3>
+                  <p className="text-gray-400 text-sm">{user.email}</p>
+                  <Badge variant="outline" className="mt-1 border-emerald-500 text-emerald-400 text-xs">
+                    {user.subscriptionPlan || 'Premium'} Plan
+                  </Badge>
+                </div>
+              </div>
+            </div>
+
+            {/* Navigation Tabs */}
+            <nav className="space-y-2">
+              <button
+                onClick={() => setActiveTab('wallet')}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all ${
+                  activeTab === 'wallet' 
+                    ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30' 
+                    : 'text-gray-300 hover:bg-gray-800/50 hover:text-white'
+                }`}
+              >
+                <Wallet className="w-5 h-5" />
+                <span className="font-medium">Wallet Details</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('nomad')}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all ${
+                  activeTab === 'nomad' 
+                    ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30' 
+                    : 'text-gray-300 hover:bg-gray-800/50 hover:text-white'
+                }`}
+              >
+                <MapPin className="w-5 h-5" />
+                <span className="font-medium">Nomad Lands</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('contracts')}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all ${
+                  activeTab === 'contracts' 
+                    ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30' 
+                    : 'text-gray-300 hover:bg-gray-800/50 hover:text-white'
+                }`}
+              >
+                <FileText className="w-5 h-5" />
+                <span className="font-medium">My Contracts</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('agents')}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all ${
+                  activeTab === 'agents' 
+                    ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30' 
+                    : 'text-gray-300 hover:bg-gray-800/50 hover:text-white'
+                }`}
+              >
+                <Bot className="w-5 h-5" />
+                <span className="font-medium">My AI Agents</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('performance')}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all ${
+                  activeTab === 'performance' 
+                    ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30' 
+                    : 'text-gray-300 hover:bg-gray-800/50 hover:text-white'
+                }`}
+              >
+                <BarChart3 className="w-5 h-5" />
+                <span className="font-medium">Performance</span>
+              </button>
+            </nav>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 p-8">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-white mb-2">Command Center</h1>
-            <p className="text-gray-400">Manage your AI agents and monitor your performance</p>
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
+              <p className="text-gray-400">Manage your AI agents, contracts, and files in the Nomad Lands ecosystem</p>
+            </div>
+            <div className="flex space-x-3">
+              <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800">
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Refresh
+              </Button>
+              <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800">
+                <Download className="w-4 h-4 mr-2" />
+                Export
+              </Button>
+            </div>
           </div>
 
-          <Tabs defaultValue="overview" className="space-y-6">
-            <TabsList className="bg-gray-900/50 border-gray-700">
-              <TabsTrigger value="overview" className="data-[state=active]:bg-emerald-600">Overview</TabsTrigger>
-              <TabsTrigger value="profile" className="data-[state=active]:bg-emerald-600">Profile</TabsTrigger>
-              <TabsTrigger value="agents" className="data-[state=active]:bg-emerald-600">My Agents</TabsTrigger>
-              <TabsTrigger value="contracts" className="data-[state=active]:bg-emerald-600">Contracts</TabsTrigger>
-              <TabsTrigger value="analytics" className="data-[state=active]:bg-emerald-600">Analytics</TabsTrigger>
-            </TabsList>
+          {/* Content based on active tab */}
+          {activeTab === 'wallet' && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Account Information */}
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center">
+                      <User className="w-5 h-5 mr-2" />
+                      Account Information
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-gray-400 text-sm">Wallet Address</Label>
+                        <p className="text-white font-mono text-sm break-all">
+                          {address || 'Not connected'}
+                        </p>
+                      </div>
+                      <div>
+                        <Label className="text-gray-400 text-sm">Total Agents Owned</Label>
+                        <p className="text-white text-2xl font-bold">{Array.isArray(userPurchases) ? userPurchases.length : 0}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
-            {/* Overview Tab */}
-            <TabsContent value="overview" className="space-y-6">
-              {/* Key Metrics */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* Wallet Connection */}
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center">
+                      <Wallet className="w-5 h-5 mr-2" />
+                      Wallet Connection
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {isConnected ? (
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-400">Status</span>
+                          <Badge className="bg-emerald-600 text-white">Connected</Badge>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-400">Network</span>
+                          <span className="text-white">Ethereum Mainnet</span>
+                        </div>
+                        <div className="text-center pt-4">
+                          <p className="text-emerald-400 font-mono text-sm">
+                            {address?.slice(0, 6)}...{address?.slice(-4)}
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center py-4">
+                        <Wallet className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+                        <p className="text-gray-400 mb-4">Connect your wallet to access full features</p>
+                        <Button
+                          onClick={connectWallet}
+                          className="bg-emerald-600 hover:bg-emerald-700"
+                        >
+                          Connect Wallet
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'nomad' && (
+            <div className="space-y-6">
+              {/* Overview Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-gray-400 text-sm font-medium">Active Agents</p>
-                        <p className="text-3xl font-bold text-white">{activeAgents}</p>
-                        <div className="flex items-center mt-2">
-                          <TrendingUp className="w-4 h-4 text-emerald-500" />
-                          <span className="text-emerald-500 text-sm ml-1">+12%</span>
+                        <p className="text-2xl font-bold text-white">{mockNomadAgents.filter(a => a.status === 'Working').length}</p>
+                      </div>
+                      <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                        <Bot className="w-5 h-5 text-emerald-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">Total Hires</p>
+                        <p className="text-2xl font-bold text-white">{mockNomadAgents.reduce((sum, agent) => sum + agent.hires, 0)}</p>
+                      </div>
+                      <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                        <Users className="w-5 h-5 text-emerald-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">Total Earnings</p>
+                        <p className="text-2xl font-bold text-white">${mockNomadAgents.reduce((sum, agent) => sum + agent.earnings, 0).toLocaleString()}</p>
+                      </div>
+                      <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                        <DollarSign className="w-5 h-5 text-emerald-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">Avg Rating</p>
+                        <p className="text-2xl font-bold text-white">{(mockNomadAgents.reduce((sum, agent) => sum + agent.rating, 0) / mockNomadAgents.length).toFixed(1)}</p>
+                      </div>
+                      <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                        <Trophy className="w-5 h-5 text-emerald-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Nomad Agents List */}
+              <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="text-white">Nomad Lands Agents</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {mockNomadAgents.map((agent) => (
+                      <div key={agent.id} className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                              <Cpu className="w-5 h-5 text-emerald-500" />
+                            </div>
+                            <div>
+                              <h4 className="text-white font-semibold">{agent.name}</h4>
+                              <p className="text-gray-400 text-sm">{agent.location}</p>
+                            </div>
+                          </div>
+                          <Badge 
+                            className={
+                              agent.status === 'Working' 
+                                ? "bg-emerald-600 text-white"
+                                : agent.status === 'Hired'
+                                ? "bg-blue-600 text-white"
+                                : "bg-gray-600 text-white"
+                            }
+                          >
+                            {agent.status}
+                          </Badge>
+                        </div>
+                        <div className="grid grid-cols-4 gap-4 text-sm">
+                          <div>
+                            <span className="text-gray-400">Earnings:</span>
+                            <p className="text-emerald-400 font-semibold">${agent.earnings.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Hires:</span>
+                            <p className="text-white">{agent.hires}</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Rating:</span>
+                            <p className="text-white">{agent.rating}/5.0</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Uptime:</span>
+                            <p className="text-emerald-400">{agent.uptime}%</p>
+                          </div>
                         </div>
                       </div>
-                      <div className="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center">
-                        <Bot className="w-6 h-6 text-emerald-500" />
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {activeTab === 'contracts' && (
+            <div className="space-y-6">
+              {/* Contract Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">Active Contracts</p>
+                        <p className="text-2xl font-bold text-white">{mockContracts.filter(c => c.status === 'Active').length}</p>
+                      </div>
+                      <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                        <FileText className="w-5 h-5 text-emerald-500" />
                       </div>
                     </div>
                   </CardContent>
@@ -228,10 +545,243 @@ export default function Dashboard() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-gray-400 text-sm font-medium">Total Revenue</p>
-                        <p className="text-3xl font-bold text-white">${totalRevenue.toLocaleString()}</p>
+                        <p className="text-2xl font-bold text-white">${mockContracts.reduce((sum, contract) => sum + contract.earnings, 0).toLocaleString()}</p>
+                      </div>
+                      <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                        <DollarSign className="w-5 h-5 text-emerald-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">Total Value</p>
+                        <p className="text-2xl font-bold text-white">9.5 ETH</p>
+                      </div>
+                      <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                        <Coins className="w-5 h-5 text-emerald-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">Penalties</p>
+                        <p className="text-2xl font-bold text-white">${mockContracts.reduce((sum, contract) => sum + contract.penalties, 0)}</p>
+                      </div>
+                      <div className="w-10 h-10 bg-red-500/10 rounded-lg flex items-center justify-center">
+                        <AlertCircle className="w-5 h-5 text-red-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Contracts List */}
+              <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="text-white">Smart Contracts</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {mockContracts.map((contract) => (
+                      <div key={contract.id} className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                              <FileText className="w-5 h-5 text-emerald-500" />
+                            </div>
+                            <div>
+                              <h4 className="text-white font-semibold">{contract.name}</h4>
+                              <p className="text-gray-400 text-sm">Expires: {contract.expires}</p>
+                            </div>
+                          </div>
+                          <Badge 
+                            className={
+                              contract.status === 'Active' 
+                                ? "bg-emerald-600 text-white"
+                                : contract.status === 'Pending'
+                                ? "bg-yellow-600 text-white"
+                                : "bg-gray-600 text-white"
+                            }
+                          >
+                            {contract.status}
+                          </Badge>
+                        </div>
+                        <div className="grid grid-cols-4 gap-4 text-sm">
+                          <div>
+                            <span className="text-gray-400">Value:</span>
+                            <p className="text-emerald-400 font-semibold">{contract.value}</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Earnings:</span>
+                            <p className="text-white">${contract.earnings.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Penalties:</span>
+                            <p className={contract.penalties > 0 ? "text-red-400" : "text-emerald-400"}>${contract.penalties}</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Status:</span>
+                            <p className="text-white">{contract.status}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {activeTab === 'agents' && (
+            <div className="space-y-6">
+              {/* Agent Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">Uploaded Agents</p>
+                        <p className="text-2xl font-bold text-white">{mockUserAgents.length}</p>
+                      </div>
+                      <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                        <Bot className="w-5 h-5 text-emerald-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">Total Runs</p>
+                        <p className="text-2xl font-bold text-white">{mockUserAgents.reduce((sum, agent) => sum + agent.runs, 0).toLocaleString()}</p>
+                      </div>
+                      <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                        <Activity className="w-5 h-5 text-emerald-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">Success Rate</p>
+                        <p className="text-2xl font-bold text-white">{(mockUserAgents.reduce((sum, agent) => sum + agent.success, 0) / mockUserAgents.length).toFixed(1)}%</p>
+                      </div>
+                      <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                        <Trophy className="w-5 h-5 text-emerald-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">Total Revenue</p>
+                        <p className="text-2xl font-bold text-white">${mockUserAgents.reduce((sum, agent) => sum + agent.revenue, 0).toLocaleString()}</p>
+                      </div>
+                      <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                        <DollarSign className="w-5 h-5 text-emerald-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* User Agents List */}
+              <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-white">My AI Agents</CardTitle>
+                    <Button className="bg-emerald-600 hover:bg-emerald-700">
+                      <Upload className="w-4 h-4 mr-2" />
+                      Upload New Agent
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {mockUserAgents.map((agent) => (
+                      <div key={agent.id} className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                              <Bot className="w-5 h-5 text-emerald-500" />
+                            </div>
+                            <div>
+                              <h4 className="text-white font-semibold">{agent.name}</h4>
+                              <p className="text-gray-400 text-sm">{agent.category} • Uploaded {agent.uploaded}</p>
+                            </div>
+                          </div>
+                          <Badge 
+                            className={
+                              agent.status === 'Active' 
+                                ? "bg-emerald-600 text-white"
+                                : "bg-gray-600 text-white"
+                            }
+                          >
+                            {agent.status}
+                          </Badge>
+                        </div>
+                        <div className="grid grid-cols-4 gap-4 text-sm">
+                          <div>
+                            <span className="text-gray-400">Runs:</span>
+                            <p className="text-white">{agent.runs.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Success Rate:</span>
+                            <p className="text-emerald-400">{agent.success}%</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Revenue:</span>
+                            <p className="text-emerald-400">${agent.revenue.toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <span className="text-gray-400">Actions:</span>
+                            <div className="flex space-x-2">
+                              <Button variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-800 h-7 px-2">
+                                <Eye className="w-3 h-3" />
+                              </Button>
+                              <Button variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-800 h-7 px-2">
+                                <Settings className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {activeTab === 'performance' && (
+            <div className="space-y-6">
+              {/* Performance KPIs */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">Total Earnings</p>
+                        <p className="text-3xl font-bold text-white">${totalEarnings.toLocaleString()}</p>
                         <div className="flex items-center mt-2">
-                          <TrendingUp className="w-4 h-4 text-emerald-500" />
-                          <span className="text-emerald-500 text-sm ml-1">+24%</span>
+                          <ArrowUpRight className="w-4 h-4 text-emerald-500" />
+                          <span className="text-emerald-500 text-sm ml-1">+18.2%</span>
                         </div>
                       </div>
                       <div className="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center">
@@ -245,15 +795,15 @@ export default function Dashboard() {
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-gray-400 text-sm font-medium">Active Contracts</p>
-                        <p className="text-3xl font-bold text-white">{totalContracts}</p>
+                        <p className="text-gray-400 text-sm font-medium">Times Hired</p>
+                        <p className="text-3xl font-bold text-white">{totalHired}</p>
                         <div className="flex items-center mt-2">
-                          <TrendingUp className="w-4 h-4 text-emerald-500" />
-                          <span className="text-emerald-500 text-sm ml-1">+18%</span>
+                          <ArrowUpRight className="w-4 h-4 text-emerald-500" />
+                          <span className="text-emerald-500 text-sm ml-1">+12.5%</span>
                         </div>
                       </div>
                       <div className="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center">
-                        <FileText className="w-6 h-6 text-emerald-500" />
+                        <Users className="w-6 h-6 text-emerald-500" />
                       </div>
                     </div>
                   </CardContent>
@@ -263,30 +813,30 @@ export default function Dashboard() {
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-gray-400 text-sm font-medium">Success Rate</p>
-                        <p className="text-3xl font-bold text-white">97.2%</p>
+                        <p className="text-gray-400 text-sm font-medium">Times Hiring</p>
+                        <p className="text-3xl font-bold text-white">{totalHires}</p>
                         <div className="flex items-center mt-2">
-                          <TrendingUp className="w-4 h-4 text-emerald-500" />
-                          <span className="text-emerald-500 text-sm ml-1">+2.1%</span>
+                          <ArrowUpRight className="w-4 h-4 text-emerald-500" />
+                          <span className="text-emerald-500 text-sm ml-1">+24.1%</span>
                         </div>
                       </div>
                       <div className="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center">
-                        <Trophy className="w-6 h-6 text-emerald-500" />
+                        <Network className="w-6 h-6 text-emerald-500" />
                       </div>
                     </div>
                   </CardContent>
                 </Card>
               </div>
 
-              {/* Charts */}
+              {/* Performance Charts */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
                   <CardHeader>
-                    <CardTitle className="text-white">Revenue Trend</CardTitle>
+                    <CardTitle className="text-white">Earnings Over Time</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={300}>
-                      <AreaChart data={mockRevenue}>
+                      <AreaChart data={mockPerformanceData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                         <XAxis dataKey="month" stroke="#9ca3af" />
                         <YAxis stroke="#9ca3af" />
@@ -299,12 +849,12 @@ export default function Dashboard() {
                         />
                         <Area 
                           type="monotone" 
-                          dataKey="revenue" 
+                          dataKey="earnings" 
                           stroke="#10b981" 
-                          fill="url(#emeraldGradient)" 
+                          fill="url(#earningsGradient)" 
                         />
                         <defs>
-                          <linearGradient id="emeraldGradient" x1="0" y1="0" x2="0" y2="1">
+                          <linearGradient id="earningsGradient" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="5%" stopColor="#10b981" stopOpacity={0.8}/>
                             <stop offset="95%" stopColor="#10b981" stopOpacity={0.1}/>
                           </linearGradient>
@@ -316,349 +866,11 @@ export default function Dashboard() {
 
                 <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
                   <CardHeader>
-                    <CardTitle className="text-white">Agent Performance</CardTitle>
+                    <CardTitle className="text-white">Hiring Activity</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={300}>
-                      <RechartsPieChart>
-                        <Tooltip 
-                          contentStyle={{ 
-                            backgroundColor: '#1f2937', 
-                            border: '1px solid #374151',
-                            borderRadius: '8px'
-                          }} 
-                        />
-                        <Pie
-                          data={mockAgentPerformance}
-                          cx="50%"
-                          cy="50%"
-                          outerRadius={100}
-                          fill="#8884d8"
-                          dataKey="revenue"
-                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                        >
-                          {mockAgentPerformance.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                          ))}
-                        </Pie>
-                      </RechartsPieChart>
-                    </ResponsiveContainer>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
-            {/* Profile Tab */}
-            <TabsContent value="profile" className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Profile Info */}
-                <Card className="lg:col-span-2 bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-white">Profile Information</CardTitle>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setIsEditingProfile(!isEditingProfile)}
-                        className="border-gray-600 text-gray-300 hover:bg-gray-800"
-                      >
-                        {isEditingProfile ? <X className="w-4 h-4" /> : <Edit3 className="w-4 h-4" />}
-                        {isEditingProfile ? 'Cancel' : 'Edit'}
-                      </Button>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center space-x-4 mb-6">
-                      <Avatar className="w-20 h-20">
-                        <AvatarImage src={user.profileImageUrl || ''} />
-                        <AvatarFallback className="bg-emerald-600 text-white text-xl">
-                          {user.firstName?.[0]}{user.lastName?.[0]}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <h3 className="text-xl font-semibold text-white">
-                          {user.firstName} {user.lastName}
-                        </h3>
-                        <p className="text-gray-400">{user.email}</p>
-                        <Badge variant="outline" className="mt-2 border-emerald-500 text-emerald-400">
-                          {user.subscriptionPlan} Plan
-                        </Badge>
-                      </div>
-                    </div>
-
-                    {isEditingProfile ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="firstName" className="text-gray-300">First Name</Label>
-                          <Input
-                            id="firstName"
-                            value={profileData.firstName}
-                            onChange={(e) => setProfileData({...profileData, firstName: e.target.value})}
-                            className="bg-gray-800/50 border-gray-600 text-white"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="lastName" className="text-gray-300">Last Name</Label>
-                          <Input
-                            id="lastName"
-                            value={profileData.lastName}
-                            onChange={(e) => setProfileData({...profileData, lastName: e.target.value})}
-                            className="bg-gray-800/50 border-gray-600 text-white"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="email" className="text-gray-300">Email</Label>
-                          <Input
-                            id="email"
-                            type="email"
-                            value={profileData.email}
-                            onChange={(e) => setProfileData({...profileData, email: e.target.value})}
-                            className="bg-gray-800/50 border-gray-600 text-white"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="phoneNumber" className="text-gray-300">Phone Number</Label>
-                          <Input
-                            id="phoneNumber"
-                            value={profileData.phoneNumber}
-                            onChange={(e) => setProfileData({...profileData, phoneNumber: e.target.value})}
-                            className="bg-gray-800/50 border-gray-600 text-white"
-                          />
-                        </div>
-                        <div className="md:col-span-2">
-                          <Button
-                            onClick={() => updateProfileMutation.mutate(profileData)}
-                            disabled={updateProfileMutation.isPending}
-                            className="bg-emerald-600 hover:bg-emerald-700"
-                          >
-                            <Save className="w-4 h-4 mr-2" />
-                            {updateProfileMutation.isPending ? 'Saving...' : 'Save Changes'}
-                          </Button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <Label className="text-gray-400">First Name</Label>
-                          <p className="text-white">{user.firstName || 'Not set'}</p>
-                        </div>
-                        <div>
-                          <Label className="text-gray-400">Last Name</Label>
-                          <p className="text-white">{user.lastName || 'Not set'}</p>
-                        </div>
-                        <div>
-                          <Label className="text-gray-400">Email</Label>
-                          <p className="text-white">{user.email || 'Not set'}</p>
-                        </div>
-                        <div>
-                          <Label className="text-gray-400">Phone Number</Label>
-                          <p className="text-white">{user.phoneNumber || 'Not set'}</p>
-                        </div>
-                        <div>
-                          <Label className="text-gray-400">Member Since</Label>
-                          <p className="text-white">{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'Unknown'}</p>
-                        </div>
-                        <div>
-                          <Label className="text-gray-400">Last Login</Label>
-                          <p className="text-white">{user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString() : 'Never'}</p>
-                        </div>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-
-                {/* Wallet Info */}
-                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="text-white flex items-center">
-                      <Wallet className="w-5 h-5 mr-2" />
-                      Wallet Details
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {isConnected ? (
-                      <div>
-                        <Label className="text-gray-400">Connected Wallet</Label>
-                        <p className="text-white font-mono text-sm break-all">
-                          {address}
-                        </p>
-                        <Badge variant="outline" className="mt-2 border-emerald-500 text-emerald-400">
-                          Connected
-                        </Badge>
-                      </div>
-                    ) : (
-                      <div className="text-center py-4">
-                        <Wallet className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                        <p className="text-gray-400 mb-4">No wallet connected</p>
-                        <Button
-                          onClick={connectWallet}
-                          className="bg-emerald-600 hover:bg-emerald-700"
-                        >
-                          Connect Wallet
-                        </Button>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
-            {/* Agents Tab */}
-            <TabsContent value="agents" className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-bold text-white">My Deployed Agents</h3>
-                <Button className="bg-emerald-600 hover:bg-emerald-700">
-                  <Upload className="w-4 h-4 mr-2" />
-                  Deploy New Agent
-                </Button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {Array.isArray(userPurchases) && userPurchases.length > 0 ? (
-                  userPurchases.map((purchase: any) => (
-                    <Card key={purchase.id} className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm hover:border-emerald-500/50 transition-colors">
-                      <CardHeader>
-                        <div className="flex items-center justify-between">
-                          <CardTitle className="text-white text-lg">{purchase.agent.name}</CardTitle>
-                          <Badge variant="outline" className="border-emerald-500 text-emerald-400">
-                            Active
-                          </Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-gray-400 text-sm mb-4">{purchase.agent.description}</p>
-                        <div className="space-y-2 mb-4">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-400">Runs Today:</span>
-                            <span className="text-white">127</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-400">Success Rate:</span>
-                            <span className="text-emerald-400">98.4%</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-400">Revenue:</span>
-                            <span className="text-white">$2,340</span>
-                          </div>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button variant="outline" size="sm" className="flex-1 border-gray-600 hover:bg-gray-800">
-                            <Eye className="w-4 h-4 mr-1" />
-                            View
-                          </Button>
-                          <Button variant="outline" size="sm" className="flex-1 border-gray-600 hover:bg-gray-800">
-                            <Settings className="w-4 h-4 mr-1" />
-                            Config
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))
-                ) : (
-                  <div className="col-span-full text-center py-12">
-                    <Bot className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                    <h3 className="text-xl font-semibold text-gray-300 mb-2">No Agents Deployed</h3>
-                    <p className="text-gray-500 mb-6">Deploy your first AI agent to get started</p>
-                    <Button className="bg-emerald-600 hover:bg-emerald-700">
-                      Browse Marketplace
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </TabsContent>
-
-            {/* Contracts Tab */}
-            <TabsContent value="contracts" className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-bold text-white">Smart Contracts</h3>
-                <Button className="bg-emerald-600 hover:bg-emerald-700">
-                  <FileText className="w-4 h-4 mr-2" />
-                  New Contract
-                </Button>
-              </div>
-
-              <div className="space-y-4">
-                {[
-                  { id: 1, name: 'Agent Revenue Share', status: 'Active', value: '5.2 ETH', expires: '2025-12-01' },
-                  { id: 2, name: 'Data Processing License', status: 'Pending', value: '2.8 ETH', expires: '2025-08-15' },
-                  { id: 3, name: 'API Access Rights', status: 'Active', value: '1.5 ETH', expires: '2025-10-30' },
-                ].map((contract) => (
-                  <Card key={contract.id} className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div className="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center">
-                            <FileText className="w-6 h-6 text-emerald-500" />
-                          </div>
-                          <div>
-                            <h4 className="text-white font-semibold">{contract.name}</h4>
-                            <p className="text-gray-400 text-sm">Expires: {contract.expires}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                          <div className="text-right">
-                            <p className="text-white font-semibold">{contract.value}</p>
-                            <Badge 
-                              variant="outline" 
-                              className={
-                                contract.status === 'Active' 
-                                  ? "border-emerald-500 text-emerald-400"
-                                  : "border-yellow-500 text-yellow-400"
-                              }
-                            >
-                              {contract.status}
-                            </Badge>
-                          </div>
-                          <Button variant="outline" size="sm" className="border-gray-600 hover:bg-gray-800">
-                            <Eye className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-
-            {/* Analytics Tab */}
-            <TabsContent value="analytics" className="space-y-6">
-              <h3 className="text-2xl font-bold text-white">Performance Analytics</h3>
-              
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="text-white">Agent Rankings</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {mockAgentPerformance.map((agent, index) => (
-                        <div key={agent.name} className="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 bg-emerald-500/10 rounded-full flex items-center justify-center">
-                              <span className="text-emerald-400 font-semibold">#{index + 1}</span>
-                            </div>
-                            <div>
-                              <p className="text-white font-medium">{agent.name}</p>
-                              <p className="text-gray-400 text-sm">{agent.runs} runs</p>
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-white font-semibold">${agent.revenue}</p>
-                            <p className="text-emerald-400 text-sm">{agent.success}% success</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="text-white">Monthly Performance</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={mockRevenue}>
+                      <BarChart data={mockPerformanceData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                         <XAxis dataKey="month" stroke="#9ca3af" />
                         <YAxis stroke="#9ca3af" />
@@ -669,14 +881,54 @@ export default function Dashboard() {
                             borderRadius: '8px'
                           }} 
                         />
-                        <Bar dataKey="contracts" fill="#10b981" />
+                        <Bar dataKey="hires" fill="#10b981" name="Hires" />
+                        <Bar dataKey="hired" fill="#3b82f6" name="Hired" />
                       </BarChart>
                     </ResponsiveContainer>
                   </CardContent>
                 </Card>
               </div>
-            </TabsContent>
-          </Tabs>
+
+              {/* Additional Performance Metrics */}
+              <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="text-white">Nomad Landscape Overview</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <Shield className="w-8 h-8 text-emerald-500" />
+                      </div>
+                      <p className="text-2xl font-bold text-white">99.2%</p>
+                      <p className="text-gray-400 text-sm">Uptime</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <Timer className="w-8 h-8 text-emerald-500" />
+                      </div>
+                      <p className="text-2xl font-bold text-white">2.3s</p>
+                      <p className="text-gray-400 text-sm">Avg Response</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <Trophy className="w-8 h-8 text-emerald-500" />
+                      </div>
+                      <p className="text-2xl font-bold text-white">4.8</p>
+                      <p className="text-gray-400 text-sm">Avg Rating</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <Building2 className="w-8 h-8 text-emerald-500" />
+                      </div>
+                      <p className="text-2xl font-bold text-white">12</p>
+                      <p className="text-gray-400 text-sm">Active Regions</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </div>
       </div>
     </div>
