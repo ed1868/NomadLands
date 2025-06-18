@@ -14,39 +14,39 @@ export default function Navigation() {
   };
 
   return (
-    <nav className="fixed top-0 w-full z-50 glass-card border-b-2 border-orange-400/20">
+    <nav className="fixed top-0 w-full z-50 glass-card">
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="w-12 h-12 electric-gradient rounded-2xl flex items-center justify-center animate-aggressive-pulse shadow-lg">
-              <Bot className="text-white text-xl" />
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 sage-gradient rounded-2xl flex items-center justify-center animate-breathe">
+              <Bot className="text-white text-lg" />
             </div>
-            <span className="text-3xl font-black bg-gradient-to-r from-orange-500 via-green-600 to-purple-600 bg-clip-text text-transparent">
-              AI NOMADS
+            <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent">
+              AI Nomads
             </span>
           </div>
           
           <div className="hidden md:flex items-center space-x-8">
             <button
               onClick={() => scrollToSection('marketplace')}
-              className="text-foreground hover:text-orange-600 transition-colors duration-300 font-bold text-lg"
+              className="text-muted-foreground hover:text-foreground transition-colors duration-300"
             >
-              ARSENAL
+              Marketplace
             </button>
             <button
               onClick={() => scrollToSection('agents')}
-              className="text-foreground hover:text-orange-600 transition-colors duration-300 font-bold text-lg"
+              className="text-muted-foreground hover:text-foreground transition-colors duration-300"
             >
-              WARRIORS
+              Agents
             </button>
             <button
               onClick={() => scrollToSection('features')}
-              className="text-foreground hover:text-orange-600 transition-colors duration-300 font-bold text-lg"
+              className="text-muted-foreground hover:text-foreground transition-colors duration-300"
             >
-              POWER
+              Features
             </button>
-            <Button className="fire-gradient hover:shadow-xl hover:shadow-orange-500/40 transition-all duration-300 text-white rounded-full px-8 py-3 font-bold text-lg animate-power-glow">
-              DOMINATE NOW
+            <Button className="sage-gradient hover:shadow-lg hover:shadow-green-500/20 transition-all duration-300 text-white rounded-full px-6">
+              Get Started
             </Button>
           </div>
           

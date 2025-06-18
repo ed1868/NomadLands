@@ -24,16 +24,16 @@
   --ring: hsl(145, 25%, 45%);
   --radius: 1rem;
   
-  /* Aggressive Mindful Alo x Houseplant palette */
-  --sage-green: hsl(145, 35%, 40%);
-  --electric-sage: hsl(145, 50%, 35%);
-  --warm-terracotta: hsl(15, 45%, 55%);
+  /* Alo Yoga inspired color palette */
+  --sage-green: hsl(145, 25%, 45%);
+  --soft-sage: hsl(145, 20%, 65%);
+  --warm-beige: hsl(38, 35%, 85%);
   --cream: hsl(38, 40%, 92%);
-  --deep-charcoal: hsl(38, 15%, 15%);
-  --vibrant-sage: hsl(145, 60%, 45%);
-  --sunset-orange: hsl(25, 70%, 50%);
-  --cosmic-purple: hsl(260, 40%, 35%);
-  --forest-green: hsl(145, 80%, 25%);
+  --stone: hsl(38, 15%, 75%);
+  --charcoal: hsl(38, 15%, 25%);
+  --dusty-rose: hsl(15, 25%, 75%);
+  --lavender-grey: hsl(260, 15%, 80%);
+  --ocean-mist: hsl(195, 20%, 75%);
 }
 
 .dark {
@@ -70,15 +70,9 @@
 
 @layer utilities {
   .gradient-mesh {
-    background: linear-gradient(135deg, var(--cream) 0%, var(--vibrant-sage) 25%, var(--electric-sage) 50%, var(--warm-terracotta) 75%, var(--sunset-orange) 100%);
-    background-size: 600% 600%;
-    animation: gradientShift 12s ease infinite;
-  }
-  
-  .aggressive-mesh {
-    background: linear-gradient(45deg, var(--forest-green) 0%, var(--electric-sage) 25%, var(--sunset-orange) 50%, var(--cosmic-purple) 75%, var(--deep-charcoal) 100%);
-    background-size: 800% 800%;
-    animation: aggressiveShift 8s ease infinite;
+    background: linear-gradient(135deg, var(--cream) 0%, var(--warm-beige) 25%, var(--sage-green) 50%, var(--soft-sage) 75%, var(--ocean-mist) 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 20s ease infinite;
   }
   
   .perspective-1000 {
@@ -94,69 +88,36 @@
   }
   
   .glass-card {
-    @apply bg-white/90 backdrop-blur-md border border-neutral-200/60 shadow-xl;
+    @apply bg-white/80 backdrop-blur-sm border border-neutral-200/50 shadow-lg;
   }
   
   .dark .glass-card {
-    @apply bg-black/30 backdrop-blur-md border border-neutral-700/50;
+    @apply bg-black/20 backdrop-blur-sm border border-neutral-700/30;
   }
   
   .agent-card {
-    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .agent-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: all 0.8s;
-  }
-  
-  .agent-card:hover::before {
-    left: 100%;
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
   
   .agent-card:hover {
-    transform: translateY(-12px) scale(1.03) rotateX(2deg);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
-  }
-  
-  .electric-gradient {
-    background: linear-gradient(135deg, var(--electric-sage) 0%, var(--vibrant-sage) 100%);
-  }
-  
-  .fire-gradient {
-    background: linear-gradient(135deg, var(--sunset-orange) 0%, var(--warm-terracotta) 100%);
-  }
-  
-  .cosmic-gradient {
-    background: linear-gradient(135deg, var(--cosmic-purple) 0%, var(--electric-sage) 100%);
-  }
-  
-  .forest-gradient {
-    background: linear-gradient(135deg, var(--forest-green) 0%, var(--electric-sage) 100%);
-  }
-  
-  .sage-gradient {
-    background: linear-gradient(135deg, var(--vibrant-sage) 0%, var(--electric-sage) 100%);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   }
   
   .zen-gradient {
-    background: linear-gradient(135deg, var(--sage-green) 0%, var(--warm-terracotta) 100%);
+    background: linear-gradient(135deg, var(--sage-green) 0%, var(--dusty-rose) 100%);
   }
   
   .warm-gradient {
-    background: linear-gradient(135deg, var(--warm-terracotta) 0%, var(--sunset-orange) 100%);
+    background: linear-gradient(135deg, var(--warm-beige) 0%, var(--stone) 100%);
   }
   
   .ocean-gradient {
-    background: linear-gradient(135deg, var(--electric-sage) 0%, var(--cosmic-purple) 100%);
+    background: linear-gradient(135deg, var(--ocean-mist) 0%, var(--lavender-grey) 100%);
+  }
+  
+  .sage-gradient {
+    background: linear-gradient(135deg, var(--soft-sage) 0%, var(--sage-green) 100%);
   }
 }
 
@@ -166,100 +127,63 @@
   100% { background-position: 0% 50%; }
 }
 
-@keyframes aggressiveShift {
-  0% { background-position: 0% 50%; }
-  25% { background-position: 100% 25%; }
-  50% { background-position: 50% 100%; }
-  75% { background-position: 0% 75%; }
-  100% { background-position: 0% 50%; }
-}
-
 @keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
-  25% { transform: translateY(-15px) rotate(2deg) scale(1.05); }
-  50% { transform: translateY(-8px) rotate(-1deg) scale(1.02); }
-  75% { transform: translateY(-12px) rotate(1.5deg) scale(1.03); }
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-10px) rotate(1deg); }
+  66% { transform: translateY(-5px) rotate(-1deg); }
 }
 
 @keyframes breathe {
-  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.9; }
-  50% { transform: scale(1.08) rotate(1deg); opacity: 1; }
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
 }
 
 @keyframes fadeInUp {
   from { 
     opacity: 0; 
-    transform: translateY(40px) scale(0.95); 
+    transform: translateY(30px); 
   }
   to { 
     opacity: 1; 
-    transform: translateY(0) scale(1); 
+    transform: translateY(0); 
   }
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(60px) rotateX(15deg); }
-  to { opacity: 1; transform: translateY(0) rotateX(0deg); }
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes powerGlow {
-  0%, 100% { 
-    box-shadow: 0 0 30px rgba(145, 185, 125, 0.4), 0 0 60px rgba(145, 185, 125, 0.2); 
-    filter: brightness(1);
-  }
-  50% { 
-    box-shadow: 0 0 40px rgba(145, 185, 125, 0.6), 0 0 80px rgba(145, 185, 125, 0.3), 0 0 100px rgba(255, 165, 0, 0.2); 
-    filter: brightness(1.1);
-  }
+@keyframes gentleGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(var(--sage-green), 0.3); }
+  50% { box-shadow: 0 0 30px rgba(var(--sage-green), 0.5); }
 }
 
-@keyframes aggressivePulse {
-  0%, 100% { transform: scale(1) rotate(0deg); }
-  25% { transform: scale(1.03) rotate(0.5deg); }
-  50% { transform: scale(1.05) rotate(-0.5deg); }
-  75% { transform: scale(1.02) rotate(0.3deg); }
-}
-
-@keyframes magneticHover {
-  0% { transform: translateY(0) scale(1); }
-  100% { transform: translateY(-20px) scale(1.05); }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
+@keyframes subtlePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
 }
 
 .animate-float {
-  animation: float 6s ease-in-out infinite;
+  animation: float 8s ease-in-out infinite;
 }
 
 .animate-breathe {
-  animation: breathe 3s ease-in-out infinite;
+  animation: breathe 4s ease-in-out infinite;
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 1s ease-out forwards;
+  animation: fadeInUp 0.8s ease-out forwards;
 }
 
 .animate-slide-up {
-  animation: slideUp 1.2s ease-out forwards;
+  animation: slideUp 0.8s ease-out forwards;
 }
 
-.animate-power-glow {
-  animation: powerGlow 2s ease-in-out infinite;
+.animate-gentle-glow {
+  animation: gentleGlow 3s ease-in-out infinite;
 }
 
-.animate-aggressive-pulse {
-  animation: aggressivePulse 1.5s ease-in-out infinite;
-}
-
-.animate-magnetic-hover {
-  animation: magneticHover 0.3s ease-out forwards;
-}
-
-.animate-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
+.animate-subtle-pulse {
+  animation: subtlePulse 2s ease-in-out infinite;
 }

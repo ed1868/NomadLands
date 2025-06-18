@@ -11,44 +11,43 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-screen aggressive-mesh flex items-center justify-center overflow-hidden">
-      {/* Dynamic floating elements */}
+    <section className="relative min-h-screen gradient-mesh flex items-center justify-center overflow-hidden">
+      {/* Floating organic elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-6 h-6 electric-gradient rounded-full animate-float animate-power-glow" />
-        <div className="absolute top-40 right-20 w-8 h-8 fire-gradient rounded-full animate-float animate-aggressive-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute bottom-40 left-20 w-4 h-4 cosmic-gradient rounded-full animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute bottom-20 right-10 w-7 h-7 forest-gradient rounded-full animate-float animate-power-glow" style={{ animationDelay: '3s' }} />
-        <div className="absolute top-60 left-1/2 w-5 h-5 sage-gradient rounded-full animate-float animate-aggressive-pulse" style={{ animationDelay: '4s' }} />
+        <div className="absolute top-20 left-10 w-3 h-3 bg-green-400/40 rounded-full animate-float blur-sm" />
+        <div className="absolute top-40 right-20 w-4 h-4 bg-stone-400/30 rounded-full animate-float blur-sm" style={{ animationDelay: '2s' }} />
+        <div className="absolute bottom-40 left-20 w-2 h-2 bg-rose-300/40 rounded-full animate-float blur-sm" style={{ animationDelay: '4s' }} />
+        <div className="absolute bottom-20 right-10 w-3 h-3 bg-blue-300/30 rounded-full animate-float blur-sm" style={{ animationDelay: '6s' }} />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
-        <div className="animate-slide-up">
-          <h1 className="text-7xl md:text-9xl font-black mb-8 leading-tight tracking-tight">
-            AGGRESSIVE{' '}
-            <span className="bg-gradient-to-r from-orange-500 via-green-600 to-purple-600 bg-clip-text text-transparent font-black animate-shimmer">
-              MINDFULNESS
+        <div className="animate-fade-in-up">
+          <h1 className="text-6xl md:text-8xl font-light mb-8 leading-tight tracking-tight">
+            Mindful{' '}
+            <span className="bg-gradient-to-r from-green-600 via-green-500 to-stone-600 bg-clip-text text-transparent font-medium">
+              AI Nomads
             </span>
           </h1>
-          <p className="text-2xl md:text-3xl text-foreground mb-12 max-w-4xl mx-auto leading-relaxed font-medium">
-            Unleash AI agents that dominate your workflow while honoring your inner zen. 
-            <span className="electric-gradient bg-clip-text text-transparent font-bold">Power meets purpose.</span>
+          <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed font-light">
+            Discover intelligent agents that flow seamlessly into your digital practice. 
+            Designed for intentional living and mindful productivity.
           </p>
-          <div className="flex flex-col sm:flex-row gap-8 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <Button
               onClick={scrollToMarketplace}
-              className="electric-gradient px-12 py-6 rounded-full text-xl font-bold hover:shadow-2xl hover:shadow-green-500/40 transition-all duration-300 transform hover:scale-110 text-white animate-power-glow"
+              className="sage-gradient px-8 py-4 rounded-full text-lg font-medium hover:shadow-xl hover:shadow-green-500/20 transition-all duration-500 transform hover:scale-105 text-white"
               size="lg"
             >
-              <Rocket className="mr-3 text-xl" />
-              UNLEASH THE POWER
+              <Rocket className="mr-2" />
+              Explore Collection
             </Button>
             <Button
               variant="outline"
-              className="border-foreground/40 px-12 py-6 rounded-full text-xl font-bold hover:bg-foreground/10 transition-all duration-300 fire-gradient text-white border-none"
+              className="border-muted-foreground/30 px-8 py-4 rounded-full text-lg font-medium hover:bg-muted/50 transition-all duration-300"
               size="lg"
             >
-              <Play className="mr-3 text-xl" />
-              WITNESS THE FLOW
+              <Play className="mr-2" />
+              Experience
             </Button>
           </div>
         </div>

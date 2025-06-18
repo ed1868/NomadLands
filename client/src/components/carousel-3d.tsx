@@ -37,35 +37,30 @@ export default function Carousel3D() {
   if (featuredAgents.length === 0) return null;
 
   return (
-    <div className="perspective-1000 opacity-80">
+    <div className="perspective-1000 opacity-60">
       <div
         ref={carouselRef}
-        className="relative w-96 h-96 transform-style-3d"
+        className="relative w-80 h-80 transform-style-3d"
       >
         {featuredAgents.slice(0, 5).map((agent, index) => {
           const IconComponent = iconMap[agent.icon as keyof typeof iconMap] || Mail;
           const rotationY = (360 / 5) * index;
-          const gradients = ['electric-gradient', 'fire-gradient', 'cosmic-gradient', 'forest-gradient', 'sage-gradient'];
-          const gradientClass = gradients[index % gradients.length];
           
           return (
             <div
               key={agent.id}
-              className="absolute w-64 h-80 left-1/2 top-1/2 -ml-32 -mt-40 glass-card rounded-3xl p-8 transition-all duration-700 animate-aggressive-pulse border-2 border-orange-400/20 hover:border-orange-400/60"
+              className="absolute w-56 h-72 left-1/2 top-1/2 -ml-28 -mt-36 glass-card rounded-3xl p-6 transition-all duration-500 animate-breathe"
               style={{
-                transform: `rotateY(${rotationY}deg) translateZ(220px)`,
-                animationDelay: `${index * 0.3}s`,
+                transform: `rotateY(${rotationY}deg) translateZ(180px)`,
+                animationDelay: `${index * 0.2}s`,
               }}
             >
               <div className="text-center">
-                <div className={`w-16 h-16 ${gradientClass} rounded-2xl mx-auto mb-6 flex items-center justify-center animate-power-glow shadow-xl`}>
-                  <IconComponent className="text-2xl text-white" />
+                <div className="w-14 h-14 sage-gradient rounded-2xl mx-auto mb-4 flex items-center justify-center">
+                  <IconComponent className="text-xl text-white" />
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-foreground tracking-tight">{agent.name}</h3>
-                <p className="text-muted-foreground text-sm font-medium leading-relaxed">{agent.description.substring(0, 60)}...</p>
-                <div className="mt-4">
-                  <span className="text-2xl font-black text-orange-600">${agent.price}</span>
-                </div>
+                <h3 className="text-lg font-medium mb-2 text-foreground">{agent.name}</h3>
+                <p className="text-muted-foreground text-xs font-light leading-relaxed">{agent.description.substring(0, 50)}...</p>
               </div>
             </div>
           );

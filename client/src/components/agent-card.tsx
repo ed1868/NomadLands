@@ -18,13 +18,13 @@ const iconMap = {
 };
 
 const gradientClasses = {
-  "electric-sage": "electric-gradient",
-  "forest-green": "forest-gradient",
-  "sunset-orange": "fire-gradient",
-  "cosmic-purple": "cosmic-gradient",
-  "vibrant-sage": "sage-gradient",
-  "warm-terracotta": "warm-gradient",
-  "deep-charcoal": "forest-gradient",
+  "sage-green": "zen-gradient",
+  "ocean-mist": "ocean-gradient", 
+  "warm-beige": "warm-gradient",
+  "dusty-rose": "zen-gradient",
+  "lavender-grey": "ocean-gradient",
+  "soft-sage": "sage-gradient",
+  "charcoal": "warm-gradient",
 };
 
 interface AgentCardProps {
@@ -49,26 +49,26 @@ export default function AgentCard({ agent }: AgentCardProps) {
   };
 
   return (
-    <div className="agent-card glass-card rounded-3xl p-8 hover:shadow-2xl transition-all duration-700 animate-fade-in-up group relative overflow-hidden border-2 border-transparent hover:border-orange-400/30">
+    <div className="agent-card glass-card rounded-3xl p-8 hover:shadow-xl transition-all duration-500 animate-fade-in-up group">
       <div className="flex items-center justify-between mb-6">
-        <div className={`w-16 h-16 ${gradientClass} rounded-2xl flex items-center justify-center group-hover:animate-aggressive-pulse transition-all duration-300 shadow-lg`}>
-          <IconComponent className="text-white text-2xl" />
+        <div className={`w-14 h-14 ${gradientClass} rounded-2xl flex items-center justify-center group-hover:animate-breathe transition-all duration-300`}>
+          <IconComponent className="text-white text-xl" />
         </div>
         <div className="text-right">
-          <span className="text-3xl font-bold text-foreground">${agent.price}</span>
-          <span className="text-muted-foreground text-sm block font-medium">/month</span>
+          <span className="text-2xl font-medium text-foreground">${agent.price}</span>
+          <span className="text-muted-foreground text-sm block font-light">/month</span>
         </div>
       </div>
       
-      <h3 className="text-2xl font-bold mb-4 text-foreground tracking-tight group-hover:text-orange-600 transition-colors duration-300">{agent.name}</h3>
-      <p className="text-muted-foreground mb-6 text-base leading-relaxed font-medium">{agent.description}</p>
+      <h3 className="text-xl font-medium mb-3 text-foreground tracking-tight">{agent.name}</h3>
+      <p className="text-muted-foreground mb-6 text-sm leading-relaxed font-light">{agent.description}</p>
       
-      <div className="flex flex-wrap gap-3 mb-8">
+      <div className="flex flex-wrap gap-2 mb-6">
         {agent.features.map((feature, index) => (
           <Badge 
             key={index}
             variant="secondary"
-            className="bg-orange-100 text-orange-800 text-sm font-bold px-4 py-2 rounded-full border-2 border-orange-200 hover:bg-orange-200 transition-all duration-300"
+            className="bg-green-100 text-green-700 text-xs font-light px-3 py-1 rounded-full border-none"
           >
             {feature}
           </Badge>
@@ -78,9 +78,9 @@ export default function AgentCard({ agent }: AgentCardProps) {
       <Button
         onClick={handleDeploy}
         disabled={isDeploying}
-        className={`w-full ${gradientClass} py-5 rounded-2xl font-bold text-lg hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-500 disabled:opacity-50 text-white border-none transform hover:scale-105 animate-power-glow`}
+        className={`w-full ${gradientClass} py-4 rounded-2xl font-medium hover:shadow-lg hover:shadow-green-500/20 transition-all duration-300 disabled:opacity-50 text-white border-none`}
       >
-        {isDeploying ? "UNLEASHING..." : "DOMINATE NOW"}
+        {isDeploying ? "Integrating..." : "Begin Journey"}
       </Button>
     </div>
   );
