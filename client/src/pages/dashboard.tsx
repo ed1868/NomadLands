@@ -1134,8 +1134,8 @@ export default function Dashboard() {
         .style('background', 'radial-gradient(circle, #0a0a0a 0%, #000000 100%)');
 
       // Generate weighted points based on agent data
-      const weightedPoints = [];
-      mockAgents.forEach((agent, index) => {
+      const weightedPoints: any[] = [];
+      mockAgents.forEach((agent: any, index: number) => {
         const weight = Math.sqrt(agent.runs / 1000); // Size based on total runs
         const numAgentPoints = Math.max(20, Math.min(200, weight * 5));
         
@@ -1171,7 +1171,7 @@ export default function Dashboard() {
         .domain([70, 100]);
 
       // Performance-based color mapping
-      const getColor = (performance, hasAgent) => {
+      const getColor = (performance: any, hasAgent: any) => {
         if (!hasAgent) return '#0a0a0a';
         if (performance >= 95) return '#10b981'; // Emerald for high performance
         if (performance >= 90) return '#3b82f6'; // Blue for good performance  
@@ -1278,8 +1278,8 @@ export default function Dashboard() {
         svg.selectAll('circle')
           .transition()
           .duration(1000)
-          .attr('cx', d => d.x)
-          .attr('cy', d => d.y);
+          .attr('cx', (d: any) => d.x)
+          .attr('cy', (d: any) => d.y);
       }, 5000);
 
       // Cleanup function
@@ -2653,7 +2653,7 @@ export default function Dashboard() {
                       <div>
                         <p className="text-gray-400 text-sm font-medium">Total Revenue</p>
                         <p className="text-2xl font-bold text-white">
-                          ${mockAgents.reduce((sum, agent) => sum + agent.revenue, 0).toLocaleString()}
+                          ${mockAgents.reduce((sum: number, agent: any) => sum + agent.revenue, 0).toLocaleString()}
                         </p>
                       </div>
                       <div className="w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center">
