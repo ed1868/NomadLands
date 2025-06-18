@@ -23,6 +23,7 @@ const signupSchema = z.object({
   phoneNumber: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Please enter a valid phone number"),
   password: z.string().min(8, "Password must be at least 8 characters"),
   confirmPassword: z.string(),
+  walletAddress: z.string().optional(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
@@ -72,11 +73,22 @@ export default function SignupNew() {
   });
 
   const onSubmit = async (data: SignupForm) => {
+    console.log("Form submitted with data:", data);
+    console.log("Form errors:", errors);
+    
+    // Log if form has validation errors
+    if (Object.keys(errors).length > 0) {
+      console.log("Form validation errors detected:", errors);
+      return;
+    }
+    
     try {
-      await signupMutation.mutateAsync({
+      console.log("Calling signup mutation...");
+      const result = await signupMutation.mutateAsync({
         ...data,
         walletAddress: isConnected && address ? address : undefined,
       });
+      console.log("Signup result:", result);
     } catch (error) {
       console.error("Signup error:", error);
     }
