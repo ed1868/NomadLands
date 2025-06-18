@@ -220,45 +220,45 @@ export default function Dashboard() {
   const totalHired = mockPerformanceData.reduce((sum, month) => sum + month.hired, 0);
 
   return (
-    <div className="min-h-screen bg-[#0a0b0e] text-white" style={{
-      backgroundImage: `linear-gradient(135deg, #0a0b0e 0%, #1a1b21 25%, #0f1015 50%, #1e1f26 75%, #0a0b0e 100%)`,
+    <div className="min-h-screen bg-black text-white" style={{
+      backgroundImage: `linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #050505 50%, #0f0f0f 75%, #000000 100%)`,
       backgroundAttachment: 'fixed'
     }}>
-      <Navigation />
-
-      <div className="flex pt-20">
-        {/* Left Sidebar */}
-        <div className="w-80 min-h-screen bg-gradient-to-b from-gray-950/80 via-black/60 to-gray-950/80 backdrop-blur-lg border-r border-gray-700/30">
-          <div className="p-6">
-            {/* User Info */}
-            <div className="mb-8">
-              <div className="flex items-center space-x-4 mb-4">
-                <Avatar className="w-16 h-16 border-2 border-emerald-400/50 shadow-lg shadow-emerald-500/20">
-                  <AvatarImage src={user.profileImageUrl || ''} />
-                  <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white text-xl font-bold">
-                    {user.firstName?.[0] || 'U'}{user.lastName?.[0] || 'S'}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <h3 className="text-xl font-bold text-white tracking-tight">
-                    {user.firstName} {user.lastName}
-                  </h3>
-                  <p className="text-gray-300 text-sm font-medium">{user.email}</p>
-                  <Badge variant="outline" className="mt-1 border-emerald-400 text-emerald-300 text-xs font-semibold bg-emerald-500/10">
-                    {user.subscriptionPlan || 'Premium'} Plan
-                  </Badge>
-                </div>
-              </div>
+      {/* Top Navigation - Full Width */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-lg border-b border-gray-800/30">
+        <div className="flex items-center justify-between px-8 py-4">
+          {/* Left - Logo */}
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">AN</span>
             </div>
+            <span className="text-xl font-bold text-white tracking-tight">AI Nomads</span>
+          </div>
 
+          {/* Right - User Icon (Transparent) */}
+          <div className="flex items-center">
+            <Avatar className="w-10 h-10 border border-gray-700/50">
+              <AvatarImage src={user.profileImageUrl || ''} />
+              <AvatarFallback className="bg-transparent text-gray-400 border-0">
+                {user.firstName?.[0] || 'U'}{user.lastName?.[0] || 'S'}
+              </AvatarFallback>
+            </Avatar>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex pt-16">
+        {/* Left Sidebar */}
+        <div className="w-80 min-h-screen bg-transparent backdrop-blur-sm">
+          <div className="p-6">
             {/* Navigation Tabs */}
-            <nav className="space-y-2">
+            <nav className="space-y-2 mt-4">
               <button
                 onClick={() => setActiveTab('wallet')}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
                   activeTab === 'wallet' 
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/10' 
-                    : 'text-gray-300 hover:bg-gray-800/60 hover:text-white hover:border-gray-600/30 border border-transparent'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20' 
+                    : 'text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/30 border border-transparent'
                 }`}
               >
                 <Wallet className="w-5 h-5" />
@@ -269,8 +269,8 @@ export default function Dashboard() {
                 onClick={() => setActiveTab('nomad')}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
                   activeTab === 'nomad' 
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/10' 
-                    : 'text-gray-300 hover:bg-gray-800/60 hover:text-white hover:border-gray-600/30 border border-transparent'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20' 
+                    : 'text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/30 border border-transparent'
                 }`}
               >
                 <MapPin className="w-5 h-5" />
@@ -281,8 +281,8 @@ export default function Dashboard() {
                 onClick={() => setActiveTab('contracts')}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
                   activeTab === 'contracts' 
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/10' 
-                    : 'text-gray-300 hover:bg-gray-800/60 hover:text-white hover:border-gray-600/30 border border-transparent'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20' 
+                    : 'text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/30 border border-transparent'
                 }`}
               >
                 <FileText className="w-5 h-5" />
@@ -293,8 +293,8 @@ export default function Dashboard() {
                 onClick={() => setActiveTab('agents')}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
                   activeTab === 'agents' 
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/10' 
-                    : 'text-gray-300 hover:bg-gray-800/60 hover:text-white hover:border-gray-600/30 border border-transparent'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20' 
+                    : 'text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/30 border border-transparent'
                 }`}
               >
                 <Bot className="w-5 h-5" />
@@ -305,8 +305,8 @@ export default function Dashboard() {
                 onClick={() => setActiveTab('performance')}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
                   activeTab === 'performance' 
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/10' 
-                    : 'text-gray-300 hover:bg-gray-800/60 hover:text-white hover:border-gray-600/30 border border-transparent'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20' 
+                    : 'text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/30 border border-transparent'
                 }`}
               >
                 <BarChart3 className="w-5 h-5" />
