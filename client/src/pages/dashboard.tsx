@@ -1402,24 +1402,24 @@ export default function Dashboard() {
 
           {/* Fleet Management Tab */}
           {activeTab === 'fleet' && (
-            <div className="space-y-8">
+            <div className="space-y-4 lg:space-y-8">
               {/* Fleet Header */}
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
                 <div>
-                  <h2 className="text-3xl font-bold text-white tracking-tight">Enterprise Fleet Orchestration</h2>
-                  <p className="text-gray-300 mt-2">Design departmental hierarchies and manage agent deployment strategies</p>
+                  <h2 className="text-2xl lg:text-3xl font-bold text-white tracking-tight">Enterprise Fleet Orchestration</h2>
+                  <p className="text-gray-300 mt-2 text-sm lg:text-base">Design departmental hierarchies and manage agent deployment strategies</p>
                 </div>
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2 lg:space-x-4">
                   <Button 
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs lg:text-sm px-3 lg:px-4 py-2"
                     onClick={() => { setNodes([]); setEdges([]); }}
                   >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Clear Canvas
+                    <Trash2 className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
+                    Clear
                   </Button>
-                  <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800">
-                    <Save className="w-4 h-4 mr-2" />
-                    Save Configuration
+                  <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800 text-xs lg:text-sm px-3 lg:px-4 py-2">
+                    <Save className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
+                    Save
                   </Button>
                 </div>
               </div>
@@ -1427,27 +1427,27 @@ export default function Dashboard() {
               {/* Fleet Templates */}
               <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg">
                 <CardHeader>
-                  <CardTitle className="text-white font-bold">Nomad Fleet Powerhouses</CardTitle>
-                  <p className="text-gray-400 text-sm">Deploy proven enterprise organizational templates</p>
+                  <CardTitle className="text-white font-bold text-lg lg:text-xl">Nomad Fleet Powerhouses</CardTitle>
+                  <p className="text-gray-400 text-xs lg:text-sm">Deploy proven enterprise organizational templates</p>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
                     {Object.entries(fleetTemplates).map(([key, template]) => (
                       <div
                         key={key}
-                        className={`p-6 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
+                        className={`p-4 lg:p-6 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
                           selectedTemplate === key
                             ? 'bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 border-emerald-400/60'
                             : 'bg-gradient-to-br from-gray-800/40 to-gray-900/40 border-gray-600/40 hover:border-gray-500/60'
                         }`}
                         onClick={() => loadTemplate(key)}
                       >
-                        <div className="text-center mb-4">
-                          <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl flex items-center justify-center">
-                            <Network className="w-8 h-8 text-blue-400" />
+                        <div className="text-center mb-3 lg:mb-4">
+                          <div className="w-12 h-12 lg:w-16 lg:h-16 mx-auto mb-2 lg:mb-3 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl flex items-center justify-center">
+                            <Network className="w-6 h-6 lg:w-8 lg:h-8 text-blue-400" />
                           </div>
-                          <h3 className="text-white font-bold text-lg">{template.name}</h3>
-                          <p className="text-gray-400 text-sm mt-2">{template.description}</p>
+                          <h3 className="text-white font-bold text-base lg:text-lg">{template.name}</h3>
+                          <p className="text-gray-400 text-xs lg:text-sm mt-1 lg:mt-2">{template.description}</p>
                         </div>
                         
                         <div className="space-y-2">
