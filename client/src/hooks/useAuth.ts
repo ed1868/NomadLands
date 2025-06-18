@@ -3,7 +3,7 @@ import type { User } from "@shared/schema";
 import { getQueryFn } from "@/lib/queryClient";
 
 export function useAuth() {
-  const token = localStorage.getItem('auth_token');
+  const token = localStorage.getItem('token');
   
   const { data: user, isLoading } = useQuery<User>({
     queryKey: ["/api/auth/user"],
