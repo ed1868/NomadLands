@@ -20,16 +20,17 @@ export default function Signup() {
     {
       id: "developer",
       name: "Developer",
-      monthlyPrice: 29,
-      yearlyPrice: 19,
+      monthlyPrice: 0,
+      yearlyPrice: 0,
       description: "Get started in your own environment with self-hosted deployment.",
-      longDescription: "Designed for individual developers and hobbyists with low volume usage to explore agent deployment.",
+      longDescription: "Designed for startups and hobbyists with low volume usage to explore agent development.",
+      pricing: "Includes up to 100k nodes executed per month",
       features: [
-        "Includes up to 10k nodes executed per month",
-        "Self-hosted deployment options",
-        "Community support",
-        "Basic API access",
-        "Documentation and tutorials"
+        "Horizontally scalable task queues and servers",
+        "APIs for retrieving & updating state and conversational history", 
+        "APIs for retrieving & updating long-term memory",
+        "Real-time streaming",
+        "Assistants API"
       ],
       gradient: "emerald-knight",
       cta: "Get started"
@@ -37,36 +38,59 @@ export default function Signup() {
     {
       id: "plus",
       name: "Plus", 
-      monthlyPrice: 99,
-      yearlyPrice: 79,
+      monthlyPrice: 25,
+      yearlyPrice: 20,
       description: "Self-serve with Cloud SaaS deployment.",
       longDescription: "Designed for teams to quickly deploy agentic apps, accessible from anywhere.",
+      pricing: "$0.001/node executed + standby charges",
+      pricingDetails: "Requires LangSmith Plus ($25/user/month). Includes 1 free Dev deployment with usage included. Then, pay per node executed + per minute of standby.",
       features: [
-        "Includes up to 100k nodes executed per month",
-        "Cloud SaaS deployment",
-        "Priority email support",
-        "Advanced analytics dashboard",
-        "Team collaboration tools",
-        "Custom integrations"
+        "All features in Developer tier",
+        "Cron scheduling",
+        "Auth to call LangGraph APIs",
+        "Smart caching"
       ],
       gradient: "obsidian-gradient",
       popular: true,
       cta: "Get started"
     },
     {
+      id: "nomad-fleet",
+      name: "Nomad Fleet",
+      monthlyPrice: 149,
+      yearlyPrice: 119,
+      description: "Enterprise-scale AI agent orchestration and fleet management.",
+      longDescription: "Designed for organizations deploying multiple agent teams with advanced coordination and monitoring.",
+      pricing: "$0.0008/node executed + fleet management",
+      pricingDetails: "Includes advanced fleet coordination, cross-team communication, and enterprise monitoring dashboards.",
+      features: [
+        "All features in Plus tier",
+        "Multi-agent fleet coordination",
+        "Advanced team collaboration",
+        "Enterprise monitoring dashboards",
+        "Cross-department synchronization",
+        "Fleet performance analytics",
+        "Priority technical support"
+      ],
+      gradient: "knight-text",
+      cta: "Get started"
+    },
+    {
       id: "enterprise",
       name: "Enterprise",
-      monthlyPrice: 499,
-      yearlyPrice: 399,
+      monthlyPrice: null,
+      yearlyPrice: null,
       description: "Deployed where you need it - fully Self-Hosted, Hybrid, or Cloud SaaS options.",
       longDescription: "Designed for teams with more security, deployment, and support needs.",
+      pricing: "Custom",
       features: [
-        "Unlimited agent executions",
-        "Advanced security controls",
-        "Dedicated support manager",
-        "Custom deployment options",
-        "SLA guarantees",
-        "Advanced monitoring"
+        "All features in Plus tier",
+        "Enterprise deployment options, including full self-hosted and hybrid",
+        "SLA for managed offerings", 
+        "Team trainings",
+        "Shared Slack channel",
+        "Architectural guidance",
+        "Dedicated customer success engineer"
       ],
       gradient: "shadow-gradient",
       cta: "Contact us",
@@ -253,8 +277,8 @@ export default function Signup() {
 
             <div className="space-y-4">
               {plans.map((plan) => {
-                const currentPrice = billingCycle === 'yearly' ? plan.yearlyPrice : plan.monthlyPrice;
-                const savings = billingCycle === 'yearly' ? plan.monthlyPrice - plan.yearlyPrice : 0;
+                const currentPrice = plan.isCustom ? null : (billingCycle === 'yearly' ? plan.yearlyPrice : plan.monthlyPrice);
+                const savings = billingCycle === 'yearly' && plan.monthlyPrice !== null && plan.yearlyPrice !== null ? plan.monthlyPrice - plan.yearlyPrice : 0;
                 
                 return (
                   <div
@@ -273,44 +297,67 @@ export default function Signup() {
                     )}
                     
                     <div className="mb-4">
-                      <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-start justify-between mb-4">
                         <div className="flex-1">
                           <h4 className="text-lg font-light text-gray-200 mb-2">{plan.name}</h4>
                           <p className="text-gray-400 text-sm font-extralight mb-2">{plan.description}</p>
-                          <p className="text-gray-500 text-xs font-extralight">{plan.longDescription}</p>
-                        </div>
-                        <div className="text-right ml-4">
-                          <div className="flex items-baseline">
-                            <span className="text-2xl font-extralight knight-text">${currentPrice}</span>
-                            <span className="text-gray-500 text-sm font-extralight ml-1">
-                              /{billingCycle === 'yearly' ? 'month' : 'month'}
-                            </span>
+                          <p className="text-gray-500 text-xs font-extralight mb-3">{plan.longDescription}</p>
+                          
+                          {/* Pricing Display */}
+                          <div className="mb-4">
+                            <div className="text-lg font-light knight-text mb-1">{plan.pricing}</div>
+                            {plan.pricingDetails && (
+                              <div className="text-gray-500 text-xs font-extralight leading-relaxed">
+                                {plan.pricingDetails}
+                              </div>
+                            )}
                           </div>
-                          {billingCycle === 'yearly' && savings > 0 && (
-                            <div className="text-emerald-400 text-xs font-extralight">
-                              Save ${savings}/month
-                            </div>
-                          )}
-                          {billingCycle === 'yearly' && (
-                            <div className="text-gray-600 text-xs font-extralight">
-                              Billed ${currentPrice * 12} yearly
-                            </div>
-                          )}
                         </div>
+                        
+                        {!plan.isCustom && (
+                          <div className="text-right ml-4">
+                            <div className="flex items-baseline">
+                              <span className="text-2xl font-extralight knight-text">
+                                {currentPrice === 0 ? 'Free' : currentPrice ? `$${currentPrice}` : 'Custom'}
+                              </span>
+                              {currentPrice !== null && currentPrice !== 0 && (
+                                <span className="text-gray-500 text-sm font-extralight ml-1">
+                                  /month
+                                </span>
+                              )}
+                            </div>
+                            {billingCycle === 'yearly' && savings > 0 && (
+                              <div className="text-emerald-400 text-xs font-extralight">
+                                Save ${savings}/month
+                              </div>
+                            )}
+                            {billingCycle === 'yearly' && currentPrice && currentPrice > 0 && (
+                              <div className="text-gray-600 text-xs font-extralight">
+                                Billed ${currentPrice * 12} yearly
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
 
-                      <div className="space-y-2 mb-4">
-                        {plan.features.map((feature, index) => (
-                          <div key={index} className="flex items-start text-gray-400 text-sm">
-                            <div className="w-1.5 h-1.5 bg-emerald-600 rounded-full mr-3 mt-2 flex-shrink-0"></div>
-                            <span className="font-extralight">{feature}</span>
-                          </div>
-                        ))}
+                      {/* Key Features */}
+                      <div className="mb-6">
+                        <div className="text-sm font-light text-gray-300 mb-3">Key features:</div>
+                        <div className="space-y-2">
+                          {plan.features.map((feature, index) => (
+                            <div key={index} className="flex items-start text-gray-400 text-sm">
+                              <div className="w-1.5 h-1.5 bg-emerald-600 rounded-full mr-3 mt-2 flex-shrink-0"></div>
+                              <span className="font-extralight">{feature}</span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
 
                       <Button
-                        className={`w-full ${plan.gradient} py-3 rounded font-light hover:shadow-xl hover:shadow-gray-900/50 transition-all duration-700 text-gray-300 border border-gray-700 hover:border-gray-600 backdrop-blur-sm ${
-                          plan.isCustom ? 'bg-transparent' : ''
+                        className={`w-full py-3 rounded font-light hover:shadow-xl hover:shadow-gray-900/50 transition-all duration-700 ${
+                          plan.isCustom 
+                            ? 'bg-transparent text-gray-300 border border-gray-700 hover:border-gray-600 backdrop-blur-sm'
+                            : 'bg-gradient-to-r from-emerald-900/80 to-emerald-800/80 text-gray-200 border border-emerald-700/50 hover:border-emerald-600/70 backdrop-blur-sm hover:from-emerald-800/90 hover:to-emerald-700/90'
                         }`}
                         variant={plan.isCustom ? "outline" : "default"}
                       >
