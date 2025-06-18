@@ -223,10 +223,7 @@ export default function SignupPremium() {
             
             <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tight">
               <span className="block bg-gradient-to-r from-emerald-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
-                Join Nomad Lands Ecosystem
-              </span>
-              <span className="block text-3xl md:text-4xl mt-4">
-                where our agents are shaping the new horizon for us
+                Nomad Lands Ecosystem
               </span>
             </h1>
             
