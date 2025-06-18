@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Search, Filter, Grid, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Navigation from "@/components/navigation";
 import AgentCard from "@/components/agent-card";
 import type { Agent } from "@shared/schema";
 
@@ -32,7 +33,7 @@ export default function Marketplace() {
     queryKey: ['/api/agents'],
   });
 
-  const filteredAgents = allAgents
+  const filteredAgents = (allAgents as Agent[])
     .filter((agent: Agent) => {
       const matchesCategory = selectedCategory === "all" || agent.category === selectedCategory;
       const matchesSearch = searchQuery === "" || 
@@ -55,6 +56,7 @@ export default function Marketplace() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-emerald-950/10">
+      <Navigation />
       <div className="max-w-7xl mx-auto px-6 py-20">
         {/* Header */}
         <div className="text-center mb-16">

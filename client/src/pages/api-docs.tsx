@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Code, Copy, ExternalLink, Book, Zap, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import Navigation from "@/components/navigation";
 
 export default function ApiDocs() {
   const [selectedEndpoint, setSelectedEndpoint] = useState("agents");

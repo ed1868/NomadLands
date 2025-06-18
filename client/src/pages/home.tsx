@@ -1,6 +1,7 @@
 import Navigation from "@/components/navigation";
 import HeroSection from "@/components/hero-section";
 import AgentMarketplace from "@/components/agent-marketplace";
+import UsedBySection from "@/components/used-by-section";
 import FeaturesSection from "@/components/features-section";
 import Footer from "@/components/footer";
 import FloatingCTA from "@/components/floating-cta";
@@ -11,6 +12,7 @@ export default function Home() {
       <Navigation />
       <HeroSection />
       <AgentMarketplace />
+      <UsedBySection />
       <FeaturesSection />
       <Footer />
       <FloatingCTA />

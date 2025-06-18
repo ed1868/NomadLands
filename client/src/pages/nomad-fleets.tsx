@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ArrowRight, Users, Zap, Shield, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import Navigation from "@/components/navigation";
 
 export default function NomadFleets() {
   const [selectedFleet, setSelectedFleet] = useState("enterprise");
@@ -38,6 +39,7 @@ export default function NomadFleets() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-emerald-950/10">
+      <Navigation />
       <div className="max-w-7xl mx-auto px-6 py-20">
         {/* Header */}
         <div className="text-center mb-20">
