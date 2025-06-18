@@ -24,10 +24,18 @@ export default function PhoneVerification() {
 
   const sendCodeMutation = useMutation({
     mutationFn: async ({ phoneNumber }: { phoneNumber: string }) => {
-      await apiRequest(`/api/user/${address}/send-verification`, {
+      const response = await fetch(`/api/user/${address}/send-verification`, {
         method: "POST",
-        body: { phoneNumber },
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ phoneNumber }),
       });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to send verification code");
+      }
+      return response.json();
     },
     onSuccess: () => {
       setIsCodeSent(true);
@@ -47,10 +55,18 @@ export default function PhoneVerification() {
 
   const verifyCodeMutation = useMutation({
     mutationFn: async ({ code }: { code: string }) => {
-      await apiRequest(`/api/user/${address}/verify-phone`, {
+      const response = await fetch(`/api/user/${address}/verify-phone`, {
         method: "POST",
-        body: { code },
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ code }),
       });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to verify phone");
+      }
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/auth/user/${address}`] });
@@ -95,7 +111,7 @@ export default function PhoneVerification() {
     verifyCodeMutation.mutate({ code: verificationCode });
   };
 
-  if (userProfile?.phoneVerified) {
+  if ((userProfile as any)?.phoneVerified) {
     return (
       <Card className="bg-black/40 border-gray-800">
         <CardHeader>
@@ -109,7 +125,7 @@ export default function PhoneVerification() {
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-between">
-            <span className="text-gray-300">{userProfile.phoneNumber}</span>
+            <span className="text-gray-300">{(userProfile as any)?.phoneNumber}</span>
             <Badge className="bg-emerald-900/40 text-emerald-400 border-emerald-700">
               Verified
             </Badge>

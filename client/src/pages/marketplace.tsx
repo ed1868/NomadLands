@@ -57,13 +57,13 @@ export default function Marketplace() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-emerald-950/10">
       <Navigation />
-      <div className="max-w-7xl mx-auto px-6 py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-7xl font-extralight mb-8 text-gray-200 tracking-wide fade-in-luxury">
+        <div className="text-center mb-12 sm:mb-16">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-extralight mb-6 sm:mb-8 text-gray-200 tracking-wide fade-in-luxury">
             Agent Marketplace
           </h1>
-          <p className="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto font-extralight leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto font-extralight leading-relaxed px-4">
             Discover, deploy, and command your AI workforce.
             <br className="hidden md:block" />
             <span className="knight-text font-light">Every agent crafted for precision.</span>
@@ -71,8 +71,8 @@ export default function Marketplace() {
         </div>
 
         {/* Search and Filters */}
-        <div className="bg-black/40 border border-gray-800 rounded-lg p-6 mb-12 backdrop-blur-sm">
-          <div className="flex flex-col lg:flex-row gap-6">
+        <div className="bg-black/40 border border-gray-800 rounded-lg p-4 sm:p-6 mb-8 sm:mb-12 backdrop-blur-sm">
+          <div className="flex flex-col sm:flex-row lg:flex-row gap-4 sm:gap-6">
             {/* Search */}
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
