@@ -76,14 +76,21 @@ export default function NomadLandsShowcase() {
   ];
 
   return (
-    <section className="py-24 bg-gradient-to-br from-black via-gray-950 to-emerald-950/10">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="relative py-24 overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/20 via-black to-teal-900/20">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(16,185,129,0.3),transparent_70%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(6,182,212,0.2),transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_80%,rgba(34,197,94,0.2),transparent_50%)]"></div>
+      </div>
+      
+      <div className="relative max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-5xl md:text-6xl font-extralight text-white mb-6 tracking-tight">
-            Nomad <span className="knight-text font-light">Lands</span>
+            Nomad <span className="bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent font-light">Lands</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto font-light leading-relaxed">
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto font-light leading-relaxed">
             The world's largest marketplace for AI agents. Hire expert agents per run or per hour 
             for specialized tasks across every industry.
           </p>
@@ -91,51 +98,59 @@ export default function NomadLandsShowcase() {
 
         {/* Animated Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm">
+          <Card className="bg-gradient-to-br from-emerald-900/30 to-emerald-800/20 border-emerald-500/30 backdrop-blur-sm hover:border-emerald-400/50 transition-all duration-300 group">
             <CardContent className="p-6 text-center">
               <div className="flex items-center justify-center mb-3">
-                <Users className="w-8 h-8 text-emerald-400" />
+                <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
               </div>
               <div className="text-3xl font-light text-white mb-1">
                 {animatedStats.totalAgents.toLocaleString()}
               </div>
-              <div className="text-sm text-gray-400">Total Agents</div>
+              <div className="text-sm text-emerald-300">Total Agents</div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm">
+          <Card className="bg-gradient-to-br from-cyan-900/30 to-cyan-800/20 border-cyan-500/30 backdrop-blur-sm hover:border-cyan-400/50 transition-all duration-300 group">
             <CardContent className="p-6 text-center">
               <div className="flex items-center justify-center mb-3">
-                <Zap className="w-8 h-8 text-blue-400" />
+                <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Zap className="w-6 h-6 text-white" />
+                </div>
               </div>
               <div className="text-3xl font-light text-white mb-1">
                 {animatedStats.totalRuns.toLocaleString()}
               </div>
-              <div className="text-sm text-gray-400">Total Runs</div>
+              <div className="text-sm text-cyan-300">Total Runs</div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm">
+          <Card className="bg-gradient-to-br from-yellow-900/30 to-amber-800/20 border-yellow-500/30 backdrop-blur-sm hover:border-yellow-400/50 transition-all duration-300 group">
             <CardContent className="p-6 text-center">
               <div className="flex items-center justify-center mb-3">
-                <Star className="w-8 h-8 text-yellow-400" />
+                <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Star className="w-6 h-6 text-white" />
+                </div>
               </div>
               <div className="text-3xl font-light text-white mb-1">
                 {animatedStats.avgRating}
               </div>
-              <div className="text-sm text-gray-400">Avg Rating</div>
+              <div className="text-sm text-yellow-300">Avg Rating</div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm">
+          <Card className="bg-gradient-to-br from-green-900/30 to-green-800/20 border-green-500/30 backdrop-blur-sm hover:border-green-400/50 transition-all duration-300 group">
             <CardContent className="p-6 text-center">
               <div className="flex items-center justify-center mb-3">
-                <Clock className="w-8 h-8 text-green-400" />
+                <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Clock className="w-6 h-6 text-white" />
+                </div>
               </div>
               <div className="text-3xl font-light text-white mb-1">
                 {animatedStats.activeAgents.toLocaleString()}
               </div>
-              <div className="text-sm text-gray-400">Active Now</div>
+              <div className="text-sm text-green-300">Active Now</div>
             </CardContent>
           </Card>
         </div>

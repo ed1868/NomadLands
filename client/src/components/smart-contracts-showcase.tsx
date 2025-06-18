@@ -83,14 +83,21 @@ export default function SmartContractsShowcase() {
   ];
 
   return (
-    <section className="py-24 bg-gradient-to-br from-black via-gray-950 to-blue-950/10">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="relative py-24 overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-black to-purple-900/20">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(59,130,246,0.3),transparent_70%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,rgba(147,51,234,0.2),transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_10%,rgba(168,85,247,0.2),transparent_50%)]"></div>
+      </div>
+      
+      <div className="relative max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-5xl md:text-6xl font-extralight text-white mb-6 tracking-tight">
-            Smart <span className="knight-text font-light">Contracts</span>
+            Smart <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent font-light">Contracts</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto font-light leading-relaxed">
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto font-light leading-relaxed">
             Battle-tested smart contracts for secure transactions. Verified, audited, and optimized 
             for the decentralized freelancer economy.
           </p>
@@ -98,51 +105,59 @@ export default function SmartContractsShowcase() {
 
         {/* Animated Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm">
+          <Card className="bg-gradient-to-br from-blue-900/30 to-blue-800/20 border-blue-500/30 backdrop-blur-sm hover:border-blue-400/50 transition-all duration-300 group">
             <CardContent className="p-6 text-center">
               <div className="flex items-center justify-center mb-3">
-                <Code className="w-8 h-8 text-blue-400" />
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Code className="w-6 h-6 text-white" />
+                </div>
               </div>
               <div className="text-3xl font-light text-white mb-1">
                 {animatedStats.totalContracts}
               </div>
-              <div className="text-sm text-gray-400">Smart Contracts</div>
+              <div className="text-sm text-blue-300">Smart Contracts</div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm">
+          <Card className="bg-gradient-to-br from-green-900/30 to-green-800/20 border-green-500/30 backdrop-blur-sm hover:border-green-400/50 transition-all duration-300 group">
             <CardContent className="p-6 text-center">
               <div className="flex items-center justify-center mb-3">
-                <TrendingUp className="w-8 h-8 text-green-400" />
+                <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <TrendingUp className="w-6 h-6 text-white" />
+                </div>
               </div>
               <div className="text-3xl font-light text-white mb-1">
                 ${animatedStats.totalVolume}M
               </div>
-              <div className="text-sm text-gray-400">Total Volume</div>
+              <div className="text-sm text-green-300">Total Volume</div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm">
+          <Card className="bg-gradient-to-br from-amber-900/30 to-yellow-800/20 border-amber-500/30 backdrop-blur-sm hover:border-amber-400/50 transition-all duration-300 group">
             <CardContent className="p-6 text-center">
               <div className="flex items-center justify-center mb-3">
-                <Zap className="w-8 h-8 text-yellow-400" />
+                <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Zap className="w-6 h-6 text-white" />
+                </div>
               </div>
               <div className="text-3xl font-light text-white mb-1">
                 {animatedStats.gasEfficiency}%
               </div>
-              <div className="text-sm text-gray-400">Gas Efficiency</div>
+              <div className="text-sm text-amber-300">Gas Efficiency</div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-900/50 border-gray-700 backdrop-blur-sm">
+          <Card className="bg-gradient-to-br from-emerald-900/30 to-teal-800/20 border-emerald-500/30 backdrop-blur-sm hover:border-emerald-400/50 transition-all duration-300 group">
             <CardContent className="p-6 text-center">
               <div className="flex items-center justify-center mb-3">
-                <Shield className="w-8 h-8 text-emerald-400" />
+                <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Shield className="w-6 h-6 text-white" />
+                </div>
               </div>
               <div className="text-3xl font-light text-white mb-1">
                 {animatedStats.verifiedContracts}
               </div>
-              <div className="text-sm text-gray-400">Verified</div>
+              <div className="text-sm text-emerald-300">Verified</div>
             </CardContent>
           </Card>
         </div>

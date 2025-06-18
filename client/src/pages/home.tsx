@@ -17,7 +17,6 @@ export default function Home() {
       <NomadLandsShowcase />
       <SmartContractsShowcase />
       <UsedBySection />
-      <FeaturesSection />
       <Footer />
       <FloatingCTA />
     </div>
