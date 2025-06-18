@@ -148,7 +148,7 @@ export class DatabaseStorage implements IStorage {
 
   async getAgentsByTag(tagSlug: string): Promise<Agent[]> {
     return await db
-      .select({ agents })
+      .select()
       .from(agents)
       .innerJoin(agentTagRelations, eq(agents.id, agentTagRelations.agentId))
       .innerJoin(agentTags, eq(agentTagRelations.tagId, agentTags.id))

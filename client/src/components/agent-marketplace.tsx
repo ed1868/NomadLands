@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import AgentCard from "@/components/agent-card";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import type { Agent, AgentTag } from "@shared/schema";
 
 export default function AgentMarketplace() {
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [filteredAgents, setFilteredAgents] = useState<Agent[]>([]);
 
   const { data: allAgents = [], isLoading: agentsLoading } = useQuery<Agent[]>({
     queryKey: ["/api/agents"],
@@ -15,13 +16,27 @@ export default function AgentMarketplace() {
     queryKey: ["/api/tags"],
   });
 
-  const { data: taggedAgents = [], isLoading: taggedLoading } = useQuery<Agent[]>({
-    queryKey: ["/api/agents/tag", selectedCategory],
-    enabled: selectedCategory !== "all",
+  // Fetch agents by tag when a specific tag is selected
+  const { data: taggedAgents = [], isLoading: taggedLoading, refetch: refetchTaggedAgents } = useQuery<Agent[]>({
+    queryKey: [`/api/agents/tag/${selectedCategory}`],
+    enabled: false, // Disable automatic execution
   });
 
-  const filteredAgents = selectedCategory === "all" ? allAgents : taggedAgents;
-  const isLoading = agentsLoading || tagsLoading || taggedLoading;
+  // Handle filtering logic
+  useEffect(() => {
+    if (selectedCategory === "all") {
+      setFilteredAgents(allAgents);
+    } else if (selectedCategory && selectedCategory !== "") {
+      // Manually trigger the tag query
+      refetchTaggedAgents().then((result) => {
+        if (result.data) {
+          setFilteredAgents(result.data);
+        }
+      });
+    }
+  }, [selectedCategory, allAgents, refetchTaggedAgents]);
+
+  const isLoading = agentsLoading || tagsLoading;
 
   return (
     <section id="marketplace" className="py-20 bg-gradient-to-br from-black via-gray-950 to-emerald-950/20">
