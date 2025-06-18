@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useWallet } from "@/hooks/use-wallet";
-import { PhoneVerification } from "@/components/phone-verification";
+import PhoneVerification from "@/components/phone-verification";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -36,7 +36,7 @@ export default function SignupNew() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isPhoneVerified, setIsPhoneVerified] = useState(false);
-  const [userId, setUserId] = useState<number | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const { toast } = useToast();
   const { connectWallet, address, isConnected } = useWallet();
 
@@ -54,7 +54,8 @@ export default function SignupNew() {
     mutationFn: async (data: SignupForm & { walletAddress?: string }) => {
       return await apiRequest("POST", "/api/auth/signup", data);
     },
-    onSuccess: (data) => {
+    onSuccess: (response) => {
+      const data = response.json ? response.json() : response;
       setUserId(data.user.id);
       setStep(2);
       toast({

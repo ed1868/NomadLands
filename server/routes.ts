@@ -286,6 +286,143 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Authentication routes
+  app.post("/api/auth/signup", async (req, res) => {
+    try {
+      const validatedData = signupUserSchema.parse(req.body);
+      
+      // Check if user already exists
+      const existingEmail = await storage.getUserByEmail(validatedData.email);
+      if (existingEmail) {
+        return res.status(400).json({ message: "Email already registered" });
+      }
+      
+      const existingUsername = await storage.getUserByUsername(validatedData.username);
+      if (existingUsername) {
+        return res.status(400).json({ message: "Username already taken" });
+      }
+      
+      // Hash password
+      const hashedPassword = await bcrypt.hash(validatedData.password, 12);
+      
+      // Create user
+      const user = await storage.createUser({
+        email: validatedData.email,
+        username: validatedData.username,
+        firstName: validatedData.firstName,
+        lastName: validatedData.lastName,
+        phoneNumber: validatedData.phoneNumber,
+        password: hashedPassword,
+        walletAddress: validatedData.walletAddress || null,
+      });
+      
+      // Generate JWT token
+      const token = jwt.sign(
+        { userId: user.id, email: user.email },
+        process.env.JWT_SECRET || "fallback-secret",
+        { expiresIn: "7d" }
+      );
+      
+      res.json({ 
+        user: { ...user, password: undefined }, 
+        token 
+      });
+    } catch (error: any) {
+      console.error("Signup error:", error);
+      res.status(400).json({ message: error.message || "Signup failed" });
+    }
+  });
+
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const validatedData = loginUserSchema.parse(req.body);
+      
+      const user = await storage.getUserByEmail(validatedData.email);
+      if (!user || !user.password) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+      
+      const isValidPassword = await bcrypt.compare(validatedData.password, user.password);
+      if (!isValidPassword) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+      
+      // Update last login
+      await storage.updateLastLogin(user.id);
+      
+      // Generate JWT token
+      const token = jwt.sign(
+        { userId: user.id, email: user.email },
+        process.env.JWT_SECRET || "fallback-secret",
+        { expiresIn: "7d" }
+      );
+      
+      res.json({ 
+        user: { ...user, password: undefined }, 
+        token 
+      });
+    } catch (error: any) {
+      console.error("Login error:", error);
+      res.status(400).json({ message: error.message || "Login failed" });
+    }
+  });
+
+  // Phone verification for new signup system
+  app.post("/api/auth/send-verification", async (req, res) => {
+    try {
+      const { userId, phoneNumber } = req.body;
+      
+      // Generate 6-digit verification code
+      const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+      const expiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+      
+      // Update user with verification code
+      await storage.updateUserPhone(userId, phoneNumber, verificationCode, expiry);
+      
+      // Send SMS using TextBelt API
+      if (process.env.TEXTBELT_API_KEY) {
+        const response = await fetch("https://textbelt.com/text", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            phone: phoneNumber,
+            message: `Your AI Nomads verification code is: ${verificationCode}`,
+            key: process.env.TEXTBELT_API_KEY,
+          }),
+        });
+        
+        const result = await response.json();
+        if (!result.success) {
+          console.error("SMS sending failed:", result);
+          return res.status(500).json({ message: "Failed to send verification code" });
+        }
+      } else {
+        console.log(`Verification code for ${phoneNumber}: ${verificationCode}`);
+      }
+      
+      res.json({ message: "Verification code sent successfully" });
+    } catch (error: any) {
+      console.error("Send verification error:", error);
+      res.status(500).json({ message: "Failed to send verification code" });
+    }
+  });
+
+  app.post("/api/auth/verify-phone", async (req, res) => {
+    try {
+      const { userId, code } = req.body;
+      
+      const isValid = await storage.verifyUserPhone(userId, code);
+      if (!isValid) {
+        return res.status(400).json({ message: "Invalid or expired verification code" });
+      }
+      
+      res.json({ message: "Phone verified successfully" });
+    } catch (error: any) {
+      console.error("Phone verification error:", error);
+      res.status(500).json({ message: "Phone verification failed" });
+    }
+  });
+
   app.post("/api/user/:walletAddress/verify-phone", async (req, res) => {
     try {
       const { walletAddress } = req.params;
