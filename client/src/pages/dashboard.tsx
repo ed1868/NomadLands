@@ -63,7 +63,9 @@ import {
   Coins,
   ChevronLeft,
   ChevronRight,
-  Menu
+  Menu,
+  Globe,
+  Plus
 } from "lucide-react";
 
 // Custom Agent Node Component with visible handles and click functionality
