@@ -220,28 +220,31 @@ export default function Dashboard() {
   const totalHired = mockPerformanceData.reduce((sum, month) => sum + month.hired, 0);
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-[#0a0b0e] text-white" style={{
+      backgroundImage: `linear-gradient(135deg, #0a0b0e 0%, #1a1b21 25%, #0f1015 50%, #1e1f26 75%, #0a0b0e 100%)`,
+      backgroundAttachment: 'fixed'
+    }}>
       <Navigation />
 
-      <div className="flex">
+      <div className="flex pt-20">
         {/* Left Sidebar */}
-        <div className="w-80 min-h-screen bg-gradient-to-b from-gray-900/60 via-gray-900/40 to-gray-900/60 backdrop-blur-sm border-r border-gray-800/50">
+        <div className="w-80 min-h-screen bg-gradient-to-b from-gray-950/80 via-black/60 to-gray-950/80 backdrop-blur-lg border-r border-gray-700/30">
           <div className="p-6">
             {/* User Info */}
             <div className="mb-8">
               <div className="flex items-center space-x-4 mb-4">
-                <Avatar className="w-16 h-16 border-2 border-emerald-500/30">
+                <Avatar className="w-16 h-16 border-2 border-emerald-400/50 shadow-lg shadow-emerald-500/20">
                   <AvatarImage src={user.profileImageUrl || ''} />
-                  <AvatarFallback className="bg-emerald-600 text-white text-xl">
+                  <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white text-xl font-bold">
                     {user.firstName?.[0] || 'U'}{user.lastName?.[0] || 'S'}
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <h3 className="text-xl font-semibold text-white">
+                  <h3 className="text-xl font-bold text-white tracking-tight">
                     {user.firstName} {user.lastName}
                   </h3>
-                  <p className="text-gray-400 text-sm">{user.email}</p>
-                  <Badge variant="outline" className="mt-1 border-emerald-500 text-emerald-400 text-xs">
+                  <p className="text-gray-300 text-sm font-medium">{user.email}</p>
+                  <Badge variant="outline" className="mt-1 border-emerald-400 text-emerald-300 text-xs font-semibold bg-emerald-500/10">
                     {user.subscriptionPlan || 'Premium'} Plan
                   </Badge>
                 </div>
@@ -252,10 +255,10 @@ export default function Dashboard() {
             <nav className="space-y-2">
               <button
                 onClick={() => setActiveTab('wallet')}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all ${
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
                   activeTab === 'wallet' 
-                    ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30' 
-                    : 'text-gray-300 hover:bg-gray-800/50 hover:text-white'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/10' 
+                    : 'text-gray-300 hover:bg-gray-800/60 hover:text-white hover:border-gray-600/30 border border-transparent'
                 }`}
               >
                 <Wallet className="w-5 h-5" />
@@ -264,10 +267,10 @@ export default function Dashboard() {
 
               <button
                 onClick={() => setActiveTab('nomad')}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all ${
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
                   activeTab === 'nomad' 
-                    ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30' 
-                    : 'text-gray-300 hover:bg-gray-800/50 hover:text-white'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/10' 
+                    : 'text-gray-300 hover:bg-gray-800/60 hover:text-white hover:border-gray-600/30 border border-transparent'
                 }`}
               >
                 <MapPin className="w-5 h-5" />
@@ -276,10 +279,10 @@ export default function Dashboard() {
 
               <button
                 onClick={() => setActiveTab('contracts')}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all ${
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
                   activeTab === 'contracts' 
-                    ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30' 
-                    : 'text-gray-300 hover:bg-gray-800/50 hover:text-white'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/10' 
+                    : 'text-gray-300 hover:bg-gray-800/60 hover:text-white hover:border-gray-600/30 border border-transparent'
                 }`}
               >
                 <FileText className="w-5 h-5" />
@@ -288,10 +291,10 @@ export default function Dashboard() {
 
               <button
                 onClick={() => setActiveTab('agents')}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all ${
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
                   activeTab === 'agents' 
-                    ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30' 
-                    : 'text-gray-300 hover:bg-gray-800/50 hover:text-white'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/10' 
+                    : 'text-gray-300 hover:bg-gray-800/60 hover:text-white hover:border-gray-600/30 border border-transparent'
                 }`}
               >
                 <Bot className="w-5 h-5" />
@@ -300,10 +303,10 @@ export default function Dashboard() {
 
               <button
                 onClick={() => setActiveTab('performance')}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all ${
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
                   activeTab === 'performance' 
-                    ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30' 
-                    : 'text-gray-300 hover:bg-gray-800/50 hover:text-white'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/10' 
+                    : 'text-gray-300 hover:bg-gray-800/60 hover:text-white hover:border-gray-600/30 border border-transparent'
                 }`}
               >
                 <BarChart3 className="w-5 h-5" />
@@ -314,19 +317,19 @@ export default function Dashboard() {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-8">
+        <div className="flex-1 p-8 bg-gradient-to-br from-gray-950/30 via-black/20 to-gray-900/40">
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
-              <p className="text-gray-400">Manage your AI agents, contracts, and files in the Nomad Lands ecosystem</p>
+              <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">Dashboard</h1>
+              <p className="text-gray-300 font-medium">Manage your AI agents, contracts, and files in the Nomad Lands ecosystem</p>
             </div>
             <div className="flex space-x-3">
-              <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800">
+              <Button variant="outline" className="border-gray-600/50 text-gray-300 hover:bg-gray-800/60 hover:border-gray-500 font-semibold">
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Refresh
               </Button>
-              <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800">
+              <Button className="bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white shadow-lg shadow-emerald-500/20 font-semibold border-0">
                 <Download className="w-4 h-4 mr-2" />
                 Export
               </Button>
@@ -338,24 +341,24 @@ export default function Dashboard() {
             <div className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Account Information */}
-                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg shadow-xl">
                   <CardHeader>
-                    <CardTitle className="text-white flex items-center">
-                      <User className="w-5 h-5 mr-2" />
+                    <CardTitle className="text-white flex items-center font-bold text-lg tracking-tight">
+                      <User className="w-5 h-5 mr-2 text-emerald-400" />
                       Account Information
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label className="text-gray-400 text-sm">Wallet Address</Label>
-                        <p className="text-white font-mono text-sm break-all">
+                        <Label className="text-gray-300 text-sm font-semibold">Wallet Address</Label>
+                        <p className="text-white font-mono text-sm break-all bg-gray-800/50 p-2 rounded mt-1">
                           {address || 'Not connected'}
                         </p>
                       </div>
                       <div>
-                        <Label className="text-gray-400 text-sm">Total Agents Owned</Label>
-                        <p className="text-white text-2xl font-bold">{Array.isArray(userPurchases) ? userPurchases.length : 0}</p>
+                        <Label className="text-gray-300 text-sm font-semibold">Total Agents Owned</Label>
+                        <p className="text-emerald-400 text-2xl font-bold tracking-tight">{Array.isArray(userPurchases) ? userPurchases.length : 0}</p>
                       </div>
                     </div>
                   </CardContent>
