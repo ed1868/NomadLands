@@ -57,7 +57,10 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Timer,
-  Coins
+  Coins,
+  Menu,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 
 // Custom Agent Node Component with visible handles
@@ -298,6 +301,7 @@ export default function Dashboard() {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [isConnecting, setIsConnecting] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>("sales-domination");
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [departmentCount, setDepartmentCount] = useState<{[key: string]: number}>({
     'Executive Director': 0,
     'Department Manager': 0,
@@ -562,17 +566,17 @@ export default function Dashboard() {
     }}>
       {/* Top Navigation - Full Width */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-transparent backdrop-blur-sm border-b border-gray-800/30">
-        <div className="flex items-center justify-between px-8 py-4">
+        <div className="flex items-center justify-between px-4 lg:px-8 py-4">
           {/* Left - Logo */}
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">AN</span>
             </div>
-            <span className="text-2xl font-bold text-white tracking-tight">AI Nomads</span>
+            <span className="text-xl lg:text-2xl font-bold text-white tracking-tight">AI Nomads</span>
           </div>
 
-          {/* Center - Navigation Tabs */}
-          <nav className="flex items-center space-x-1">
+          {/* Center - Navigation Tabs (Hidden on mobile) */}
+          <nav className="hidden lg:flex items-center space-x-1">
             <button 
               onClick={() => window.location.href = '/marketplace'} 
               className="px-4 py-2 text-gray-300 hover:text-emerald-400 font-medium transition-colors"
@@ -605,8 +609,14 @@ export default function Dashboard() {
             </button>
           </nav>
 
-          {/* Right - User Menu */}
+          {/* Right - Mobile Menu Button & User Menu */}
           <div className="flex items-center space-x-4">
+            <button
+              onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+              className="lg:hidden p-2 text-gray-300 hover:text-emerald-400 transition-colors"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar className="w-10 h-10 border border-gray-700/50 cursor-pointer hover:border-emerald-500/60 transition-colors">
@@ -646,14 +656,55 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="flex pt-16">
+      <div className="flex pt-16 relative">
+        {/* Mobile Sidebar Overlay */}
+        {isMobileSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setIsMobileSidebarOpen(false)}
+          />
+        )}
+
         {/* Left Sidebar */}
-        <div className="w-80 min-h-screen bg-transparent backdrop-blur-sm">
-          <div className="p-6">
+        <div className={`
+          ${isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
+          lg:translate-x-0 fixed lg:relative z-50 lg:z-auto
+          w-80 min-h-screen bg-black/95 lg:bg-transparent backdrop-blur-sm
+          transition-transform duration-300 ease-in-out
+          border-r border-gray-700/30 lg:border-r-0
+        `}>
+          <div className="p-4 lg:p-6">
+            {/* Mobile Navigation Links */}
+            <div className="lg:hidden mb-6 border-b border-gray-700/30 pb-4">
+              <button 
+                onClick={() => { window.location.href = '/marketplace'; setIsMobileSidebarOpen(false); }} 
+                className="w-full px-4 py-3 text-left text-gray-300 hover:text-emerald-400 font-medium transition-colors border-b border-gray-700/20"
+              >
+                Marketplace
+              </button>
+              <button 
+                onClick={() => { window.location.href = '/nomad-lands'; setIsMobileSidebarOpen(false); }} 
+                className="w-full px-4 py-3 text-left text-gray-300 hover:text-emerald-400 font-medium transition-colors border-b border-gray-700/20"
+              >
+                Nomad Lands
+              </button>
+              <button 
+                onClick={() => { window.location.href = '/smart-contracts'; setIsMobileSidebarOpen(false); }} 
+                className="w-full px-4 py-3 text-left text-gray-300 hover:text-emerald-400 font-medium transition-colors border-b border-gray-700/20"
+              >
+                Smart Contracts
+              </button>
+              <button 
+                onClick={() => { window.location.href = '/api-docs'; setIsMobileSidebarOpen(false); }} 
+                className="w-full px-4 py-3 text-left text-gray-300 hover:text-emerald-400 font-medium transition-colors"
+              >
+                API Docs
+              </button>
+            </div>
             {/* Navigation Tabs */}
             <nav className="space-y-2 mt-4">
               <button
-                onClick={() => setActiveTab('wallet')}
+                onClick={() => { setActiveTab('wallet'); setIsMobileSidebarOpen(false); }}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
                   activeTab === 'wallet' 
                     ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20' 
@@ -665,7 +716,7 @@ export default function Dashboard() {
               </button>
 
               <button
-                onClick={() => setActiveTab('nomad')}
+                onClick={() => { setActiveTab('nomad'); setIsMobileSidebarOpen(false); }}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
                   activeTab === 'nomad' 
                     ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20' 
@@ -677,7 +728,7 @@ export default function Dashboard() {
               </button>
 
               <button
-                onClick={() => setActiveTab('contracts')}
+                onClick={() => { setActiveTab('contracts'); setIsMobileSidebarOpen(false); }}
                 className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
                   activeTab === 'contracts' 
                     ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20' 
