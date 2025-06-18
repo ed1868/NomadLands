@@ -15,7 +15,9 @@ import ReactFlow, {
   Connection,
   BackgroundVariant,
   MarkerType,
-  Position
+  Position,
+  Handle,
+  NodeTypes
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { 
@@ -57,6 +59,73 @@ import {
   Timer,
   Coins
 } from "lucide-react";
+
+// Custom Agent Node Component with visible handles
+const AgentNode = ({ data }: { data: any }) => {
+  return (
+    <div className="relative">
+      {/* Connection Handles */}
+      <Handle
+        type="target"
+        position={Position.Top}
+        className="w-4 h-4 bg-emerald-500 border-2 border-emerald-300 shadow-lg shadow-emerald-500/50 hover:bg-emerald-400 transition-colors"
+        style={{ background: '#10b981', top: -8 }}
+      />
+      <Handle
+        type="target"
+        position={Position.Left}
+        className="w-4 h-4 bg-emerald-500 border-2 border-emerald-300 shadow-lg shadow-emerald-500/50 hover:bg-emerald-400 transition-colors"
+        style={{ background: '#10b981', left: -8 }}
+      />
+      
+      {/* Node Content */}
+      <div className="bg-gradient-to-br from-gray-900/95 to-gray-800/95 border-2 border-emerald-500/40 rounded-xl p-4 min-w-[180px] shadow-2xl backdrop-blur-lg hover:border-emerald-400/60 transition-all duration-300 hover:shadow-emerald-500/20">
+        <div className="flex items-center space-x-3">
+          <div className="text-2xl filter drop-shadow-lg">{data.icon}</div>
+          <div className="flex-1">
+            <div className="font-bold text-white text-sm tracking-wide">{data.type}</div>
+            <div className="text-xs text-emerald-300 opacity-80 mt-0.5">{data.level}</div>
+            {data.description && (
+              <div className="text-xs text-gray-400 opacity-70 mt-1 max-w-[120px] truncate">
+                {data.description}
+              </div>
+            )}
+          </div>
+        </div>
+        
+        {/* Status indicator */}
+        <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-gray-900 shadow-lg animate-pulse"></div>
+        
+        {/* Department badge */}
+        {data.departmentId && (
+          <div className="absolute -bottom-1 -left-1 px-2 py-0.5 bg-purple-600/80 text-white text-xs rounded-md border border-purple-400/40">
+            {data.departmentId}
+          </div>
+        )}
+      </div>
+
+      {/* Output Handles */}
+      <Handle
+        type="source"
+        position={Position.Right}
+        className="w-4 h-4 bg-emerald-500 border-2 border-emerald-300 shadow-lg shadow-emerald-500/50 hover:bg-emerald-400 transition-colors"
+        style={{ background: '#10b981', right: -8 }}
+      />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        className="w-4 h-4 bg-emerald-500 border-2 border-emerald-300 shadow-lg shadow-emerald-500/50 hover:bg-emerald-400 transition-colors"
+        style={{ background: '#10b981', bottom: -8 }}
+      />
+    </div>
+  );
+};
+
+// Node types configuration
+const nodeTypes: NodeTypes = {
+  agentNode: AgentNode,
+};
+
 import {
   Card,
   CardContent,
@@ -251,23 +320,14 @@ export default function Dashboard() {
 
     const newNode: Node = {
       id: `agent-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      type: 'default',
+      type: 'agentNode',
       position,
       data: {
-        label: (
-          <div className={`${agentData.bgColor} ${agentData.borderColor} border-2 rounded-xl p-3 min-w-[160px] backdrop-blur-sm`}>
-            <div className="flex items-center space-x-2 mb-1">
-              <span className="text-xl">{agentData.icon}</span>
-              <div>
-                <h3 className="text-white font-bold text-xs">{agentData.type}</h3>
-                <div className={`text-xs px-2 py-0.5 rounded-full bg-gradient-to-r ${agentData.color} text-black font-medium`}>
-                  {agentData.level}
-                </div>
-              </div>
-            </div>
-            <p className="text-gray-300 text-xs">{agentData.description}</p>
-          </div>
-        ),
+        icon: agentData.icon,
+        type: agentData.type,
+        level: agentData.level,
+        description: agentData.description,
+        departmentId: agentData.departmentId,
         agentType: agentData.type
       },
       sourcePosition: Position.Right,
@@ -376,23 +436,14 @@ export default function Dashboard() {
       
       return {
         id: nodeId,
-        type: 'default',
+        type: 'agentNode',
         position: { x: agent.x, y: agent.y },
         data: {
-          label: (
-            <div className={`${agentType?.bgColor || 'bg-gray-500/20'} ${agentType?.borderColor || 'border-gray-400/40'} border-2 rounded-xl p-3 min-w-[160px] backdrop-blur-sm`}>
-              <div className="flex items-center space-x-2 mb-1">
-                <span className="text-xl">{agentType?.icon || '👤'}</span>
-                <div>
-                  <h3 className="text-white font-bold text-xs">{agent.type}</h3>
-                  <div className={`text-xs px-2 py-0.5 rounded-full bg-gradient-to-r ${agentType?.color || 'from-gray-400 to-gray-300'} text-black font-medium`}>
-                    {agentType?.level || 'Staff'}
-                  </div>
-                </div>
-              </div>
-              <p className="text-gray-300 text-xs">{agentType?.description || 'Team member'}</p>
-            </div>
-          ),
+          icon: agentType?.icon || '👤',
+          type: agent.type,
+          level: agentType?.level || 'Staff',
+          description: agentType?.description || 'Team member',
+          departmentId: `Dept-${index + 1}`,
           agentType: agent.type
         },
         sourcePosition: Position.Right,
