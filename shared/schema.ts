@@ -25,11 +25,12 @@ export const sessions = pgTable(
   (table) => [index("IDX_session_expire").on(table.expire)],
 );
 
-// Users table with Web3 wallet integration
+// Users table with Web3 wallet integration and authentication
 export const users = pgTable("users", {
-  id: varchar("id").primaryKey().notNull(),
-  walletAddress: varchar("wallet_address", { length: 42 }).unique().notNull(),
-  email: varchar("email"),
+  id: serial("id").primaryKey(),
+  walletAddress: varchar("wallet_address", { length: 42 }).unique(),
+  email: varchar("email").unique(),
+  username: varchar("username").unique(),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
@@ -37,6 +38,9 @@ export const users = pgTable("users", {
   phoneVerified: boolean("phone_verified").default(false),
   phoneVerificationCode: varchar("phone_verification_code"),
   phoneVerificationExpiry: timestamp("phone_verification_expiry"),
+  password: varchar("password"), // For non-wallet users
+  isActive: boolean("is_active").default(true),
+  lastLoginAt: timestamp("last_login_at"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -263,18 +267,39 @@ export const userFiles = pgTable("user_files", {
 export const insertUserSchema = createInsertSchema(users).pick({
   walletAddress: true,
   email: true,
+  username: true,
   firstName: true,
   lastName: true,
   profileImageUrl: true,
+  phoneNumber: true,
+  password: true,
 });
 
 export const upsertUserSchema = createInsertSchema(users).pick({
   id: true,
   walletAddress: true,
   email: true,
+  username: true,
   firstName: true,
   lastName: true,
   profileImageUrl: true,
+  phoneNumber: true,
+  password: true,
+});
+
+export const signupUserSchema = createInsertSchema(users).pick({
+  walletAddress: true,
+  email: true,
+  username: true,
+  firstName: true,
+  lastName: true,
+  phoneNumber: true,
+  password: true,
+}).extend({
+  confirmPassword: z.string().min(8, "Password must be at least 8 characters"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
 });
 
 export const insertAgentSchema = createInsertSchema(agents).pick({

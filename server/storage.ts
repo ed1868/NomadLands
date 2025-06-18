@@ -23,11 +23,16 @@ import { ethers } from "ethers";
 
 export interface IStorage {
   // User operations
-  getUser(id: string): Promise<User | undefined>;
+  getUser(id: number): Promise<User | undefined>;
   getUserByWallet(walletAddress: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
   upsertUser(user: UpsertUser): Promise<User>;
-  updateUserPhone(userId: string, phoneNumber: string, verificationCode: string, expiry: Date): Promise<void>;
-  verifyUserPhone(userId: string, code: string): Promise<boolean>;
+  updateUserPhone(userId: number, phoneNumber: string, verificationCode: string, expiry: Date): Promise<void>;
+  verifyUserPhone(userId: number, code: string): Promise<boolean>;
+  updateUserPassword(userId: number, hashedPassword: string): Promise<void>;
+  updateLastLogin(userId: number): Promise<void>;
   
   // Agent operations
   getAllAgents(): Promise<Agent[]>;
