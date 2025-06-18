@@ -1,9 +1,10 @@
-import { useState } from "react";
-import { Menu, X, Bot } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Menu, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -13,45 +14,75 @@ export default function Navigation() {
     }
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <nav className="fixed top-0 w-full z-50 glass-card">
-      <div className="max-w-7xl mx-auto px-6 py-4">
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${
+      isScrolled 
+        ? 'bg-white/95 backdrop-blur-md shadow-xl border-b border-emerald-100/20' 
+        : 'bg-transparent'
+    }`}>
+      <div className="max-w-7xl mx-auto px-8 py-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 sage-gradient rounded-2xl flex items-center justify-center animate-breathe">
-              <Bot className="text-white text-lg" />
+          <div className="flex items-center space-x-4">
+            <div className={`w-10 h-10 forest-gradient rounded-xl flex items-center justify-center transition-all duration-300 ${isScrolled ? 'shadow-lg' : ''}`}>
+              <Sparkles className="text-white text-lg" />
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent">
+            <span className={`text-2xl font-light tracking-tight transition-all duration-300 ${
+              isScrolled 
+                ? 'text-emerald-900' 
+                : 'text-white drop-shadow-sm'
+            }`}>
               AI Nomads
             </span>
           </div>
           
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-12">
             <button
               onClick={() => scrollToSection('marketplace')}
-              className="text-muted-foreground hover:text-foreground transition-colors duration-300"
+              className={`font-light tracking-wide transition-all duration-300 hover:scale-105 ${
+                isScrolled 
+                  ? 'text-emerald-600 hover:text-emerald-900' 
+                  : 'text-emerald-100 hover:text-white'
+              }`}
             >
-              Marketplace
-            </button>
-            <button
-              onClick={() => scrollToSection('agents')}
-              className="text-muted-foreground hover:text-foreground transition-colors duration-300"
-            >
-              Agents
+              Collection
             </button>
             <button
               onClick={() => scrollToSection('features')}
-              className="text-muted-foreground hover:text-foreground transition-colors duration-300"
+              className={`font-light tracking-wide transition-all duration-300 hover:scale-105 ${
+                isScrolled 
+                  ? 'text-emerald-600 hover:text-emerald-900' 
+                  : 'text-emerald-100 hover:text-white'
+              }`}
             >
               Features
             </button>
-            <Button className="sage-gradient hover:shadow-lg hover:shadow-green-500/20 transition-all duration-300 text-white rounded-full px-6">
-              Get Started
+            <button
+              onClick={() => scrollToSection('features')}
+              className={`font-light tracking-wide transition-all duration-300 hover:scale-105 ${
+                isScrolled 
+                  ? 'text-emerald-600 hover:text-emerald-900' 
+                  : 'text-emerald-100 hover:text-white'
+              }`}
+            >
+              Story
+            </button>
+            <Button className={`${isScrolled ? 'forest-gradient text-white' : 'bg-white/95 hover:bg-white text-emerald-900'} hover:shadow-xl hover:scale-105 transition-all duration-500 border-none rounded-full px-8 py-3 font-medium magnetic-hover`}>
+              Start Journey
             </Button>
           </div>
           
           <button
-            className="md:hidden text-white"
+            className={`md:hidden transition-colors duration-300 ${
+              isScrolled ? 'text-emerald-900' : 'text-white'
+            }`}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -60,28 +91,28 @@ export default function Navigation() {
         
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-white/10">
-            <div className="flex flex-col space-y-4 pt-4">
+          <div className="md:hidden mt-6 pb-6 border-t border-stone-200/30">
+            <div className="flex flex-col space-y-6 pt-6">
               <button
                 onClick={() => scrollToSection('marketplace')}
-                className="text-gray-300 hover:text-white transition-colors text-left"
+                className="text-stone-600 hover:text-stone-900 transition-colors text-left font-light tracking-wide"
               >
-                Marketplace
-              </button>
-              <button
-                onClick={() => scrollToSection('agents')}
-                className="text-gray-300 hover:text-white transition-colors text-left"
-              >
-                Agents
+                Collection
               </button>
               <button
                 onClick={() => scrollToSection('features')}
-                className="text-gray-300 hover:text-white transition-colors text-left"
+                className="text-stone-600 hover:text-stone-900 transition-colors text-left font-light tracking-wide"
               >
                 Features
               </button>
-              <Button className="bg-gradient-to-r from-purple-500 to-cyan-500 w-full">
-                Get Started
+              <button
+                onClick={() => scrollToSection('features')}
+                className="text-stone-600 hover:text-stone-900 transition-colors text-left font-light tracking-wide"
+              >
+                Story
+              </button>
+              <Button className="premium-gradient w-full py-4 rounded-full text-stone-900 font-medium">
+                Start Journey
               </Button>
             </div>
           </div>

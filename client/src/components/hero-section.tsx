@@ -1,8 +1,10 @@
-import { Play, Rocket } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Carousel3D from "@/components/carousel-3d";
 
 export default function HeroSection() {
+  const [isVisible, setIsVisible] = useState(false);
+
   const scrollToMarketplace = () => {
     const element = document.getElementById('marketplace');
     if (element) {
@@ -10,52 +12,68 @@ export default function HeroSection() {
     }
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 200);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <section className="relative min-h-screen gradient-mesh flex items-center justify-center overflow-hidden">
-      {/* Floating organic elements */}
+    <section className="relative h-screen bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-900 flex items-center justify-center overflow-hidden">
+      {/* Cinematic Fog Overlay */}
+      <div className="absolute inset-0 fog-overlay" />
+      
+      {/* Floating fog effects */}
       <div className="absolute inset-0">
-        <div className="absolute top-20 left-10 w-3 h-3 bg-green-400/40 rounded-full animate-float blur-sm" />
-        <div className="absolute top-40 right-20 w-4 h-4 bg-stone-400/30 rounded-full animate-float blur-sm" style={{ animationDelay: '2s' }} />
-        <div className="absolute bottom-40 left-20 w-2 h-2 bg-rose-300/40 rounded-full animate-float blur-sm" style={{ animationDelay: '4s' }} />
-        <div className="absolute bottom-20 right-10 w-3 h-3 bg-blue-300/30 rounded-full animate-float blur-sm" style={{ animationDelay: '6s' }} />
+        <div className="absolute top-1/4 left-1/6 w-32 h-32 fog-effect rounded-full animate-float-pulse opacity-60" />
+        <div className="absolute top-2/3 right-1/6 w-24 h-24 fog-effect rounded-full animate-float-pulse opacity-40" style={{ animationDelay: '2s' }} />
+        <div className="absolute bottom-1/4 left-1/3 w-40 h-40 fog-effect rounded-full animate-float-pulse opacity-30" style={{ animationDelay: '4s' }} />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
-        <div className="animate-fade-in-up">
-          <h1 className="text-6xl md:text-8xl font-light mb-8 leading-tight tracking-tight">
-            Mindful{' '}
-            <span className="bg-gradient-to-r from-green-600 via-green-500 to-stone-600 bg-clip-text text-transparent font-medium">
-              AI Nomads
+      <div className="max-w-6xl mx-auto px-8 text-center relative z-10">
+        <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          {/* Main Headline */}
+          <h1 className="text-7xl md:text-9xl font-extralight mb-6 leading-[0.9] tracking-[-0.02em] text-white drop-shadow-2xl">
+            Work Less.
+            <br />
+            <span className="font-light bg-gradient-to-r from-emerald-200 to-white bg-clip-text text-transparent">
+              Live Smart.
             </span>
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed font-light">
-            Discover intelligent agents that flow seamlessly into your digital practice. 
-            Designed for intentional living and mindful productivity.
+          
+          {/* Subheadline */}
+          <p className={`text-xl md:text-2xl text-emerald-100 mb-16 max-w-4xl mx-auto leading-relaxed font-light transition-all duration-1000 drop-shadow-lg ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: '300ms' }}>
+            Premium AI agents crafted for the modern nomad lifestyle. 
+            <br className="hidden md:block" />
+            Effortless automation that travels with you.
           </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          
+          {/* CTA Buttons */}
+          <div className={`flex flex-col sm:flex-row gap-6 justify-center items-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: '600ms' }}>
             <Button
               onClick={scrollToMarketplace}
-              className="sage-gradient px-8 py-4 rounded-full text-lg font-medium hover:shadow-xl hover:shadow-green-500/20 transition-all duration-500 transform hover:scale-105 text-white"
+              className="bg-white/95 hover:bg-white px-10 py-6 rounded-full text-lg font-medium hover:shadow-2xl transition-all duration-500 transform hover:scale-105 text-emerald-900 border-none magnetic-hover"
               size="lg"
             >
-              <Rocket className="mr-2" />
-              Explore Collection
+              Explore Agents
+              <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
             <Button
               variant="outline"
-              className="border-muted-foreground/30 px-8 py-4 rounded-full text-lg font-medium hover:bg-muted/50 transition-all duration-300"
+              className="border-white/40 px-10 py-6 rounded-full text-lg font-medium hover:bg-white/10 transition-all duration-300 text-white backdrop-blur-sm magnetic-hover"
               size="lg"
             >
-              <Play className="mr-2" />
-              Experience
+              <Play className="mr-2 w-5 h-5" />
+              Watch Story
             </Button>
           </div>
         </div>
       </div>
 
-      {/* 3D Carousel */}
-      <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2">
-        <Carousel3D />
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-float-pulse">
+        <div className="w-6 h-10 border-2 border-white/40 rounded-full flex justify-center backdrop-blur-sm">
+          <div className="w-1 h-3 bg-white/60 rounded-full mt-2 animate-pulse" />
+        </div>
       </div>
     </section>
   );
