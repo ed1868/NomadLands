@@ -1115,95 +1115,163 @@ export default function Dashboard() {
     }
   }, [activeTab, selectedTemplate, nodes.length]);
 
-  // D3.js Voronoi Stippling Visualization
+  // Voronoi Stippling Visualization (based on Observable HQ example)
   useEffect(() => {
     if (activeTab === 'ecosystem') {
-      console.log('Starting D3 visualization...');
+      console.log('Starting Voronoi stippling visualization...');
       const container = d3.select('#voronoi-ecosystem');
       container.selectAll('*').remove();
 
       const width = 800;
       const height = 500;
-      const numPoints = 1500;
 
-      // Create SVG with proper dimensions
+      // Create SVG
       const svg = container
         .append('svg')
         .attr('width', '100%')
         .attr('height', '100%')
         .attr('viewBox', `0 0 ${width} ${height}`)
-        .style('background', 'radial-gradient(circle at center, #1a1a1a 0%, #000000 100%)')
-        .style('border-radius', '8px')
-        .style('display', 'block');
+        .style('background', '#000000')
+        .style('border-radius', '8px');
 
-      console.log('SVG created, mockAgents:', mockAgents.length);
-
-      // Generate points directly from agent data
-      const points: any[] = [];
-      
-      // Create multiple points for each agent based on their performance
-      mockAgents.forEach((agent: any, index: number) => {
-        const pointCount = Math.max(25, Math.floor(agent.runs / 800));
+      // Create density function based on agent performance data
+      const createDensity = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext('2d')!;
         
-        for (let i = 0; i < pointCount; i++) {
-          points.push({
-            x: Math.random() * (width - 40) + 20,
-            y: Math.random() * (height - 40) + 20,
-            size: Math.random() * 4 + 2, // Larger points
-            color: agent.success >= 95 ? '#10b981' : 
-                   agent.success >= 90 ? '#3b82f6' : 
-                   agent.success >= 85 ? '#f59e0b' : '#ef4444',
-            opacity: 0.7 + Math.random() * 0.3,
-            agent: agent.name
-          });
-        }
-      });
-
-      // Add background scatter points
-      for (let i = 0; i < 150; i++) {
-        points.push({
-          x: Math.random() * (width - 40) + 20,
-          y: Math.random() * (height - 40) + 20,
-          size: Math.random() * 2 + 1,
-          color: '#4b5563', // Lighter gray for visibility
-          opacity: 0.3 + Math.random() * 0.4,
-          agent: null
+        // Fill with base density
+        context.fillStyle = 'rgba(255, 255, 255, 0.1)';
+        context.fillRect(0, 0, width, height);
+        
+        // Add density hotspots for each agent based on their performance
+        mockAgents.forEach((agent: any) => {
+          const intensity = agent.runs / 50000; // Scale intensity
+          const radius = Math.max(30, Math.min(80, agent.success * 0.8));
+          
+          // Create multiple density spots per agent
+          for (let i = 0; i < 3; i++) {
+            const x = Math.random() * (width - 100) + 50;
+            const y = Math.random() * (height - 100) + 50;
+            
+            const gradient = context.createRadialGradient(x, y, 0, x, y, radius);
+            gradient.addColorStop(0, `rgba(255, 255, 255, ${intensity})`);
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            
+            context.fillStyle = gradient;
+            context.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+          }
         });
+        
+        return context.getImageData(0, 0, width, height);
+      };
+
+      const imageData = createDensity();
+      const data = imageData.data;
+
+      // Generate initial random points
+      let points = Array.from({ length: 2000 }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: 0,
+        vy: 0
+      }));
+
+      // Voronoi stippling algorithm
+      const stipple = () => {
+        // Create Voronoi diagram
+        const delaunay = d3.Delaunay.from(points, d => d.x, d => d.y);
+        const voronoi = delaunay.voronoi([0, 0, width, height]);
+
+        // Calculate weighted centroids
+        for (let i = 0; i < points.length; i++) {
+          const cell = voronoi.cellPolygon(i);
+          if (cell) {
+            let x = 0, y = 0, weight = 0;
+
+            // Sample points within the cell
+            const minX = Math.max(0, Math.floor(Math.min(...cell.map(p => p[0]))));
+            const maxX = Math.min(width - 1, Math.ceil(Math.max(...cell.map(p => p[0]))));
+            const minY = Math.max(0, Math.floor(Math.min(...cell.map(p => p[1]))));
+            const maxY = Math.min(height - 1, Math.ceil(Math.max(...cell.map(p => p[1]))));
+
+            for (let py = minY; py <= maxY; py += 2) {
+              for (let px = minX; px <= maxX; px += 2) {
+                if (d3.polygonContains(cell, [px, py])) {
+                  const density = data[(py * width + px) * 4] / 255;
+                  x += px * density;
+                  y += py * density;
+                  weight += density;
+                }
+              }
+            }
+
+            if (weight > 0) {
+              points[i].vx = (x / weight - points[i].x) * 0.1;
+              points[i].vy = (y / weight - points[i].y) * 0.1;
+            }
+          }
+        }
+
+        // Update positions
+        points.forEach(point => {
+          point.x += point.vx;
+          point.y += point.vy;
+          point.x = Math.max(5, Math.min(width - 5, point.x));
+          point.y = Math.max(5, Math.min(height - 5, point.y));
+        });
+      };
+
+      // Run stippling iterations
+      for (let i = 0; i < 100; i++) {
+        stipple();
       }
 
-      console.log('Generated points:', points.length);
+      // Color points based on density and agent performance
+      const coloredPoints = points.map(point => {
+        const pixel = Math.floor(point.y) * width + Math.floor(point.x);
+        const density = data[pixel * 4] / 255;
+        
+        // Find nearest agent influence
+        let nearestAgent = mockAgents[0];
+        let minDistance = Infinity;
+        
+        mockAgents.forEach(agent => {
+          const agentX = (agent.id / mockAgents.length) * width;
+          const agentY = (agent.success / 100) * height;
+          const distance = Math.sqrt((point.x - agentX) ** 2 + (point.y - agentY) ** 2);
+          if (distance < minDistance) {
+            minDistance = distance;
+            nearestAgent = agent;
+          }
+        });
 
-      // Add test circle to verify SVG is working
-      svg.append('circle')
-        .attr('cx', 50)
-        .attr('cy', 50)
-        .attr('r', 10)
-        .attr('fill', '#ff0000')
-        .attr('opacity', 1);
+        return {
+          ...point,
+          r: Math.max(0.5, density * 4),
+          color: nearestAgent.success >= 95 ? '#10b981' : 
+                 nearestAgent.success >= 90 ? '#3b82f6' : 
+                 nearestAgent.success >= 85 ? '#f59e0b' : '#ef4444',
+          opacity: Math.max(0.3, density)
+        };
+      });
 
-      // Add test text
-      svg.append('text')
-        .attr('x', 80)
-        .attr('y', 55)
-        .attr('fill', '#ffffff')
-        .attr('font-size', '12px')
-        .text('Test Point');
-
-      // Render points with stroke for visibility
-      const circles = svg.selectAll('.data-point')
-        .data(points)
+      // Render stippling points
+      svg.selectAll('circle')
+        .data(coloredPoints.filter(d => d.r > 0.5))
         .enter()
         .append('circle')
-        .attr('class', 'data-point')
         .attr('cx', d => d.x)
         .attr('cy', d => d.y)
-        .attr('r', d => d.size)
+        .attr('r', 0)
         .attr('fill', d => d.color)
-        .attr('stroke', d => d.agent ? '#ffffff' : 'none')
-        .attr('stroke-width', d => d.agent ? 1 : 0)
+        .attr('opacity', 0)
+        .transition()
+        .duration(2000)
+        .delay((d, i) => i * 1)
+        .attr('r', d => d.r)
         .attr('opacity', d => d.opacity);
-
-      console.log('Circles created:', circles.size());
 
       // Add legend
       const legend = svg.append('g')
@@ -1254,9 +1322,9 @@ export default function Dashboard() {
         .attr('y', 50)
         .attr('fill', '#888888')
         .attr('font-size', '11px')
-        .text(`${mockAgents.length} agents • ${points.filter(p => p.agent).length} data points`);
+        .text(`Voronoi stippling • ${coloredPoints.filter(d => d.r > 0.5).length} points`);
 
-      console.log('Visualization complete');
+      console.log('Voronoi stippling complete');
     }
   }, [activeTab]);
 
