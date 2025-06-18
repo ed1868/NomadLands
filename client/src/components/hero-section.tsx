@@ -50,9 +50,9 @@ export default function HeroSection() {
           {/* Subheadline */}
           <div className={`${isVisible ? 'slide-up-luxury' : 'opacity-0'}`} style={{ animationDelay: '0.4s' }}>
             <p className="text-base sm:text-lg md:text-xl text-gray-500 mb-12 sm:mb-16 max-w-4xl mx-auto leading-relaxed font-extralight px-4">
-              In the shadows of innovation.
+              Wander where machines meet magic.
               <br className="hidden md:block" />
-              <span className="text-gray-400">Where darkness meets intelligence.</span>
+              <span className="text-gray-400">Built in the shadows. Born to disrupt.</span>
             </p>
           </div>
           

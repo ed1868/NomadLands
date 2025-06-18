@@ -1143,12 +1143,12 @@ export default function Dashboard() {
       <div className="fixed top-0 left-0 right-0 z-50 bg-transparent backdrop-blur-sm border-b border-gray-800/30">
         <div className="flex items-center justify-between px-4 lg:px-8 py-4">
           {/* Left - Logo */}
-          <div className="flex items-center space-x-3">
+          <a href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
             <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">AN</span>
             </div>
             <span className="text-xl lg:text-2xl font-bold text-white tracking-tight">AI Nomads</span>
-          </div>
+          </a>
 
           {/* Center - Navigation Tabs (Hidden on mobile) */}
           <nav className="hidden lg:flex items-center space-x-1">
