@@ -23,59 +23,59 @@ export default function Navigation() {
   }, []);
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-700 ${
       isScrolled 
-        ? 'bg-black/95 backdrop-blur-md shadow-xl border-b border-green-500/20' 
+        ? 'bg-slate-900/95 backdrop-blur-xl shadow-2xl border-b border-emerald-600/20' 
         : 'bg-transparent'
     }`}>
       <div className="max-w-7xl mx-auto px-8 py-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className={`w-10 h-10 neon-gradient rounded-lg flex items-center justify-center transition-all duration-300 glow-effect ${isScrolled ? 'shadow-lg shadow-green-500/50' : ''}`}>
-              <Bot className="text-black text-lg" />
+            <div className={`w-10 h-10 forest-gradient rounded-full flex items-center justify-center transition-all duration-500 ${isScrolled ? 'shadow-lg shadow-emerald-500/30' : ''}`}>
+              <Bot className="text-white text-lg" />
             </div>
-            <span className={`text-2xl font-bold tracking-tight transition-all duration-300 ${
+            <span className={`text-2xl font-light tracking-wide transition-all duration-500 ${
               isScrolled 
                 ? 'text-white' 
                 : 'text-white drop-shadow-sm'
             }`}>
-              AI NOMADS
+              AI Nomads
             </span>
           </div>
           
           <div className="hidden md:flex items-center space-x-12">
             <button
               onClick={() => scrollToSection('marketplace')}
-              className={`font-semibold tracking-wide transition-all duration-300 hover:scale-105 ${
+              className={`font-light tracking-wide transition-all duration-500 hover:scale-105 ${
                 isScrolled 
-                  ? 'text-gray-300 hover:text-green-400' 
-                  : 'text-gray-300 hover:text-green-400'
+                  ? 'text-gray-300 hover:text-emerald-400' 
+                  : 'text-gray-300 hover:text-emerald-400'
               }`}
             >
-              AGENTS
+              Collection
             </button>
             <button
               onClick={() => scrollToSection('features')}
-              className={`font-semibold tracking-wide transition-all duration-300 hover:scale-105 ${
+              className={`font-light tracking-wide transition-all duration-500 hover:scale-105 ${
                 isScrolled 
-                  ? 'text-gray-300 hover:text-green-400' 
-                  : 'text-gray-300 hover:text-green-400'
+                  ? 'text-gray-300 hover:text-emerald-400' 
+                  : 'text-gray-300 hover:text-emerald-400'
               }`}
             >
-              FEATURES
+              Features
             </button>
             <button
               onClick={() => scrollToSection('features')}
-              className={`font-semibold tracking-wide transition-all duration-300 hover:scale-105 ${
+              className={`font-light tracking-wide transition-all duration-500 hover:scale-105 ${
                 isScrolled 
-                  ? 'text-gray-300 hover:text-green-400' 
-                  : 'text-gray-300 hover:text-green-400'
+                  ? 'text-gray-300 hover:text-emerald-400' 
+                  : 'text-gray-300 hover:text-emerald-400'
               }`}
             >
-              TECH
+              Story
             </button>
-            <Button className="neon-gradient hover:shadow-xl hover:shadow-green-500/50 hover:scale-105 transition-all duration-300 border-none rounded-lg px-8 py-3 font-bold text-black glow-effect">
-              GET STARTED
+            <Button className="forest-gradient hover:shadow-xl hover:shadow-emerald-500/30 hover:scale-105 transition-all duration-500 border-none rounded-full px-8 py-3 font-medium text-white magnetic-hover">
+              Begin Journey
             </Button>
           </div>
           

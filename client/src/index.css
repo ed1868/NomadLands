@@ -3,39 +3,37 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(0, 0%, 4%);
-  --foreground: hsl(120, 5%, 95%);
-  --muted: hsl(140, 15%, 8%);
-  --muted-foreground: hsl(120, 5%, 60%);
-  --popover: hsl(0, 0%, 4%);
-  --popover-foreground: hsl(120, 5%, 95%);
-  --card: hsl(140, 20%, 6%);
-  --card-foreground: hsl(120, 5%, 95%);
-  --border: hsl(140, 15%, 15%);
-  --input: hsl(140, 15%, 10%);
-  --primary: hsl(140, 60%, 40%);
-  --primary-foreground: hsl(0, 0%, 4%);
-  --secondary: hsl(140, 15%, 10%);
-  --secondary-foreground: hsl(120, 5%, 95%);
-  --accent: hsl(140, 15%, 15%);
-  --accent-foreground: hsl(120, 5%, 95%);
-  --destructive: hsl(0, 63%, 31%);
-  --destructive-foreground: hsl(120, 5%, 95%);
-  --ring: hsl(140, 60%, 40%);
-  --radius: 0.5rem;
+  --background: hsl(0, 0%, 6%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(140, 15%, 12%);
+  --muted-foreground: hsl(0, 0%, 65%);
+  --popover: hsl(0, 0%, 8%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(140, 10%, 8%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(140, 10%, 18%);
+  --input: hsl(140, 10%, 12%);
+  --primary: hsl(140, 25%, 35%);
+  --primary-foreground: hsl(0, 0%, 98%);
+  --secondary: hsl(140, 10%, 12%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(140, 10%, 18%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 60%, 50%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(140, 25%, 35%);
+  --radius: 0.75rem;
   
-  /* Dark Forest Green Cyberpunk Palette */
-  --cyber-green: hsl(140, 60%, 40%);
-  --neon-green: hsl(120, 100%, 50%);
-  --forest-green: hsl(140, 40%, 20%);
-  --dark-forest: hsl(140, 30%, 10%);
-  --electric-green: hsl(120, 80%, 60%);
-  --matrix-green: hsl(140, 100%, 30%);
-  --black-bg: hsl(0, 0%, 2%);
-  --dark-bg: hsl(0, 0%, 4%);
-  --darker-bg: hsl(140, 20%, 3%);
-  --card-bg: hsl(140, 20%, 6%);
-  --border-glow: hsl(140, 60%, 40%);
+  /* Dark Forest Green + Matte Black Palette */
+  --forest-green: hsl(140, 25%, 35%);
+  --deep-forest: hsl(140, 20%, 25%);
+  --sage-green: hsl(140, 15%, 45%);
+  --matte-black: hsl(0, 0%, 6%);
+  --charcoal: hsl(0, 0%, 12%);
+  --dark-grey: hsl(0, 0%, 18%);
+  --soft-white: hsl(0, 0%, 98%);
+  --warm-grey: hsl(0, 0%, 85%);
+  --accent-green: hsl(140, 30%, 40%);
 }
 
 .dark {
@@ -72,80 +70,55 @@
 
 @layer utilities {
   .gradient-mesh {
-    background: linear-gradient(135deg, var(--black-bg) 0%, var(--darker-bg) 30%, var(--card-bg) 70%, var(--black-bg) 100%);
+    background: linear-gradient(135deg, var(--matte-black) 0%, var(--charcoal) 30%, var(--dark-grey) 70%, var(--matte-black) 100%);
     background-size: 400% 400%;
-    animation: gradientShift 20s ease infinite;
+    animation: gradientShift 30s ease infinite;
   }
   
-  .cyber-hero {
-    background: linear-gradient(135deg, var(--black-bg) 0%, var(--darker-bg) 50%, var(--dark-forest) 100%);
+  .hero-section {
+    background: linear-gradient(135deg, var(--matte-black) 0%, var(--charcoal) 50%, var(--deep-forest) 100%);
     position: relative;
   }
   
-  .cyber-hero::before {
+  .hero-section::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 20% 80%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(22, 163, 74, 0.1) 0%, transparent 50%);
+    background: radial-gradient(circle at 30% 70%, rgba(64, 112, 80, 0.08) 0%, transparent 60%),
+                radial-gradient(circle at 70% 30%, rgba(64, 112, 80, 0.06) 0%, transparent 60%);
   }
   
-  .glass-card {
-    @apply bg-slate-900/80 backdrop-blur-md border border-green-500/20 shadow-xl;
-    box-shadow: 0 25px 50px -12px rgba(34, 197, 94, 0.15);
+  .premium-card {
+    @apply bg-card/95 backdrop-blur-xl border border-border/60 shadow-2xl;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
   
-  .cyber-card {
-    @apply bg-slate-900/90 backdrop-blur-sm border border-green-500/30 shadow-2xl;
-    box-shadow: 0 25px 50px -12px rgba(34, 197, 94, 0.2);
-    position: relative;
-  }
-  
-  .cyber-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, transparent 0%, rgba(34, 197, 94, 0.05) 100%);
-    border-radius: inherit;
-    pointer-events: none;
+  .premium-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 35px 70px rgba(64, 112, 80, 0.15);
+    border-color: var(--forest-green);
   }
   
   .agent-card {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
   
   .agent-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 35px 70px rgba(34, 197, 94, 0.25);
-    border-color: var(--cyber-green);
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 35px 70px rgba(64, 112, 80, 0.2);
   }
   
   .forest-gradient {
-    background: linear-gradient(135deg, var(--forest-green) 0%, var(--dark-forest) 100%);
+    background: linear-gradient(135deg, var(--forest-green) 0%, var(--deep-forest) 100%);
   }
   
-  .cyber-gradient {
-    background: linear-gradient(135deg, var(--cyber-green) 0%, var(--electric-green) 100%);
+  .sage-gradient {
+    background: linear-gradient(135deg, var(--sage-green) 0%, var(--forest-green) 100%);
   }
   
-  .neon-gradient {
-    background: linear-gradient(135deg, var(--cyber-green) 0%, var(--neon-green) 100%);
-  }
-  
-  .matrix-gradient {
-    background: linear-gradient(135deg, var(--dark-forest) 0%, var(--matrix-green) 100%);
-  }
-  
-  .glow-effect {
-    filter: drop-shadow(0 0 20px currentColor);
-  }
-  
-  .green-glow {
-    text-shadow: 0 0 10px var(--cyber-green), 0 0 20px var(--cyber-green), 0 0 40px var(--cyber-green);
-  }
-  
-  .matrix-glow {
-    text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green), 0 0 40px var(--neon-green);
+  .matte-gradient {
+    background: linear-gradient(135deg, var(--charcoal) 0%, var(--matte-black) 100%);
   }
   
   .floating-cta {
@@ -153,35 +126,42 @@
     bottom: 2rem;
     right: 2rem;
     z-index: 50;
-    animation: floatPulse 3s ease-in-out infinite;
+    animation: floatPulse 4s ease-in-out infinite;
   }
   
-  .text-reveal {
+  .smooth-reveal {
     opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(40px);
+    transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
   
-  .text-reveal.revealed {
+  .smooth-reveal.revealed {
     opacity: 1;
     transform: translateY(0);
   }
   
-  .cyber-grid {
-    background-image: 
-      linear-gradient(rgba(34, 197, 94, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(34, 197, 94, 0.1) 1px, transparent 1px);
-    background-size: 50px 50px;
+  .fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
   
-  .matrix-rain {
-    background: repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 2px,
-      rgba(34, 197, 94, 0.03) 2px,
-      rgba(34, 197, 94, 0.03) 4px
-    );
+  .scale-in {
+    opacity: 0;
+    transform: scale(0.95);
+    animation: scaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  
+  .magnetic-hover {
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  
+  .magnetic-hover:hover {
+    transform: translateY(-2px);
+  }
+  
+  .breathing-glow {
+    animation: breathingGlow 3s ease-in-out infinite;
   }
 }
 
