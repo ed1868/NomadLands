@@ -303,6 +303,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Hash password
+      if (!validatedData.password) {
+        return res.status(400).json({ message: "Password is required" });
+      }
       const hashedPassword = await bcrypt.hash(validatedData.password, 12);
       
       // Create user

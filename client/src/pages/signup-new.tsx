@@ -54,8 +54,7 @@ export default function SignupNew() {
     mutationFn: async (data: SignupForm & { walletAddress?: string }) => {
       return await apiRequest("POST", "/api/auth/signup", data);
     },
-    onSuccess: (response) => {
-      const data = response.json ? response.json() : response;
+    onSuccess: (data: any) => {
       setUserId(data.user.id);
       setStep(2);
       toast({

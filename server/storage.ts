@@ -8,6 +8,7 @@ import {
   type User,
   type Agent,
   type UpsertUser,
+  type InsertUser,
   type UserPurchase,
   type Transaction,
   type InsertPurchase,
@@ -75,14 +76,14 @@ export class DatabaseStorage implements IStorage {
       .insert(users)
       .values({
         ...userData,
-        walletAddress: userData.walletAddress.toLowerCase(),
+        walletAddress: userData.walletAddress ? userData.walletAddress.toLowerCase() : null,
         updatedAt: new Date(),
       })
       .onConflictDoUpdate({
         target: users.walletAddress,
         set: {
           ...userData,
-          walletAddress: userData.walletAddress.toLowerCase(),
+          walletAddress: userData.walletAddress ? userData.walletAddress.toLowerCase() : null,
           updatedAt: new Date(),
         },
       })
