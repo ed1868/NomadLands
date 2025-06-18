@@ -1,12 +1,31 @@
 import { useState, useEffect } from "react";
-import { Menu, X, Bot, Wallet } from "lucide-react";
+import { Menu, X, Bot, Wallet, User, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/hooks/use-wallet";
+import { useQuery } from "@tanstack/react-query";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { address, isConnected, isConnecting, connectWallet, disconnectWallet, formatAddress } = useWallet();
+  
+  // Check if user is logged in
+  const { data: user, isLoading: isUserLoading } = useQuery({
+    queryKey: ["/api/auth/user"],
+    retry: false,
+  });
+
+  const handleLogout = () => {
+    window.location.href = "/api/logout";
+  };
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -97,22 +116,71 @@ export default function Navigation() {
               API
             </a>
             
-            {/* Dashboard link for connected users */}
-            {isConnected && (
-              <a
-                href="/dashboard"
-                className={`font-extralight tracking-wide transition-all duration-500 ${
-                  isScrolled 
-                    ? 'text-gray-500 hover:text-gray-300' 
-                    : 'text-gray-500 hover:text-gray-300'
-                }`}
-              >
-                Dashboard
-              </a>
-            )}
-            
-            {/* Wallet Connection */}
-            {isConnected ? (
+            {/* User Authentication or Wallet Connection */}
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    className="relative h-10 w-10 rounded-full bg-slate-800/50 border border-gray-700 hover:border-emerald-500/50 transition-all duration-300"
+                  >
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={user.profileImageUrl} alt={user.username || user.email} />
+                      <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-blue-600 text-white text-sm">
+                        {(user.firstName && user.lastName) 
+                          ? `${user.firstName[0]}${user.lastName[0]}` 
+                          : user.username?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent 
+                  className="w-56 bg-slate-900/95 border border-gray-700 backdrop-blur-xl" 
+                  align="end" 
+                  forceMount
+                >
+                  <div className="flex items-center justify-start gap-2 p-2">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={user.profileImageUrl} alt={user.username || user.email} />
+                      <AvatarFallback className="bg-gradient-to-br from-emerald-500 to-blue-600 text-white text-sm">
+                        {(user.firstName && user.lastName) 
+                          ? `${user.firstName[0]}${user.lastName[0]}` 
+                          : user.username?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium text-white">
+                        {user.firstName && user.lastName 
+                          ? `${user.firstName} ${user.lastName}` 
+                          : user.username || 'User'}
+                      </p>
+                      <p className="text-xs text-gray-400">{user.email}</p>
+                    </div>
+                  </div>
+                  <DropdownMenuSeparator className="bg-gray-700" />
+                  <DropdownMenuItem asChild>
+                    <a href="/dashboard" className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors">
+                      <User className="h-4 w-4" />
+                      Dashboard
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <a href="/settings" className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors">
+                      <Settings className="h-4 w-4" />
+                      Settings
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="bg-gray-700" />
+                  <DropdownMenuItem 
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 text-red-400 hover:text-red-300 transition-colors cursor-pointer"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : isConnected ? (
               <button
                 onClick={disconnectWallet}
                 className="flex items-center space-x-2 bg-emerald-900/40 border border-emerald-700/50 rounded px-4 py-2 font-light text-emerald-300 backdrop-blur-sm hover:bg-emerald-900/60 hover:border-emerald-600/70 transition-all duration-300"
@@ -133,12 +201,14 @@ export default function Navigation() {
               </button>
             )}
             
-            <a
-              href="/signup"
-              className="obsidian-gradient hover:shadow-lg hover:shadow-gray-900/30 transition-all duration-500 border border-gray-700 rounded px-6 py-2 font-light text-gray-300 backdrop-blur-sm hover:border-gray-600"
-            >
-              Deploy
-            </a>
+            {!user && (
+              <a
+                href="/signup"
+                className="obsidian-gradient hover:shadow-lg hover:shadow-gray-900/30 transition-all duration-500 border border-gray-700 rounded px-6 py-2 font-light text-gray-300 backdrop-blur-sm hover:border-gray-600"
+              >
+                Deploy
+              </a>
+            )}
           </div>
           
           <button

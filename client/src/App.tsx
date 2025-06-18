@@ -10,7 +10,7 @@ import SmartContracts from "@/pages/smart-contracts";
 import NomadFleets from "@/pages/nomad-fleets";
 import ApiDocs from "@/pages/api-docs";
 import Signup from "@/pages/signup-premium";
-import Dashboard from "@/pages/dashboard";
+import DashboardEnhanced from "@/pages/dashboard-enhanced";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -23,7 +23,7 @@ function Router() {
       <Route path="/nomad-fleets" component={NomadFleets} />
       <Route path="/api-docs" component={ApiDocs} />
       <Route path="/signup" component={Signup} />
-      <Route path="/dashboard" component={Dashboard} />
+      <Route path="/dashboard" component={DashboardEnhanced} />
       <Route component={NotFound} />
     </Switch>
   );
