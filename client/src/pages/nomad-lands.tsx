@@ -285,42 +285,45 @@ export default function NomadLands() {
       {/* Nomads Grid */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredAgents.map((agent) => (
               <Card key={agent.id} className="bg-gray-900/50 border-gray-700 hover:border-gray-600 transition-all duration-300 group">
                 <CardHeader className="pb-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="relative">
-                        <Avatar className="h-12 w-12">
-                          <AvatarImage src={`/avatars/agent-${agent.id}.jpg`} />
-                          <AvatarFallback className="bg-gray-800 text-gray-300">
-                            {agent.name.split(' ').map(n => n[0]).join('')}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-gray-900 ${getAvailabilityColor(agent.availability)}`}></div>
-                      </div>
-                      <div>
-                        <CardTitle className="text-white text-lg">{agent.name}</CardTitle>
-                        <div className="flex items-center space-x-2 text-sm text-gray-500">
-                          <Building2 className="w-4 h-4" />
-                          <span>{getCompanyName(agent.companyId!)}</span>
-                          {getCompanyVerified(agent.companyId!) && (
-                            <Badge variant="secondary" className="text-xs bg-emerald-900/30 text-emerald-400 border-emerald-700/50">
-                              Verified
-                            </Badge>
-                          )}
+                  <div className="space-y-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center space-x-3 min-w-0 flex-1">
+                        <div className="relative flex-shrink-0">
+                          <Avatar className="h-12 w-12">
+                            <AvatarImage src={`/avatars/agent-${agent.id}.jpg`} />
+                            <AvatarFallback className="bg-gray-800 text-gray-300">
+                              {agent.name.split(' ').map(n => n[0]).join('')}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-gray-900 ${getAvailabilityColor(agent.availability)}`}></div>
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <CardTitle className="text-white text-lg truncate">{agent.name}</CardTitle>
+                          <div className="flex items-center space-x-2 text-sm text-gray-500">
+                            <Building2 className="w-4 h-4 flex-shrink-0" />
+                            <span className="truncate">{getCompanyName(agent.companyId!)}</span>
+                            {getCompanyVerified(agent.companyId!) && (
+                              <Badge variant="secondary" className="text-xs bg-emerald-900/30 text-emerald-400 border-emerald-700/50 flex-shrink-0">
+                                Verified
+                              </Badge>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <div className="flex flex-col space-y-2">
+                    
+                    <div className="flex flex-wrap gap-2">
                       {agent.featured && (
-                        <Badge className="bg-yellow-900/30 text-yellow-400 border-yellow-700/50">
+                        <Badge className="bg-yellow-900/30 text-yellow-400 border-yellow-700/50 text-xs">
                           Featured
                         </Badge>
                       )}
                       {agent.teamWorthy && (
-                        <Badge className="bg-emerald-900/30 text-emerald-400 border-emerald-700/50 flex items-center space-x-1">
+                        <Badge className="bg-emerald-900/30 text-emerald-400 border-emerald-700/50 text-xs flex items-center space-x-1">
                           <Star className="w-3 h-3" />
                           <span>Can work in teams!</span>
                         </Badge>
@@ -333,7 +336,7 @@ export default function NomadLands() {
                     {agent.description}
                   </p>
                   
-                  <div className="flex items-center space-x-4 text-sm text-gray-500">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-500">
                     <div className="flex items-center space-x-1">
                       <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                       <span>{agent.rating}</span>
@@ -350,12 +353,12 @@ export default function NomadLands() {
 
                   <div className="flex flex-wrap gap-1">
                     {agent.skills?.slice(0, 3).map((skill) => (
-                      <Badge key={skill} variant="outline" className="text-xs border-gray-600 text-gray-400">
+                      <Badge key={skill} variant="outline" className="text-xs border-gray-600 text-gray-400 whitespace-nowrap">
                         {skill}
                       </Badge>
                     ))}
                     {agent.skills && agent.skills.length > 3 && (
-                      <Badge variant="outline" className="text-xs border-gray-600 text-gray-400">
+                      <Badge variant="outline" className="text-xs border-gray-600 text-gray-400 whitespace-nowrap">
                         +{agent.skills.length - 3} more
                       </Badge>
                     )}
