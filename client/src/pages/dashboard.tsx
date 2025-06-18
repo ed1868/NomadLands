@@ -2481,7 +2481,7 @@ export default function Dashboard() {
               {/* Brain Visualization */}
               <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg overflow-hidden">
                 <CardContent className="p-0">
-                  <div className="h-[500px] lg:h-[600px] w-full">
+                  <div className="h-[300px] sm:h-[400px] lg:h-[600px] w-full">
                     <BrainVisualization className="rounded-lg" />
                   </div>
                 </CardContent>

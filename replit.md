@@ -251,6 +251,13 @@ Changelog:
   * Implemented responsive padding and spacing adjustments for touch-friendly interactions
   * Created collapsible header sections with proper text truncation for long agent names
   * Enhanced card content with centered text on mobile and left-aligned on desktop
+- June 18, 2025. Three.js brain visualization mobile optimization
+  * Reduced container height for mobile devices (300px mobile, 400px tablet, 600px desktop)
+  * Implemented adaptive particle count: 16,384 particles on mobile, 65,536 on tablet, 262,144 on desktop
+  * Optimized camera positioning and field of view for smaller screens (wider FOV and adjusted distance)
+  * Disabled antialiasing on mobile devices for better performance while maintaining visual quality
+  * Added low-power preference for mobile GPU usage and capped pixel ratio for efficiency
+  * Maintained full visual impact while ensuring smooth performance on mobile devices
 ```
 
 ## User Preferences

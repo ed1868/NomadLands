@@ -34,22 +34,29 @@ export default function BrainVisualization({ className = "" }: BrainVisualizatio
     
     console.log("Starting massive hive mind brain visualization...");
 
+    // Mobile detection
+    const isMobile = window.innerWidth < 768;
+    const isTablet = window.innerWidth < 1024;
+
     // Scene setup
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x000000);
 
-    // Camera setup
+    // Camera setup - adjusted for mobile
     const camera = new THREE.PerspectiveCamera(
-      25,
+      isMobile ? 35 : 25, // Wider field of view for mobile
       mountRef.current.clientWidth / mountRef.current.clientHeight,
       0.1,
       100
     );
-    camera.position.set(3, 5, 8);
+    camera.position.set(isMobile ? 4 : 3, isMobile ? 6 : 5, isMobile ? 10 : 8);
 
-    // Renderer setup
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setPixelRatio(window.devicePixelRatio);
+    // Renderer setup - optimized for mobile
+    const renderer = new THREE.WebGLRenderer({ 
+      antialias: !isMobile, // Disable antialiasing on mobile for better performance
+      powerPreference: isMobile ? "low-power" : "high-performance"
+    });
+    renderer.setPixelRatio(isMobile ? Math.min(window.devicePixelRatio, 2) : window.devicePixelRatio);
     renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
     renderer.setClearColor(0x000000);
     rendererRef.current = renderer;
@@ -121,8 +128,16 @@ export default function BrainVisualization({ className = "" }: BrainVisualizatio
       return helper;
     });
 
-    // Particles
-    const particleCount = Math.pow(2, 18); // 262,144 particles for massive scale
+    // Particles - adaptive count based on screen size
+    let particleCount;
+    if (isMobile) {
+      particleCount = Math.pow(2, 14); // 16,384 particles for mobile
+    } else if (isTablet) {
+      particleCount = Math.pow(2, 16); // 65,536 particles for tablet
+    } else {
+      particleCount = Math.pow(2, 18); // 262,144 particles for desktop
+    }
+    
     console.log(`Generated ${particleCount} visual neural nodes`);
 
     // Particle positions and velocities
