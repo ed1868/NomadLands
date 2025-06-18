@@ -379,7 +379,7 @@ export default function BrainVisualization({ className = "" }: BrainVisualizatio
       
       {/* Control Panel */}
       {showControls && (
-        <div className="absolute top-4 right-4 bg-black/90 backdrop-blur-lg border border-emerald-500/30 rounded-lg p-4 min-w-[280px]">
+        <div className="absolute top-4 right-4 bg-black/90 backdrop-blur-lg border border-emerald-500/30 rounded-lg p-4 min-w-[280px] max-h-[calc(100vh-2rem)] overflow-y-auto">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-white font-bold text-sm">Controls</h3>
             <button

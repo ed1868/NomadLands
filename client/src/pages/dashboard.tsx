@@ -1220,7 +1220,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="flex pt-16 relative">
+      <div className="flex pt-24 relative">
         {/* Mobile Sidebar Overlay */}
         {isMobileSidebarOpen && (
           <div 
