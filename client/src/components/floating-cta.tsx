@@ -13,10 +13,10 @@ export default function FloatingCTA() {
     <div className="floating-cta">
       <Button
         onClick={scrollToMarketplace}
-        className="forest-gradient text-white px-6 py-4 rounded-full shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 transform hover:scale-110 border-none magnetic-hover breathing-glow"
+        className="bright-gradient text-white px-8 py-6 rounded-full shadow-2xl bright-border transition-all duration-300 elastic-hover pulse-bright"
         size="lg"
       >
-        <ArrowRight className="w-5 h-5" />
+        <ArrowRight className="w-6 h-6" />
       </Button>
     </div>
   );
