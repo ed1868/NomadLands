@@ -64,8 +64,14 @@ import {
   Menu
 } from "lucide-react";
 
-// Custom Agent Node Component with visible handles
+// Custom Agent Node Component with visible handles and click functionality
 const AgentNode = ({ data }: { data: any }) => {
+  const handleClick = () => {
+    if (data.onClick) {
+      data.onClick(data);
+    }
+  };
+
   return (
     <div className="relative">
       {/* Connection Handles */}
@@ -82,8 +88,11 @@ const AgentNode = ({ data }: { data: any }) => {
         style={{ background: '#10b981', left: -8 }}
       />
       
-      {/* Node Content */}
-      <div className="bg-gradient-to-br from-gray-900/95 to-gray-800/95 border-2 border-emerald-500/40 rounded-xl p-4 min-w-[180px] shadow-2xl backdrop-blur-lg hover:border-emerald-400/60 transition-all duration-300 hover:shadow-emerald-500/20">
+      {/* Node Content - Now clickable */}
+      <div 
+        className="bg-gradient-to-br from-gray-900/95 to-gray-800/95 border-2 border-emerald-500/40 rounded-xl p-4 min-w-[180px] shadow-2xl backdrop-blur-lg hover:border-emerald-400/60 transition-all duration-300 hover:shadow-emerald-500/20 cursor-pointer hover:scale-105"
+        onClick={handleClick}
+      >
         <div className="flex items-center space-x-3">
           <div className="text-2xl filter drop-shadow-lg">{data.icon}</div>
           <div className="flex-1">
@@ -99,6 +108,11 @@ const AgentNode = ({ data }: { data: any }) => {
         
         {/* Status indicator */}
         <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-gray-900 shadow-lg animate-pulse"></div>
+        
+        {/* Click indicator */}
+        <div className="absolute top-1 right-1 w-4 h-4 bg-blue-500/20 rounded-full flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+          <Eye className="w-2 h-2 text-blue-400" />
+        </div>
         
         {/* Department badge */}
         {data.departmentId && (
@@ -290,6 +304,106 @@ const mockUserAgents = [
   }
 ];
 
+// Helper functions to generate agent details
+const getAgentTasks = (agentType: string) => {
+  const taskMap: { [key: string]: string[] } = {
+    'Agent Boss': [
+      'Strategic decision making and resource allocation',
+      'Cross-departmental coordination and oversight',
+      'Performance monitoring and optimization',
+      'Risk assessment and mitigation planning',
+      'Team leadership and delegation'
+    ],
+    'Agent Worker': [
+      'Process automation and task execution',
+      'Data processing and analysis',
+      'Quality assurance and validation',
+      'Workflow optimization',
+      'Report generation and documentation'
+    ],
+    'Agent LLC': [
+      'Contract management and compliance',
+      'Legal document review and processing',
+      'Regulatory compliance monitoring',
+      'Policy implementation and enforcement',
+      'Audit trail maintenance'
+    ],
+    'Agent Data': [
+      'Data collection and aggregation',
+      'Real-time analytics and insights',
+      'Database optimization and maintenance',
+      'Data visualization and reporting',
+      'Predictive modeling and forecasting'
+    ],
+    'Director': [
+      'Strategic planning and execution',
+      'Budget management and resource allocation',
+      'Team performance evaluation',
+      'Stakeholder communication',
+      'Innovation and process improvement'
+    ]
+  };
+  return taskMap[agentType] || ['General task automation', 'Process optimization', 'Data handling'];
+};
+
+const getAgentToolkit = (agentType: string) => {
+  const toolkitMap: { [key: string]: string[] } = {
+    'Agent Boss': [
+      'Executive Dashboard', 'Resource Planner', 'Performance Analytics', 
+      'Risk Monitor', 'Strategic Forecaster', 'Team Coordinator'
+    ],
+    'Agent Worker': [
+      'Process Automator', 'Data Processor', 'Quality Checker', 
+      'Workflow Engine', 'Report Builder', 'Task Scheduler'
+    ],
+    'Agent LLC': [
+      'Contract Parser', 'Compliance Scanner', 'Legal Analyzer', 
+      'Policy Engine', 'Audit Logger', 'Regulatory Monitor'
+    ],
+    'Agent Data': [
+      'Data Collector', 'Analytics Engine', 'Visualization Tool', 
+      'Prediction Model', 'Database Optimizer', 'Insight Generator'
+    ],
+    'Director': [
+      'Strategy Planner', 'Budget Tracker', 'Performance Evaluator', 
+      'Communication Hub', 'Innovation Lab', 'Process Designer'
+    ]
+  };
+  return toolkitMap[agentType] || ['Basic Tools', 'Data Handler', 'Process Manager'];
+};
+
+const getAgentPerformance = (agentType: string) => {
+  const basePerformance = {
+    uptime: 95 + Math.random() * 5,
+    tasksCompleted: Math.floor(Math.random() * 1000) + 500,
+    successRate: 85 + Math.random() * 15,
+    avgResponseTime: Math.floor(Math.random() * 200) + 50,
+    energyEfficiency: 80 + Math.random() * 20
+  };
+  
+  // Adjust based on agent type
+  if (agentType === 'Agent Boss') {
+    basePerformance.successRate += 5;
+    basePerformance.uptime += 2;
+  } else if (agentType === 'Director') {
+    basePerformance.successRate += 3;
+    basePerformance.uptime += 1;
+  }
+  
+  return basePerformance;
+};
+
+const getAgentConnections = (agentType: string) => {
+  const connectionMap: { [key: string]: string[] } = {
+    'Agent Boss': ['Strategic Database', 'Performance Monitor', 'Resource Pool', 'Risk Assessment'],
+    'Agent Worker': ['Task Queue', 'Data Pipeline', 'Quality Gate', 'Report Storage'],
+    'Agent LLC': ['Legal Database', 'Compliance Engine', 'Policy Repository', 'Audit System'],
+    'Agent Data': ['Data Sources', 'Analytics Platform', 'Visualization Engine', 'Prediction Models'],
+    'Director': ['Strategic Planning', 'Budget System', 'Team Dashboard', 'Innovation Hub']
+  };
+  return connectionMap[agentType] || ['System Database', 'Process Engine', 'Monitoring Hub'];
+};
+
 export default function Dashboard() {
   const { user, isLoading } = useAuth();
   const { isConnected, address, connectWallet } = useWallet();
@@ -302,12 +416,30 @@ export default function Dashboard() {
   const [isConnecting, setIsConnecting] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>("sales-domination");
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [selectedAgent, setSelectedAgent] = useState<any>(null);
+  const [isAgentDetailsOpen, setIsAgentDetailsOpen] = useState(false);
   const [departmentCount, setDepartmentCount] = useState<{[key: string]: number}>({
     'Executive Director': 0,
     'Department Manager': 0,
     'Senior Associate': 0,
     'Associate': 0
   });
+
+  // Agent click handler
+  const handleAgentClick = useCallback((agentData: any) => {
+    // Create detailed agent information with tasks and toolkit
+    const detailedAgent = {
+      ...agentData,
+      id: agentData.id || `agent-${Date.now()}`,
+      tasks: getAgentTasks(agentData.type),
+      toolkit: getAgentToolkit(agentData.type),
+      performance: getAgentPerformance(agentData.type),
+      connections: getAgentConnections(agentData.type)
+    };
+    
+    setSelectedAgent(detailedAgent);
+    setIsAgentDetailsOpen(true);
+  }, []);
 
   // React Flow connection handler
   const onConnect = useCallback(
@@ -340,7 +472,8 @@ export default function Dashboard() {
         level: agentData.level,
         description: agentData.description,
         departmentId: agentData.departmentId,
-        agentType: agentData.type
+        agentType: agentData.type,
+        onClick: handleAgentClick
       },
       sourcePosition: Position.Right,
       targetPosition: Position.Left,
