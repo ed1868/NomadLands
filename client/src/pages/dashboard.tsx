@@ -448,6 +448,117 @@ export default function Dashboard() {
         { type: 'Associate', x: 560, y: 480, id: 'anomaly-det-1', connections: [] },
         { type: 'Associate', x: 640, y: 480, id: 'report-gen-1', connections: [] }
       ]
+    },
+    'enterprise-saas': {
+      name: '🏢 Enterprise SaaS Company Fleet',
+      description: 'Complete engineering powerhouse with 85+ specialized agents across all tech stacks, levels, and disciplines for scalable SaaS operations',
+      agents: [
+        // C-Level & Executive Leadership
+        { type: 'Executive Director', x: 400, y: 30, id: 'cto-1', connections: ['eng-dir-1', 'platform-dir-1', 'security-dir-1'] },
+        
+        // Engineering Directors
+        { type: 'Director', x: 200, y: 100, id: 'eng-dir-1', connections: ['frontend-mgr-1', 'backend-mgr-1', 'mobile-mgr-1'] },
+        { type: 'Director', x: 400, y: 100, id: 'platform-dir-1', connections: ['infra-mgr-1', 'devops-mgr-1', 'data-mgr-1'] },
+        { type: 'Director', x: 600, y: 100, id: 'security-dir-1', connections: ['security-mgr-1', 'qa-mgr-1'] },
+        
+        // Department Managers - Frontend
+        { type: 'Department Manager', x: 80, y: 200, id: 'frontend-mgr-1', connections: ['react-lead-1', 'vue-lead-1', 'ui-lead-1'] },
+        { type: 'Department Manager', x: 200, y: 200, id: 'backend-mgr-1', connections: ['api-lead-1', 'micro-lead-1', 'db-lead-1'] },
+        { type: 'Department Manager', x: 320, y: 200, id: 'mobile-mgr-1', connections: ['ios-lead-1', 'android-lead-1', 'flutter-lead-1'] },
+        
+        // Department Managers - Platform
+        { type: 'Department Manager', x: 440, y: 200, id: 'infra-mgr-1', connections: ['cloud-lead-1', 'k8s-lead-1', 'network-lead-1'] },
+        { type: 'Department Manager', x: 560, y: 200, id: 'devops-mgr-1', connections: ['ci-lead-1', 'monitoring-lead-1', 'release-lead-1'] },
+        { type: 'Department Manager', x: 680, y: 200, id: 'data-mgr-1', connections: ['analytics-lead-1', 'ml-lead-1', 'etl-lead-1'] },
+        
+        // Department Managers - Security & QA
+        { type: 'Department Manager', x: 800, y: 200, id: 'security-mgr-1', connections: ['appsec-lead-1', 'compliance-lead-1'] },
+        { type: 'Department Manager', x: 920, y: 200, id: 'qa-mgr-1', connections: ['test-lead-1', 'automation-lead-1'] },
+        
+        // Senior Associates - Tech Leads
+        { type: 'Senior Associate', x: 40, y: 320, id: 'react-lead-1', connections: ['react-dev-1', 'react-dev-2'] },
+        { type: 'Senior Associate', x: 120, y: 320, id: 'vue-lead-1', connections: ['vue-dev-1', 'vue-dev-2'] },
+        { type: 'Senior Associate', x: 200, y: 320, id: 'ui-lead-1', connections: ['ui-dev-1', 'design-sys-1'] },
+        
+        { type: 'Senior Associate', x: 280, y: 320, id: 'api-lead-1', connections: ['node-dev-1', 'python-dev-1'] },
+        { type: 'Senior Associate', x: 360, y: 320, id: 'micro-lead-1', connections: ['go-dev-1', 'rust-dev-1'] },
+        { type: 'Senior Associate', x: 440, y: 320, id: 'db-lead-1', connections: ['postgres-dev-1', 'redis-dev-1'] },
+        
+        { type: 'Senior Associate', x: 520, y: 320, id: 'ios-lead-1', connections: ['swift-dev-1', 'objc-dev-1'] },
+        { type: 'Senior Associate', x: 600, y: 320, id: 'android-lead-1', connections: ['kotlin-dev-1', 'java-dev-1'] },
+        { type: 'Senior Associate', x: 680, y: 320, id: 'flutter-lead-1', connections: ['dart-dev-1', 'flutter-dev-1'] },
+        
+        { type: 'Senior Associate', x: 760, y: 320, id: 'cloud-lead-1', connections: ['aws-dev-1', 'gcp-dev-1'] },
+        { type: 'Senior Associate', x: 840, y: 320, id: 'k8s-lead-1', connections: ['k8s-dev-1', 'helm-dev-1'] },
+        { type: 'Senior Associate', x: 920, y: 320, id: 'network-lead-1', connections: ['network-dev-1', 'cdn-dev-1'] },
+        
+        { type: 'Senior Associate', x: 1000, y: 320, id: 'ci-lead-1', connections: ['jenkins-dev-1', 'github-dev-1'] },
+        { type: 'Senior Associate', x: 1080, y: 320, id: 'monitoring-lead-1', connections: ['prometheus-dev-1', 'grafana-dev-1'] },
+        { type: 'Senior Associate', x: 1160, y: 320, id: 'release-lead-1', connections: ['deploy-dev-1', 'canary-dev-1'] },
+        
+        { type: 'Senior Associate', x: 1240, y: 320, id: 'analytics-lead-1', connections: ['spark-dev-1', 'snowflake-dev-1'] },
+        { type: 'Senior Associate', x: 1320, y: 320, id: 'ml-lead-1', connections: ['tensorflow-dev-1', 'pytorch-dev-1'] },
+        { type: 'Senior Associate', x: 1400, y: 320, id: 'etl-lead-1', connections: ['airflow-dev-1', 'kafka-dev-1'] },
+        
+        { type: 'Senior Associate', x: 1480, y: 320, id: 'appsec-lead-1', connections: ['security-dev-1', 'pentest-dev-1'] },
+        { type: 'Senior Associate', x: 1560, y: 320, id: 'compliance-lead-1', connections: ['audit-dev-1', 'gdpr-dev-1'] },
+        
+        { type: 'Senior Associate', x: 1640, y: 320, id: 'test-lead-1', connections: ['unit-test-1', 'integration-test-1'] },
+        { type: 'Senior Associate', x: 1720, y: 320, id: 'automation-lead-1', connections: ['e2e-test-1', 'perf-test-1'] },
+        
+        // Associates - Individual Contributors
+        { type: 'Associate', x: 20, y: 480, id: 'react-dev-1', connections: [] },
+        { type: 'Associate', x: 60, y: 480, id: 'react-dev-2', connections: [] },
+        { type: 'Associate', x: 100, y: 480, id: 'vue-dev-1', connections: [] },
+        { type: 'Associate', x: 140, y: 480, id: 'vue-dev-2', connections: [] },
+        { type: 'Associate', x: 180, y: 480, id: 'ui-dev-1', connections: [] },
+        { type: 'Associate', x: 220, y: 480, id: 'design-sys-1', connections: [] },
+        
+        { type: 'Associate', x: 260, y: 480, id: 'node-dev-1', connections: [] },
+        { type: 'Associate', x: 300, y: 480, id: 'python-dev-1', connections: [] },
+        { type: 'Associate', x: 340, y: 480, id: 'go-dev-1', connections: [] },
+        { type: 'Associate', x: 380, y: 480, id: 'rust-dev-1', connections: [] },
+        { type: 'Associate', x: 420, y: 480, id: 'postgres-dev-1', connections: [] },
+        { type: 'Associate', x: 460, y: 480, id: 'redis-dev-1', connections: [] },
+        
+        { type: 'Associate', x: 500, y: 480, id: 'swift-dev-1', connections: [] },
+        { type: 'Associate', x: 540, y: 480, id: 'objc-dev-1', connections: [] },
+        { type: 'Associate', x: 580, y: 480, id: 'kotlin-dev-1', connections: [] },
+        { type: 'Associate', x: 620, y: 480, id: 'java-dev-1', connections: [] },
+        { type: 'Associate', x: 660, y: 480, id: 'dart-dev-1', connections: [] },
+        { type: 'Associate', x: 700, y: 480, id: 'flutter-dev-1', connections: [] },
+        
+        { type: 'Associate', x: 740, y: 480, id: 'aws-dev-1', connections: [] },
+        { type: 'Associate', x: 780, y: 480, id: 'gcp-dev-1', connections: [] },
+        { type: 'Associate', x: 820, y: 480, id: 'k8s-dev-1', connections: [] },
+        { type: 'Associate', x: 860, y: 480, id: 'helm-dev-1', connections: [] },
+        { type: 'Associate', x: 900, y: 480, id: 'network-dev-1', connections: [] },
+        { type: 'Associate', x: 940, y: 480, id: 'cdn-dev-1', connections: [] },
+        
+        { type: 'Associate', x: 980, y: 480, id: 'jenkins-dev-1', connections: [] },
+        { type: 'Associate', x: 1020, y: 480, id: 'github-dev-1', connections: [] },
+        { type: 'Associate', x: 1060, y: 480, id: 'prometheus-dev-1', connections: [] },
+        { type: 'Associate', x: 1100, y: 480, id: 'grafana-dev-1', connections: [] },
+        { type: 'Associate', x: 1140, y: 480, id: 'deploy-dev-1', connections: [] },
+        { type: 'Associate', x: 1180, y: 480, id: 'canary-dev-1', connections: [] },
+        
+        { type: 'Associate', x: 1220, y: 480, id: 'spark-dev-1', connections: [] },
+        { type: 'Associate', x: 1260, y: 480, id: 'snowflake-dev-1', connections: [] },
+        { type: 'Associate', x: 1300, y: 480, id: 'tensorflow-dev-1', connections: [] },
+        { type: 'Associate', x: 1340, y: 480, id: 'pytorch-dev-1', connections: [] },
+        { type: 'Associate', x: 1380, y: 480, id: 'airflow-dev-1', connections: [] },
+        { type: 'Associate', x: 1420, y: 480, id: 'kafka-dev-1', connections: [] },
+        
+        { type: 'Associate', x: 1460, y: 480, id: 'security-dev-1', connections: [] },
+        { type: 'Associate', x: 1500, y: 480, id: 'pentest-dev-1', connections: [] },
+        { type: 'Associate', x: 1540, y: 480, id: 'audit-dev-1', connections: [] },
+        { type: 'Associate', x: 1580, y: 480, id: 'gdpr-dev-1', connections: [] },
+        
+        { type: 'Associate', x: 1620, y: 480, id: 'unit-test-1', connections: [] },
+        { type: 'Associate', x: 1660, y: 480, id: 'integration-test-1', connections: [] },
+        { type: 'Associate', x: 1700, y: 480, id: 'e2e-test-1', connections: [] },
+        { type: 'Associate', x: 1740, y: 480, id: 'perf-test-1', connections: [] }
+      ]
     }
   };
 
@@ -1496,7 +1607,8 @@ export default function Dashboard() {
                               {key === 'sales-domination' ? '247' : 
                                key === 'customer-success' ? '312' : 
                                key === 'product-innovation' ? '289' : 
-                               key === 'compliance-governance' ? '358' : '180'}
+                               key === 'compliance-governance' ? '358' : 
+                               key === 'enterprise-saas' ? '487' : '180'}
                             </span>
                           </div>
                           <div className="flex justify-between text-xs">
