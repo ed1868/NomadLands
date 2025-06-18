@@ -18,25 +18,25 @@ const iconMap = {
 };
 
 const gradientClasses = {
-  "sage-green": "velvet-gradient",
-  "ocean-mist": "emerald-gradient", 
-  "warm-beige": "velvet-gradient",
-  "dusty-rose": "emerald-gradient",
-  "lavender-grey": "velvet-gradient",
-  "soft-sage": "emerald-gradient",
-  "charcoal": "velvet-gradient",
+  "sage-green": "obsidian-gradient",
+  "ocean-mist": "shadow-gradient", 
+  "warm-beige": "obsidian-gradient",
+  "dusty-rose": "shadow-gradient",
+  "lavender-grey": "obsidian-gradient",
+  "soft-sage": "emerald-knight",
+  "charcoal": "obsidian-gradient",
 };
 
-// High-quality agent images
+// Dark Knight architectural images - inspired by your references
 const agentImages = {
-  "Mindful Email Curator": "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=300&fit=crop&crop=center",
-  "CloudFlow Orchestrator": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=300&fit=crop&crop=center",
-  "Invoice Intelligence": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop&crop=center",
-  "Talent Scout Pro": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=400&h=300&fit=crop&crop=center",
-  "Social Harmony Bot": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=300&fit=crop&crop=center",
-  "Schedule Sage": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&crop=center",
-  "Data Whisperer": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop&crop=center",
-  "Wellness Guardian": "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop&crop=center",
+  "Mindful Email Curator": "@assets/Screenshot 2025-06-17 at 21.43.12_1750210995781.png",
+  "CloudFlow Orchestrator": "@assets/Screenshot 2025-06-17 at 21.43.26_1750211011505.png",
+  "Invoice Intelligence": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop&crop=center", // Dark modern architecture
+  "Talent Scout Pro": "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=400&h=300&fit=crop&crop=center", // Moody building
+  "Social Harmony Bot": "https://images.unsplash.com/photo-1600607688960-e095cb4bd6b8?w=400&h=300&fit=crop&crop=center", // Dark architectural detail
+  "Schedule Sage": "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?w=400&h=300&fit=crop&crop=center", // Minimal dark structure
+  "Data Whisperer": "https://images.unsplash.com/photo-1600607688960-e095cb4bd6b8?w=400&h=300&fit=crop&crop=center", // Dark tech aesthetic
+  "Wellness Guardian": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=300&fit=crop&crop=center", // Serene dark space
 };
 
 interface AgentCardProps {

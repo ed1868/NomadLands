@@ -3,37 +3,37 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(140, 15%, 8%);
-  --foreground: hsl(0, 0%, 95%);
-  --muted: hsl(140, 10%, 12%);
-  --muted-foreground: hsl(0, 0%, 70%);
-  --popover: hsl(140, 15%, 8%);
-  --popover-foreground: hsl(0, 0%, 95%);
-  --card: hsl(140, 12%, 10%);
-  --card-foreground: hsl(0, 0%, 95%);
-  --border: hsl(140, 20%, 20%);
-  --input: hsl(140, 10%, 12%);
-  --primary: hsl(140, 25%, 30%);
-  --primary-foreground: hsl(0, 0%, 95%);
-  --secondary: hsl(140, 10%, 15%);
-  --secondary-foreground: hsl(0, 0%, 95%);
-  --accent: hsl(140, 20%, 25%);
-  --accent-foreground: hsl(0, 0%, 95%);
-  --destructive: hsl(0, 60%, 50%);
-  --destructive-foreground: hsl(0, 0%, 95%);
-  --ring: hsl(140, 25%, 30%);
+  --background: hsl(0, 0%, 4%);
+  --foreground: hsl(0, 0%, 90%);
+  --muted: hsl(0, 0%, 8%);
+  --muted-foreground: hsl(0, 0%, 60%);
+  --popover: hsl(0, 0%, 6%);
+  --popover-foreground: hsl(0, 0%, 90%);
+  --card: hsl(0, 0%, 6%);
+  --card-foreground: hsl(0, 0%, 90%);
+  --border: hsl(140, 15%, 12%);
+  --input: hsl(0, 0%, 8%);
+  --primary: hsl(140, 20%, 25%);
+  --primary-foreground: hsl(0, 0%, 90%);
+  --secondary: hsl(0, 0%, 10%);
+  --secondary-foreground: hsl(0, 0%, 85%);
+  --accent: hsl(140, 15%, 15%);
+  --accent-foreground: hsl(0, 0%, 85%);
+  --destructive: hsl(0, 60%, 45%);
+  --destructive-foreground: hsl(0, 0%, 90%);
+  --ring: hsl(140, 20%, 25%);
   --radius: 0.5rem;
   
-  /* Luxurious Dark Green Interior Palette */
-  --velvet-green: hsl(140, 30%, 25%);
-  --deep-emerald: hsl(140, 35%, 20%);
-  --forest-velvet: hsl(140, 40%, 15%);
-  --charcoal-black: hsl(0, 0%, 8%);
-  --metal-black: hsl(0, 0%, 12%);
-  --warm-brass: hsl(45, 25%, 60%);
-  --soft-cream: hsl(45, 15%, 92%);
-  --warm-grey: hsl(0, 0%, 85%);
-  --luxury-gold: hsl(45, 30%, 70%);
+  /* Dark Knight Palette - Inspired by moody architecture */
+  --obsidian: hsl(0, 0%, 3%);
+  --charcoal-deep: hsl(0, 0%, 6%);
+  --forest-shadow: hsl(140, 25%, 12%);
+  --emerald-night: hsl(140, 30%, 18%);
+  --steel-grey: hsl(220, 5%, 25%);
+  --warm-amber: hsl(45, 40%, 55%);
+  --misty-white: hsl(0, 0%, 88%);
+  --fog-grey: hsl(0, 0%, 65%);
+  --accent-green: hsl(140, 35%, 22%);
 }
 
 .dark {
@@ -98,19 +98,23 @@
     border-color: var(--velvet-green);
   }
   
-  .velvet-gradient {
-    background: linear-gradient(135deg, var(--velvet-green) 0%, var(--deep-emerald) 100%);
+  .obsidian-gradient {
+    background: linear-gradient(135deg, var(--obsidian) 0%, var(--charcoal-deep) 50%, var(--forest-shadow) 100%);
   }
   
-  .emerald-gradient {
-    background: linear-gradient(135deg, var(--deep-emerald) 0%, var(--forest-velvet) 100%);
+  .shadow-gradient {
+    background: linear-gradient(135deg, var(--charcoal-deep) 0%, var(--forest-shadow) 100%);
   }
   
-  .luxury-text {
-    background: linear-gradient(135deg, var(--soft-cream) 0%, var(--warm-brass) 100%);
+  .knight-text {
+    background: linear-gradient(135deg, var(--warm-amber) 0%, var(--misty-white) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
+  
+  .emerald-knight {
+    background: linear-gradient(135deg, var(--emerald-night) 0%, var(--accent-green) 100%);
   }
   
   .fade-in-luxury {

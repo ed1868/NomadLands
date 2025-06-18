@@ -18,30 +18,39 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="relative h-screen hero-section flex items-center justify-center overflow-hidden">
-      {/* Luxury ambient effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/3 left-1/5 w-96 h-96 bg-emerald-800/8 rounded-full blur-3xl floating-luxury" />
-        <div className="absolute bottom-1/3 right-1/5 w-80 h-80 bg-amber-600/5 rounded-full blur-3xl floating-luxury" style={{ animationDelay: '2s' }} />
+    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      {/* Dark Knight background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-950 to-black"></div>
+      
+      {/* Moody atmospheric layers */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/60"></div>
+      
+      {/* Subtle fog/mist effects */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-emerald-900/30 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-slate-800/20 rounded-full blur-3xl"></div>
       </div>
+      
+      {/* Shadows and depth */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,black_70%)]"></div>
 
       <div className="max-w-6xl mx-auto px-8 text-center relative z-10">
         <div className={`${isVisible ? 'fade-in-luxury' : 'opacity-0'}`}>
           {/* Main Headline */}
-          <h1 className="text-6xl md:text-8xl font-light mb-8 leading-[0.9] tracking-[-0.02em] text-white">
-            Work Less.
+          <h1 className="text-5xl md:text-7xl font-extralight mb-8 leading-[0.9] tracking-wide text-gray-200">
+            AI
             <br />
-            <span className="luxury-text font-medium">
-              Live Smart.
+            <span className="knight-text font-light">
+              Nomads
             </span>
           </h1>
           
           {/* Subheadline */}
           <div className={`${isVisible ? 'slide-up-luxury' : 'opacity-0'}`} style={{ animationDelay: '0.4s' }}>
-            <p className="text-xl md:text-2xl text-gray-300 mb-16 max-w-4xl mx-auto leading-relaxed font-light">
-              Exquisitely crafted AI agents for discerning professionals.
+            <p className="text-lg md:text-xl text-gray-500 mb-16 max-w-4xl mx-auto leading-relaxed font-extralight">
+              In the shadows of innovation.
               <br className="hidden md:block" />
-              <span className="text-amber-200">Sophisticated automation that elevates your practice.</span>
+              <span className="text-gray-400">Where darkness meets intelligence.</span>
             </p>
           </div>
           
@@ -49,28 +58,28 @@ export default function HeroSection() {
           <div className={`flex flex-col sm:flex-row gap-6 justify-center items-center ${isVisible ? 'slide-up-luxury' : 'opacity-0'}`} style={{ animationDelay: '0.8s' }}>
             <Button
               onClick={scrollToMarketplace}
-              className="velvet-gradient px-12 py-6 rounded-md text-lg font-medium hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 text-white border-none smooth-hover luxury-shadow"
+              className="obsidian-gradient px-10 py-5 rounded border border-gray-800 text-lg font-light hover:border-emerald-800 hover:shadow-2xl hover:shadow-emerald-900/30 transition-all duration-700 text-gray-300 backdrop-blur-sm"
               size="lg"
             >
-              Explore Collection
-              <ArrowRight className="ml-2 w-5 h-5" />
+              Enter the Shadows
+              <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
             <Button
               variant="outline"
-              className="brass-border bg-transparent px-12 py-6 rounded-md text-lg font-light transition-all duration-500 text-amber-200 backdrop-blur-sm smooth-hover"
+              className="bg-transparent border-gray-700 px-10 py-5 rounded text-lg font-extralight transition-all duration-500 text-gray-400 hover:text-gray-300 hover:border-gray-600 backdrop-blur-sm"
               size="lg"
             >
-              <Play className="mr-2 w-5 h-5" />
-              Watch Story
+              <Play className="mr-2 w-4 h-4" />
+              Witness Power
             </Button>
           </div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 floating-luxury">
-        <div className="w-6 h-10 border-2 border-amber-300/60 rounded-full flex justify-center backdrop-blur-sm">
-          <div className="w-1 h-3 bg-amber-300/80 rounded-full mt-2 animate-pulse" />
+      {/* Dark scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+        <div className="w-6 h-10 border border-gray-700 rounded-full flex justify-center backdrop-blur-sm">
+          <div className="w-0.5 h-3 bg-gray-600 rounded-full mt-2 animate-pulse" />
         </div>
       </div>
     </section>
