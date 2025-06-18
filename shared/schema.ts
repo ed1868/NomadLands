@@ -159,6 +159,106 @@ export const agentTagRelationsRelations = relations(agentTagRelations, ({ one })
   }),
 }));
 
+// Nomad Lands ecosystem tables
+export const companies = pgTable("companies", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  ownerId: varchar("owner_id").notNull().references(() => users.id),
+  walletAddress: varchar("wallet_address", { length: 42 }),
+  avatar: varchar("avatar"),
+  verified: boolean("verified").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const nomadAgents = pgTable("nomad_agents", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  category: varchar("category", { length: 100 }),
+  ownerId: varchar("owner_id").notNull().references(() => users.id),
+  companyId: integer("company_id").references(() => companies.id),
+  pricePerRun: integer("price_per_run").notNull(), // in wei
+  pricePerHour: integer("price_per_hour"), // in wei
+  availability: varchar("availability").default("available"), // available, busy, offline
+  skills: text("skills").array(),
+  rating: integer("rating").default(5),
+  totalRuns: integer("total_runs").default(0),
+  icon: varchar("icon"),
+  featured: boolean("featured").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const agentHires = pgTable("agent_hires", {
+  id: serial("id").primaryKey(),
+  hirerId: varchar("hirer_id").notNull().references(() => users.id),
+  agentId: integer("agent_id").notNull().references(() => nomadAgents.id),
+  contractId: integer("contract_id").references(() => smartContracts.id),
+  hireType: varchar("hire_type").notNull(), // "per_run" | "per_hour"
+  amount: integer("amount").notNull(), // in wei
+  status: varchar("status").default("pending"), // pending, active, completed, cancelled
+  taskDescription: text("task_description"),
+  startTime: timestamp("start_time"),
+  endTime: timestamp("end_time"),
+  transactionHash: varchar("transaction_hash"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Smart Contracts marketplace
+export const smartContracts = pgTable("smart_contracts", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  category: varchar("category", { length: 100 }),
+  contractAddress: varchar("contract_address", { length: 42 }),
+  abi: text("abi"), // JSON string of contract ABI
+  taxPercentage: integer("tax_percentage").default(250), // 2.5% = 250 basis points
+  minAmount: integer("min_amount"), // minimum amount in wei
+  maxAmount: integer("max_amount"), // maximum amount in wei
+  features: text("features").array(),
+  gasEstimate: integer("gas_estimate"),
+  icon: varchar("icon"),
+  verified: boolean("verified").default(false),
+  active: boolean("active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const contractEngagements = pgTable("contract_engagements", {
+  id: serial("id").primaryKey(),
+  contractId: integer("contract_id").notNull().references(() => smartContracts.id),
+  partyAId: varchar("party_a_id").notNull().references(() => users.id),
+  partyBId: varchar("party_b_id").notNull().references(() => users.id),
+  partyAWallet: varchar("party_a_wallet", { length: 42 }).notNull(),
+  partyBWallet: varchar("party_b_wallet", { length: 42 }).notNull(),
+  amount: integer("amount").notNull(), // in wei
+  taxAmount: integer("tax_amount").notNull(), // calculated tax in wei
+  status: varchar("status").default("pending"), // pending, active, completed, disputed
+  terms: text("terms"),
+  transactionHash: varchar("transaction_hash"),
+  blockNumber: integer("block_number"),
+  startTime: timestamp("start_time"),
+  endTime: timestamp("end_time"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// User uploads and files
+export const userFiles = pgTable("user_files", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  fileName: varchar("file_name").notNull(),
+  fileType: varchar("file_type"),
+  fileSize: integer("file_size"),
+  filePath: varchar("file_path"),
+  description: text("description"),
+  category: varchar("category"), // agent, contract, document
+  associatedAgentId: integer("associated_agent_id").references(() => nomadAgents.id),
+  associatedContractId: integer("associated_contract_id").references(() => contractEngagements.id),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Schema validation
 export const insertUserSchema = createInsertSchema(users).pick({
   walletAddress: true,
@@ -238,3 +338,153 @@ export type InsertTag = z.infer<typeof insertTagSchema>;
 export type AgentTag = typeof agentTags.$inferSelect;
 export type InsertTagRelation = z.infer<typeof insertTagRelationSchema>;
 export type AgentTagRelation = typeof agentTagRelations.$inferSelect;
+
+// Add relations for new tables
+export const companiesRelations = relations(companies, ({ one, many }) => ({
+  owner: one(users, {
+    fields: [companies.ownerId],
+    references: [users.id],
+  }),
+  agents: many(nomadAgents),
+}));
+
+export const nomadAgentsRelations = relations(nomadAgents, ({ one, many }) => ({
+  owner: one(users, {
+    fields: [nomadAgents.ownerId],
+    references: [users.id],
+  }),
+  company: one(companies, {
+    fields: [nomadAgents.companyId],
+    references: [companies.id],
+  }),
+  hires: many(agentHires),
+}));
+
+export const agentHiresRelations = relations(agentHires, ({ one }) => ({
+  hirer: one(users, {
+    fields: [agentHires.hirerId],
+    references: [users.id],
+  }),
+  agent: one(nomadAgents, {
+    fields: [agentHires.agentId],
+    references: [nomadAgents.id],
+  }),
+  contract: one(smartContracts, {
+    fields: [agentHires.contractId],
+    references: [smartContracts.id],
+  }),
+}));
+
+export const smartContractsRelations = relations(smartContracts, ({ many }) => ({
+  engagements: many(contractEngagements),
+  agentHires: many(agentHires),
+}));
+
+export const contractEngagementsRelations = relations(contractEngagements, ({ one }) => ({
+  contract: one(smartContracts, {
+    fields: [contractEngagements.contractId],
+    references: [smartContracts.id],
+  }),
+  partyA: one(users, {
+    fields: [contractEngagements.partyAId],
+    references: [users.id],
+  }),
+  partyB: one(users, {
+    fields: [contractEngagements.partyBId],
+    references: [users.id],
+  }),
+}));
+
+export const userFilesRelations = relations(userFiles, ({ one }) => ({
+  user: one(users, {
+    fields: [userFiles.userId],
+    references: [users.id],
+  }),
+  nomadAgent: one(nomadAgents, {
+    fields: [userFiles.associatedAgentId],
+    references: [nomadAgents.id],
+  }),
+  contractEngagement: one(contractEngagements, {
+    fields: [userFiles.associatedContractId],
+    references: [contractEngagements.id],
+  }),
+}));
+
+// New schemas for Nomad Lands ecosystem
+export const insertCompanySchema = createInsertSchema(companies).pick({
+  name: true,
+  description: true,
+  ownerId: true,
+  walletAddress: true,
+  avatar: true,
+});
+
+export const insertNomadAgentSchema = createInsertSchema(nomadAgents).pick({
+  name: true,
+  description: true,
+  category: true,
+  ownerId: true,
+  companyId: true,
+  pricePerRun: true,
+  pricePerHour: true,
+  skills: true,
+  icon: true,
+});
+
+export const insertAgentHireSchema = createInsertSchema(agentHires).pick({
+  hirerId: true,
+  agentId: true,
+  contractId: true,
+  hireType: true,
+  amount: true,
+  taskDescription: true,
+});
+
+export const insertSmartContractSchema = createInsertSchema(smartContracts).pick({
+  name: true,
+  description: true,
+  category: true,
+  contractAddress: true,
+  abi: true,
+  taxPercentage: true,
+  minAmount: true,
+  maxAmount: true,
+  features: true,
+  gasEstimate: true,
+  icon: true,
+});
+
+export const insertContractEngagementSchema = createInsertSchema(contractEngagements).pick({
+  contractId: true,
+  partyAId: true,
+  partyBId: true,
+  partyAWallet: true,
+  partyBWallet: true,
+  amount: true,
+  terms: true,
+});
+
+export const insertUserFileSchema = createInsertSchema(userFiles).pick({
+  userId: true,
+  fileName: true,
+  fileType: true,
+  fileSize: true,
+  description: true,
+  category: true,
+  associatedAgentId: true,
+  associatedContractId: true,
+});
+
+// New types for Nomad Lands ecosystem
+export type InsertCompany = z.infer<typeof insertCompanySchema>;
+export type Company = typeof companies.$inferSelect;
+export type InsertNomadAgent = z.infer<typeof insertNomadAgentSchema>;
+export type NomadAgent = typeof nomadAgents.$inferSelect;
+export type InsertAgentHire = z.infer<typeof insertAgentHireSchema>;
+export type AgentHire = typeof agentHires.$inferSelect;
+export type InsertSmartContract = z.infer<typeof insertSmartContractSchema>;
+export type SmartContract = typeof smartContracts.$inferSelect;
+export type InsertContractEngagement = z.infer<typeof insertContractEngagementSchema>;
+export type ContractEngagement = typeof contractEngagements.$inferSelect;
+export type InsertUserFile = z.infer<typeof insertUserFileSchema>;
+export type UserFile = typeof userFiles.$inferSelect;

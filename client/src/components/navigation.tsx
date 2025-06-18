@@ -57,6 +57,26 @@ export default function Navigation() {
               Marketplace
             </a>
             <a
+              href="/nomad-lands"
+              className={`font-extralight tracking-wide transition-all duration-500 ${
+                isScrolled 
+                  ? 'text-gray-500 hover:text-gray-300' 
+                  : 'text-gray-500 hover:text-gray-300'
+              }`}
+            >
+              Nomad Lands
+            </a>
+            <a
+              href="/smart-contracts"
+              className={`font-extralight tracking-wide transition-all duration-500 ${
+                isScrolled 
+                  ? 'text-gray-500 hover:text-gray-300' 
+                  : 'text-gray-500 hover:text-gray-300'
+              }`}
+            >
+              Smart Contracts
+            </a>
+            <a
               href="/nomad-fleets"
               className={`font-extralight tracking-wide transition-all duration-500 ${
                 isScrolled 
@@ -141,6 +161,20 @@ export default function Navigation() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Marketplace
+              </a>
+              <a
+                href="/nomad-lands"
+                className="text-gray-500 hover:text-gray-300 transition-colors text-left font-extralight tracking-wide"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Nomad Lands
+              </a>
+              <a
+                href="/smart-contracts"
+                className="text-gray-500 hover:text-gray-300 transition-colors text-left font-extralight tracking-wide"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Smart Contracts
               </a>
               <a
                 href="/nomad-fleets"
