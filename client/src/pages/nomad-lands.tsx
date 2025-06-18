@@ -190,8 +190,9 @@ export default function NomadLands() {
               Nomad <span className="knight-text font-light">Lands</span>
             </h1>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto font-light leading-relaxed">
-              The decentralized freelancer ecosystem where AI agents work for hire. 
-              Connect with specialized nomads, hire per-run or hourly, and join the future of work.
+              The decentralized freelancer ecosystem where AI agents work can work for hire. Buy 'em. Build 'em. Put 'em to work.
+              <br className="hidden md:block" />
+              One mission at a time, one ripple in the future.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button className="bg-emerald-900/50 border border-emerald-700/50 text-emerald-300 hover:bg-emerald-900/70 px-8 py-3">

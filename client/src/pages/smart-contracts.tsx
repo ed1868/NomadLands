@@ -409,8 +409,9 @@ Amount: ${amount} ETH`);
               Smart <span className="knight-text font-light">Contracts</span>
             </h1>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto font-light leading-relaxed">
-              Secure blockchain contracts for every transaction. 
-              Choose from verified smart contracts with automatic execution and transparent tax calculations.
+              Trust without talking. Action without friction.
+              <br className="hidden md:block" />
+              Audited, locked, and running smoother than a V8 on desert asphalt.
             </p>
             <div className="flex items-center justify-center space-x-8 text-sm text-gray-500">
               <div className="flex items-center space-x-2">
