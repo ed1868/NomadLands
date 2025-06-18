@@ -1120,6 +1120,13 @@ export default function Dashboard() {
     if (activeTab === 'ecosystem') {
       console.log('Starting massive hive mind brain visualization...');
       const container = d3.select('#voronoi-ecosystem');
+      
+      // Clean up any existing intervals first
+      const existingSvg = container.select('svg').node();
+      if (existingSvg && (existingSvg as any).__cleanup) {
+        (existingSvg as any).__cleanup();
+      }
+      
       container.selectAll('*').remove();
 
       const width = 800;
@@ -1186,31 +1193,31 @@ export default function Dashboard() {
       const rightCenter = { x: width * 0.75, y: height * 0.5 };
       const corpus = { x: width * 0.5, y: height * 0.5 };
 
-      // Generate optimized neural clusters for visual density
+      // Generate optimized neural clusters for performance
       const regions = [
         // Left hemisphere regions  
-        { center: { x: leftCenter.x, y: height * 0.3 }, radius: 80, density: 800, type: 'frontal' },
-        { center: { x: leftCenter.x - 50, y: height * 0.5 }, radius: 60, density: 600, type: 'temporal' },
-        { center: { x: leftCenter.x, y: height * 0.7 }, radius: 70, density: 700, type: 'occipital' },
-        { center: { x: leftCenter.x + 30, y: height * 0.4 }, radius: 50, density: 500, type: 'parietal' },
+        { center: { x: leftCenter.x, y: height * 0.3 }, radius: 80, density: 400, type: 'frontal' },
+        { center: { x: leftCenter.x - 50, y: height * 0.5 }, radius: 60, density: 300, type: 'temporal' },
+        { center: { x: leftCenter.x, y: height * 0.7 }, radius: 70, density: 350, type: 'occipital' },
+        { center: { x: leftCenter.x + 30, y: height * 0.4 }, radius: 50, density: 250, type: 'parietal' },
         
         // Right hemisphere regions
-        { center: { x: rightCenter.x, y: height * 0.3 }, radius: 80, density: 800, type: 'frontal' },
-        { center: { x: rightCenter.x + 50, y: height * 0.5 }, radius: 60, density: 600, type: 'temporal' },
-        { center: { x: rightCenter.x, y: height * 0.7 }, radius: 70, density: 700, type: 'occipital' },
-        { center: { x: rightCenter.x - 30, y: height * 0.4 }, radius: 50, density: 500, type: 'parietal' },
+        { center: { x: rightCenter.x, y: height * 0.3 }, radius: 80, density: 400, type: 'frontal' },
+        { center: { x: rightCenter.x + 50, y: height * 0.5 }, radius: 60, density: 300, type: 'temporal' },
+        { center: { x: rightCenter.x, y: height * 0.7 }, radius: 70, density: 350, type: 'occipital' },
+        { center: { x: rightCenter.x - 30, y: height * 0.4 }, radius: 50, density: 250, type: 'parietal' },
         
         // Central regions
-        { center: corpus, radius: 40, density: 400, type: 'corpus' },
-        { center: { x: width * 0.5, y: height * 0.8 }, radius: 30, density: 300, type: 'brainstem' },
+        { center: corpus, radius: 40, density: 200, type: 'corpus' },
+        { center: { x: width * 0.5, y: height * 0.8 }, radius: 30, density: 150, type: 'brainstem' },
         
-        // Dense peripheral clusters for visual effect
-        { center: { x: width * 0.15, y: height * 0.4 }, radius: 35, density: 350, type: 'cluster' },
-        { center: { x: width * 0.85, y: height * 0.4 }, radius: 35, density: 350, type: 'cluster' },
-        { center: { x: width * 0.3, y: height * 0.15 }, radius: 25, density: 250, type: 'cluster' },
-        { center: { x: width * 0.7, y: height * 0.15 }, radius: 25, density: 250, type: 'cluster' },
-        { center: { x: width * 0.3, y: height * 0.85 }, radius: 25, density: 250, type: 'cluster' },
-        { center: { x: width * 0.7, y: height * 0.85 }, radius: 25, density: 250, type: 'cluster' }
+        // Peripheral clusters for visual effect
+        { center: { x: width * 0.15, y: height * 0.4 }, radius: 35, density: 175, type: 'cluster' },
+        { center: { x: width * 0.85, y: height * 0.4 }, radius: 35, density: 175, type: 'cluster' },
+        { center: { x: width * 0.3, y: height * 0.15 }, radius: 25, density: 125, type: 'cluster' },
+        { center: { x: width * 0.7, y: height * 0.15 }, radius: 25, density: 125, type: 'cluster' },
+        { center: { x: width * 0.3, y: height * 0.85 }, radius: 25, density: 125, type: 'cluster' },
+        { center: { x: width * 0.7, y: height * 0.85 }, radius: 25, density: 125, type: 'cluster' }
       ];
 
       // Generate nodes with optimized density for visual effect
@@ -1453,75 +1460,96 @@ export default function Dashboard() {
         }, 3000 + i * 200);
       });
 
-      // Add visual density effects for massive appearance
-      const addDensityEffect = () => {
-        // Create background particle effect for visual density
-        for (let i = 0; i < 200; i++) {
-          const particle = svg.append('circle')
-            .attr('cx', Math.random() * width)
-            .attr('cy', Math.random() * height)
-            .attr('r', 0.3 + Math.random() * 0.5)
-            .attr('fill', colors.dark)
-            .attr('opacity', 0.1 + Math.random() * 0.2)
-            .attr('filter', 'url(#glow)');
+      // Add title at the top
+      svg.append('text')
+        .attr('x', width / 2)
+        .attr('y', 25)
+        .attr('fill', colors.core)
+        .attr('font-size', '18px')
+        .attr('font-weight', 'bold')
+        .attr('text-anchor', 'middle')
+        .attr('filter', 'url(#glow)')
+        .text('Total AI Agents Running Tasks');
 
-          // Animate particles for living effect
-          particle.transition()
-            .duration(3000 + Math.random() * 2000)
-            .delay(Math.random() * 5000)
-            .attr('opacity', 0.3)
-            .transition()
-            .duration(3000 + Math.random() * 2000)
-            .attr('opacity', 0.1)
-            .on('end', function() {
-              d3.select(this).remove();
-            });
-        }
-      };
+      svg.append('text')
+        .attr('x', width / 2)
+        .attr('y', 45)
+        .attr('fill', '#888888')
+        .attr('font-size', '12px')
+        .attr('text-anchor', 'middle')
+        .text(`247,382 agents • 89,574 active tasks • Live activity`);
 
-      // Continuous density effects
-      setInterval(addDensityEffect, 4000);
+      // Fast synaptic firing animation
+      const createSynapticFiring = () => {
+        // Select random start and end points from existing nodes
+        if (nodes.length < 2) return;
+        
+        const startNode = nodes[Math.floor(Math.random() * nodes.length)];
+        const endNode = nodes[Math.floor(Math.random() * nodes.length)];
+        
+        if (startNode === endNode) return;
 
-      // Add pulsing network activity overlay
-      const addNetworkPulse = () => {
+        // Create fast-moving pulse
         const pulse = svg.append('circle')
-          .attr('cx', width * (0.2 + Math.random() * 0.6))
-          .attr('cy', height * (0.2 + Math.random() * 0.6))
-          .attr('r', 3)
-          .attr('fill', 'none')
-          .attr('stroke', colors.core)
-          .attr('stroke-width', 1.5)
-          .attr('stroke-opacity', 0.8)
+          .attr('cx', startNode.x)
+          .attr('cy', startNode.y)
+          .attr('r', 1.5)
+          .attr('fill', colors.core)
+          .attr('opacity', 1)
           .attr('filter', 'url(#glow)');
 
+        // Animate pulse along path
         pulse.transition()
-          .duration(2000)
-          .attr('r', 40)
+          .duration(150) // Very fast - 150ms
+          .attr('cx', endNode.x)
+          .attr('cy', endNode.y)
+          .attr('r', 3)
+          .attr('opacity', 0.8)
+          .transition()
+          .duration(50)
+          .attr('r', 0.5)
+          .attr('opacity', 0)
+          .remove();
+
+        // Create connection flash
+        const flash = svg.append('line')
+          .attr('x1', startNode.x)
+          .attr('y1', startNode.y)
+          .attr('x2', endNode.x)
+          .attr('y2', endNode.y)
+          .attr('stroke', colors.synapse)
+          .attr('stroke-width', 1)
+          .attr('stroke-opacity', 0.6)
+          .attr('filter', 'url(#connectionGlow)');
+
+        flash.transition()
+          .duration(100)
           .attr('stroke-opacity', 0)
           .remove();
       };
 
-      setInterval(addNetworkPulse, 600);
+      // Rapid synaptic firing every 80ms
+      const firingInterval = setInterval(createSynapticFiring, 80);
 
-      // Add statistics with 200k+ display
-      svg.append('text')
-        .attr('x', 20)
-        .attr('y', 30)
-        .attr('fill', colors.core)
-        .attr('font-size', '14px')
-        .attr('font-weight', 'bold')
-        .attr('filter', 'url(#glow)')
-        .text('Neural Hive Mind');
+      // Cleanup interval when component unmounts or tab changes
+      const cleanup = () => {
+        clearInterval(firingInterval);
+      };
 
-      svg.append('text')
-        .attr('x', 20)
-        .attr('y', 50)
-        .attr('fill', '#888888')
-        .attr('font-size', '11px')
-        .text(`247,382 neurons • 89,574 synapses • Live neural activity`);
+      // Store cleanup function for later use
+      (svg.node() as any).__cleanup = cleanup;
 
       console.log('Massive hive mind brain visualization complete');
     }
+
+    // Cleanup function when tab changes or component unmounts
+    return () => {
+      const container = d3.select('#voronoi-ecosystem');
+      const svgNode = container.select('svg').node();
+      if (svgNode && (svgNode as any).__cleanup) {
+        (svgNode as any).__cleanup();
+      }
+    };
   }, [activeTab]);
 
   // Logout function
