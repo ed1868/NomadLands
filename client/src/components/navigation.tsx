@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Menu, X, Bot, Wallet, User, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/hooks/use-wallet";
-import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/useAuth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,12 +16,7 @@ export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { address, isConnected, isConnecting, connectWallet, disconnectWallet, formatAddress } = useWallet();
-  
-  // Check if user is logged in
-  const { data: user, isLoading: isUserLoading } = useQuery({
-    queryKey: ["/api/auth/user"],
-    retry: false,
-  });
+  const { user, isLoading: isUserLoading } = useAuth();
 
   const handleLogout = () => {
     window.location.href = "/api/logout";

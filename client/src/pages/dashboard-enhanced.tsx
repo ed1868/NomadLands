@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/useAuth";
 import { 
   Activity, 
   TrendingUp, 
@@ -154,10 +155,7 @@ export default function DashboardEnhanced() {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Get user data
-  const { data: user } = useQuery({
-    queryKey: ["/api/auth/user"],
-    retry: false,
-  });
+  const { user, isLoading: isUserLoading } = useAuth();
 
   // Get user purchases/agents
   const { data: userPurchases, isLoading: isPurchasesLoading } = useQuery({
@@ -196,7 +194,7 @@ export default function DashboardEnhanced() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-white">
-                Welcome back, {user.firstName || user.username || 'Nomad'}
+                Welcome back, {user?.firstName || user?.username || 'Nomad'}
               </h1>
               <p className="text-gray-400 text-sm">
                 Monitor your AI agents and track performance metrics
