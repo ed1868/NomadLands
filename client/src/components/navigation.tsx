@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { Menu, X, Bot } from "lucide-react";
+import { Menu, X, Bot, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useWallet } from "@/hooks/use-wallet";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { address, isConnected, isConnecting, connectWallet, disconnectWallet, formatAddress } = useWallet();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -43,7 +45,7 @@ export default function Navigation() {
             </span>
           </div>
           
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-6">
             <a
               href="/marketplace"
               className={`font-extralight tracking-wide transition-all duration-500 ${
@@ -74,6 +76,29 @@ export default function Navigation() {
             >
               API
             </a>
+            
+            {/* Wallet Connection */}
+            {isConnected ? (
+              <button
+                onClick={disconnectWallet}
+                className="flex items-center space-x-2 bg-emerald-900/40 border border-emerald-700/50 rounded px-4 py-2 font-light text-emerald-300 backdrop-blur-sm hover:bg-emerald-900/60 hover:border-emerald-600/70 transition-all duration-300"
+              >
+                <Wallet className="w-4 h-4" />
+                <span className="text-sm">{address && formatAddress(address)}</span>
+              </button>
+            ) : (
+              <button
+                onClick={connectWallet}
+                disabled={isConnecting}
+                className="flex items-center space-x-2 bg-black/40 border border-gray-700 rounded px-4 py-2 font-light text-gray-300 backdrop-blur-sm hover:border-gray-600 hover:bg-black/60 transition-all duration-300 disabled:opacity-50"
+              >
+                <Wallet className="w-4 h-4" />
+                <span className="text-sm">
+                  {isConnecting ? 'Connecting...' : 'Connect Wallet'}
+                </span>
+              </button>
+            )}
+            
             <a
               href="/signup"
               className="obsidian-gradient hover:shadow-lg hover:shadow-gray-900/30 transition-all duration-500 border border-gray-700 rounded px-6 py-2 font-light text-gray-300 backdrop-blur-sm hover:border-gray-600"
@@ -99,24 +124,57 @@ export default function Navigation() {
               <a
                 href="/marketplace"
                 className="text-gray-500 hover:text-gray-300 transition-colors text-left font-extralight tracking-wide"
+                onClick={() => setIsMenuOpen(false)}
               >
                 Marketplace
               </a>
               <a
                 href="/nomad-fleets"
                 className="text-gray-500 hover:text-gray-300 transition-colors text-left font-extralight tracking-wide"
+                onClick={() => setIsMenuOpen(false)}
               >
                 Nomad Fleets
               </a>
               <a
                 href="/api-docs"
                 className="text-gray-500 hover:text-gray-300 transition-colors text-left font-extralight tracking-wide"
+                onClick={() => setIsMenuOpen(false)}
               >
                 API
               </a>
+              
+              {/* Mobile Wallet Connection */}
+              {isConnected ? (
+                <button
+                  onClick={() => {
+                    disconnectWallet();
+                    setIsMenuOpen(false);
+                  }}
+                  className="flex items-center space-x-2 bg-emerald-900/40 border border-emerald-700/50 rounded px-4 py-3 font-light text-emerald-300 backdrop-blur-sm w-full"
+                >
+                  <Wallet className="w-4 h-4" />
+                  <span className="text-sm">{address && formatAddress(address)}</span>
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    connectWallet();
+                    setIsMenuOpen(false);
+                  }}
+                  disabled={isConnecting}
+                  className="flex items-center space-x-2 bg-black/40 border border-gray-700 rounded px-4 py-3 font-light text-gray-300 backdrop-blur-sm w-full disabled:opacity-50"
+                >
+                  <Wallet className="w-4 h-4" />
+                  <span className="text-sm">
+                    {isConnecting ? 'Connecting...' : 'Connect Wallet'}
+                  </span>
+                </button>
+              )}
+              
               <a
                 href="/signup"
                 className="obsidian-gradient w-full py-3 rounded border border-gray-700 font-light text-gray-300 backdrop-blur-sm block text-center"
+                onClick={() => setIsMenuOpen(false)}
               >
                 Deploy
               </a>
