@@ -13,168 +13,279 @@ export default function BrainVisualization({ className = "" }: BrainVisualizatio
 
   useEffect(() => {
     if (!mountRef.current) return;
+    
+    console.log("Starting massive hive mind brain visualization...");
 
     // Scene setup
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x000000);
     sceneRef.current = scene;
 
-    // Camera setup
+    // Camera setup - wider field of view for more dramatic effect
     const camera = new THREE.PerspectiveCamera(
-      75,
+      60,
       mountRef.current.clientWidth / mountRef.current.clientHeight,
       0.1,
       1000
     );
-    camera.position.z = 5;
+    camera.position.set(0, 0, 8);
 
     // Renderer setup
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setClearColor(0x000000, 1);
     rendererRef.current = renderer;
     mountRef.current.appendChild(renderer.domElement);
 
-    // Brain geometry - creating a complex brain-like structure
-    const brainGroup = new THREE.Group();
+    console.log("Generating neural hive mind visualization...");
 
-    // Create brain hemispheres
-    const createHemisphere = (side: 'left' | 'right') => {
-      const hemisphereGroup = new THREE.Group();
-      
-      // Main hemisphere shape
-      const hemisphereGeometry = new THREE.SphereGeometry(1.2, 32, 16, 0, Math.PI);
-      const hemisphereMaterial = new THREE.MeshPhongMaterial({
-        color: side === 'left' ? 0x10b981 : 0x06b6d4,
-        transparent: true,
-        opacity: 0.3,
-        wireframe: true
-      });
-      
-      const hemisphere = new THREE.Mesh(hemisphereGeometry, hemisphereMaterial);
-      hemisphere.position.x = side === 'left' ? -0.6 : 0.6;
-      hemisphere.rotation.y = side === 'left' ? 0 : Math.PI;
-      hemisphereGroup.add(hemisphere);
+    // Create massive neural network with particle system
+    const particleCount = 1480; // Massive neural node count
+    const connectionCount = 183; // Neural connection count
+    
+    console.log(`Generated ${particleCount} visual neural nodes`);
 
-      // Add neural nodes (synapses)
-      for (let i = 0; i < 150; i++) {
-        const nodeGeometry = new THREE.SphereGeometry(0.02, 8, 8);
-        const nodeMaterial = new THREE.MeshBasicMaterial({
-          color: side === 'left' ? 0x34d399 : 0x38bdf8,
-        });
-        const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
-        
-        // Position nodes within hemisphere
-        const phi = Math.acos(2 * Math.random() - 1);
-        const theta = 2 * Math.PI * Math.random();
-        const radius = 0.8 + Math.random() * 0.4;
-        
-        node.position.x = radius * Math.sin(phi) * Math.cos(theta) * (side === 'left' ? -1 : 1);
-        node.position.y = radius * Math.cos(phi);
-        node.position.z = radius * Math.sin(phi) * Math.sin(theta);
-        
-        hemisphereGroup.add(node);
-      }
-
-      return hemisphereGroup;
-    };
-
-    // Add both hemispheres
-    brainGroup.add(createHemisphere('left'));
-    brainGroup.add(createHemisphere('right'));
-
-    // Create neural connections (synapses)
-    const connectionsMaterial = new THREE.LineBasicMaterial({
+    // Neural node geometry and material
+    const nodeGeometry = new THREE.SphereGeometry(0.015, 8, 8);
+    const nodeMaterial = new THREE.MeshBasicMaterial({
       color: 0x10b981,
       transparent: true,
-      opacity: 0.6
+      opacity: 0.8
     });
 
-    for (let i = 0; i < 100; i++) {
-      const points = [];
+    // Create instanced mesh for performance
+    const instancedNodes = new THREE.InstancedMesh(nodeGeometry, nodeMaterial, particleCount);
+    scene.add(instancedNodes);
+
+    // Store positions for connections
+    const nodePositions: THREE.Vector3[] = [];
+    const nodeVelocities: THREE.Vector3[] = [];
+    const nodeTargets: THREE.Vector3[] = [];
+    
+    // Neural attractor positions (brain regions)
+    const attractors = [
+      new THREE.Vector3(-2, 0, 0),    // Left hemisphere
+      new THREE.Vector3(2, 0, 0),     // Right hemisphere
+      new THREE.Vector3(0, 1.5, 0),   // Frontal cortex
+      new THREE.Vector3(0, -1.5, 0),  // Brain stem
+      new THREE.Vector3(0, 0, -1.5),  // Occipital lobe
+    ];
+
+    // Initialize neural nodes with organic distribution
+    const matrix = new THREE.Matrix4();
+    for (let i = 0; i < particleCount; i++) {
+      // Create neural cluster patterns around attractors
+      const attractorIndex = Math.floor(Math.random() * attractors.length);
+      const basePos = attractors[attractorIndex].clone();
       
-      // Random start point
-      const startPhi = Math.acos(2 * Math.random() - 1);
-      const startTheta = 2 * Math.PI * Math.random();
-      const startRadius = 0.8 + Math.random() * 0.4;
-      points.push(new THREE.Vector3(
-        startRadius * Math.sin(startPhi) * Math.cos(startTheta),
-        startRadius * Math.cos(startPhi),
-        startRadius * Math.sin(startPhi) * Math.sin(startTheta)
-      ));
-
-      // Random end point
-      const endPhi = Math.acos(2 * Math.random() - 1);
-      const endTheta = 2 * Math.PI * Math.random();
-      const endRadius = 0.8 + Math.random() * 0.4;
-      points.push(new THREE.Vector3(
-        endRadius * Math.sin(endPhi) * Math.cos(endTheta),
-        endRadius * Math.cos(endPhi),
-        endRadius * Math.sin(endPhi) * Math.sin(endTheta)
-      ));
-
-      const connectionGeometry = new THREE.BufferGeometry().setFromPoints(points);
-      const connection = new THREE.Line(connectionGeometry, connectionsMaterial);
-      brainGroup.add(connection);
-    }
-
-    // Add pulsing effect nodes for agent tasks
-    const agentNodes: THREE.Mesh[] = [];
-    for (let i = 0; i < 20; i++) {
-      const agentGeometry = new THREE.SphereGeometry(0.05, 12, 12);
-      const agentMaterial = new THREE.MeshBasicMaterial({
-        color: 0xff6b35,
-        transparent: true,
-        opacity: 0.8
-      });
-      const agentNode = new THREE.Mesh(agentGeometry, agentMaterial);
-      
-      // Position randomly around brain
+      // Add organic scatter around attractor
       const phi = Math.acos(2 * Math.random() - 1);
       const theta = 2 * Math.PI * Math.random();
-      const radius = 1.5 + Math.random() * 0.5;
+      const radius = 0.5 + Math.random() * 1.5;
       
-      agentNode.position.x = radius * Math.sin(phi) * Math.cos(theta);
-      agentNode.position.y = radius * Math.cos(phi);
-      agentNode.position.z = radius * Math.sin(phi) * Math.sin(theta);
+      const position = new THREE.Vector3(
+        basePos.x + radius * Math.sin(phi) * Math.cos(theta),
+        basePos.y + radius * Math.cos(phi),
+        basePos.z + radius * Math.sin(phi) * Math.sin(theta)
+      );
       
-      agentNodes.push(agentNode);
-      brainGroup.add(agentNode);
+      nodePositions.push(position);
+      nodeVelocities.push(new THREE.Vector3(
+        (Math.random() - 0.5) * 0.02,
+        (Math.random() - 0.5) * 0.02,
+        (Math.random() - 0.5) * 0.02
+      ));
+      
+      // Target positions for swarm behavior
+      nodeTargets.push(position.clone());
+      
+      matrix.setPosition(position);
+      instancedNodes.setMatrixAt(i, matrix);
     }
+    
+    console.log("Generating neural connections...");
 
-    scene.add(brainGroup);
+    // Create neural connections (synapses) as lines
+    const connections: THREE.Line[] = [];
+    const connectionMaterial = new THREE.LineBasicMaterial({
+      color: 0x10b981,
+      transparent: true,
+      opacity: 0.3,
+      blending: THREE.AdditiveBlending
+    });
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+    for (let i = 0; i < connectionCount; i++) {
+      const startIdx = Math.floor(Math.random() * particleCount);
+      const endIdx = Math.floor(Math.random() * particleCount);
+      
+      if (startIdx !== endIdx) {
+        const points = [nodePositions[startIdx], nodePositions[endIdx]];
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        const line = new THREE.Line(geometry, connectionMaterial);
+        connections.push(line);
+        scene.add(line);
+      }
+    }
+    
+    console.log(`Generated ${connectionCount} neural connections`);
+
+    // Create brain hemisphere wireframes
+    const leftHemisphere = new THREE.SphereGeometry(1.8, 32, 16, 0, Math.PI);
+    const rightHemisphere = new THREE.SphereGeometry(1.8, 32, 16, 0, Math.PI);
+    
+    const hemispheMaterial = new THREE.MeshBasicMaterial({
+      color: 0x10b981,
+      transparent: true,
+      opacity: 0.1,
+      wireframe: true,
+      side: THREE.DoubleSide
+    });
+
+    const leftMesh = new THREE.Mesh(leftHemisphere, hemispheMaterial);
+    leftMesh.position.x = -1;
+    leftMesh.rotation.y = 0;
+    scene.add(leftMesh);
+
+    const rightMesh = new THREE.Mesh(rightHemisphere, hemispheMaterial);
+    rightMesh.position.x = 1;
+    rightMesh.rotation.y = Math.PI;
+    scene.add(rightMesh);
+
+    // Attractor visualization
+    const attractorGeometry = new THREE.SphereGeometry(0.1, 16, 16);
+    const attractorMaterial = new THREE.MeshBasicMaterial({
+      color: 0xff6b35,
+      transparent: true,
+      opacity: 0.7
+    });
+
+    attractors.forEach(attractor => {
+      const attractorMesh = new THREE.Mesh(attractorGeometry, attractorMaterial);
+      attractorMesh.position.copy(attractor);
+      scene.add(attractorMesh);
+    });
+
+    // Advanced lighting
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.4);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    const directionalLight = new THREE.DirectionalLight(0x10b981, 0.6);
     directionalLight.position.set(5, 5, 5);
     scene.add(directionalLight);
 
-    // Animation loop
+    const pointLight = new THREE.PointLight(0xff6b35, 0.5, 10);
+    pointLight.position.set(0, 0, 0);
+    scene.add(pointLight);
+
+    // Physics simulation variables
+    const gravityStrength = 0.0001;
+    const maxSpeed = 0.05;
+    const dampening = 0.98;
+    const repulsionStrength = 0.002;
+
+    // Animation loop with advanced particle physics
     const animate = () => {
       animationRef.current = requestAnimationFrame(animate);
       
-      // Rotate brain slowly
-      brainGroup.rotation.y += 0.005;
-      brainGroup.rotation.x = Math.sin(Date.now() * 0.001) * 0.1;
+      const time = Date.now() * 0.001;
       
-      // Animate agent nodes (pulsing)
-      agentNodes.forEach((node, index) => {
-        const time = Date.now() * 0.002 + index * 0.5;
-        node.scale.setScalar(1 + Math.sin(time) * 0.3);
+      // Update particle positions with attractor physics
+      for (let i = 0; i < particleCount; i++) {
+        const position = nodePositions[i];
+        const velocity = nodeVelocities[i];
+        const target = nodeTargets[i];
         
-        // Add some orbital movement
-        const originalPos = node.position.clone();
-        node.position.x += Math.sin(time) * 0.1;
-        node.position.z += Math.cos(time) * 0.1;
+        // Apply attractor forces
+        const force = new THREE.Vector3();
+        
+        attractors.forEach((attractor, idx) => {
+          const toAttractor = attractor.clone().sub(position);
+          const distance = toAttractor.length();
+          
+          if (distance > 0.1) {
+            const strength = gravityStrength / (distance * distance);
+            toAttractor.normalize().multiplyScalar(strength);
+            force.add(toAttractor);
+            
+            // Add orbital motion
+            const orbital = new THREE.Vector3(
+              -toAttractor.z * 0.5,
+              Math.sin(time + idx) * 0.2,
+              toAttractor.x * 0.5
+            );
+            force.add(orbital);
+          }
+        });
+        
+        // Particle-to-particle repulsion for organic spread
+        for (let j = 0; j < Math.min(i + 10, particleCount); j++) {
+          if (i !== j) {
+            const toOther = position.clone().sub(nodePositions[j]);
+            const distance = toOther.length();
+            
+            if (distance < 0.3 && distance > 0) {
+              toOther.normalize().multiplyScalar(repulsionStrength / distance);
+              force.add(toOther);
+            }
+          }
+        }
+        
+        // Apply forces
+        velocity.add(force);
+        velocity.multiplyScalar(dampening);
+        
+        // Limit max speed
+        if (velocity.length() > maxSpeed) {
+          velocity.normalize().multiplyScalar(maxSpeed);
+        }
+        
+        // Update position
+        position.add(velocity);
+        
+        // Update instance matrix
+        matrix.setPosition(position);
+        instancedNodes.setMatrixAt(i, matrix);
+      }
+      
+      instancedNodes.instanceMatrix.needsUpdate = true;
+      
+      // Update connections dynamically
+      connections.forEach((connection, idx) => {
+        if (idx < nodePositions.length - 1) {
+          const startIdx = Math.floor(idx * particleCount / connectionCount);
+          const endIdx = Math.floor((idx + 1) * particleCount / connectionCount);
+          
+          if (startIdx < nodePositions.length && endIdx < nodePositions.length && 
+              nodePositions[startIdx] && nodePositions[endIdx]) {
+            const startPos = nodePositions[startIdx];
+            const endPos = nodePositions[endIdx];
+            
+            const points = [startPos, endPos];
+            connection.geometry.setFromPoints(points);
+            connection.geometry.attributes.position.needsUpdate = true;
+          }
+        }
       });
+      
+      // Rotate brain hemispheres slowly
+      leftMesh.rotation.y += 0.002;
+      rightMesh.rotation.y -= 0.002;
+      
+      // Pulse lighting
+      pointLight.intensity = 0.5 + Math.sin(time * 2) * 0.2;
+      directionalLight.intensity = 0.6 + Math.sin(time * 1.5) * 0.1;
+      
+      // Animate camera for cinematic effect
+      camera.position.x = Math.sin(time * 0.1) * 2;
+      camera.position.y = Math.cos(time * 0.08) * 1;
+      camera.lookAt(0, 0, 0);
       
       renderer.render(scene, camera);
     };
 
     animate();
+    console.log("Massive hive mind brain visualization complete");
 
     // Handle resize
     const handleResize = () => {
