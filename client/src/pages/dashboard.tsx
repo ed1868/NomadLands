@@ -21,6 +21,7 @@ import ReactFlow, {
   NodeTypes
 } from 'reactflow';
 import 'reactflow/dist/style.css';
+import BrainVisualization from "@/components/brain-visualization";
 import { 
   User, 
   Wallet, 
@@ -1340,6 +1341,18 @@ export default function Dashboard() {
                     BETA
                   </Badge>
                 </div>
+              </button>
+
+              <button
+                onClick={() => { setActiveTab('ecosystem'); setIsMobileSidebarOpen(false); }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
+                  activeTab === 'ecosystem' 
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20' 
+                    : 'text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/30 border border-transparent'
+                }`}
+              >
+                <Activity className="w-5 h-5" />
+                <span className="font-medium">Nomad Ecosystem</span>
               </button>
             </nav>
           </div>
