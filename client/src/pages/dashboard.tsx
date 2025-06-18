@@ -1193,31 +1193,31 @@ export default function Dashboard() {
       const rightCenter = { x: width * 0.75, y: height * 0.5 };
       const corpus = { x: width * 0.5, y: height * 0.5 };
 
-      // Generate optimized neural clusters for performance
+      // Generate optimized neural clusters with 1200 nodes total
       const regions = [
         // Left hemisphere regions  
-        { center: { x: leftCenter.x, y: height * 0.3 }, radius: 80, density: 400, type: 'frontal' },
-        { center: { x: leftCenter.x - 50, y: height * 0.5 }, radius: 60, density: 300, type: 'temporal' },
-        { center: { x: leftCenter.x, y: height * 0.7 }, radius: 70, density: 350, type: 'occipital' },
-        { center: { x: leftCenter.x + 30, y: height * 0.4 }, radius: 50, density: 250, type: 'parietal' },
+        { center: { x: leftCenter.x, y: height * 0.3 }, radius: 80, density: 150, type: 'frontal' },
+        { center: { x: leftCenter.x - 50, y: height * 0.5 }, radius: 60, density: 120, type: 'temporal' },
+        { center: { x: leftCenter.x, y: height * 0.7 }, radius: 70, density: 130, type: 'occipital' },
+        { center: { x: leftCenter.x + 30, y: height * 0.4 }, radius: 50, density: 100, type: 'parietal' },
         
         // Right hemisphere regions
-        { center: { x: rightCenter.x, y: height * 0.3 }, radius: 80, density: 400, type: 'frontal' },
-        { center: { x: rightCenter.x + 50, y: height * 0.5 }, radius: 60, density: 300, type: 'temporal' },
-        { center: { x: rightCenter.x, y: height * 0.7 }, radius: 70, density: 350, type: 'occipital' },
-        { center: { x: rightCenter.x - 30, y: height * 0.4 }, radius: 50, density: 250, type: 'parietal' },
+        { center: { x: rightCenter.x, y: height * 0.3 }, radius: 80, density: 150, type: 'frontal' },
+        { center: { x: rightCenter.x + 50, y: height * 0.5 }, radius: 60, density: 120, type: 'temporal' },
+        { center: { x: rightCenter.x, y: height * 0.7 }, radius: 70, density: 130, type: 'occipital' },
+        { center: { x: rightCenter.x - 30, y: height * 0.4 }, radius: 50, density: 100, type: 'parietal' },
         
         // Central regions
-        { center: corpus, radius: 40, density: 200, type: 'corpus' },
-        { center: { x: width * 0.5, y: height * 0.8 }, radius: 30, density: 150, type: 'brainstem' },
+        { center: corpus, radius: 40, density: 80, type: 'corpus' },
+        { center: { x: width * 0.5, y: height * 0.8 }, radius: 30, density: 60, type: 'brainstem' },
         
         // Peripheral clusters for visual effect
-        { center: { x: width * 0.15, y: height * 0.4 }, radius: 35, density: 175, type: 'cluster' },
-        { center: { x: width * 0.85, y: height * 0.4 }, radius: 35, density: 175, type: 'cluster' },
-        { center: { x: width * 0.3, y: height * 0.15 }, radius: 25, density: 125, type: 'cluster' },
-        { center: { x: width * 0.7, y: height * 0.15 }, radius: 25, density: 125, type: 'cluster' },
-        { center: { x: width * 0.3, y: height * 0.85 }, radius: 25, density: 125, type: 'cluster' },
-        { center: { x: width * 0.7, y: height * 0.85 }, radius: 25, density: 125, type: 'cluster' }
+        { center: { x: width * 0.15, y: height * 0.4 }, radius: 35, density: 70, type: 'cluster' },
+        { center: { x: width * 0.85, y: height * 0.4 }, radius: 35, density: 70, type: 'cluster' },
+        { center: { x: width * 0.3, y: height * 0.15 }, radius: 25, density: 50, type: 'cluster' },
+        { center: { x: width * 0.7, y: height * 0.15 }, radius: 25, density: 50, type: 'cluster' },
+        { center: { x: width * 0.3, y: height * 0.85 }, radius: 25, density: 50, type: 'cluster' },
+        { center: { x: width * 0.7, y: height * 0.85 }, radius: 25, density: 50, type: 'cluster' }
       ];
 
       // Generate nodes with optimized density for visual effect
@@ -1239,16 +1239,16 @@ export default function Dashboard() {
           
           if (normalizedDistance < 0.3) {
             nodeColor = colors.core;
-            nodeSize = 1.8 + Math.random() * 0.8;
+            nodeSize = 3.5 + Math.random() * 1.5;
           } else if (normalizedDistance < 0.6) {
             nodeColor = colors.synapse;
-            nodeSize = 1.4 + Math.random() * 0.6;
+            nodeSize = 2.8 + Math.random() * 1.2;
           } else if (normalizedDistance < 0.8) {
             nodeColor = colors.neural;
-            nodeSize = 1.0 + Math.random() * 0.4;
+            nodeSize = 2.0 + Math.random() * 0.8;
           } else {
             nodeColor = colors.dendrite;
-            nodeSize = 0.8 + Math.random() * 0.3;
+            nodeSize = 1.5 + Math.random() * 0.6;
           }
           
           nodes.push({
@@ -1287,12 +1287,16 @@ export default function Dashboard() {
             const targetNode = regionNodes[targetIndex];
             
             if (targetNode && targetNode.id !== sourceNode.id) {
+              // Colorful synapses like the screenshot
+              const synapseColors = ['#3b82f6', '#f59e0b', '#06b6d4', '#8b5cf6', '#f97316', '#10b981'];
+              const randomColor = synapseColors[Math.floor(Math.random() * synapseColors.length)];
+              
               connections.push({
                 source: sourceNode,
                 target: targetNode,
-                color: sourceNode.color,
-                opacity: 0.15 + Math.random() * 0.2,
-                width: 0.4 + Math.random() * 0.3
+                color: randomColor,
+                opacity: 0.2 + Math.random() * 0.3,
+                width: 0.5 + Math.random() * 0.4
               });
             }
           }
@@ -1313,12 +1317,16 @@ export default function Dashboard() {
             const target = region2Nodes[Math.floor(Math.random() * region2Nodes.length)];
             
             if (source && target) {
+              // Colorful inter-regional synapses
+              const synapseColors = ['#3b82f6', '#f59e0b', '#06b6d4', '#8b5cf6', '#f97316', '#10b981'];
+              const randomColor = synapseColors[Math.floor(Math.random() * synapseColors.length)];
+              
               connections.push({
                 source: source,
                 target: target,
-                color: colors.neural,
-                opacity: 0.1 + Math.random() * 0.15,
-                width: 0.3 + Math.random() * 0.2
+                color: randomColor,
+                opacity: 0.15 + Math.random() * 0.25,
+                width: 0.4 + Math.random() * 0.3
               });
             }
           }
