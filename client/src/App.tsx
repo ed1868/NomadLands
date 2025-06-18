@@ -11,7 +11,7 @@ import NomadFleets from "@/pages/nomad-fleets";
 import ApiDocs from "@/pages/api-docs";
 import Signup from "@/pages/signup-premium";
 import Signin from "@/pages/signin";
-import Dashboard from "@/pages/dashboard";
+import Dashboard from "@/pages/dashboard-clean";
 import NotFound from "@/pages/not-found";
 
 function Router() {

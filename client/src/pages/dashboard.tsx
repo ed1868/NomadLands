@@ -1509,6 +1509,8 @@ export default function Dashboard() {
   );
 }
 
+// Remove duplicate export - keeping the original one
+
 // Three.js Neural Network Visualization Component
 const ThreeJSNeuralNetwork = () => {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -1768,27 +1770,27 @@ const handleLogout = () => {
 };
 
 if (isLoading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-4 border-emerald-400 border-t-transparent rounded-full" />
-      </div>
-    );
-  }
+  return (
+    <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="animate-spin w-8 h-8 border-4 border-emerald-400 border-t-transparent rounded-full" />
+    </div>
+  );
+}
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-center">
-          <Bot className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-white mb-2">Access Denied</h2>
-          <p className="text-gray-400">Please log in to access your dashboard</p>
-          <Button asChild className="mt-4 bg-emerald-600 hover:bg-emerald-700">
-            <a href="/signin">Sign In</a>
-          </Button>
-        </div>
+if (!user) {
+  return (
+    <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="text-center">
+        <Bot className="w-16 h-16 text-emerald-500 mx-auto mb-4" />
+        <h2 className="text-2xl font-bold text-white mb-2">Access Denied</h2>
+        <p className="text-gray-400">Please log in to access your dashboard</p>
+        <Button asChild className="mt-4 bg-emerald-600 hover:bg-emerald-700">
+          <a href="/signin">Sign In</a>
+        </Button>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   const totalEarnings = mockPerformanceData.reduce((sum, month) => sum + month.earnings, 0);
   const totalHires = mockPerformanceData.reduce((sum, month) => sum + month.hires, 0);
