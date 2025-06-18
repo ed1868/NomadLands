@@ -139,6 +139,14 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   LineChart,
   Line,
   AreaChart,
@@ -514,6 +522,12 @@ export default function Dashboard() {
     }
   }, [activeTab, selectedTemplate, nodes.length]);
 
+  // Logout function
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/';
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
@@ -593,12 +607,41 @@ export default function Dashboard() {
 
           {/* Right - User Menu */}
           <div className="flex items-center space-x-4">
-            <Avatar className="w-10 h-10 border border-gray-700/50">
-              <AvatarImage src={user.profileImageUrl || ''} />
-              <AvatarFallback className="bg-transparent text-gray-400 border-0">
-                {user.firstName?.[0] || 'U'}{user.lastName?.[0] || 'S'}
-              </AvatarFallback>
-            </Avatar>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar className="w-10 h-10 border border-gray-700/50 cursor-pointer hover:border-emerald-500/60 transition-colors">
+                  <AvatarImage src={user.profileImageUrl || ''} />
+                  <AvatarFallback className="bg-transparent text-gray-400 border-0">
+                    {user.firstName?.[0] || 'U'}{user.lastName?.[0] || 'S'}
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56 bg-black/95 border border-gray-700/50 backdrop-blur-sm" align="end">
+                <DropdownMenuLabel className="text-gray-300">
+                  {user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : user.username}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-gray-700/50" />
+                <DropdownMenuItem 
+                  className="text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 cursor-pointer"
+                  onClick={() => setActiveTab('wallet')}
+                >
+                  View Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  className="text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 cursor-pointer"
+                  onClick={() => setActiveTab('agents')}
+                >
+                  My Agents
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-gray-700/50" />
+                <DropdownMenuItem 
+                  className="text-red-400 hover:bg-red-500/10 hover:text-red-300 cursor-pointer"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
