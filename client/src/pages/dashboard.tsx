@@ -73,6 +73,21 @@ import Navigation from "@/components/navigation";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
+interface DroppedAgent {
+  id: string;
+  type: string;
+  icon: string;
+  level: string;
+  description: string;
+  bgColor: string;
+  borderColor: string;
+  color: string;
+  x: number;
+  y: number;
+  connections: string[];
+  departmentId?: string;
+}
+
 // Mock data for analytics
 const mockPerformanceData = [
   { month: 'Jan', earnings: 2400, hires: 14, hired: 8 },
@@ -186,6 +201,70 @@ export default function Dashboard() {
   const queryClient = useQueryClient();
   
   const [activeTab, setActiveTab] = useState('wallet');
+  const [droppedAgents, setDroppedAgents] = useState<DroppedAgent[]>([]);
+  const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [departmentCount, setDepartmentCount] = useState({
+    'Executive Director': 0,
+    'Department Manager': 0,
+    'Senior Associate': 0,
+    'Associate': 0
+  });
+
+  // Handle dropping agents onto canvas
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const agentData = JSON.parse(e.dataTransfer.getData('text/plain'));
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const newAgent: DroppedAgent = {
+      ...agentData,
+      id: `agent-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      x: x - 90, // Center the agent
+      y: y - 40,
+      connections: []
+    };
+
+    setDroppedAgents(prev => [...prev, newAgent]);
+    setDepartmentCount(prev => ({
+      ...prev,
+      [agentData.type]: prev[agentData.type] + 1
+    }));
+  };
+
+  // Handle connecting agents
+  const handleAgentClick = (agentId: string) => {
+    if (!selectedAgent) {
+      setSelectedAgent(agentId);
+    } else if (selectedAgent !== agentId) {
+      // Create connection
+      setDroppedAgents(prev => 
+        prev.map(agent => 
+          agent.id === selectedAgent 
+            ? { ...agent, connections: [...agent.connections, agentId] }
+            : agent
+        )
+      );
+      setSelectedAgent(null);
+    } else {
+      setSelectedAgent(null);
+    }
+  };
+
+  // Remove agent
+  const removeAgent = (agentId: string) => {
+    const agent = droppedAgents.find(a => a.id === agentId);
+    if (agent) {
+      setDepartmentCount(prev => ({
+        ...prev,
+        [agent.type]: Math.max(0, prev[agent.type] - 1)
+      }));
+    }
+    setDroppedAgents(prev => prev.filter(a => a.id !== agentId));
+    setSelectedAgent(null);
+  };
 
   // Fetch user's purchased agents
   const { data: userPurchases } = useQuery({
@@ -991,148 +1070,216 @@ export default function Dashboard() {
               {/* Fleet Header */}
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-3xl font-bold text-white tracking-tight">Fleet Management</h2>
-                  <p className="text-gray-300 mt-2">Build and orchestrate enterprise-scale agent networks</p>
+                  <h2 className="text-3xl font-bold text-white tracking-tight">Enterprise Fleet Orchestration</h2>
+                  <p className="text-gray-300 mt-2">Design departmental hierarchies and manage agent deployment strategies</p>
                 </div>
                 <div className="flex items-center space-x-4">
                   <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">
                     <Bot className="w-4 h-4 mr-2" />
-                    Add Agent
+                    Deploy Agent
+                  </Button>
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                    <Network className="w-4 h-4 mr-2" />
+                    Create Department
                   </Button>
                   <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800">
-                    Save Fleet
+                    Save Configuration
                   </Button>
                 </div>
               </div>
 
-              {/* Agent Palette */}
+              {/* Agent Deployment Palette */}
               <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg">
                 <CardHeader>
-                  <CardTitle className="text-white font-bold">Agent Types</CardTitle>
-                  <p className="text-gray-400 text-sm">Drag agents onto the canvas to build your fleet</p>
+                  <CardTitle className="text-white font-bold">Organizational Hierarchy</CardTitle>
+                  <p className="text-gray-400 text-sm">Deploy agents by department and configure reporting structures</p>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     {[
-                      { type: 'Agent Boss', icon: '👑', color: 'from-purple-500 to-purple-600', description: 'Orchestrates team workflows' },
-                      { type: 'Agent Worker', icon: '⚡', color: 'from-blue-500 to-blue-600', description: 'Executes specific tasks' },
-                      { type: 'Agent LLC', icon: '🏢', color: 'from-green-500 to-green-600', description: 'Manages business logic' },
-                      { type: 'Agent Data', icon: '📊', color: 'from-orange-500 to-orange-600', description: 'Handles data processing' },
+                      { 
+                        type: 'Executive Director', 
+                        icon: '👨‍💼', 
+                        color: 'from-indigo-400/80 via-purple-400/80 to-pink-400/80',
+                        bgColor: 'bg-indigo-500/10',
+                        borderColor: 'border-indigo-400/30',
+                        description: 'Strategic oversight & governance',
+                        level: 'C-Level'
+                      },
+                      { 
+                        type: 'Department Manager', 
+                        icon: '👩‍💼', 
+                        color: 'from-cyan-400/80 via-blue-400/80 to-indigo-400/80',
+                        bgColor: 'bg-blue-500/10',
+                        borderColor: 'border-blue-400/30',
+                        description: 'Cross-functional coordination',
+                        level: 'Management'
+                      },
+                      { 
+                        type: 'Senior Associate', 
+                        icon: '👨‍🔬', 
+                        color: 'from-emerald-400/80 via-teal-400/80 to-cyan-400/80',
+                        bgColor: 'bg-emerald-500/10',
+                        borderColor: 'border-emerald-400/30',
+                        description: 'Complex task execution',
+                        level: 'Senior'
+                      },
+                      { 
+                        type: 'Associate', 
+                        icon: '👩‍💻', 
+                        color: 'from-amber-400/80 via-orange-400/80 to-red-400/80',
+                        bgColor: 'bg-amber-500/10',
+                        borderColor: 'border-amber-400/30',
+                        description: 'Operational task processing',
+                        level: 'Associate'
+                      },
                     ].map((agent, index) => (
                       <div
                         key={index}
-                        className={`p-4 rounded-lg bg-gradient-to-br ${agent.color} cursor-move hover:scale-105 transition-transform border border-white/10`}
+                        className={`p-4 rounded-xl ${agent.bgColor} ${agent.borderColor} border-2 cursor-move hover:scale-105 hover:shadow-lg transition-all duration-300 backdrop-blur-sm`}
                         draggable
+                        onDragStart={(e) => {
+                          e.dataTransfer.setData('text/plain', JSON.stringify(agent));
+                        }}
                       >
-                        <div className="text-2xl mb-2 text-center">{agent.icon}</div>
-                        <h3 className="text-white font-semibold text-sm text-center">{agent.type}</h3>
-                        <p className="text-white/80 text-xs text-center mt-1">{agent.description}</p>
+                        <div className="text-3xl mb-2 text-center">{agent.icon}</div>
+                        <h3 className="text-white font-bold text-sm text-center">{agent.type}</h3>
+                        <div className={`text-xs text-center mt-1 px-2 py-1 rounded-full bg-gradient-to-r ${agent.color} text-black font-medium`}>
+                          {agent.level}
+                        </div>
+                        <p className="text-gray-300 text-xs text-center mt-2">{agent.description}</p>
                       </div>
                     ))}
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Fleet Canvas */}
+              {/* Interactive Fleet Canvas */}
               <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg">
                 <CardHeader>
-                  <CardTitle className="text-white font-bold">Fleet Canvas</CardTitle>
-                  <p className="text-gray-400 text-sm">Design your agent network topology</p>
+                  <CardTitle className="text-white font-bold">Enterprise Network Canvas</CardTitle>
+                  <p className="text-gray-400 text-sm">Design departmental hierarchies and agent reporting structures</p>
                 </CardHeader>
                 <CardContent>
                   <div 
-                    className="relative bg-gray-900/50 rounded-lg border-2 border-dashed border-gray-600/50 min-h-[600px] p-8"
+                    className="relative bg-gray-900/30 rounded-xl border-2 border-dashed border-gray-600/40 min-h-[700px] p-8 overflow-hidden"
                     style={{
-                      backgroundImage: 'radial-gradient(circle at 20px 20px, rgba(75, 85, 99, 0.3) 1px, transparent 0)',
-                      backgroundSize: '40px 40px'
+                      backgroundImage: 'radial-gradient(circle at 30px 30px, rgba(16, 185, 129, 0.15) 1px, transparent 0)',
+                      backgroundSize: '60px 60px'
                     }}
+                    onDrop={handleDrop}
+                    onDragOver={(e) => e.preventDefault()}
                   >
-                    {/* Sample Fleet Network */}
-                    <div className="absolute top-20 left-20">
-                      <div className="bg-gradient-to-br from-purple-500 to-purple-600 p-4 rounded-lg border border-white/20 shadow-lg min-w-[180px]">
-                        <div className="flex items-center space-x-3">
-                          <span className="text-2xl">👑</span>
-                          <div>
-                            <h3 className="text-white font-semibold">Agent Boss</h3>
-                            <p className="text-white/80 text-xs">main_orchestrator</p>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Connection line */}
-                      <svg className="absolute top-1/2 left-full" width="100" height="2">
-                        <line x1="0" y1="0" x2="100" y2="0" stroke="#10b981" strokeWidth="2" />
-                        <circle cx="100" cy="0" r="3" fill="#10b981" />
-                      </svg>
-                    </div>
+                    {/* Render SVG connections first (behind agents) */}
+                    <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1 }}>
+                      {droppedAgents.map(agent => 
+                        agent.connections.map(connectionId => {
+                          const targetAgent = droppedAgents.find(a => a.id === connectionId);
+                          if (!targetAgent) return null;
+                          
+                          const startX = agent.x + 90; // Center of source agent
+                          const startY = agent.y + 30;
+                          const endX = targetAgent.x + 90; // Center of target agent
+                          const endY = targetAgent.y + 30;
+                          
+                          return (
+                            <g key={`${agent.id}-${connectionId}`}>
+                              <line 
+                                x1={startX} 
+                                y1={startY} 
+                                x2={endX} 
+                                y2={endY} 
+                                stroke="rgba(16, 185, 129, 0.8)" 
+                                strokeWidth="3"
+                                strokeDasharray="5,5"
+                                className="animate-pulse"
+                              />
+                              <circle 
+                                cx={endX} 
+                                cy={endY} 
+                                r="6" 
+                                fill="rgba(16, 185, 129, 0.9)"
+                                className="animate-pulse"
+                              />
+                            </g>
+                          );
+                        })
+                      )}
+                    </svg>
 
-                    <div className="absolute top-20 left-80">
-                      <div className="bg-gradient-to-br from-green-500 to-green-600 p-4 rounded-lg border border-white/20 shadow-lg min-w-[180px]">
-                        <div className="flex items-center space-x-3">
-                          <span className="text-2xl">🏢</span>
-                          <div>
-                            <h3 className="text-white font-semibold">Agent LLC</h3>
-                            <p className="text-white/80 text-xs">business_logic</p>
+                    {/* Render dropped agents */}
+                    {droppedAgents.map(agent => (
+                      <div
+                        key={agent.id}
+                        className={`absolute cursor-pointer transition-all duration-300 ${agent.bgColor} ${agent.borderColor} border-2 rounded-xl p-4 min-w-[180px] shadow-xl backdrop-blur-sm ${
+                          selectedAgent === agent.id ? 'ring-4 ring-emerald-400/50 scale-110' : 'hover:scale-105'
+                        }`}
+                        style={{ 
+                          left: agent.x, 
+                          top: agent.y,
+                          zIndex: selectedAgent === agent.id ? 10 : 2
+                        }}
+                        onClick={() => handleAgentClick(agent.id)}
+                        onDoubleClick={() => removeAgent(agent.id)}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <span className="text-3xl">{agent.icon}</span>
+                            <div>
+                              <h3 className="text-white font-bold text-sm">{agent.type}</h3>
+                              <div className={`text-xs text-center px-2 py-1 rounded-full bg-gradient-to-r ${agent.color} text-black font-medium`}>
+                                {agent.level}
+                              </div>
+                            </div>
                           </div>
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10 p-1 h-6 w-6"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              removeAgent(agent.id);
+                            }}
+                          >
+                            <X className="w-3 h-3" />
+                          </Button>
+                        </div>
+                        <p className="text-gray-300 text-xs">{agent.description}</p>
+                        <div className="mt-2 text-xs text-emerald-400">
+                          ID: {agent.id.slice(-8)}
+                        </div>
+                        <div className="mt-1 text-xs text-blue-400">
+                          Connections: {agent.connections.length}
                         </div>
                       </div>
-                      {/* Connection lines */}
-                      <svg className="absolute top-1/2 left-full" width="100" height="2">
-                        <line x1="0" y1="0" x2="100" y2="0" stroke="#10b981" strokeWidth="2" />
-                        <circle cx="100" cy="0" r="3" fill="#10b981" />
-                      </svg>
-                      <svg className="absolute top-full left-1/2 -translate-x-1/2" width="2" height="100">
-                        <line x1="0" y1="0" x2="0" y2="100" stroke="#10b981" strokeWidth="2" />
-                        <circle cx="0" cy="100" r="3" fill="#10b981" />
-                      </svg>
-                    </div>
-
-                    <div className="absolute top-20 left-[540px]">
-                      <div className="bg-gradient-to-br from-orange-500 to-orange-600 p-4 rounded-lg border border-white/20 shadow-lg min-w-[180px]">
-                        <div className="flex items-center space-x-3">
-                          <span className="text-2xl">📊</span>
-                          <div>
-                            <h3 className="text-white font-semibold">Agent Data</h3>
-                            <p className="text-white/80 text-xs">data_processor</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="absolute top-60 left-80">
-                      <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-4 rounded-lg border border-white/20 shadow-lg min-w-[180px]">
-                        <div className="flex items-center space-x-3">
-                          <span className="text-2xl">⚡</span>
-                          <div>
-                            <h3 className="text-white font-semibold">Agent Worker</h3>
-                            <p className="text-white/80 text-xs">task_executor</p>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Connection line */}
-                      <svg className="absolute top-1/2 left-full" width="100" height="2">
-                        <line x1="0" y1="0" x2="100" y2="0" stroke="#10b981" strokeWidth="2" />
-                        <circle cx="100" cy="0" r="3" fill="#10b981" />
-                      </svg>
-                    </div>
-
-                    <div className="absolute top-60 left-[540px]">
-                      <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-4 rounded-lg border border-white/20 shadow-lg min-w-[180px]">
-                        <div className="flex items-center space-x-3">
-                          <span className="text-2xl">⚡</span>
-                          <div>
-                            <h3 className="text-white font-semibold">Agent Worker</h3>
-                            <p className="text-white/80 text-xs">api_handler</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    ))}
 
                     {/* Canvas Instructions */}
-                    <div className="absolute bottom-8 left-8 text-gray-400 text-sm">
-                      <p>💡 Drag agents from the palette above to build your fleet</p>
-                      <p>🔗 Click and drag between agents to create connections</p>
-                      <p>⚙️ Double-click agents to configure their properties</p>
+                    <div className="absolute bottom-6 left-6 text-gray-400 text-sm space-y-1" style={{ zIndex: 5 }}>
+                      <p className="flex items-center space-x-2">
+                        <span className="w-3 h-3 bg-emerald-500 rounded-full"></span>
+                        <span>Drag agents from palette to deploy</span>
+                      </p>
+                      <p className="flex items-center space-x-2">
+                        <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
+                        <span>Click agents to select and create connections</span>
+                      </p>
+                      <p className="flex items-center space-x-2">
+                        <span className="w-3 h-3 bg-red-500 rounded-full"></span>
+                        <span>Double-click to remove agents</span>
+                      </p>
                     </div>
+
+                    {/* Empty state */}
+                    {droppedAgents.length === 0 && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-center text-gray-500">
+                          <Network className="w-16 h-16 mx-auto mb-4 opacity-50" />
+                          <h3 className="text-xl font-semibold mb-2">Build Your Enterprise Network</h3>
+                          <p className="text-sm">Drag organizational roles from the palette above to start designing your fleet</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -1141,56 +1288,134 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg">
                   <CardHeader>
-                    <CardTitle className="text-white font-bold">Fleet Configuration</CardTitle>
+                    <CardTitle className="text-white font-bold">Organizational Structure</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <label className="text-gray-300 text-sm font-medium">Fleet Name</label>
+                      <label className="text-gray-300 text-sm font-medium">Department Name</label>
                       <input 
                         type="text" 
-                        className="w-full mt-1 bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2 text-white"
-                        placeholder="Enterprise Data Pipeline"
+                        className="w-full mt-1 bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-emerald-400 transition-colors"
+                        placeholder="Data Operations Department"
                       />
                     </div>
                     <div>
-                      <label className="text-gray-300 text-sm font-medium">Description</label>
+                      <label className="text-gray-300 text-sm font-medium">Mission Statement</label>
                       <textarea 
-                        className="w-full mt-1 bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2 text-white h-24"
-                        placeholder="Automated enterprise data processing and analysis fleet"
+                        className="w-full mt-1 bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2 text-white h-20 focus:border-emerald-400 transition-colors"
+                        placeholder="Automated enterprise data processing, analysis, and strategic decision support"
                       />
                     </div>
                     <div>
-                      <label className="text-gray-300 text-sm font-medium">Execution Mode</label>
-                      <select className="w-full mt-1 bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2 text-white">
-                        <option>Sequential</option>
-                        <option>Parallel</option>
-                        <option>Event-Driven</option>
+                      <label className="text-gray-300 text-sm font-medium">Workflow Pattern</label>
+                      <select className="w-full mt-1 bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-emerald-400 transition-colors">
+                        <option>Hierarchical Command Structure</option>
+                        <option>Collaborative Network</option>
+                        <option>Event-Driven Response</option>
+                        <option>Matrix Organization</option>
                       </select>
+                    </div>
+                    
+                    {/* Department Headcount */}
+                    <div className="pt-4 border-t border-gray-700">
+                      <h4 className="text-gray-300 text-sm font-medium mb-3">Current Headcount</h4>
+                      <div className="space-y-2">
+                        {Object.entries(departmentCount).map(([role, count]) => (
+                          <div key={role} className="flex justify-between items-center">
+                            <span className="text-gray-400 text-sm">{role}</span>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-white font-semibold">{count}</span>
+                              <div className={`w-3 h-3 rounded-full ${
+                                count > 0 ? 'bg-emerald-400' : 'bg-gray-600'
+                              }`} />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
 
                 <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg">
                   <CardHeader>
-                    <CardTitle className="text-white font-bold">Fleet Metrics</CardTitle>
+                    <CardTitle className="text-white font-bold">Network Analytics</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-gray-800/30 p-4 rounded-lg">
-                        <p className="text-gray-400 text-sm">Active Agents</p>
-                        <p className="text-2xl font-bold text-emerald-400">5</p>
+                      <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/10 border border-emerald-500/30 p-4 rounded-lg">
+                        <p className="text-emerald-400 text-sm font-medium">Deployed Agents</p>
+                        <p className="text-2xl font-bold text-white">{droppedAgents.length}</p>
                       </div>
-                      <div className="bg-gray-800/30 p-4 rounded-lg">
-                        <p className="text-gray-400 text-sm">Connections</p>
-                        <p className="text-2xl font-bold text-blue-400">4</p>
+                      <div className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 border border-blue-500/30 p-4 rounded-lg">
+                        <p className="text-blue-400 text-sm font-medium">Network Links</p>
+                        <p className="text-2xl font-bold text-white">
+                          {droppedAgents.reduce((total, agent) => total + agent.connections.length, 0)}
+                        </p>
                       </div>
-                      <div className="bg-gray-800/30 p-4 rounded-lg">
-                        <p className="text-gray-400 text-sm">Est. Cost/Hour</p>
-                        <p className="text-2xl font-bold text-yellow-400">$2.40</p>
+                      <div className="bg-gradient-to-br from-amber-500/10 to-amber-600/10 border border-amber-500/30 p-4 rounded-lg">
+                        <p className="text-amber-400 text-sm font-medium">Estimated Cost/Hour</p>
+                        <p className="text-2xl font-bold text-white">
+                          ${(droppedAgents.length * 0.48 + droppedAgents.reduce((total, agent) => total + agent.connections.length, 0) * 0.12).toFixed(2)}
+                        </p>
                       </div>
-                      <div className="bg-gray-800/30 p-4 rounded-lg">
-                        <p className="text-gray-400 text-sm">Complexity</p>
-                        <p className="text-2xl font-bold text-purple-400">Medium</p>
+                      <div className="bg-gradient-to-br from-purple-500/10 to-purple-600/10 border border-purple-500/30 p-4 rounded-lg">
+                        <p className="text-purple-400 text-sm font-medium">Network Density</p>
+                        <p className="text-2xl font-bold text-white">
+                          {droppedAgents.length > 1 
+                            ? Math.round((droppedAgents.reduce((total, agent) => total + agent.connections.length, 0) / (droppedAgents.length * (droppedAgents.length - 1))) * 100)
+                            : 0}%
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Organizational Health Metrics */}
+                    <div className="pt-4 border-t border-gray-700">
+                      <h4 className="text-gray-300 text-sm font-medium mb-3">Organizational Health</h4>
+                      <div className="space-y-3">
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span className="text-gray-400">Leadership Coverage</span>
+                            <span className="text-white">
+                              {departmentCount['Executive Director'] > 0 ? '100%' : '0%'}
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-700 rounded-full h-2">
+                            <div 
+                              className="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full transition-all duration-500"
+                              style={{ width: departmentCount['Executive Director'] > 0 ? '100%' : '0%' }}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span className="text-gray-400">Management Span</span>
+                            <span className="text-white">
+                              {departmentCount['Department Manager'] > 0 ? 'Optimal' : 'Needs Management'}
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-700 rounded-full h-2">
+                            <div 
+                              className="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full transition-all duration-500"
+                              style={{ width: departmentCount['Department Manager'] > 0 ? '100%' : '20%' }}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span className="text-gray-400">Operational Capacity</span>
+                            <span className="text-white">
+                              {Object.values(departmentCount).reduce((a, b) => a + b, 0) > 3 ? 'High' : 'Building'}
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-700 rounded-full h-2">
+                            <div 
+                              className="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all duration-500"
+                              style={{ 
+                                width: `${Math.min(100, (Object.values(departmentCount).reduce((a, b) => a + b, 0) / 5) * 100)}%` 
+                              }}
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
