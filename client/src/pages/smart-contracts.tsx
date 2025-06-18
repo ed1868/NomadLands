@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Shield, Code, Coins, FileText, Clock, Users, Zap, Calculator, Lock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,15 +16,134 @@ export default function SmartContracts() {
   const [partyAWallet, setPartyAWallet] = useState("");
   const [partyBWallet, setPartyBWallet] = useState("");
   const [amount, setAmount] = useState("");
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  // Mock Smart Contracts - will implement backend later
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Smart Contracts including the 6 core contracts
   const mockSmartContracts: SmartContract[] = [
+    // Core Smart Contracts
     {
       id: 1,
+      name: "AgentRegistry.sol",
+      description: "Tracks all registered agents with metadata like owner, description, pricing, and endpoint URLs. Central registry for the agent ecosystem.",
+      category: "Core Infrastructure",
+      contractAddress: "0x742d35Cc6635C0532925a3b8D359e16FA1000001",
+      abi: JSON.stringify([]),
+      taxPercentage: 100, // 1.0%
+      minAmount: "1000000000000000", // 0.001 ETH
+      maxAmount: "1000000000000000000000", // 1000 ETH
+      features: ["Agent Registration", "Metadata Storage", "Owner Verification", "Pricing Config", "Endpoint URLs"],
+      gasEstimate: 65000,
+      icon: "Code",
+      verified: true,
+      active: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: 2,
+      name: "AgentAccessController.sol",
+      description: "Handles access control and payment logic for agents—supports both pay-per-use and subscription models with flexible pricing.",
+      category: "Core Infrastructure",
+      contractAddress: "0x742d35Cc6635C0532925a3b8D359e16FA1000002",
+      abi: JSON.stringify([]),
+      taxPercentage: 150, // 1.5%
+      minAmount: "5000000000000000", // 0.005 ETH
+      maxAmount: "500000000000000000000", // 500 ETH
+      features: ["Pay-per-use", "Subscriptions", "Access Control", "Payment Processing", "Usage Tracking"],
+      gasEstimate: 75000,
+      icon: "Lock",
+      verified: true,
+      active: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: 3,
+      name: "AgentLicenseNFT.sol",
+      description: "Represents agent access or ownership as NFTs (ERC-721/ERC-1155), including royalty support and transferability options.",
+      category: "Core Infrastructure",
+      contractAddress: "0x742d35Cc6635C0532925a3b8D359e16FA1000003",
+      abi: JSON.stringify([]),
+      taxPercentage: 300, // 3.0%
+      minAmount: "10000000000000000", // 0.01 ETH
+      maxAmount: "100000000000000000000", // 100 ETH
+      features: ["ERC-721 NFTs", "ERC-1155 Support", "Royalty Distribution", "Transfer Rights", "Ownership Proof"],
+      gasEstimate: 120000,
+      icon: "FileText",
+      verified: true,
+      active: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: 4,
+      name: "RevenueSplitter.sol",
+      description: "Splits payments among multiple stakeholders—ideal for team-built agents or DAO-owned assets with automated distribution.",
+      category: "Core Infrastructure",
+      contractAddress: "0x742d35Cc6635C0532925a3b8D359e16FA1000004",
+      abi: JSON.stringify([]),
+      taxPercentage: 200, // 2.0%
+      minAmount: "10000000000000000", // 0.01 ETH
+      maxAmount: "1000000000000000000000", // 1000 ETH
+      features: ["Multi-party Splits", "Automated Distribution", "DAO Support", "Team Payments", "Revenue Sharing"],
+      gasEstimate: 90000,
+      icon: "Users",
+      verified: true,
+      active: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: 5,
+      name: "ReviewAndReputation.sol", 
+      description: "Lets users review agents and build a decentralized reputation layer with anti-sybil protection and weighted scoring.",
+      category: "Core Infrastructure",
+      contractAddress: "0x742d35Cc6635C0532925a3b8D359e16FA1000005",
+      abi: JSON.stringify([]),
+      taxPercentage: 50, // 0.5%
+      minAmount: "1000000000000000", // 0.001 ETH
+      maxAmount: "10000000000000000000", // 10 ETH
+      features: ["Reputation Tracking", "Review System", "Anti-sybil Protection", "Weighted Scoring", "Agent Rankings"],
+      gasEstimate: 55000,
+      icon: "Shield",
+      verified: true,
+      active: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: 6,
+      name: "DisputeResolution.sol",
+      description: "Resolves disputes around agent rentals or performance—can integrate with decentralized courts like Kleros or Aragon.",
+      category: "Core Infrastructure", 
+      contractAddress: "0x742d35Cc6635C0532925a3b8D359e16FA1000006",
+      abi: JSON.stringify([]),
+      taxPercentage: 400, // 4.0%
+      minAmount: "50000000000000000", // 0.05 ETH
+      maxAmount: "10000000000000000000000", // 10000 ETH
+      features: ["Dispute Arbitration", "Kleros Integration", "Aragon Support", "Evidence Submission", "Automated Resolution"],
+      gasEstimate: 150000,
+      icon: "Calculator",
+      verified: true,
+      active: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    // Additional marketplace contracts
+    {
+      id: 7,
       name: "Escrow Service Contract",
       description: "Secure escrow service for peer-to-peer transactions with automatic release conditions and dispute resolution.",
       category: "Finance",
-      contractAddress: "0x742d35Cc6635C0532925a3b8D359e16FA1000001",
+      contractAddress: "0x742d35Cc6635C0532925a3b8D359e16FA2000001",
       abi: JSON.stringify([]),
       taxPercentage: 250, // 2.5%
       minAmount: "1000000000000000", // 0.001 ETH
@@ -38,11 +157,11 @@ export default function SmartContracts() {
       updatedAt: new Date().toISOString(),
     },
     {
-      id: 2,
+      id: 8,
       name: "Freelance Payment Contract",
       description: "Milestone-based payment system for freelance work with automated releases and performance tracking.",
       category: "Employment",
-      contractAddress: "0x742d35Cc6635C0532925a3b8D359e16FA1000002",
+      contractAddress: "0x742d35Cc6635C0532925a3b8D359e16FA2000002",
       abi: JSON.stringify([]),
       taxPercentage: 300, // 3.0%
       minAmount: "5000000000000000", // 0.005 ETH
@@ -201,7 +320,7 @@ export default function SmartContracts() {
     }
   ];
 
-  const categories = ["all", "Finance", "Employment", "NFT", "Subscription", "Logistics", "Insurance", "Real Estate", "Governance", "DeFi", "Energy"];
+  const categories = ["all", "Core Infrastructure", "Finance", "Employment", "NFT", "Subscription", "Logistics", "Insurance", "Real Estate", "Governance", "DeFi", "Energy"];
 
   const getIconComponent = (iconName: string) => {
     const icons: Record<string, any> = {
@@ -233,6 +352,27 @@ export default function SmartContracts() {
 
   return (
     <div className="min-h-screen bg-black">
+      {/* Fixed Navigation with Fade Effect */}
+      <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-black/95 backdrop-blur-lg border-b border-gray-800/50' 
+          : 'bg-transparent'
+      }`}>
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="text-2xl font-light text-white">
+              AI <span className="knight-text">Nomads</span>
+            </div>
+            <nav className="hidden md:flex space-x-8">
+              <a href="/marketplace" className="text-gray-300 hover:text-white transition-colors">Marketplace</a>
+              <a href="/nomad-lands" className="text-gray-300 hover:text-white transition-colors">Nomad Lands</a>
+              <a href="/smart-contracts" className="text-blue-400">Smart Contracts</a>
+              <a href="/api-docs" className="text-gray-300 hover:text-white transition-colors">API</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
       {/* Hero Section */}
       <section className="relative py-32 bg-gradient-to-br from-black via-gray-950 to-blue-950/20">
         <div className="max-w-7xl mx-auto px-6 text-center">
