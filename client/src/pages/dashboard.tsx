@@ -1519,25 +1519,39 @@ export default function Dashboard() {
           .attr('opacity', 0)
           .remove();
 
-        // Create connection flash
+        // Colorful synaptic flash like the screenshot
+        const synapseColors = [
+          '#3b82f6', // blue
+          '#f59e0b', // amber/orange  
+          '#06b6d4', // cyan
+          '#8b5cf6', // violet
+          '#f97316', // orange
+          '#10b981', // emerald
+          '#eab308', // yellow
+          '#ef4444', // red
+          '#06d6a0', // teal
+          '#f472b6'  // pink
+        ];
+        const flashColor = synapseColors[Math.floor(Math.random() * synapseColors.length)];
+        
         const flash = svg.append('line')
           .attr('x1', startNode.x)
           .attr('y1', startNode.y)
           .attr('x2', endNode.x)
           .attr('y2', endNode.y)
-          .attr('stroke', colors.synapse)
-          .attr('stroke-width', 1)
-          .attr('stroke-opacity', 0.6)
-          .attr('filter', 'url(#connectionGlow)');
+          .attr('stroke', flashColor)
+          .attr('stroke-width', 1.5 + Math.random() * 1)
+          .attr('stroke-opacity', 0.8)
+          .attr('filter', `drop-shadow(0 0 4px ${flashColor})`);
 
         flash.transition()
-          .duration(100)
+          .duration(120)
           .attr('stroke-opacity', 0)
           .remove();
       };
 
-      // Rapid synaptic firing every 80ms
-      const firingInterval = setInterval(createSynapticFiring, 80);
+      // Ultra-fast synaptic firing every 50ms for continuous activity
+      const firingInterval = setInterval(createSynapticFiring, 50);
 
       // Cleanup interval when component unmounts or tab changes
       const cleanup = () => {
@@ -2939,9 +2953,9 @@ export default function Dashboard() {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-6">
                     <div>
-                      <h3 className="text-xl font-bold text-white mb-2">Agent Performance Ecosystem</h3>
+                      <h3 className="text-xl font-bold text-white mb-2">Total AI Agents Running Tasks</h3>
                       <p className="text-gray-400 text-sm">
-                        Voronoi stippling visualization where each dot represents an agent, sized by total runs and colored by performance metrics
+                        247,382 agents • 89,574 active tasks • Live activity with fast synaptic firing patterns
                       </p>
                     </div>
                     <div className="flex items-center space-x-4">
