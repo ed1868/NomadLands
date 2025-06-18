@@ -419,6 +419,35 @@ export default function Dashboard() {
         { type: 'Associate', x: 500, y: 480, id: 'validator-1', connections: [] },
         { type: 'Associate', x: 580, y: 480, id: 'marketer-1', connections: [] }
       ]
+    },
+    'compliance-governance': {
+      name: '🛡️ Compliance & Governance Fleet',
+      description: 'Ensure full enterprise-grade compliance, audit trails, and regulatory guardrails—all handled by your AI watchdogs',
+      agents: [
+        { type: 'Executive Director', x: 350, y: 40, id: 'exec-4', connections: ['compliance-dir-1', 'audit-dir-1'] },
+        { type: 'Director', x: 200, y: 120, id: 'compliance-dir-1', connections: ['policy-mgr-1', 'legal-mgr-1'] },
+        { type: 'Director', x: 500, y: 120, id: 'audit-dir-1', connections: ['risk-mgr-1', 'monitor-mgr-1'] },
+        { type: 'Department Manager', x: 120, y: 220, id: 'policy-mgr-1', connections: ['policy-ops-1', 'gdpr-1'] },
+        { type: 'Department Manager', x: 280, y: 220, id: 'legal-mgr-1', connections: ['legal-analyst-1', 'contract-1'] },
+        { type: 'Department Manager', x: 420, y: 220, id: 'risk-mgr-1', connections: ['risk-score-1', 'threat-1'] },
+        { type: 'Department Manager', x: 580, y: 220, id: 'monitor-mgr-1', connections: ['log-scanner-1', 'violation-1'] },
+        { type: 'Senior Associate', x: 80, y: 340, id: 'policy-ops-1', connections: ['reg-updater-1'] },
+        { type: 'Senior Associate', x: 160, y: 340, id: 'gdpr-1', connections: ['privacy-guard-1'] },
+        { type: 'Senior Associate', x: 240, y: 340, id: 'legal-analyst-1', connections: ['compliance-checker-1'] },
+        { type: 'Senior Associate', x: 320, y: 340, id: 'contract-1', connections: ['terms-validator-1'] },
+        { type: 'Senior Associate', x: 400, y: 340, id: 'risk-score-1', connections: ['score-calc-1'] },
+        { type: 'Senior Associate', x: 480, y: 340, id: 'threat-1', connections: ['alert-gen-1'] },
+        { type: 'Senior Associate', x: 560, y: 340, id: 'log-scanner-1', connections: ['anomaly-det-1'] },
+        { type: 'Senior Associate', x: 640, y: 340, id: 'violation-1', connections: ['report-gen-1'] },
+        { type: 'Associate', x: 80, y: 480, id: 'reg-updater-1', connections: [] },
+        { type: 'Associate', x: 160, y: 480, id: 'privacy-guard-1', connections: [] },
+        { type: 'Associate', x: 240, y: 480, id: 'compliance-checker-1', connections: [] },
+        { type: 'Associate', x: 320, y: 480, id: 'terms-validator-1', connections: [] },
+        { type: 'Associate', x: 400, y: 480, id: 'score-calc-1', connections: [] },
+        { type: 'Associate', x: 480, y: 480, id: 'alert-gen-1', connections: [] },
+        { type: 'Associate', x: 560, y: 480, id: 'anomaly-det-1', connections: [] },
+        { type: 'Associate', x: 640, y: 480, id: 'report-gen-1', connections: [] }
+      ]
     }
   };
 
@@ -1487,7 +1516,7 @@ export default function Dashboard() {
                   <p className="text-gray-400 text-xs lg:text-sm">Deploy agents by department and configure reporting structures</p>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+                  <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 lg:gap-4">
                     {[
                       { 
                         type: 'Executive Director', 
@@ -1497,6 +1526,15 @@ export default function Dashboard() {
                         borderColor: 'border-indigo-400/30',
                         description: 'Strategic oversight & governance',
                         level: 'C-Level'
+                      },
+                      { 
+                        type: 'Director', 
+                        icon: '🎯', 
+                        color: 'from-violet-400/80 via-purple-400/80 to-indigo-400/80',
+                        bgColor: 'bg-violet-500/10',
+                        borderColor: 'border-violet-400/30',
+                        description: 'Division leadership & alignment',
+                        level: 'Director'
                       },
                       { 
                         type: 'Department Manager', 
@@ -1708,6 +1746,20 @@ export default function Dashboard() {
                             <div 
                               className="bg-gradient-to-r from-indigo-500 to-purple-500 h-1.5 lg:h-2 rounded-full transition-all duration-500"
                               style={{ width: departmentCount['Executive Director'] > 0 ? '100%' : '0%' }}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <div className="flex justify-between text-xs lg:text-sm mb-1">
+                            <span className="text-gray-400">Director Span</span>
+                            <span className="text-white">
+                              {departmentCount['Director'] > 0 ? 'Strategic' : 'Limited'}
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-700 rounded-full h-1.5 lg:h-2">
+                            <div 
+                              className="bg-gradient-to-r from-violet-500 to-purple-500 h-1.5 lg:h-2 rounded-full transition-all duration-500"
+                              style={{ width: departmentCount['Director'] > 0 ? '100%' : '30%' }}
                             />
                           </div>
                         </div>

@@ -183,6 +183,14 @@ Changelog:
   * Enhanced network analytics cards with responsive padding and text scaling
   * Added touch-manipulation class for better drag-and-drop on mobile devices
   * Implemented responsive organizational health metrics with scaled progress bars
+- June 18, 2025. Compliance & Governance Fleet template and Director hierarchy expansion
+  * Added comprehensive "🛡️ Compliance & Governance Fleet" template for CFOs, CCOs, and Legal Heads
+  * Created sophisticated compliance architecture with 22 specialized agents across 4 management layers
+  * Integrated Directors role into organizational hierarchy with 🎯 icon and violet gradient styling
+  * Built compliance network with Executive Director → Directors → Department Managers → Associates structure
+  * Added specialized compliance agents: Policy Ops AI, Legal Analyst AI, GDPR Sentinel, Risk Score Generator
+  * Enhanced organizational health metrics to track Director span and strategic alignment
+  * Expanded agent palette from 4 to 5 roles with proper mobile-responsive grid layout
 ```
 
 ## User Preferences
