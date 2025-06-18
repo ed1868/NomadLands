@@ -5,20 +5,20 @@ import backgroundImage from '@assets/back_1750268064928.png';
 const features = [
   {
     icon: Heart,
-    title: "Mindful Integration",
-    description: "Seamlessly weave AI agents into your daily practice with intentional, conscious design that honors your workflow.",
+    title: "Shadow Integration",
+    description: "Deploy AI agents that move unseen through your workflows. Built in the shadows. Born to disrupt.",
     delay: "0s",
   },
   {
     icon: Leaf,
-    title: "Sustainable Technology",
-    description: "Built with environmental consciousness and energy-efficient practices that align with your values.",
+    title: "Lethal Efficiency",
+    description: "Zero tolerance for weakness. Our agents eliminate inefficiency with surgical precision.",
     delay: "1s",
   },
   {
     icon: Sparkles,
-    title: "Authentic Experience",
-    description: "Each agent is crafted to enhance your natural productivity rhythm without disrupting your inner balance.",
+    title: "Warrior Experience", 
+    description: "Every agent is forged in digital fire. They don't just work—they dominate their assigned domain.",
     delay: "2s",
   },
 ];
@@ -62,11 +62,15 @@ export default function FeaturesSection() {
           ? 'bg-gradient-to-br from-blue-500/5 via-transparent to-blue-400/10 border-t border-blue-500/20' 
           : 'bg-transparent border-t border-gray-900/50'
       }`}></div>
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="text-center mb-20">
-          <h2 className="text-4xl font-light mb-8 text-foreground tracking-tight">Why Choose Mindful AI?</h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-light leading-relaxed">
-            Experience technology that aligns with your values and enhances your natural flow.
+          <h2 className="text-4xl md:text-6xl font-extralight mb-8 text-gray-200 tracking-wide fade-in-luxury">
+            Why Choose Shadow Ops?
+          </h2>
+          <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto font-extralight leading-relaxed">
+            We don't build software. We forge digital weapons.
+            <br className="hidden md:block" />
+            <span className="knight-text font-light">Every line of code is a declaration of war against inefficiency.</span>
           </p>
         </div>
         

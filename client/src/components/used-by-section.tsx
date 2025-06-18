@@ -31,7 +31,24 @@ export default function UsedBySection() {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-950 via-black to-emerald-950/10">
+    <section 
+      ref={sectionRef}
+      className="relative py-20 overflow-hidden"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
+    >
+      <div className="absolute inset-0 bg-black/70"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/50"></div>
+      
+      <div className={`absolute inset-0 transition-all duration-1000 ${
+        isInView 
+          ? 'bg-gradient-to-br from-purple-500/5 via-transparent to-purple-400/10 border-t border-purple-500/20' 
+          : 'bg-transparent border-t border-gray-900/50'
+      }`}></div>
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-6xl font-extralight mb-8 text-gray-200 tracking-wide fade-in-luxury">

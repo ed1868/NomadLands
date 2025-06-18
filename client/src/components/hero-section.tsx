@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ArrowRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import backgroundImage from '@assets/back_1750268064928.png';
 
 export default function HeroSection() {
   const [isVisible, setIsVisible] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   const scrollToMarketplace = () => {
     const element = document.getElementById('marketplace');
@@ -18,15 +20,42 @@ export default function HeroSection() {
     return () => clearTimeout(timer);
   }, []);
 
+  // Motion sensor scroll effect
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.2, rootMargin: '0px 0px -20% 0px' }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url(${backgroundImage})`
-        }}
-      ></div>
+    <section 
+      ref={sectionRef}
+      className="relative h-screen flex items-center justify-center overflow-hidden"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
+    >
+      <div className="absolute inset-0 bg-black/70"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/50"></div>
+      
+      {/* Motion sensor lighting effect */}
+      <div className={`absolute inset-0 transition-all duration-1000 ${
+        isInView 
+          ? 'bg-gradient-to-br from-emerald-500/8 via-transparent to-emerald-400/15 border-t border-emerald-500/30' 
+          : 'bg-transparent border-t border-gray-900/50'
+      }`}></div>
       
       {/* Dark overlay for readability */}
       <div className="absolute inset-0 bg-black/60"></div>
