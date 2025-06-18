@@ -1,11 +1,29 @@
-import { useState } from "react";
-import { ArrowRight, Users, Zap, Shield, Globe } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ArrowRight, Users, Zap, Shield, Globe, Activity, TrendingUp, Network } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Navigation from "@/components/navigation";
 
 export default function NomadFleets() {
   const [selectedFleet, setSelectedFleet] = useState("enterprise");
+  const [animationProgress, setAnimationProgress] = useState(0);
+  const [hoveredNode, setHoveredNode] = useState<number | null>(null);
+  const [activeMetric, setActiveMetric] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAnimationProgress(prev => (prev + 1) % 100);
+    }, 100);
+
+    const metricInterval = setInterval(() => {
+      setActiveMetric(prev => (prev + 1) % 3);
+    }, 2000);
+
+    return () => {
+      clearInterval(interval);
+      clearInterval(metricInterval);
+    };
+  }, []);
 
   const fleets = [
     {
@@ -99,51 +117,90 @@ export default function NomadFleets() {
           ))}
         </div>
 
-        {/* Enterprise Scale Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-20">
-          {/* Scale Description */}
-          <div className="bg-black/40 border border-gray-800 rounded-lg p-12 backdrop-blur-sm">
-            <h2 className="text-3xl font-light text-gray-200 mb-8">
-              Enterprise Scale <span className="knight-text">Deployment</span>
-            </h2>
+        {/* Interactive Dashboard Section */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-20">
+          {/* Real-time Metrics */}
+          <div className="bg-black/40 border border-gray-800 rounded-lg p-8 backdrop-blur-sm">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-light text-gray-200">Live Metrics</h3>
+              <Activity className="w-5 h-5 text-emerald-500" />
+            </div>
+            
             <div className="space-y-6">
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-emerald-900/40 rounded border border-emerald-700 flex items-center justify-center mt-1">
-                  <span className="text-emerald-400 font-light text-sm">10</span>
+              <div className={`transition-all duration-500 ${activeMetric === 0 ? 'scale-105 bg-emerald-900/20' : ''} p-4 rounded`}>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-gray-400 font-extralight">Active Companies</span>
+                  <span className="text-2xl font-light knight-text">
+                    {Math.floor(8 + Math.sin(animationProgress / 10) * 2)}
+                  </span>
                 </div>
-                <div>
-                  <h4 className="text-gray-300 font-light mb-2">Companies</h4>
-                  <p className="text-gray-500 font-extralight">Multi-tenant deployment across enterprise organizations</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-emerald-900/40 rounded border border-emerald-700 flex items-center justify-center mt-1">
-                  <span className="text-emerald-400 font-light text-sm">500</span>
-                </div>
-                <div>
-                  <h4 className="text-gray-300 font-light mb-2">Active Agents</h4>
-                  <p className="text-gray-500 font-extralight">Simultaneous AI workforce operating at global scale</p>
+                <div className="w-full bg-gray-800 rounded-full h-2">
+                  <div 
+                    className="bg-gradient-to-r from-emerald-600 to-emerald-400 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${80 + Math.sin(animationProgress / 10) * 20}%` }}
+                  />
                 </div>
               </div>
-              <div className="flex items-start space-x-4">
-                <div className="w-8 h-8 bg-emerald-900/40 rounded border border-emerald-700 flex items-center justify-center mt-1">
-                  <span className="text-emerald-400 font-light text-sm">∞</span>
+
+              <div className={`transition-all duration-500 ${activeMetric === 1 ? 'scale-105 bg-emerald-900/20' : ''} p-4 rounded`}>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-gray-400 font-extralight">Deployed Agents</span>
+                  <span className="text-2xl font-light knight-text">
+                    {Math.floor(450 + Math.cos(animationProgress / 8) * 50)}
+                  </span>
                 </div>
-                <div>
-                  <h4 className="text-gray-300 font-light mb-2">Departments</h4>
-                  <p className="text-gray-500 font-extralight">Cross-functional teams unified toward common objectives</p>
+                <div className="w-full bg-gray-800 rounded-full h-2">
+                  <div 
+                    className="bg-gradient-to-r from-emerald-600 to-emerald-400 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${90 + Math.cos(animationProgress / 8) * 10}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className={`transition-all duration-500 ${activeMetric === 2 ? 'scale-105 bg-emerald-900/20' : ''} p-4 rounded`}>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-gray-400 font-extralight">Processing Power</span>
+                  <span className="text-2xl font-light knight-text">
+                    {Math.floor(95 + Math.sin(animationProgress / 15) * 5)}%
+                  </span>
+                </div>
+                <div className="w-full bg-gray-800 rounded-full h-2">
+                  <div 
+                    className="bg-gradient-to-r from-emerald-600 to-emerald-400 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${95 + Math.sin(animationProgress / 15) * 5}%` }}
+                  />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Scale Visualization */}
-          <div className="bg-black/40 border border-gray-800 rounded-lg p-12 backdrop-blur-sm">
-            <h3 className="text-xl font-light text-gray-200 mb-8">Network Topology</h3>
+          {/* Interactive Network Graph */}
+          <div className="bg-black/40 border border-gray-800 rounded-lg p-8 backdrop-blur-sm">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-light text-gray-200">Network Topology</h3>
+              <Network className="w-5 h-5 text-emerald-500" />
+            </div>
+            
             <div className="relative h-64">
+              {/* Data Flow Animation */}
+              <div className="absolute inset-0">
+                {[...Array(3)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute w-2 h-2 bg-emerald-400 rounded-full opacity-60"
+                    style={{
+                      left: `${50 + 40 * Math.cos((animationProgress + i * 33) / 10)}%`,
+                      top: `${50 + 40 * Math.sin((animationProgress + i * 33) / 10)}%`,
+                      transition: 'all 0.1s ease-out'
+                    }}
+                  />
+                ))}
+              </div>
+
               {/* Central Hub */}
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-emerald-900/60 border-2 border-emerald-600 rounded-full flex items-center justify-center">
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-emerald-900/60 border-2 border-emerald-600 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition-all duration-300">
                 <Shield className="w-8 h-8 text-emerald-400" />
+                <div className="absolute inset-0 bg-emerald-400/20 rounded-full animate-ping" />
               </div>
               
               {/* Company Nodes */}
@@ -152,32 +209,106 @@ export default function NomadFleets() {
                 const radius = 80;
                 const x = Math.cos(angle) * radius;
                 const y = Math.sin(angle) * radius;
+                const isHovered = hoveredNode === i;
                 
                 return (
                   <div key={i}>
                     {/* Connection Line */}
                     <div 
-                      className="absolute top-1/2 left-1/2 origin-left h-0.5 bg-gradient-to-r from-emerald-600/60 to-transparent"
+                      className={`absolute top-1/2 left-1/2 origin-left h-0.5 transition-all duration-300 ${
+                        isHovered ? 'bg-gradient-to-r from-emerald-400 to-emerald-600' : 'bg-gradient-to-r from-emerald-600/60 to-transparent'
+                      }`}
                       style={{
                         width: `${radius}px`,
                         transform: `translate(-2px, -1px) rotate(${i * 45}deg)`,
-                        animationDelay: `${i * 0.2}s`
+                        opacity: isHovered ? 1 : 0.6
                       }}
                     />
                     {/* Company Node */}
                     <div 
-                      className="absolute w-6 h-6 bg-emerald-900/40 border border-emerald-700 rounded-full animate-pulse"
+                      className={`absolute w-8 h-8 rounded-full cursor-pointer transition-all duration-300 ${
+                        isHovered 
+                          ? 'bg-emerald-600 border-2 border-emerald-400 scale-125' 
+                          : 'bg-emerald-900/40 border border-emerald-700 hover:scale-110'
+                      }`}
                       style={{
-                        left: `calc(50% + ${x}px - 12px)`,
-                        top: `calc(50% + ${y}px - 12px)`,
-                        animationDelay: `${i * 0.3}s`
+                        left: `calc(50% + ${x}px - 16px)`,
+                        top: `calc(50% + ${y}px - 16px)`
                       }}
+                      onMouseEnter={() => setHoveredNode(i)}
+                      onMouseLeave={() => setHoveredNode(null)}
                     >
-                      <div className="w-2 h-2 bg-emerald-500 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                      <div className={`w-3 h-3 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${
+                        isHovered ? 'bg-white' : 'bg-emerald-500'
+                      }`} />
+                      {isHovered && (
+                        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded whitespace-nowrap">
+                          Company {i + 1}
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
               })}
+            </div>
+          </div>
+
+          {/* Performance Graph */}
+          <div className="bg-black/40 border border-gray-800 rounded-lg p-8 backdrop-blur-sm">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-light text-gray-200">Performance</h3>
+              <TrendingUp className="w-5 h-5 text-emerald-500" />
+            </div>
+            
+            <div className="h-64 relative">
+              <svg className="w-full h-full" viewBox="0 0 300 200">
+                {/* Grid */}
+                <defs>
+                  <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgb(75, 85, 99)" strokeWidth="0.5" opacity="0.3"/>
+                  </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+                
+                {/* Performance Line */}
+                <path
+                  d={`M 0,${150 - Math.sin(0) * 30} ${[...Array(30)].map((_, i) => 
+                    `L ${i * 10},${150 - Math.sin(i * 0.3 + animationProgress / 20) * 40 - i * 2}`
+                  ).join(' ')}`}
+                  fill="none"
+                  stroke="url(#performance-gradient)"
+                  strokeWidth="3"
+                  className="drop-shadow-sm"
+                />
+                
+                {/* Gradient Definition */}
+                <defs>
+                  <linearGradient id="performance-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#10b981" />
+                    <stop offset="100%" stopColor="#34d399" />
+                  </linearGradient>
+                </defs>
+                
+                {/* Data Points */}
+                {[...Array(6)].map((_, i) => (
+                  <circle
+                    key={i}
+                    cx={i * 50}
+                    cy={150 - Math.sin(i * 0.5 + animationProgress / 20) * 40 - i * 8}
+                    r="4"
+                    fill="#10b981"
+                    className="cursor-pointer hover:r-6 transition-all duration-200"
+                  >
+                    <animate
+                      attributeName="r"
+                      values="4;6;4"
+                      dur="2s"
+                      repeatCount="indefinite"
+                      begin={`${i * 0.3}s`}
+                    />
+                  </circle>
+                ))}
+              </svg>
             </div>
           </div>
         </div>
@@ -192,27 +323,132 @@ export default function NomadFleets() {
             far beyond the sum of their parts. Deploy fleets that think, adapt, and evolve as one.
           </p>
           
-          {/* Animated Growth Chart */}
-          <div className="bg-black/60 border border-gray-700 rounded-lg p-8 mb-8">
-            <div className="flex items-end justify-center space-x-4 h-32">
-              {[
-                { label: "1 Agent", height: "20%", delay: "0s" },
-                { label: "5 Agents", height: "35%", delay: "0.5s" },
-                { label: "25 Agents", height: "60%", delay: "1s" },
-                { label: "100 Agents", height: "85%", delay: "1.5s" },
-                { label: "500 Agents", height: "100%", delay: "2s" }
-              ].map((bar, index) => (
-                <div key={index} className="text-center">
-                  <div 
-                    className="w-12 bg-gradient-to-t from-emerald-900 to-emerald-600 rounded-t scale-bar"
-                    style={{ 
-                      height: bar.height,
-                      animationDelay: bar.delay
-                    }}
+          {/* Interactive Scale Visualization */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            {/* Exponential Growth Chart */}
+            <div className="bg-black/60 border border-gray-700 rounded-lg p-8">
+              <h4 className="text-lg font-light text-gray-200 mb-6">Exponential Scale</h4>
+              <div className="h-48 relative">
+                <svg className="w-full h-full" viewBox="0 0 400 180">
+                  {/* Grid Lines */}
+                  <defs>
+                    <pattern id="exponential-grid" width="40" height="18" patternUnits="userSpaceOnUse">
+                      <path d="M 40 0 L 0 0 0 18" fill="none" stroke="rgb(75, 85, 99)" strokeWidth="0.3" opacity="0.5"/>
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#exponential-grid)" />
+                  
+                  {/* Exponential Curve */}
+                  <path
+                    d={`M 20,160 ${[...Array(20)].map((_, i) => {
+                      const x = 20 + i * 18;
+                      const exponentialY = 160 - Math.pow(i / 5, 2.2) * 12;
+                      return `L ${x},${exponentialY}`;
+                    }).join(' ')}`}
+                    fill="none"
+                    stroke="url(#exponential-gradient)"
+                    strokeWidth="4"
+                    className="drop-shadow-lg"
                   />
-                  <span className="text-gray-500 text-xs mt-2 block font-extralight">{bar.label}</span>
-                </div>
-              ))}
+                  
+                  {/* Fill Area */}
+                  <path
+                    d={`M 20,160 ${[...Array(20)].map((_, i) => {
+                      const x = 20 + i * 18;
+                      const exponentialY = 160 - Math.pow(i / 5, 2.2) * 12;
+                      return `L ${x},${exponentialY}`;
+                    }).join(' ')} L 380,160 Z`}
+                    fill="url(#exponential-fill)"
+                    opacity="0.3"
+                  />
+                  
+                  {/* Data Points */}
+                  {[1, 5, 25, 100, 500].map((value, i) => {
+                    const x = 20 + i * 90;
+                    const y = 160 - Math.pow(i * 2 / 5, 2.2) * 12;
+                    return (
+                      <g key={i}>
+                        <circle
+                          cx={x}
+                          cy={y}
+                          r="6"
+                          fill="#10b981"
+                          className="cursor-pointer hover:r-8 transition-all duration-300"
+                        >
+                          <animate
+                            attributeName="r"
+                            values="6;8;6"
+                            dur="3s"
+                            repeatCount="indefinite"
+                            begin={`${i * 0.5}s`}
+                          />
+                        </circle>
+                        <text
+                          x={x}
+                          y={y - 15}
+                          textAnchor="middle"
+                          className="fill-emerald-400 text-xs font-light"
+                        >
+                          {value}
+                        </text>
+                      </g>
+                    );
+                  })}
+                  
+                  <defs>
+                    <linearGradient id="exponential-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#059669" />
+                      <stop offset="50%" stopColor="#10b981" />
+                      <stop offset="100%" stopColor="#34d399" />
+                    </linearGradient>
+                    <linearGradient id="exponential-fill" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#10b981" />
+                      <stop offset="100%" stopColor="transparent" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+            </div>
+
+            {/* Network Load Distribution */}
+            <div className="bg-black/60 border border-gray-700 rounded-lg p-8">
+              <h4 className="text-lg font-light text-gray-200 mb-6">Load Distribution</h4>
+              <div className="space-y-4">
+                {[
+                  { label: "Processing", value: 85, color: "emerald" },
+                  { label: "Communication", value: 72, color: "blue" },
+                  { label: "Storage", value: 91, color: "purple" },
+                  { label: "Analysis", value: 68, color: "orange" }
+                ].map((metric, i) => (
+                  <div key={i} className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-400 font-extralight">{metric.label}</span>
+                      <span className="text-gray-300 font-light">
+                        {Math.floor(metric.value + Math.sin(animationProgress / 12 + i) * 8)}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-800 rounded-full h-3 overflow-hidden">
+                      <div 
+                        className={`h-3 rounded-full transition-all duration-500 bg-gradient-to-r ${
+                          metric.color === 'emerald' ? 'from-emerald-600 to-emerald-400' :
+                          metric.color === 'blue' ? 'from-blue-600 to-blue-400' :
+                          metric.color === 'purple' ? 'from-purple-600 to-purple-400' :
+                          'from-orange-600 to-orange-400'
+                        }`}
+                        style={{ 
+                          width: `${metric.value + Math.sin(animationProgress / 12 + i) * 8}%`,
+                          boxShadow: `0 0 10px ${
+                            metric.color === 'emerald' ? '#10b981' :
+                            metric.color === 'blue' ? '#3b82f6' :
+                            metric.color === 'purple' ? '#8b5cf6' :
+                            '#f59e0b'
+                          }40`
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
