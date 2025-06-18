@@ -120,19 +120,23 @@ The application follows a full-stack architecture with clear separation between 
 Changelog:
 - June 17, 2025. Initial setup with dark cyberpunk theme
 - June 17, 2025. Complete redesign with Alo Yoga-inspired aesthetic
-  * Transformed color palette to earthy, zen tones (sage green, warm beige, dusty rose, ocean mist)
-  * Enhanced animations with breathing, floating, and fade-in effects
-  * Updated agent data with mindful, wellness-oriented naming and descriptions
-  * Redesigned UI components for minimalist, light aesthetic
-  * Added new agent categories including "Wellness" 
-  * Implemented zen-inspired gradients and glass morphism effects
+- June 18, 2025. Major transformation to Dark Forest Green Cyberpunk aesthetic
+  * Implemented black and dark forest green color scheme with neon green accents
+  * Added cyberpunk-inspired UI elements: matrix rain effects, cyber grids, neon glows
+  * Updated typography to bold, uppercase fonts for tech-forward appearance
+  * Transformed agent categories to cyberpunk themes (Stealth Ops, Net Infiltration, etc.)
+  * Enhanced cards with cyber-card styling, green glow effects, and matrix gradients
+  * Updated hero section with "WORK LESS. LIVE SMART." in matrix-style design
+  * Modified navigation with dark backgrounds and green accent colors
+  * Applied consistent dark forest green and black theme across all components
 ```
 
 ## User Preferences
 
 ```
 Preferred communication style: Simple, everyday language.
-Design aesthetic: Alo Yoga-inspired - minimalist, earthy, zen, wellness-focused
-Animation style: Subtle, breathing, organic movements
-Target audience: Mindful professionals seeking conscious technology
+Design aesthetic: Dark Forest Green Cyberpunk - black backgrounds, neon green accents, matrix-inspired
+Animation style: Tech-forward with glow effects and cyber aesthetics
+Target audience: Tech professionals seeking powerful automation tools
+Color scheme: Black, dark forest green, matrix green, neon green highlights
 ```
