@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Users, Building2, Star, Clock, Zap, Plus, Search, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,13 +12,22 @@ export default function NomadLands() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [hireType, setHireType] = useState("all"); // all, per_run, per_hour
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Mock data for now - will implement backend later
   const mockNomadAgents: NomadAgent[] = [
     {
       id: 1,
-      name: "DataFlow Jenkins",
-      description: "Expert at ETL pipelines and data transformation. 15+ years experience with enterprise data architecture.",
+      name: "Pipeline Pete",
+      description: "Master of ETL pipelines and data transformation. Turns messy data into pristine analytics-ready datasets.",
       category: "Engineering",
       ownerId: "user1",
       companyId: 1,
@@ -32,11 +41,12 @@ export default function NomadLands() {
       featured: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      teamWorthy: true
     },
     {
       id: 2,
-      name: "CyberShield Maya",
-      description: "Penetration testing specialist with a focus on smart contract security audits and blockchain vulnerability assessment.",
+      name: "Fortress Felix",
+      description: "Cybersecurity ninja who finds vulnerabilities before the bad guys do. Expert penetration tester and security auditor.",
       category: "Security",
       ownerId: "user2", 
       companyId: 2,
@@ -45,15 +55,16 @@ export default function NomadLands() {
       availability: "busy",
       skills: ["Solidity", "Security Auditing", "Penetration Testing", "Smart Contracts", "Vulnerability Assessment"],
       rating: 5,
-      totalRuns: 89,
+      totalRuns: 189,
       icon: "Shield",
       featured: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      teamWorthy: true
     },
     {
       id: 3,
-      name: "ContentCraft Alex",
+      name: "Viral Vixen Maya",
       description: "Creative strategist specializing in viral content creation, brand storytelling, and multi-platform campaigns.",
       category: "Marketing",
       ownerId: "user3",
@@ -168,6 +179,27 @@ export default function NomadLands() {
 
   return (
     <div className="min-h-screen bg-black">
+      {/* Fixed Navigation with Fade Effect */}
+      <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-black/95 backdrop-blur-lg border-b border-gray-800/50' 
+          : 'bg-transparent'
+      }`}>
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="text-2xl font-light text-white">
+              AI <span className="knight-text">Nomads</span>
+            </div>
+            <nav className="hidden md:flex space-x-8">
+              <a href="/marketplace" className="text-gray-300 hover:text-white transition-colors">Marketplace</a>
+              <a href="/nomad-lands" className="text-emerald-400">Nomad Lands</a>
+              <a href="/smart-contracts" className="text-gray-300 hover:text-white transition-colors">Smart Contracts</a>
+              <a href="/api-docs" className="text-gray-300 hover:text-white transition-colors">API</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
       {/* Hero Section */}
       <section className="relative py-32 bg-gradient-to-br from-black via-gray-950 to-emerald-950/20">
         <div className="max-w-7xl mx-auto px-6 text-center">
@@ -281,11 +313,19 @@ export default function NomadLands() {
                         </div>
                       </div>
                     </div>
-                    {agent.featured && (
-                      <Badge className="bg-yellow-900/30 text-yellow-400 border-yellow-700/50">
-                        Featured
-                      </Badge>
-                    )}
+                    <div className="flex flex-col space-y-2">
+                      {agent.featured && (
+                        <Badge className="bg-yellow-900/30 text-yellow-400 border-yellow-700/50">
+                          Featured
+                        </Badge>
+                      )}
+                      {agent.teamWorthy && (
+                        <Badge className="bg-emerald-900/30 text-emerald-400 border-emerald-700/50 flex items-center space-x-1">
+                          <Star className="w-3 h-3" />
+                          <span>Can work in teams!</span>
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
