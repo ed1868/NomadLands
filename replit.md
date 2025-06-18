@@ -211,6 +211,13 @@ Changelog:
   * Added supporting functions: Legal, Compliance, Data Analytics, Business Intelligence, Administrative Services
   * Highest tool count at 623 tools available across all business functions and organizational levels
   * Removed emojis from all fleet template titles for cleaner professional appearance
+- June 18, 2025. Subscription-based access control for premium features
+  * Implemented subscription validation for save button in My Fleet tab
+  * Save functionality now restricted to users with active paid subscriptions (Nomad, Pioneer, Sovereign plans)
+  * Added visual feedback: disabled button styling and tooltip for non-subscribers
+  * Created toast notifications for both successful saves and upgrade requirements
+  * Button text changes to "Save (Pro)" for non-subscribers with hover tooltip explanation
+  * Enhanced user experience with clear messaging about premium feature requirements
 ```
 
 ## User Preferences
