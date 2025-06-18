@@ -11,7 +11,7 @@ import NomadFleets from "@/pages/nomad-fleets";
 import ApiDocs from "@/pages/api-docs";
 import Signup from "@/pages/signup-premium";
 import Signin from "@/pages/signin";
-import DashboardEnhanced from "@/pages/dashboard-enhanced";
+import Dashboard from "@/pages/dashboard";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -25,7 +25,7 @@ function Router() {
       <Route path="/api-docs" component={ApiDocs} />
       <Route path="/signup" component={Signup} />
       <Route path="/signin" component={Signin} />
-      <Route path="/dashboard" component={DashboardEnhanced} />
+      <Route path="/dashboard" component={Dashboard} />
       <Route component={NotFound} />
     </Switch>
   );
