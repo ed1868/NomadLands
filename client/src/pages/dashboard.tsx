@@ -1237,19 +1237,14 @@ export default function Dashboard() {
                 </div>
                 <div className="flex items-center space-x-4">
                   <Button 
-                    className={`${connectionMode ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-emerald-600 hover:bg-emerald-700'} text-white font-semibold`}
-                    onClick={() => setConnectionMode(!connectionMode)}
-                  >
-                    <Network className="w-4 h-4 mr-2" />
-                    {connectionMode ? 'Exit Connection Mode' : 'Connection Mode'}
-                  </Button>
-                  <Button 
                     className="bg-blue-600 hover:bg-blue-700 text-white font-semibold"
-                    onClick={() => setDroppedAgents([])}
+                    onClick={() => { setNodes([]); setEdges([]); }}
                   >
+                    <Trash2 className="w-4 h-4 mr-2" />
                     Clear Canvas
                   </Button>
                   <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800">
+                    <Save className="w-4 h-4 mr-2" />
                     Save Configuration
                   </Button>
                 </div>
@@ -1417,7 +1412,7 @@ export default function Dashboard() {
                         style={{ opacity: 0.3 }}
                       />
                     </ReactFlow>
-
+                  </div>
 
                   {/* Fleet Instructions */}
                   <div className="mt-4 bg-gray-800/40 rounded-lg p-4">
@@ -1503,26 +1498,22 @@ export default function Dashboard() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/10 border border-emerald-500/30 p-4 rounded-lg">
                         <p className="text-emerald-400 text-sm font-medium">Deployed Agents</p>
-                        <p className="text-2xl font-bold text-white">{droppedAgents.length}</p>
+                        <p className="text-2xl font-bold text-white">{nodes.length}</p>
                       </div>
                       <div className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 border border-blue-500/30 p-4 rounded-lg">
                         <p className="text-blue-400 text-sm font-medium">Network Links</p>
-                        <p className="text-2xl font-bold text-white">
-                          {droppedAgents.reduce((total, agent) => total + agent.connections.length, 0)}
-                        </p>
+                        <p className="text-2xl font-bold text-white">{edges.length}</p>
                       </div>
                       <div className="bg-gradient-to-br from-amber-500/10 to-amber-600/10 border border-amber-500/30 p-4 rounded-lg">
                         <p className="text-amber-400 text-sm font-medium">Estimated Cost/Hour</p>
                         <p className="text-2xl font-bold text-white">
-                          ${(droppedAgents.length * 0.48 + droppedAgents.reduce((total, agent) => total + agent.connections.length, 0) * 0.12).toFixed(2)}
+                          ${(nodes.length * 0.48 + edges.length * 0.12).toFixed(2)}
                         </p>
                       </div>
                       <div className="bg-gradient-to-br from-purple-500/10 to-purple-600/10 border border-purple-500/30 p-4 rounded-lg">
                         <p className="text-purple-400 text-sm font-medium">Network Density</p>
                         <p className="text-2xl font-bold text-white">
-                          {droppedAgents.length > 1 
-                            ? Math.round((droppedAgents.reduce((total, agent) => total + agent.connections.length, 0) / (droppedAgents.length * (droppedAgents.length - 1))) * 100)
-                            : 0}%
+                          {nodes.length > 0 ? (edges.length / nodes.length).toFixed(1) : '0'}
                         </p>
                       </div>
                     </div>
