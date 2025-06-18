@@ -3,37 +3,39 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(220, 13%, 9%);
-  --foreground: hsl(220, 9%, 95%);
-  --muted: hsl(220, 13%, 15%);
-  --muted-foreground: hsl(220, 9%, 60%);
-  --popover: hsl(220, 13%, 9%);
-  --popover-foreground: hsl(220, 9%, 95%);
-  --card: hsl(220, 13%, 11%);
-  --card-foreground: hsl(220, 9%, 95%);
-  --border: hsl(220, 13%, 20%);
-  --input: hsl(220, 13%, 15%);
-  --primary: hsl(271, 81%, 56%);
-  --primary-foreground: hsl(220, 13%, 9%);
-  --secondary: hsl(220, 13%, 15%);
-  --secondary-foreground: hsl(220, 9%, 95%);
-  --accent: hsl(220, 13%, 20%);
-  --accent-foreground: hsl(220, 9%, 95%);
+  --background: hsl(0, 0%, 4%);
+  --foreground: hsl(120, 5%, 95%);
+  --muted: hsl(140, 15%, 8%);
+  --muted-foreground: hsl(120, 5%, 60%);
+  --popover: hsl(0, 0%, 4%);
+  --popover-foreground: hsl(120, 5%, 95%);
+  --card: hsl(140, 20%, 6%);
+  --card-foreground: hsl(120, 5%, 95%);
+  --border: hsl(140, 15%, 15%);
+  --input: hsl(140, 15%, 10%);
+  --primary: hsl(140, 60%, 40%);
+  --primary-foreground: hsl(0, 0%, 4%);
+  --secondary: hsl(140, 15%, 10%);
+  --secondary-foreground: hsl(120, 5%, 95%);
+  --accent: hsl(140, 15%, 15%);
+  --accent-foreground: hsl(120, 5%, 95%);
   --destructive: hsl(0, 63%, 31%);
-  --destructive-foreground: hsl(220, 9%, 95%);
-  --ring: hsl(271, 81%, 56%);
+  --destructive-foreground: hsl(120, 5%, 95%);
+  --ring: hsl(140, 60%, 40%);
   --radius: 0.5rem;
   
-  /* Cyberpunk Tech Palette */
-  --neon-purple: hsl(271, 81%, 56%);
-  --neon-cyan: hsl(188, 100%, 50%);
-  --neon-pink: hsl(322, 81%, 60%);
-  --electric-blue: hsl(217, 91%, 60%);
-  --cyber-green: hsl(120, 100%, 50%);
-  --dark-bg: hsl(220, 13%, 9%);
-  --darker-bg: hsl(220, 13%, 6%);
-  --card-bg: hsl(220, 13%, 11%);
-  --border-glow: hsl(271, 81%, 56%);
+  /* Dark Forest Green Cyberpunk Palette */
+  --cyber-green: hsl(140, 60%, 40%);
+  --neon-green: hsl(120, 100%, 50%);
+  --forest-green: hsl(140, 40%, 20%);
+  --dark-forest: hsl(140, 30%, 10%);
+  --electric-green: hsl(120, 80%, 60%);
+  --matrix-green: hsl(140, 100%, 30%);
+  --black-bg: hsl(0, 0%, 2%);
+  --dark-bg: hsl(0, 0%, 4%);
+  --darker-bg: hsl(140, 20%, 3%);
+  --card-bg: hsl(140, 20%, 6%);
+  --border-glow: hsl(140, 60%, 40%);
 }
 
 .dark {
@@ -70,13 +72,13 @@
 
 @layer utilities {
   .gradient-mesh {
-    background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 30%, var(--card-bg) 70%, var(--dark-bg) 100%);
+    background: linear-gradient(135deg, var(--black-bg) 0%, var(--darker-bg) 30%, var(--card-bg) 70%, var(--black-bg) 100%);
     background-size: 400% 400%;
     animation: gradientShift 20s ease infinite;
   }
   
   .cyber-hero {
-    background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 50%, var(--card-bg) 100%);
+    background: linear-gradient(135deg, var(--black-bg) 0%, var(--darker-bg) 50%, var(--dark-forest) 100%);
     position: relative;
   }
   
@@ -84,18 +86,18 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 20% 80%, rgba(147, 51, 234, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+    background: radial-gradient(circle at 20% 80%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(22, 163, 74, 0.1) 0%, transparent 50%);
   }
   
   .glass-card {
-    @apply bg-slate-800/80 backdrop-blur-md border border-purple-500/20 shadow-xl;
-    box-shadow: 0 25px 50px -12px rgba(147, 51, 234, 0.15);
+    @apply bg-slate-900/80 backdrop-blur-md border border-green-500/20 shadow-xl;
+    box-shadow: 0 25px 50px -12px rgba(34, 197, 94, 0.15);
   }
   
   .cyber-card {
-    @apply bg-slate-800/90 backdrop-blur-sm border border-purple-500/30 shadow-2xl;
-    box-shadow: 0 25px 50px -12px rgba(147, 51, 234, 0.2);
+    @apply bg-slate-900/90 backdrop-blur-sm border border-green-500/30 shadow-2xl;
+    box-shadow: 0 25px 50px -12px rgba(34, 197, 94, 0.2);
     position: relative;
   }
   
@@ -103,7 +105,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, transparent 0%, rgba(147, 51, 234, 0.05) 100%);
+    background: linear-gradient(135deg, transparent 0%, rgba(34, 197, 94, 0.05) 100%);
     border-radius: inherit;
     pointer-events: none;
   }
@@ -114,28 +116,36 @@
   
   .agent-card:hover {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 35px 70px rgba(147, 51, 234, 0.25);
-    border-color: var(--neon-purple);
+    box-shadow: 0 35px 70px rgba(34, 197, 94, 0.25);
+    border-color: var(--cyber-green);
   }
   
-  .neon-gradient {
-    background: linear-gradient(135deg, var(--neon-purple) 0%, var(--neon-pink) 100%);
+  .forest-gradient {
+    background: linear-gradient(135deg, var(--forest-green) 0%, var(--dark-forest) 100%);
   }
   
   .cyber-gradient {
-    background: linear-gradient(135deg, var(--electric-blue) 0%, var(--neon-cyan) 100%);
+    background: linear-gradient(135deg, var(--cyber-green) 0%, var(--electric-green) 100%);
   }
   
-  .tech-gradient {
-    background: linear-gradient(135deg, var(--neon-cyan) 0%, var(--cyber-green) 100%);
+  .neon-gradient {
+    background: linear-gradient(135deg, var(--cyber-green) 0%, var(--neon-green) 100%);
+  }
+  
+  .matrix-gradient {
+    background: linear-gradient(135deg, var(--dark-forest) 0%, var(--matrix-green) 100%);
   }
   
   .glow-effect {
     filter: drop-shadow(0 0 20px currentColor);
   }
   
-  .neon-glow {
-    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 40px currentColor;
+  .green-glow {
+    text-shadow: 0 0 10px var(--cyber-green), 0 0 20px var(--cyber-green), 0 0 40px var(--cyber-green);
+  }
+  
+  .matrix-glow {
+    text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green), 0 0 40px var(--neon-green);
   }
   
   .floating-cta {
@@ -159,9 +169,19 @@
   
   .cyber-grid {
     background-image: 
-      linear-gradient(rgba(147, 51, 234, 0.1) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(147, 51, 234, 0.1) 1px, transparent 1px);
+      linear-gradient(rgba(34, 197, 94, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(34, 197, 94, 0.1) 1px, transparent 1px);
     background-size: 50px 50px;
+  }
+  
+  .matrix-rain {
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(34, 197, 94, 0.03) 2px,
+      rgba(34, 197, 94, 0.03) 4px
+    );
   }
 }
 

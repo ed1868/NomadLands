@@ -18,13 +18,13 @@ const iconMap = {
 };
 
 const gradientClasses = {
-  "sage-green": "forest-gradient",
-  "ocean-mist": "mist-gradient", 
-  "warm-beige": "mist-gradient",
+  "sage-green": "cyber-gradient",
+  "ocean-mist": "neon-gradient", 
+  "warm-beige": "matrix-gradient",
   "dusty-rose": "forest-gradient",
-  "lavender-grey": "mist-gradient",
-  "soft-sage": "forest-gradient",
-  "charcoal": "deep-gradient",
+  "lavender-grey": "cyber-gradient",
+  "soft-sage": "neon-gradient",
+  "charcoal": "matrix-gradient",
 };
 
 interface AgentCardProps {
