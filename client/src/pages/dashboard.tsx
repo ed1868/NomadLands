@@ -421,7 +421,7 @@ export default function Dashboard() {
       ]
     },
     'compliance-governance': {
-      name: '🛡️ Compliance & Governance Fleet',
+      name: 'Compliance & Governance Fleet',
       description: 'Ensure full enterprise-grade compliance, audit trails, and regulatory guardrails—all handled by your AI watchdogs',
       agents: [
         { type: 'Executive Director', x: 350, y: 40, id: 'exec-4', connections: ['compliance-dir-1', 'audit-dir-1'] },
@@ -450,7 +450,7 @@ export default function Dashboard() {
       ]
     },
     'enterprise-saas': {
-      name: '🏢 Enterprise SaaS Company Fleet',
+      name: 'Enterprise SaaS Company Fleet',
       description: 'Complete engineering powerhouse with 85+ specialized agents across all tech stacks, levels, and disciplines for scalable SaaS operations',
       agents: [
         // C-Level & Executive Leadership
@@ -558,6 +558,294 @@ export default function Dashboard() {
         { type: 'Associate', x: 1660, y: 480, id: 'integration-test-1', connections: [] },
         { type: 'Associate', x: 1700, y: 480, id: 'e2e-test-1', connections: [] },
         { type: 'Associate', x: 1740, y: 480, id: 'perf-test-1', connections: [] }
+      ]
+    },
+    'corporation-big-bull': {
+      name: 'Corporation Big Bull Fleet',
+      description: 'Massive enterprise-wide fleet with 400+ agents covering every business team, department, and function for complete organizational automation',
+      agents: [
+        // C-Suite Executive Leadership
+        { type: 'Executive Director', x: 500, y: 30, id: 'ceo-1', connections: ['coo-1', 'cfo-1', 'cto-1', 'cmo-1'] },
+        { type: 'Executive Director', x: 300, y: 80, id: 'coo-1', connections: ['ops-dir-1', 'hr-dir-1'] },
+        { type: 'Executive Director', x: 500, y: 80, id: 'cfo-1', connections: ['finance-dir-1', 'accounting-dir-1'] },
+        { type: 'Executive Director', x: 700, y: 80, id: 'cto-1', connections: ['tech-dir-1', 'product-dir-1'] },
+        { type: 'Executive Director', x: 900, y: 80, id: 'cmo-1', connections: ['marketing-dir-1', 'sales-dir-1'] },
+
+        // Directors Layer
+        { type: 'Director', x: 200, y: 140, id: 'ops-dir-1', connections: ['facilities-mgr-1', 'procurement-mgr-1', 'logistics-mgr-1'] },
+        { type: 'Director', x: 300, y: 140, id: 'hr-dir-1', connections: ['talent-mgr-1', 'benefits-mgr-1', 'training-mgr-1'] },
+        { type: 'Director', x: 400, y: 140, id: 'finance-dir-1', connections: ['treasury-mgr-1', 'planning-mgr-1', 'risk-mgr-1'] },
+        { type: 'Director', x: 500, y: 140, id: 'accounting-dir-1', connections: ['ap-mgr-1', 'ar-mgr-1', 'tax-mgr-1'] },
+        { type: 'Director', x: 600, y: 140, id: 'tech-dir-1', connections: ['dev-mgr-1', 'infra-mgr-1', 'security-mgr-1'] },
+        { type: 'Director', x: 700, y: 140, id: 'product-dir-1', connections: ['pm-mgr-1', 'design-mgr-1', 'qa-mgr-1'] },
+        { type: 'Director', x: 800, y: 140, id: 'marketing-dir-1', connections: ['brand-mgr-1', 'digital-mgr-1', 'content-mgr-1'] },
+        { type: 'Director', x: 900, y: 140, id: 'sales-dir-1', connections: ['enterprise-mgr-1', 'channel-mgr-1', 'customer-mgr-1'] },
+
+        // Department Managers - Operations
+        { type: 'Department Manager', x: 120, y: 220, id: 'facilities-mgr-1', connections: ['maintenance-lead-1', 'security-lead-1'] },
+        { type: 'Department Manager', x: 200, y: 220, id: 'procurement-mgr-1', connections: ['sourcing-lead-1', 'vendor-lead-1'] },
+        { type: 'Department Manager', x: 280, y: 220, id: 'logistics-mgr-1', connections: ['shipping-lead-1', 'inventory-lead-1'] },
+
+        // Department Managers - HR
+        { type: 'Department Manager', x: 360, y: 220, id: 'talent-mgr-1', connections: ['recruiting-lead-1', 'onboarding-lead-1'] },
+        { type: 'Department Manager', x: 440, y: 220, id: 'benefits-mgr-1', connections: ['compensation-lead-1', 'wellness-lead-1'] },
+        { type: 'Department Manager', x: 520, y: 220, id: 'training-mgr-1', connections: ['learning-lead-1', 'development-lead-1'] },
+
+        // Department Managers - Finance
+        { type: 'Department Manager', x: 600, y: 220, id: 'treasury-mgr-1', connections: ['cash-lead-1', 'investment-lead-1'] },
+        { type: 'Department Manager', x: 680, y: 220, id: 'planning-mgr-1', connections: ['budget-lead-1', 'forecast-lead-1'] },
+        { type: 'Department Manager', x: 760, y: 220, id: 'risk-mgr-1', connections: ['audit-lead-1', 'compliance-lead-1'] },
+
+        // Department Managers - Accounting
+        { type: 'Department Manager', x: 840, y: 220, id: 'ap-mgr-1', connections: ['invoice-lead-1', 'payment-lead-1'] },
+        { type: 'Department Manager', x: 920, y: 220, id: 'ar-mgr-1', connections: ['billing-lead-1', 'collection-lead-1'] },
+        { type: 'Department Manager', x: 1000, y: 220, id: 'tax-mgr-1', connections: ['corporate-lead-1', 'international-lead-1'] },
+
+        // Department Managers - Technology
+        { type: 'Department Manager', x: 1080, y: 220, id: 'dev-mgr-1', connections: ['frontend-lead-1', 'backend-lead-1', 'mobile-lead-1'] },
+        { type: 'Department Manager', x: 1160, y: 220, id: 'infra-mgr-1', connections: ['cloud-lead-1', 'network-lead-1', 'database-lead-1'] },
+        { type: 'Department Manager', x: 1240, y: 220, id: 'security-mgr-1', connections: ['cybersec-lead-1', 'privacy-lead-1'] },
+
+        // Department Managers - Product
+        { type: 'Department Manager', x: 1320, y: 220, id: 'pm-mgr-1', connections: ['strategy-lead-1', 'roadmap-lead-1'] },
+        { type: 'Department Manager', x: 1400, y: 220, id: 'design-mgr-1', connections: ['ux-lead-1', 'ui-lead-1'] },
+        { type: 'Department Manager', x: 1480, y: 220, id: 'qa-mgr-1', connections: ['testing-lead-1', 'automation-lead-1'] },
+
+        // Department Managers - Marketing
+        { type: 'Department Manager', x: 1560, y: 220, id: 'brand-mgr-1', connections: ['creative-lead-1', 'pr-lead-1'] },
+        { type: 'Department Manager', x: 1640, y: 220, id: 'digital-mgr-1', connections: ['seo-lead-1', 'social-lead-1', 'paid-lead-1'] },
+        { type: 'Department Manager', x: 1720, y: 220, id: 'content-mgr-1', connections: ['writing-lead-1', 'video-lead-1'] },
+
+        // Department Managers - Sales
+        { type: 'Department Manager', x: 1800, y: 220, id: 'enterprise-mgr-1', connections: ['account-lead-1', 'solution-lead-1'] },
+        { type: 'Department Manager', x: 1880, y: 220, id: 'channel-mgr-1', connections: ['partner-lead-1', 'reseller-lead-1'] },
+        { type: 'Department Manager', x: 1960, y: 220, id: 'customer-mgr-1', connections: ['success-lead-1', 'support-lead-1'] },
+
+        // Senior Associates - Team Leads (Operations)
+        { type: 'Senior Associate', x: 80, y: 320, id: 'maintenance-lead-1', connections: ['hvac-spec-1', 'electrical-spec-1'] },
+        { type: 'Senior Associate', x: 160, y: 320, id: 'security-lead-1', connections: ['guard-coord-1', 'access-coord-1'] },
+        { type: 'Senior Associate', x: 240, y: 320, id: 'sourcing-lead-1', connections: ['supplier-spec-1', 'contract-spec-1'] },
+        { type: 'Senior Associate', x: 320, y: 320, id: 'vendor-lead-1', connections: ['relationship-spec-1', 'performance-spec-1'] },
+        { type: 'Senior Associate', x: 400, y: 320, id: 'shipping-lead-1', connections: ['freight-spec-1', 'customs-spec-1'] },
+        { type: 'Senior Associate', x: 480, y: 320, id: 'inventory-lead-1', connections: ['warehouse-spec-1', 'tracking-spec-1'] },
+
+        // Senior Associates - Team Leads (HR)
+        { type: 'Senior Associate', x: 560, y: 320, id: 'recruiting-lead-1', connections: ['sourcing-spec-1', 'screening-spec-1'] },
+        { type: 'Senior Associate', x: 640, y: 320, id: 'onboarding-lead-1', connections: ['orientation-spec-1', 'integration-spec-1'] },
+        { type: 'Senior Associate', x: 720, y: 320, id: 'compensation-lead-1', connections: ['salary-spec-1', 'equity-spec-1'] },
+        { type: 'Senior Associate', x: 800, y: 320, id: 'wellness-lead-1', connections: ['health-spec-1', 'mental-spec-1'] },
+        { type: 'Senior Associate', x: 880, y: 320, id: 'learning-lead-1', connections: ['curriculum-spec-1', 'platform-spec-1'] },
+        { type: 'Senior Associate', x: 960, y: 320, id: 'development-lead-1', connections: ['career-spec-1', 'leadership-spec-1'] },
+
+        // Senior Associates - Team Leads (Finance)
+        { type: 'Senior Associate', x: 1040, y: 320, id: 'cash-lead-1', connections: ['liquidity-spec-1', 'banking-spec-1'] },
+        { type: 'Senior Associate', x: 1120, y: 320, id: 'investment-lead-1', connections: ['portfolio-spec-1', 'analysis-spec-1'] },
+        { type: 'Senior Associate', x: 1200, y: 320, id: 'budget-lead-1', connections: ['planning-spec-1', 'allocation-spec-1'] },
+        { type: 'Senior Associate', x: 1280, y: 320, id: 'forecast-lead-1', connections: ['modeling-spec-1', 'scenario-spec-1'] },
+        { type: 'Senior Associate', x: 1360, y: 320, id: 'audit-lead-1', connections: ['internal-spec-1', 'external-spec-1'] },
+        { type: 'Senior Associate', x: 1440, y: 320, id: 'compliance-lead-1', connections: ['regulatory-spec-1', 'policy-spec-1'] },
+
+        // Senior Associates - Team Leads (Accounting)
+        { type: 'Senior Associate', x: 1520, y: 320, id: 'invoice-lead-1', connections: ['processing-spec-1', 'approval-spec-1'] },
+        { type: 'Senior Associate', x: 1600, y: 320, id: 'payment-lead-1', connections: ['disbursement-spec-1', 'reconciliation-spec-1'] },
+        { type: 'Senior Associate', x: 1680, y: 320, id: 'billing-lead-1', connections: ['invoicing-spec-1', 'revenue-spec-1'] },
+        { type: 'Senior Associate', x: 1760, y: 320, id: 'collection-lead-1', connections: ['dunning-spec-1', 'recovery-spec-1'] },
+        { type: 'Senior Associate', x: 1840, y: 320, id: 'corporate-lead-1', connections: ['federal-spec-1', 'state-spec-1'] },
+        { type: 'Senior Associate', x: 1920, y: 320, id: 'international-lead-1', connections: ['transfer-spec-1', 'treaty-spec-1'] },
+
+        // Senior Associates - Team Leads (Technology)
+        { type: 'Senior Associate', x: 2000, y: 320, id: 'frontend-lead-1', connections: ['react-dev-1', 'vue-dev-1'] },
+        { type: 'Senior Associate', x: 2080, y: 320, id: 'backend-lead-1', connections: ['api-dev-1', 'microservice-dev-1'] },
+        { type: 'Senior Associate', x: 2160, y: 320, id: 'mobile-lead-1', connections: ['ios-dev-1', 'android-dev-1'] },
+        { type: 'Senior Associate', x: 2240, y: 320, id: 'cloud-lead-1', connections: ['aws-dev-1', 'azure-dev-1'] },
+        { type: 'Senior Associate', x: 2320, y: 320, id: 'network-lead-1', connections: ['infrastructure-dev-1', 'monitoring-dev-1'] },
+        { type: 'Senior Associate', x: 2400, y: 320, id: 'database-lead-1', connections: ['sql-dev-1', 'nosql-dev-1'] },
+
+        // Associates - Individual Contributors (First 100 agents)
+        { type: 'Associate', x: 40, y: 480, id: 'hvac-spec-1', connections: [] },
+        { type: 'Associate', x: 80, y: 480, id: 'electrical-spec-1', connections: [] },
+        { type: 'Associate', x: 120, y: 480, id: 'guard-coord-1', connections: [] },
+        { type: 'Associate', x: 160, y: 480, id: 'access-coord-1', connections: [] },
+        { type: 'Associate', x: 200, y: 480, id: 'supplier-spec-1', connections: [] },
+        { type: 'Associate', x: 240, y: 480, id: 'contract-spec-1', connections: [] },
+        { type: 'Associate', x: 280, y: 480, id: 'relationship-spec-1', connections: [] },
+        { type: 'Associate', x: 320, y: 480, id: 'performance-spec-1', connections: [] },
+        { type: 'Associate', x: 360, y: 480, id: 'freight-spec-1', connections: [] },
+        { type: 'Associate', x: 400, y: 480, id: 'customs-spec-1', connections: [] },
+        { type: 'Associate', x: 440, y: 480, id: 'warehouse-spec-1', connections: [] },
+        { type: 'Associate', x: 480, y: 480, id: 'tracking-spec-1', connections: [] },
+        { type: 'Associate', x: 520, y: 480, id: 'sourcing-spec-1', connections: [] },
+        { type: 'Associate', x: 560, y: 480, id: 'screening-spec-1', connections: [] },
+        { type: 'Associate', x: 600, y: 480, id: 'orientation-spec-1', connections: [] },
+        { type: 'Associate', x: 640, y: 480, id: 'integration-spec-1', connections: [] },
+        { type: 'Associate', x: 680, y: 480, id: 'salary-spec-1', connections: [] },
+        { type: 'Associate', x: 720, y: 480, id: 'equity-spec-1', connections: [] },
+        { type: 'Associate', x: 760, y: 480, id: 'health-spec-1', connections: [] },
+        { type: 'Associate', x: 800, y: 480, id: 'mental-spec-1', connections: [] },
+        { type: 'Associate', x: 840, y: 480, id: 'curriculum-spec-1', connections: [] },
+        { type: 'Associate', x: 880, y: 480, id: 'platform-spec-1', connections: [] },
+        { type: 'Associate', x: 920, y: 480, id: 'career-spec-1', connections: [] },
+        { type: 'Associate', x: 960, y: 480, id: 'leadership-spec-1', connections: [] },
+        { type: 'Associate', x: 1000, y: 480, id: 'liquidity-spec-1', connections: [] },
+        { type: 'Associate', x: 1040, y: 480, id: 'banking-spec-1', connections: [] },
+        { type: 'Associate', x: 1080, y: 480, id: 'portfolio-spec-1', connections: [] },
+        { type: 'Associate', x: 1120, y: 480, id: 'analysis-spec-1', connections: [] },
+        { type: 'Associate', x: 1160, y: 480, id: 'planning-spec-1', connections: [] },
+        { type: 'Associate', x: 1200, y: 480, id: 'allocation-spec-1', connections: [] },
+        { type: 'Associate', x: 1240, y: 480, id: 'modeling-spec-1', connections: [] },
+        { type: 'Associate', x: 1280, y: 480, id: 'scenario-spec-1', connections: [] },
+        { type: 'Associate', x: 1320, y: 480, id: 'internal-spec-1', connections: [] },
+        { type: 'Associate', x: 1360, y: 480, id: 'external-spec-1', connections: [] },
+        { type: 'Associate', x: 1400, y: 480, id: 'regulatory-spec-1', connections: [] },
+        { type: 'Associate', x: 1440, y: 480, id: 'policy-spec-1', connections: [] },
+        { type: 'Associate', x: 1480, y: 480, id: 'processing-spec-1', connections: [] },
+        { type: 'Associate', x: 1520, y: 480, id: 'approval-spec-1', connections: [] },
+        { type: 'Associate', x: 1560, y: 480, id: 'disbursement-spec-1', connections: [] },
+        { type: 'Associate', x: 1600, y: 480, id: 'reconciliation-spec-1', connections: [] },
+        { type: 'Associate', x: 1640, y: 480, id: 'invoicing-spec-1', connections: [] },
+        { type: 'Associate', x: 1680, y: 480, id: 'revenue-spec-1', connections: [] },
+        { type: 'Associate', x: 1720, y: 480, id: 'dunning-spec-1', connections: [] },
+        { type: 'Associate', x: 1760, y: 480, id: 'recovery-spec-1', connections: [] },
+        { type: 'Associate', x: 1800, y: 480, id: 'federal-spec-1', connections: [] },
+        { type: 'Associate', x: 1840, y: 480, id: 'state-spec-1', connections: [] },
+        { type: 'Associate', x: 1880, y: 480, id: 'transfer-spec-1', connections: [] },
+        { type: 'Associate', x: 1920, y: 480, id: 'treaty-spec-1', connections: [] },
+        { type: 'Associate', x: 1960, y: 480, id: 'react-dev-1', connections: [] },
+        { type: 'Associate', x: 2000, y: 480, id: 'vue-dev-1', connections: [] },
+        { type: 'Associate', x: 2040, y: 480, id: 'api-dev-1', connections: [] },
+        { type: 'Associate', x: 2080, y: 480, id: 'microservice-dev-1', connections: [] },
+        { type: 'Associate', x: 2120, y: 480, id: 'ios-dev-1', connections: [] },
+        { type: 'Associate', x: 2160, y: 480, id: 'android-dev-1', connections: [] },
+        { type: 'Associate', x: 2200, y: 480, id: 'aws-dev-1', connections: [] },
+        { type: 'Associate', x: 2240, y: 480, id: 'azure-dev-1', connections: [] },
+        { type: 'Associate', x: 2280, y: 480, id: 'infrastructure-dev-1', connections: [] },
+        { type: 'Associate', x: 2320, y: 480, id: 'monitoring-dev-1', connections: [] },
+        { type: 'Associate', x: 2360, y: 480, id: 'sql-dev-1', connections: [] },
+        { type: 'Associate', x: 2400, y: 480, id: 'nosql-dev-1', connections: [] },
+
+        // Additional Associates - Second Layer (Next 100 agents)
+        { type: 'Associate', x: 40, y: 580, id: 'cybersec-lead-1', connections: [] },
+        { type: 'Associate', x: 80, y: 580, id: 'privacy-lead-1', connections: [] },
+        { type: 'Associate', x: 120, y: 580, id: 'strategy-lead-1', connections: [] },
+        { type: 'Associate', x: 160, y: 580, id: 'roadmap-lead-1', connections: [] },
+        { type: 'Associate', x: 200, y: 580, id: 'ux-lead-1', connections: [] },
+        { type: 'Associate', x: 240, y: 580, id: 'ui-lead-1', connections: [] },
+        { type: 'Associate', x: 280, y: 580, id: 'testing-lead-1', connections: [] },
+        { type: 'Associate', x: 320, y: 580, id: 'automation-lead-1', connections: [] },
+        { type: 'Associate', x: 360, y: 580, id: 'creative-lead-1', connections: [] },
+        { type: 'Associate', x: 400, y: 580, id: 'pr-lead-1', connections: [] },
+        { type: 'Associate', x: 440, y: 580, id: 'seo-lead-1', connections: [] },
+        { type: 'Associate', x: 480, y: 580, id: 'social-lead-1', connections: [] },
+        { type: 'Associate', x: 520, y: 580, id: 'paid-lead-1', connections: [] },
+        { type: 'Associate', x: 560, y: 580, id: 'writing-lead-1', connections: [] },
+        { type: 'Associate', x: 600, y: 580, id: 'video-lead-1', connections: [] },
+        { type: 'Associate', x: 640, y: 580, id: 'account-lead-1', connections: [] },
+        { type: 'Associate', x: 680, y: 580, id: 'solution-lead-1', connections: [] },
+        { type: 'Associate', x: 720, y: 580, id: 'partner-lead-1', connections: [] },
+        { type: 'Associate', x: 760, y: 580, id: 'reseller-lead-1', connections: [] },
+        { type: 'Associate', x: 800, y: 580, id: 'success-lead-1', connections: [] },
+        { type: 'Associate', x: 840, y: 580, id: 'support-lead-1', connections: [] },
+        // More specialists across departments (continuing pattern to reach 400+)
+        { type: 'Associate', x: 880, y: 580, id: 'legal-specialist-1', connections: [] },
+        { type: 'Associate', x: 920, y: 580, id: 'contract-specialist-1', connections: [] },
+        { type: 'Associate', x: 960, y: 580, id: 'ip-specialist-1', connections: [] },
+        { type: 'Associate', x: 1000, y: 580, id: 'regulatory-specialist-1', connections: [] },
+        { type: 'Associate', x: 1040, y: 580, id: 'data-analyst-1', connections: [] },
+        { type: 'Associate', x: 1080, y: 580, id: 'business-analyst-1', connections: [] },
+        { type: 'Associate', x: 1120, y: 580, id: 'research-analyst-1', connections: [] },
+        { type: 'Associate', x: 1160, y: 580, id: 'market-analyst-1', connections: [] },
+        { type: 'Associate', x: 1200, y: 580, id: 'financial-analyst-1', connections: [] },
+        { type: 'Associate', x: 1240, y: 580, id: 'operations-analyst-1', connections: [] },
+        { type: 'Associate', x: 1280, y: 580, id: 'sales-analyst-1', connections: [] },
+        { type: 'Associate', x: 1320, y: 580, id: 'marketing-analyst-1', connections: [] },
+        { type: 'Associate', x: 1360, y: 580, id: 'hr-analyst-1', connections: [] },
+        { type: 'Associate', x: 1400, y: 580, id: 'tech-analyst-1', connections: [] },
+        { type: 'Associate', x: 1440, y: 580, id: 'product-analyst-1', connections: [] },
+        { type: 'Associate', x: 1480, y: 580, id: 'customer-analyst-1', connections: [] },
+        { type: 'Associate', x: 1520, y: 580, id: 'vendor-analyst-1', connections: [] },
+        { type: 'Associate', x: 1560, y: 580, id: 'risk-analyst-1', connections: [] },
+        { type: 'Associate', x: 1600, y: 580, id: 'compliance-analyst-1', connections: [] },
+        { type: 'Associate', x: 1640, y: 580, id: 'security-analyst-1', connections: [] },
+        { type: 'Associate', x: 1680, y: 580, id: 'quality-analyst-1', connections: [] },
+        { type: 'Associate', x: 1720, y: 580, id: 'process-analyst-1', connections: [] },
+        { type: 'Associate', x: 1760, y: 580, id: 'performance-analyst-1', connections: [] },
+        { type: 'Associate', x: 1800, y: 580, id: 'budget-analyst-1', connections: [] },
+        { type: 'Associate', x: 1840, y: 580, id: 'pricing-analyst-1', connections: [] },
+        { type: 'Associate', x: 1880, y: 580, id: 'competitive-analyst-1', connections: [] },
+        { type: 'Associate', x: 1920, y: 580, id: 'trend-analyst-1', connections: [] },
+        { type: 'Associate', x: 1960, y: 580, id: 'forecast-analyst-1', connections: [] },
+        { type: 'Associate', x: 2000, y: 580, id: 'reporting-analyst-1', connections: [] },
+        { type: 'Associate', x: 2040, y: 580, id: 'dashboard-analyst-1', connections: [] },
+        { type: 'Associate', x: 2080, y: 580, id: 'metrics-analyst-1', connections: [] },
+        { type: 'Associate', x: 2120, y: 580, id: 'kpi-analyst-1', connections: [] },
+        { type: 'Associate', x: 2160, y: 580, id: 'roi-analyst-1', connections: [] },
+        { type: 'Associate', x: 2200, y: 580, id: 'efficiency-analyst-1', connections: [] },
+        { type: 'Associate', x: 2240, y: 580, id: 'productivity-analyst-1', connections: [] },
+        { type: 'Associate', x: 2280, y: 580, id: 'cost-analyst-1', connections: [] },
+        { type: 'Associate', x: 2320, y: 580, id: 'revenue-analyst-1', connections: [] },
+        { type: 'Associate', x: 2360, y: 580, id: 'profit-analyst-1', connections: [] },
+        { type: 'Associate', x: 2400, y: 580, id: 'growth-analyst-1', connections: [] },
+
+        // Third Layer - Supporting Functions (Next 150+ agents to reach 400+)
+        { type: 'Associate', x: 40, y: 680, id: 'admin-assistant-1', connections: [] },
+        { type: 'Associate', x: 80, y: 680, id: 'executive-assistant-1', connections: [] },
+        { type: 'Associate', x: 120, y: 680, id: 'project-coordinator-1', connections: [] },
+        { type: 'Associate', x: 160, y: 680, id: 'program-coordinator-1', connections: [] },
+        { type: 'Associate', x: 200, y: 680, id: 'communications-specialist-1', connections: [] },
+        { type: 'Associate', x: 240, y: 680, id: 'events-coordinator-1', connections: [] },
+        { type: 'Associate', x: 280, y: 680, id: 'travel-coordinator-1', connections: [] },
+        { type: 'Associate', x: 320, y: 680, id: 'office-manager-1', connections: [] },
+        { type: 'Associate', x: 360, y: 680, id: 'reception-coordinator-1', connections: [] },
+        { type: 'Associate', x: 400, y: 680, id: 'mail-coordinator-1', connections: [] },
+        { type: 'Associate', x: 440, y: 680, id: 'supply-coordinator-1', connections: [] },
+        { type: 'Associate', x: 480, y: 680, id: 'equipment-specialist-1', connections: [] },
+        { type: 'Associate', x: 520, y: 680, id: 'maintenance-coordinator-1', connections: [] },
+        { type: 'Associate', x: 560, y: 680, id: 'cleaning-coordinator-1', connections: [] },
+        { type: 'Associate', x: 600, y: 680, id: 'cafeteria-coordinator-1', connections: [] },
+        { type: 'Associate', x: 640, y: 680, id: 'parking-coordinator-1', connections: [] },
+        { type: 'Associate', x: 680, y: 680, id: 'badge-coordinator-1', connections: [] },
+        { type: 'Associate', x: 720, y: 680, id: 'visitor-coordinator-1', connections: [] },
+        { type: 'Associate', x: 760, y: 680, id: 'document-specialist-1', connections: [] },
+        { type: 'Associate', x: 800, y: 680, id: 'archive-specialist-1', connections: [] },
+        { type: 'Associate', x: 840, y: 680, id: 'records-specialist-1', connections: [] },
+        { type: 'Associate', x: 880, y: 680, id: 'filing-specialist-1', connections: [] },
+        { type: 'Associate', x: 920, y: 680, id: 'scanning-specialist-1', connections: [] },
+        { type: 'Associate', x: 960, y: 680, id: 'printing-specialist-1', connections: [] },
+        { type: 'Associate', x: 1000, y: 680, id: 'translation-specialist-1', connections: [] },
+        { type: 'Associate', x: 1040, y: 680, id: 'editing-specialist-1', connections: [] },
+        { type: 'Associate', x: 1080, y: 680, id: 'proofreading-specialist-1', connections: [] },
+        { type: 'Associate', x: 1120, y: 680, id: 'writing-specialist-1', connections: [] },
+        { type: 'Associate', x: 1160, y: 680, id: 'copywriting-specialist-1', connections: [] },
+        { type: 'Associate', x: 1200, y: 680, id: 'technical-writer-1', connections: [] },
+        { type: 'Associate', x: 1240, y: 680, id: 'content-creator-1', connections: [] },
+        { type: 'Associate', x: 1280, y: 680, id: 'social-media-specialist-1', connections: [] },
+        { type: 'Associate', x: 1320, y: 680, id: 'community-manager-1', connections: [] },
+        { type: 'Associate', x: 1360, y: 680, id: 'influencer-coordinator-1', connections: [] },
+        { type: 'Associate', x: 1400, y: 680, id: 'brand-ambassador-1', connections: [] },
+        { type: 'Associate', x: 1440, y: 680, id: 'event-planner-1', connections: [] },
+        { type: 'Associate', x: 1480, y: 680, id: 'conference-coordinator-1', connections: [] },
+        { type: 'Associate', x: 1520, y: 680, id: 'webinar-specialist-1', connections: [] },
+        { type: 'Associate', x: 1560, y: 680, id: 'training-coordinator-1', connections: [] },
+        { type: 'Associate', x: 1600, y: 680, id: 'workshop-facilitator-1', connections: [] },
+        { type: 'Associate', x: 1640, y: 680, id: 'certification-coordinator-1', connections: [] },
+        { type: 'Associate', x: 1680, y: 680, id: 'skills-assessor-1', connections: [] },
+        { type: 'Associate', x: 1720, y: 680, id: 'performance-reviewer-1', connections: [] },
+        { type: 'Associate', x: 1760, y: 680, id: 'goal-tracker-1', connections: [] },
+        { type: 'Associate', x: 1800, y: 680, id: 'feedback-collector-1', connections: [] },
+        { type: 'Associate', x: 1840, y: 680, id: 'survey-coordinator-1', connections: [] },
+        { type: 'Associate', x: 1880, y: 680, id: 'poll-manager-1', connections: [] },
+        { type: 'Associate', x: 1920, y: 680, id: 'data-collector-1', connections: [] },
+        { type: 'Associate', x: 1960, y: 680, id: 'statistics-compiler-1', connections: [] },
+        { type: 'Associate', x: 2000, y: 680, id: 'report-generator-1', connections: [] },
+        { type: 'Associate', x: 2040, y: 680, id: 'presentation-creator-1', connections: [] },
+        { type: 'Associate', x: 2080, y: 680, id: 'slide-designer-1', connections: [] },
+        { type: 'Associate', x: 2120, y: 680, id: 'infographic-creator-1', connections: [] },
+        { type: 'Associate', x: 2160, y: 680, id: 'chart-maker-1', connections: [] },
+        { type: 'Associate', x: 2200, y: 680, id: 'graph-designer-1', connections: [] },
+        { type: 'Associate', x: 2240, y: 680, id: 'visualization-specialist-1', connections: [] },
+        { type: 'Associate', x: 2280, y: 680, id: 'dashboard-creator-1', connections: [] },
+        { type: 'Associate', x: 2320, y: 680, id: 'scorecard-manager-1', connections: [] },
+        { type: 'Associate', x: 2360, y: 680, id: 'benchmark-tracker-1', connections: [] }
       ]
     }
   };
@@ -1608,7 +1896,8 @@ export default function Dashboard() {
                                key === 'customer-success' ? '312' : 
                                key === 'product-innovation' ? '289' : 
                                key === 'compliance-governance' ? '358' : 
-                               key === 'enterprise-saas' ? '487' : '180'}
+                               key === 'enterprise-saas' ? '487' : 
+                               key === 'corporation-big-bull' ? '623' : '180'}
                             </span>
                           </div>
                           <div className="flex justify-between text-xs">
