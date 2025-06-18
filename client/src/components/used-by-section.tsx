@@ -21,7 +21,7 @@ export default function UsedBySection() {
   }, []);
   const companies = [
     { name: "Google", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
-    { name: "Microsoft", logo: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" },
+    { name: "Microsoft", logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" },
     { name: "Apple", logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" },
     { name: "Amazon", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
     { name: "Meta", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" },
@@ -54,7 +54,7 @@ export default function UsedBySection() {
           <h2 className="text-4xl md:text-6xl font-extralight mb-8 text-white tracking-wide fade-in-luxury">
             Trusted by Industry Leaders
           </h2>
-          <p className="text-lg md:text-xl text-gray-400 max-w-3xl mx-auto font-extralight leading-relaxed">
+          <p className="text-lg md:text-xl text-white max-w-3xl mx-auto font-extralight leading-relaxed">
             The world's most innovative companies deploy our AI agents
             <br className="hidden md:block" />
             <span className="knight-text font-light">to transform their operations.</span>
@@ -62,19 +62,19 @@ export default function UsedBySection() {
         </div>
 
         {/* Company Logos Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-8 items-center">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6 items-center">
           {companies.map((company, index) => (
             <div
               key={company.name}
-              className="flex items-center justify-center h-20 p-6 bg-black/40 border border-white/20 rounded-lg hover:border-emerald-500/50 hover:bg-black/60 transition-all duration-500 group backdrop-blur-sm"
+              className="flex items-center justify-center h-24 p-8 bg-black/40 border border-white/20 rounded-lg hover:border-emerald-500/50 hover:bg-black/60 transition-all duration-500 group backdrop-blur-sm"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <img
                 src={company.logo}
                 alt={company.name}
-                className="h-8 w-auto opacity-60 group-hover:opacity-90 transition-all duration-300 group-hover:scale-105"
+                className="h-6 w-auto opacity-60 group-hover:opacity-90 transition-all duration-300 group-hover:scale-105"
                 style={{ 
-                  maxWidth: '120px', 
+                  maxWidth: '100px', 
                   filter: 'brightness(0) invert(1) opacity(0.7)' 
                 }}
               />
