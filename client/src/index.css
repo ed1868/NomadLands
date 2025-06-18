@@ -3,37 +3,37 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(0, 0%, 98%);
-  --foreground: hsl(150, 25%, 15%);
-  --muted: hsl(150, 8%, 90%);
-  --muted-foreground: hsl(150, 10%, 45%);
-  --popover: hsl(0, 0%, 98%);
-  --popover-foreground: hsl(150, 25%, 15%);
-  --card: hsl(0, 0%, 99%);
-  --card-foreground: hsl(150, 25%, 15%);
-  --border: hsl(150, 8%, 85%);
-  --input: hsl(150, 5%, 92%);
-  --primary: hsl(150, 25%, 25%);
-  --primary-foreground: hsl(0, 0%, 98%);
-  --secondary: hsl(150, 5%, 92%);
-  --secondary-foreground: hsl(150, 25%, 15%);
-  --accent: hsl(150, 8%, 85%);
-  --accent-foreground: hsl(150, 25%, 15%);
-  --destructive: hsl(0, 60%, 50%);
-  --destructive-foreground: hsl(0, 0%, 98%);
-  --ring: hsl(150, 25%, 25%);
-  --radius: 0.75rem;
+  --background: hsl(220, 13%, 9%);
+  --foreground: hsl(220, 9%, 95%);
+  --muted: hsl(220, 13%, 15%);
+  --muted-foreground: hsl(220, 9%, 60%);
+  --popover: hsl(220, 13%, 9%);
+  --popover-foreground: hsl(220, 9%, 95%);
+  --card: hsl(220, 13%, 11%);
+  --card-foreground: hsl(220, 9%, 95%);
+  --border: hsl(220, 13%, 20%);
+  --input: hsl(220, 13%, 15%);
+  --primary: hsl(271, 81%, 56%);
+  --primary-foreground: hsl(220, 13%, 9%);
+  --secondary: hsl(220, 13%, 15%);
+  --secondary-foreground: hsl(220, 9%, 95%);
+  --accent: hsl(220, 13%, 20%);
+  --accent-foreground: hsl(220, 9%, 95%);
+  --destructive: hsl(0, 63%, 31%);
+  --destructive-foreground: hsl(220, 9%, 95%);
+  --ring: hsl(271, 81%, 56%);
+  --radius: 0.5rem;
   
-  /* Dark Forest Green + Fog Palette */
-  --forest-green: hsl(150, 25%, 20%);
-  --matte-green: hsl(150, 20%, 25%);
-  --deep-forest: hsl(150, 30%, 15%);
-  --sage-mist: hsl(150, 15%, 75%);
-  --fog-gray: hsl(150, 5%, 85%);
-  --light-fog: hsl(150, 3%, 92%);
-  --off-white: hsl(0, 0%, 97%);
-  --soft-white: hsl(0, 0%, 99%);
-  --charcoal: hsl(150, 15%, 12%);
+  /* Cyberpunk Tech Palette */
+  --neon-purple: hsl(271, 81%, 56%);
+  --neon-cyan: hsl(188, 100%, 50%);
+  --neon-pink: hsl(322, 81%, 60%);
+  --electric-blue: hsl(217, 91%, 60%);
+  --cyber-green: hsl(120, 100%, 50%);
+  --dark-bg: hsl(220, 13%, 9%);
+  --darker-bg: hsl(220, 13%, 6%);
+  --card-bg: hsl(220, 13%, 11%);
+  --border-glow: hsl(271, 81%, 56%);
 }
 
 .dark {
@@ -70,72 +70,72 @@
 
 @layer utilities {
   .gradient-mesh {
-    background: linear-gradient(135deg, var(--off-white) 0%, var(--light-fog) 30%, var(--fog-gray) 70%, var(--sage-mist) 100%);
+    background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 30%, var(--card-bg) 70%, var(--dark-bg) 100%);
     background-size: 400% 400%;
-    animation: gradientShift 30s ease infinite;
+    animation: gradientShift 20s ease infinite;
   }
   
-  .hero-gradient {
-    background: linear-gradient(135deg, var(--off-white) 0%, var(--light-fog) 40%, var(--forest-green) 100%);
+  .cyber-hero {
+    background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 50%, var(--card-bg) 100%);
+    position: relative;
   }
   
-  .fog-overlay {
-    background: linear-gradient(180deg, 
-      rgba(255, 255, 255, 0.9) 0%, 
-      rgba(240, 245, 242, 0.7) 30%, 
-      rgba(220, 235, 225, 0.5) 70%, 
-      rgba(200, 225, 210, 0.3) 100%);
-  }
-  
-  .perspective-1000 {
-    perspective: 1000px;
-  }
-  
-  .transform-style-3d {
-    transform-style: preserve-3d;
-  }
-  
-  .backface-hidden {
-    backface-visibility: hidden;
+  .cyber-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 80%, rgba(147, 51, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
   }
   
   .glass-card {
-    @apply bg-white/80 backdrop-blur-md border border-emerald-100/40 shadow-xl;
-    box-shadow: 0 25px 50px -12px rgba(16, 46, 30, 0.08);
+    @apply bg-slate-800/80 backdrop-blur-md border border-purple-500/20 shadow-xl;
+    box-shadow: 0 25px 50px -12px rgba(147, 51, 234, 0.15);
   }
   
-  .premium-card {
-    @apply bg-white/95 backdrop-blur-sm border border-emerald-100/30 shadow-2xl;
-    box-shadow: 0 25px 50px -12px rgba(16, 46, 30, 0.06);
+  .cyber-card {
+    @apply bg-slate-800/90 backdrop-blur-sm border border-purple-500/30 shadow-2xl;
+    box-shadow: 0 25px 50px -12px rgba(147, 51, 234, 0.2);
+    position: relative;
+  }
+  
+  .cyber-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(147, 51, 234, 0.05) 100%);
+    border-radius: inherit;
+    pointer-events: none;
   }
   
   .agent-card {
-    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .agent-card:hover {
-    transform: translateY(-12px) scale(1.03);
-    box-shadow: 0 35px 70px rgba(16, 46, 30, 0.12);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 35px 70px rgba(147, 51, 234, 0.25);
+    border-color: var(--neon-purple);
   }
   
-  .forest-gradient {
-    background: linear-gradient(135deg, var(--matte-green) 0%, var(--forest-green) 100%);
+  .neon-gradient {
+    background: linear-gradient(135deg, var(--neon-purple) 0%, var(--neon-pink) 100%);
   }
   
-  .mist-gradient {
-    background: linear-gradient(135deg, var(--sage-mist) 0%, var(--fog-gray) 100%);
+  .cyber-gradient {
+    background: linear-gradient(135deg, var(--electric-blue) 0%, var(--neon-cyan) 100%);
   }
   
-  .deep-gradient {
-    background: linear-gradient(135deg, var(--deep-forest) 0%, var(--matte-green) 100%);
+  .tech-gradient {
+    background: linear-gradient(135deg, var(--neon-cyan) 0%, var(--cyber-green) 100%);
   }
   
-  .magnetic-hover {
-    transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  .glow-effect {
+    filter: drop-shadow(0 0 20px currentColor);
   }
   
-  .magnetic-hover:hover {
-    transform: translate3d(var(--mouse-x, 0), var(--mouse-y, 0), 0) scale(1.05);
+  .neon-glow {
+    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 40px currentColor;
   }
   
   .floating-cta {
@@ -157,11 +157,11 @@
     transform: translateY(0);
   }
   
-  .fog-effect {
-    background: radial-gradient(circle at center, 
-      rgba(240, 245, 242, 0.8) 0%, 
-      rgba(220, 235, 225, 0.4) 50%, 
-      transparent 100%);
+  .cyber-grid {
+    background-image: 
+      linear-gradient(rgba(147, 51, 234, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(147, 51, 234, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
   }
 }
 
