@@ -1,8 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { useWallet } from "@/hooks/use-wallet";
+import ReactFlow, { 
+  MiniMap, 
+  Controls, 
+  Background, 
+  useNodesState, 
+  useEdgesState, 
+  addEdge,
+  Node,
+  Edge,
+  Connection,
+  BackgroundVariant,
+  MarkerType,
+  Position
+} from 'reactflow';
+import 'reactflow/dist/style.css';
 import { 
   User, 
   Wallet, 
@@ -204,6 +219,8 @@ export default function Dashboard() {
   const [droppedAgents, setDroppedAgents] = useState<DroppedAgent[]>([]);
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [connectionMode, setConnectionMode] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [departmentCount, setDepartmentCount] = useState<{[key: string]: number}>({
     'Executive Director': 0,
     'Department Manager': 0,
@@ -264,6 +281,121 @@ export default function Dashboard() {
     }
     setDroppedAgents(prev => prev.filter(a => a.id !== agentId));
     setSelectedAgent(null);
+  };
+
+  // Fleet templates
+  const fleetTemplates = {
+    'data-pipeline': {
+      name: 'Data Pipeline Fleet',
+      description: 'Complete data processing and analytics pipeline',
+      agents: [
+        { type: 'Executive Director', x: 50, y: 50, connections: ['manager-1'] },
+        { type: 'Department Manager', x: 300, y: 50, id: 'manager-1', connections: ['senior-1', 'senior-2'] },
+        { type: 'Senior Associate', x: 200, y: 200, id: 'senior-1', connections: ['associate-1'] },
+        { type: 'Senior Associate', x: 400, y: 200, id: 'senior-2', connections: ['associate-2'] },
+        { type: 'Associate', x: 200, y: 350, id: 'associate-1', connections: [] },
+        { type: 'Associate', x: 400, y: 350, id: 'associate-2', connections: [] }
+      ]
+    },
+    'customer-service': {
+      name: 'Customer Service Fleet',
+      description: 'Comprehensive customer support and engagement system',
+      agents: [
+        { type: 'Executive Director', x: 300, y: 50, connections: ['manager-1', 'manager-2'] },
+        { type: 'Department Manager', x: 150, y: 180, id: 'manager-1', connections: ['senior-1'] },
+        { type: 'Department Manager', x: 450, y: 180, id: 'manager-2', connections: ['senior-2'] },
+        { type: 'Senior Associate', x: 150, y: 320, id: 'senior-1', connections: ['associate-1', 'associate-2'] },
+        { type: 'Senior Associate', x: 450, y: 320, id: 'senior-2', connections: ['associate-3'] },
+        { type: 'Associate', x: 50, y: 450, id: 'associate-1', connections: [] },
+        { type: 'Associate', x: 200, y: 450, id: 'associate-2', connections: [] },
+        { type: 'Associate', x: 450, y: 450, id: 'associate-3', connections: [] }
+      ]
+    },
+    'security-ops': {
+      name: 'Security Operations Fleet',
+      description: 'Enterprise security monitoring and threat response',
+      agents: [
+        { type: 'Executive Director', x: 250, y: 50, connections: ['manager-1'] },
+        { type: 'Department Manager', x: 250, y: 180, id: 'manager-1', connections: ['senior-1', 'senior-2', 'senior-3'] },
+        { type: 'Senior Associate', x: 100, y: 320, id: 'senior-1', connections: ['associate-1'] },
+        { type: 'Senior Associate', x: 250, y: 320, id: 'senior-2', connections: ['associate-2'] },
+        { type: 'Senior Associate', x: 400, y: 320, id: 'senior-3', connections: ['associate-3'] },
+        { type: 'Associate', x: 100, y: 450, id: 'associate-1', connections: [] },
+        { type: 'Associate', x: 250, y: 450, id: 'associate-2', connections: [] },
+        { type: 'Associate', x: 400, y: 450, id: 'associate-3', connections: [] }
+      ]
+    }
+  };
+
+  // Load fleet template
+  const loadTemplate = (templateKey: string) => {
+    const template = fleetTemplates[templateKey as keyof typeof fleetTemplates];
+    if (!template) return;
+
+    const newAgents: DroppedAgent[] = template.agents.map((agent, index) => {
+      const agentType = [
+        { 
+          type: 'Executive Director', 
+          icon: '👨‍💼', 
+          level: 'C-Level', 
+          description: 'Strategic oversight & governance',
+          bgColor: 'bg-gradient-to-br from-purple-500/20 to-purple-600/20',
+          borderColor: 'border-purple-400/40',
+          color: 'from-purple-400 to-purple-300'
+        },
+        { 
+          type: 'Department Manager', 
+          icon: '👩‍💼', 
+          level: 'Management', 
+          description: 'Cross-functional coordination',
+          bgColor: 'bg-gradient-to-br from-cyan-500/20 to-cyan-600/20',
+          borderColor: 'border-cyan-400/40',
+          color: 'from-cyan-400 to-cyan-300'
+        },
+        { 
+          type: 'Senior Associate', 
+          icon: '👨‍🔬', 
+          level: 'Senior', 
+          description: 'Complex task execution',
+          bgColor: 'bg-gradient-to-br from-amber-500/20 to-amber-600/20',
+          borderColor: 'border-amber-400/40',
+          color: 'from-amber-400 to-amber-300'
+        },
+        { 
+          type: 'Associate', 
+          icon: '👩‍💻', 
+          level: 'Operations', 
+          description: 'Operational task processing',
+          bgColor: 'bg-gradient-to-br from-emerald-500/20 to-emerald-600/20',
+          borderColor: 'border-emerald-400/40',
+          color: 'from-emerald-400 to-emerald-300'
+        }
+      ].find(a => a.type === agent.type);
+
+      return {
+        id: agent.id || `agent-${Date.now()}-${index}`,
+        type: agent.type,
+        icon: agentType?.icon || '👤',
+        level: agentType?.level || 'Staff',
+        description: agentType?.description || 'Team member',
+        bgColor: agentType?.bgColor || 'bg-gray-500/20',
+        borderColor: agentType?.borderColor || 'border-gray-400/40',
+        color: agentType?.color || 'from-gray-400 to-gray-300',
+        x: agent.x,
+        y: agent.y,
+        connections: agent.connections || []
+      };
+    });
+
+    setDroppedAgents(newAgents);
+    
+    // Update department counts
+    const newCounts = { 'Executive Director': 0, 'Department Manager': 0, 'Senior Associate': 0, 'Associate': 0 };
+    newAgents.forEach(agent => {
+      newCounts[agent.type] = (newCounts[agent.type] || 0) + 1;
+    });
+    setDepartmentCount(newCounts);
+    setSelectedTemplate(templateKey);
   };
 
   // Fetch user's purchased agents
@@ -1074,19 +1206,80 @@ export default function Dashboard() {
                   <p className="text-gray-300 mt-2">Design departmental hierarchies and manage agent deployment strategies</p>
                 </div>
                 <div className="flex items-center space-x-4">
-                  <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">
-                    <Bot className="w-4 h-4 mr-2" />
-                    Deploy Agent
-                  </Button>
-                  <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                  <Button 
+                    className={`${connectionMode ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-emerald-600 hover:bg-emerald-700'} text-white font-semibold`}
+                    onClick={() => setConnectionMode(!connectionMode)}
+                  >
                     <Network className="w-4 h-4 mr-2" />
-                    Create Department
+                    {connectionMode ? 'Exit Connection Mode' : 'Connection Mode'}
+                  </Button>
+                  <Button 
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+                    onClick={() => setDroppedAgents([])}
+                  >
+                    Clear Canvas
                   </Button>
                   <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800">
                     Save Configuration
                   </Button>
                 </div>
               </div>
+
+              {/* Fleet Templates */}
+              <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg">
+                <CardHeader>
+                  <CardTitle className="text-white font-bold">Nomad Fleet Powerhouses</CardTitle>
+                  <p className="text-gray-400 text-sm">Deploy proven enterprise organizational templates</p>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {Object.entries(fleetTemplates).map(([key, template]) => (
+                      <div
+                        key={key}
+                        className={`p-6 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
+                          selectedTemplate === key
+                            ? 'bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 border-emerald-400/60'
+                            : 'bg-gradient-to-br from-gray-800/40 to-gray-900/40 border-gray-600/40 hover:border-gray-500/60'
+                        }`}
+                        onClick={() => loadTemplate(key)}
+                      >
+                        <div className="text-center mb-4">
+                          <div className="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-xl flex items-center justify-center">
+                            <Network className="w-8 h-8 text-blue-400" />
+                          </div>
+                          <h3 className="text-white font-bold text-lg">{template.name}</h3>
+                          <p className="text-gray-400 text-sm mt-2">{template.description}</p>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-xs">
+                            <span className="text-gray-400">Agents:</span>
+                            <span className="text-white font-semibold">{template.agents.length}</span>
+                          </div>
+                          <div className="flex justify-between text-xs">
+                            <span className="text-gray-400">Connections:</span>
+                            <span className="text-white font-semibold">
+                              {template.agents.reduce((total, agent) => total + agent.connections.length, 0)}
+                            </span>
+                          </div>
+                          <div className="flex justify-between text-xs">
+                            <span className="text-gray-400">Complexity:</span>
+                            <span className="text-emerald-400 font-semibold">
+                              {template.agents.length > 6 ? 'High' : template.agents.length > 4 ? 'Medium' : 'Low'}
+                            </span>
+                          </div>
+                        </div>
+                        
+                        {selectedTemplate === key && (
+                          <div className="mt-4 pt-3 border-t border-emerald-400/30">
+                            <p className="text-emerald-400 text-xs font-medium text-center">✓ Active Template</p>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
 
               {/* Agent Deployment Palette */}
               <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg">
@@ -1207,13 +1400,13 @@ export default function Dashboard() {
                       )}
                     </svg>
 
-                    {/* Render dropped agents */}
+                    {/* Render dropped agents with connection points */}
                     {droppedAgents.map(agent => (
                       <div
                         key={agent.id}
                         className={`absolute cursor-pointer transition-all duration-300 ${agent.bgColor} ${agent.borderColor} border-2 rounded-xl p-4 min-w-[180px] shadow-xl backdrop-blur-sm ${
                           selectedAgent === agent.id ? 'ring-4 ring-emerald-400/50 scale-110' : 'hover:scale-105'
-                        }`}
+                        } ${connectionMode ? 'hover:ring-2 hover:ring-yellow-400/50' : ''}`}
                         style={{ 
                           left: agent.x, 
                           top: agent.y,
@@ -1222,6 +1415,44 @@ export default function Dashboard() {
                         onClick={() => handleAgentClick(agent.id)}
                         onDoubleClick={() => removeAgent(agent.id)}
                       >
+                        {/* Connection Points - Marquez Style */}
+                        {connectionMode && (
+                          <>
+                            {/* Top connection point */}
+                            <div 
+                              className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-emerald-400 rounded-full border-2 border-white shadow-lg cursor-crosshair hover:bg-emerald-300 transition-colors"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAgentClick(agent.id);
+                              }}
+                            />
+                            {/* Right connection point */}
+                            <div 
+                              className="absolute -right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 bg-blue-400 rounded-full border-2 border-white shadow-lg cursor-crosshair hover:bg-blue-300 transition-colors"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAgentClick(agent.id);
+                              }}
+                            />
+                            {/* Bottom connection point */}
+                            <div 
+                              className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-purple-400 rounded-full border-2 border-white shadow-lg cursor-crosshair hover:bg-purple-300 transition-colors"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAgentClick(agent.id);
+                              }}
+                            />
+                            {/* Left connection point */}
+                            <div 
+                              className="absolute -left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 bg-amber-400 rounded-full border-2 border-white shadow-lg cursor-crosshair hover:bg-amber-300 transition-colors"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAgentClick(agent.id);
+                              }}
+                            />
+                          </>
+                        )}
+
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center space-x-3">
                             <span className="text-3xl">{agent.icon}</span>
@@ -1248,26 +1479,56 @@ export default function Dashboard() {
                         <div className="mt-2 text-xs text-emerald-400">
                           ID: {agent.id.slice(-8)}
                         </div>
-                        <div className="mt-1 text-xs text-blue-400">
-                          Connections: {agent.connections.length}
+                        <div className="mt-1 text-xs text-blue-400 flex items-center justify-between">
+                          <span>Connections: {agent.connections.length}</span>
+                          {connectionMode && selectedAgent === agent.id && (
+                            <span className="text-yellow-400 text-xs animate-pulse">● Selected</span>
+                          )}
                         </div>
+                        
+                        {/* Connection Mode Indicator */}
+                        {connectionMode && (
+                          <div className="mt-2 text-xs text-yellow-400 bg-yellow-400/10 px-2 py-1 rounded border border-yellow-400/30">
+                            Click to connect
+                          </div>
+                        )}
                       </div>
                     ))}
 
                     {/* Canvas Instructions */}
                     <div className="absolute bottom-6 left-6 text-gray-400 text-sm space-y-1" style={{ zIndex: 5 }}>
-                      <p className="flex items-center space-x-2">
-                        <span className="w-3 h-3 bg-emerald-500 rounded-full"></span>
-                        <span>Drag agents from palette to deploy</span>
-                      </p>
-                      <p className="flex items-center space-x-2">
-                        <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
-                        <span>Click agents to select and create connections</span>
-                      </p>
-                      <p className="flex items-center space-x-2">
-                        <span className="w-3 h-3 bg-red-500 rounded-full"></span>
-                        <span>Double-click to remove agents</span>
-                      </p>
+                      {connectionMode ? (
+                        <>
+                          <div className="bg-yellow-500/10 border border-yellow-400/30 rounded-lg p-3 mb-3">
+                            <p className="text-yellow-400 font-semibold mb-2">🔗 Connection Mode Active</p>
+                            <div className="space-y-1 text-xs">
+                              <p>• Click first agent to select</p>
+                              <p>• Click second agent to create connection</p>
+                              <p>• Use colored connection points on blocks</p>
+                              <p>• Toggle off when done connecting</p>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <p className="flex items-center space-x-2">
+                            <span className="w-3 h-3 bg-emerald-500 rounded-full"></span>
+                            <span>Drag organizational roles from palette to deploy</span>
+                          </p>
+                          <p className="flex items-center space-x-2">
+                            <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
+                            <span>Enable Connection Mode to link agents</span>
+                          </p>
+                          <p className="flex items-center space-x-2">
+                            <span className="w-3 h-3 bg-purple-500 rounded-full"></span>
+                            <span>Load fleet templates for quick setup</span>
+                          </p>
+                          <p className="flex items-center space-x-2">
+                            <span className="w-3 h-3 bg-red-500 rounded-full"></span>
+                            <span>Double-click agents to remove</span>
+                          </p>
+                        </>
+                      )}
                     </div>
 
                     {/* Empty state */}
