@@ -88,8 +88,8 @@ export default function AgentMarketplace() {
             onClick={() => setSelectedCategory("all")}
             className={
               selectedCategory === "all"
-                ? "obsidian-gradient text-gray-300 shadow-lg shadow-gray-900/30 border border-gray-700 font-light px-5 py-2 rounded backdrop-blur-sm"
-                : "bg-black/40 border border-gray-800 text-gray-500 hover:bg-gray-900/40 hover:text-gray-400 font-extralight px-5 py-2 rounded backdrop-blur-sm"
+                ? "obsidian-gradient text-white shadow-lg shadow-gray-900/30 border-2 border-white/80 font-light px-5 py-2 rounded backdrop-blur-sm"
+                : "bg-black/40 border-2 border-white/50 text-gray-300 hover:bg-gray-900/40 hover:text-white hover:border-white/70 font-extralight px-5 py-2 rounded backdrop-blur-sm"
             }
             variant={selectedCategory === "all" ? "default" : "outline"}
           >
@@ -101,8 +101,8 @@ export default function AgentMarketplace() {
               onClick={() => setSelectedCategory(tag.slug)}
               className={
                 selectedCategory === tag.slug
-                  ? "obsidian-gradient text-gray-300 shadow-lg shadow-gray-900/30 border border-gray-700 font-light px-5 py-2 rounded backdrop-blur-sm"
-                  : "bg-black/40 border border-gray-800 text-gray-500 hover:bg-gray-900/40 hover:text-gray-400 font-extralight px-5 py-2 rounded backdrop-blur-sm"
+                  ? "obsidian-gradient text-white shadow-lg shadow-gray-900/30 border-2 border-white/80 font-light px-5 py-2 rounded backdrop-blur-sm"
+                  : "bg-black/40 border-2 border-white/50 text-gray-300 hover:bg-gray-900/40 hover:text-white hover:border-white/70 font-extralight px-5 py-2 rounded backdrop-blur-sm"
               }
               variant={selectedCategory === tag.slug ? "default" : "outline"}
             >

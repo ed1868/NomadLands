@@ -69,7 +69,7 @@ export default function AgentCard({ agent }: AgentCardProps) {
   return (
     <>
       <div 
-        className="agent-card bg-black/60 border border-gray-800 p-0 fade-in-luxury group cursor-pointer backdrop-blur-sm hover:border-gray-700 transition-all duration-700 rounded-xl overflow-hidden hover:bg-black/70 hover:shadow-2xl hover:shadow-black/30" 
+        className="agent-card bg-black/60 border-2 border-white/40 p-0 fade-in-luxury group cursor-pointer backdrop-blur-sm hover:border-white/70 transition-all duration-700 rounded-xl overflow-hidden hover:bg-black/70 hover:shadow-2xl hover:shadow-black/30" 
         style={{ animationDelay: `${Math.random() * 0.5}s` }}
         onClick={handleCardClick}
       >
@@ -96,7 +96,7 @@ export default function AgentCard({ agent }: AgentCardProps) {
           </div>
           
           {/* Pricing Section */}
-          <div className="mb-6 p-3 sm:p-4 bg-black/30 border border-gray-800 rounded-lg">
+          <div className="mb-6 p-3 sm:p-4 bg-black/30 border border-white/30 rounded-lg">
             <div className="flex items-baseline justify-between">
               <div>
                 <span className="text-2xl sm:text-3xl font-extralight knight-text">
@@ -152,7 +152,7 @@ export default function AgentCard({ agent }: AgentCardProps) {
                 handleDeploy();
               }}
               disabled={isDeploying}
-              className={`w-full ${gradientClass} py-3 sm:py-4 rounded-lg font-light hover:shadow-xl hover:shadow-gray-900/50 transition-all duration-700 disabled:opacity-50 text-gray-300 border border-gray-700 hover:border-gray-600 backdrop-blur-sm text-sm sm:text-base`}
+              className={`w-full ${gradientClass} py-3 sm:py-4 rounded-lg font-light hover:shadow-xl hover:shadow-gray-900/50 transition-all duration-700 disabled:opacity-50 text-white border-2 border-white/50 hover:border-white/80 backdrop-blur-sm text-sm sm:text-base`}
             >
               {isDeploying ? (
                 <div className="flex items-center justify-center gap-2">
