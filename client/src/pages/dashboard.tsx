@@ -2394,7 +2394,7 @@ export default function Dashboard() {
           {activeTab === 'ecosystem' && (
             <div className="space-y-6">
               {/* Brain Visualization Header */}
-              <div className="text-center mb-8">
+              <div className="text-center mb-8 mt-12 lg:mt-16">
                 <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4 tracking-tight">
                   The Nomad Agents Ecosystem Synapses with Every Agent Task
                 </h2>
