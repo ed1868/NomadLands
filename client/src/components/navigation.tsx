@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, X, Bot, Wallet, User, LogOut, Settings } from "lucide-react";
-import aiNomadsLogo from "@assets/logo_dark_mode_1750270383392.png";
+import aiNomadsLogo from "@assets/log_1750270769527.png";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/hooks/use-wallet";
 import { useAuth } from "@/hooks/useAuth";
