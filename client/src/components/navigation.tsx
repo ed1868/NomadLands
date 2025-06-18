@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, X, Bot, Wallet, User, LogOut, Settings } from "lucide-react";
+import aiNomadsLogo from "@assets/logo_dark_mode_1750270383392.png";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/hooks/use-wallet";
 import { useAuth } from "@/hooks/useAuth";
@@ -59,8 +60,12 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-8 py-6">
         <div className="flex items-center justify-between">
           <a href="/" className="flex items-center space-x-4 hover:opacity-80 transition-opacity duration-300">
-            <div className={`w-10 h-10 obsidian-gradient rounded border border-gray-700 flex items-center justify-center transition-all duration-500 backdrop-blur-sm ${isScrolled ? 'shadow-lg' : ''}`}>
-              <Bot className="text-gray-300 text-lg" />
+            <div className={`w-10 h-10 flex items-center justify-center transition-all duration-500 ${isScrolled ? 'shadow-lg' : ''}`}>
+              <img 
+                src={aiNomadsLogo} 
+                alt="AI Nomads"
+                className="w-8 h-8 object-contain"
+              />
             </div>
             <span className={`text-xl font-extralight tracking-wide transition-all duration-500 ${
               isScrolled 

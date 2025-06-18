@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import backgroundImage from "@assets/back_1750268064928.png";
-import aiNomadsLogo from "@assets/logo_dark_mode_1750270383392.png";
 
 export default function UsedBySection() {
   const [isInView, setIsInView] = useState(false);
@@ -21,11 +20,6 @@ export default function UsedBySection() {
     return () => observer.disconnect();
   }, []);
   const companies = [
-    {
-      name: "AI Nomads",
-      logo: aiNomadsLogo,
-      isOurLogo: true,
-    },
     {
       name: "Google",
       logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
@@ -115,7 +109,7 @@ export default function UsedBySection() {
                 className="h-6 w-auto opacity-60 group-hover:opacity-90 transition-all duration-300 group-hover:scale-105"
                 style={{
                   maxWidth: "100px",
-                  filter: (company as any).isOurLogo ? "none" : "brightness(0) invert(1) opacity(0.7)",
+                  filter: "brightness(0) invert(1) opacity(0.7)",
                 }}
               />
             </div>
