@@ -1117,176 +1117,132 @@ export default function Dashboard() {
 
   // D3.js Voronoi Stippling Visualization
   useEffect(() => {
-    if (activeTab === 'ecosystem' && voronoiRef.current) {
+    if (activeTab === 'ecosystem') {
+      console.log('Starting D3 visualization...');
       const container = d3.select('#voronoi-ecosystem');
       container.selectAll('*').remove();
 
       const width = 800;
-      const height = 600;
-      const numPoints = 2000;
+      const height = 500;
+      const numPoints = 1500;
 
-      // Create SVG
+      // Create SVG with proper dimensions
       const svg = container
         .append('svg')
         .attr('width', '100%')
         .attr('height', '100%')
         .attr('viewBox', `0 0 ${width} ${height}`)
-        .style('background', 'radial-gradient(circle, #0a0a0a 0%, #000000 100%)');
+        .style('background', 'radial-gradient(circle at center, #1a1a1a 0%, #000000 100%)')
+        .style('border-radius', '8px')
+        .style('display', 'block');
 
-      // Generate weighted points based on agent data
-      const weightedPoints: any[] = [];
+      console.log('SVG created, mockAgents:', mockAgents.length);
+
+      // Generate points directly from agent data
+      const points: any[] = [];
+      
+      // Create multiple points for each agent based on their performance
       mockAgents.forEach((agent: any, index: number) => {
-        const weight = Math.sqrt(agent.runs / 1000); // Size based on total runs
-        const numAgentPoints = Math.max(20, Math.min(200, weight * 5));
+        const pointCount = Math.max(25, Math.floor(agent.runs / 800));
         
-        for (let i = 0; i < numAgentPoints; i++) {
-          weightedPoints.push({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            agent: agent,
-            agentIndex: index,
-            size: Math.max(0.5, weight / 10),
-            performance: agent.success
+        for (let i = 0; i < pointCount; i++) {
+          points.push({
+            x: Math.random() * (width - 40) + 20,
+            y: Math.random() * (height - 40) + 20,
+            size: Math.random() * 4 + 2, // Larger points
+            color: agent.success >= 95 ? '#10b981' : 
+                   agent.success >= 90 ? '#3b82f6' : 
+                   agent.success >= 85 ? '#f59e0b' : '#ef4444',
+            opacity: 0.7 + Math.random() * 0.3,
+            agent: agent.name
           });
         }
       });
 
-      // Add random background points
-      for (let i = 0; i < numPoints - weightedPoints.length; i++) {
-        weightedPoints.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          agent: null,
-          agentIndex: -1,
-          size: 0.3,
-          performance: 50
+      // Add background scatter points
+      for (let i = 0; i < 150; i++) {
+        points.push({
+          x: Math.random() * (width - 40) + 20,
+          y: Math.random() * (height - 40) + 20,
+          size: Math.random() * 2 + 1,
+          color: '#4b5563', // Lighter gray for visibility
+          opacity: 0.3 + Math.random() * 0.4,
+          agent: null
         });
       }
 
-      // Create Voronoi diagram
-      const voronoi = d3.Delaunay.from(weightedPoints, d => d.x, d => d.y).voronoi([0, 0, width, height]);
+      console.log('Generated points:', points.length);
 
-      // Color scale based on performance
-      const colorScale = d3.scaleSequential(d3.interpolateViridis)
-        .domain([70, 100]);
+      // Render points with stroke for visibility
+      svg.selectAll('circle')
+        .data(points)
+        .enter()
+        .append('circle')
+        .attr('cx', d => d.x)
+        .attr('cy', d => d.y)
+        .attr('r', 0)
+        .attr('fill', d => d.color)
+        .attr('stroke', d => d.agent ? d.color : 'none')
+        .attr('stroke-width', d => d.agent ? 0.5 : 0)
+        .attr('opacity', 0)
+        .transition()
+        .duration(2000)
+        .delay((d, i) => Math.min(i * 2, 1000))
+        .attr('r', d => d.size)
+        .attr('opacity', d => d.opacity);
 
-      // Performance-based color mapping
-      const getColor = (performance: any, hasAgent: any) => {
-        if (!hasAgent) return '#0a0a0a';
-        if (performance >= 95) return '#10b981'; // Emerald for high performance
-        if (performance >= 90) return '#3b82f6'; // Blue for good performance  
-        if (performance >= 85) return '#f59e0b'; // Yellow for medium performance
-        return '#ef4444'; // Red for low performance
-      };
+      // Add legend
+      const legend = svg.append('g')
+        .attr('transform', `translate(${width - 140}, 20)`);
 
-      // Animate stippling effect
-      const animate = () => {
-        // Clear previous points
-        svg.selectAll('circle').remove();
+      const legendData = [
+        { color: '#10b981', label: 'High (95%+)' },
+        { color: '#3b82f6', label: 'Good (90%+)' },
+        { color: '#f59e0b', label: 'Medium (85%+)' },
+        { color: '#ef4444', label: 'Low (<85%)' }
+      ];
 
-        // Add stippling points with Voronoi-based distribution
-        svg.selectAll('circle')
-          .data(weightedPoints)
-          .enter()
-          .append('circle')
-          .attr('cx', d => d.x)
-          .attr('cy', d => d.y)
-          .attr('r', 0)
-          .attr('fill', d => getColor(d.performance, d.agent !== null))
-          .attr('opacity', d => d.agent ? 0.8 : 0.2)
-          .transition()
-          .duration(2000)
-          .delay((d, i) => i * 2)
-          .attr('r', d => d.size)
-          .attr('opacity', d => d.agent ? 0.9 : 0.3);
-
-        // Add agent labels for major agents
-        const majorAgents = mockAgents.filter(agent => agent.runs > 15000);
-        
-        svg.selectAll('text')
-          .data(majorAgents)
-          .enter()
-          .append('text')
-          .attr('x', (d, i) => (i + 1) * (width / (majorAgents.length + 1)))
-          .attr('y', height - 40)
-          .attr('text-anchor', 'middle')
-          .attr('fill', '#10b981')
-          .attr('font-size', '10px')
-          .attr('font-weight', 'bold')
-          .style('opacity', 0)
-          .text(d => d.name.split(' ')[0])
-          .transition()
-          .duration(1000)
-          .delay(3000)
-          .style('opacity', 0.7);
-
-        // Add performance legend
-        const legend = svg.append('g')
-          .attr('transform', `translate(${width - 120}, 20)`);
-
-        const legendData = [
-          { color: '#10b981', label: 'High (95%+)', performance: 98 },
-          { color: '#3b82f6', label: 'Good (90%+)', performance: 92 },
-          { color: '#f59e0b', label: 'Medium (85%+)', performance: 87 },
-          { color: '#ef4444', label: 'Low (<85%)', performance: 80 }
-        ];
-
-        legend.selectAll('circle')
-          .data(legendData)
-          .enter()
-          .append('circle')
-          .attr('cx', 0)
-          .attr('cy', (d, i) => i * 20)
-          .attr('r', 4)
-          .attr('fill', d => d.color)
-          .style('opacity', 0)
-          .transition()
-          .duration(500)
-          .delay(4000)
-          .style('opacity', 0.8);
-
-        legend.selectAll('text')
-          .data(legendData)
-          .enter()
-          .append('text')
-          .attr('x', 10)
-          .attr('y', (d, i) => i * 20 + 4)
-          .attr('fill', '#ffffff')
-          .attr('font-size', '8px')
-          .style('opacity', 0)
-          .text(d => d.label)
-          .transition()
-          .duration(500)
-          .delay(4000)
-          .style('opacity', 0.7);
-      };
-
-      // Start animation
-      animate();
-
-      // Update points periodically for dynamic effect
-      const interval = setInterval(() => {
-        weightedPoints.forEach(point => {
-          if (point.agent) {
-            point.x += (Math.random() - 0.5) * 0.5;
-            point.y += (Math.random() - 0.5) * 0.5;
-            point.x = Math.max(5, Math.min(width - 5, point.x));
-            point.y = Math.max(5, Math.min(height - 5, point.y));
-          }
+      legend.selectAll('.legend-item')
+        .data(legendData)
+        .enter()
+        .append('g')
+        .attr('class', 'legend-item')
+        .attr('transform', (d, i) => `translate(0, ${i * 20})`)
+        .each(function(d) {
+          const group = d3.select(this);
+          
+          group.append('circle')
+            .attr('cx', 6)
+            .attr('cy', 0)
+            .attr('r', 4)
+            .attr('fill', d.color)
+            .attr('opacity', 0.8);
+            
+          group.append('text')
+            .attr('x', 16)
+            .attr('y', 4)
+            .attr('fill', '#ffffff')
+            .attr('font-size', '10px')
+            .text(d.label);
         });
-        
-        svg.selectAll('circle')
-          .transition()
-          .duration(1000)
-          .attr('cx', (d: any) => d.x)
-          .attr('cy', (d: any) => d.y);
-      }, 5000);
 
-      // Cleanup function
-      return () => {
-        clearInterval(interval);
-        container.selectAll('*').remove();
-      };
+      // Add title
+      svg.append('text')
+        .attr('x', 20)
+        .attr('y', 30)
+        .attr('fill', '#10b981')
+        .attr('font-size', '14px')
+        .attr('font-weight', 'bold')
+        .text('Agent Performance Ecosystem');
+
+      svg.append('text')
+        .attr('x', 20)
+        .attr('y', 50)
+        .attr('fill', '#888888')
+        .attr('font-size', '11px')
+        .text(`${mockAgents.length} agents • ${points.filter(p => p.agent).length} data points`);
+
+      console.log('Visualization complete');
     }
   }, [activeTab]);
 
@@ -2693,8 +2649,8 @@ export default function Dashboard() {
                   {/* D3 Visualization Container */}
                   <div 
                     id="voronoi-ecosystem" 
-                    className="w-full bg-black/20 rounded-lg border border-gray-800/50"
-                    style={{ height: '600px' }}
+                    className="w-full bg-black/40 rounded-lg border border-gray-700/50 overflow-hidden"
+                    style={{ height: '500px', minHeight: '500px' }}
                   />
                 </CardContent>
               </Card>
