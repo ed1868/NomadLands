@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Shield, Code, Coins, FileText, Clock, Users, Zap, Calculator, Lock, ArrowRight, Wallet, User } from "lucide-react";
+import { Shield, Code, Coins, FileText, Clock, Users, Zap, Calculator, Lock, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import Navigation from "@/components/navigation";
 import type { SmartContract } from "@shared/schema";
 
 export default function SmartContracts() {
@@ -398,38 +399,7 @@ Amount: ${amount} ETH`);
 
   return (
     <div className="min-h-screen bg-black">
-      {/* Fixed Navigation with Fade Effect */}
-      <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-black/95 backdrop-blur-lg border-b border-gray-800/50' 
-          : 'bg-transparent'
-      }`}>
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="text-2xl font-light text-white">
-              AI <span className="knight-text">Nomads</span>
-            </div>
-            <div className="flex items-center space-x-8">
-              <nav className="hidden md:flex space-x-8">
-                <a href="/marketplace" className="text-gray-300 hover:text-white transition-colors">Marketplace</a>
-                <a href="/nomad-lands" className="text-gray-300 hover:text-white transition-colors">Nomad Lands</a>
-                <a href="/nomad-fleets" className="text-gray-300 hover:text-white transition-colors">Nomad Fleets</a>
-                <a href="/smart-contracts" className="text-blue-400">Smart Contracts</a>
-                <a href="/api-docs" className="text-gray-300 hover:text-white transition-colors">API</a>
-              </nav>
-              
-              <div className="flex items-center space-x-4">
-                <button className="text-gray-300 hover:text-white transition-colors">
-                  <Wallet className="w-5 h-5" />
-                </button>
-                <button className="text-gray-300 hover:text-white transition-colors">
-                  <User className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Navigation />
 
       {/* Hero Section */}
       <section className="relative py-32 bg-gradient-to-br from-black via-gray-950 to-blue-950/20">
