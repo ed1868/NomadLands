@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { useWallet } from "@/hooks/use-wallet";
 import { 
@@ -237,11 +238,36 @@ export default function Dashboard() {
 
           {/* Center - Navigation Tabs */}
           <nav className="flex items-center space-x-1">
-            <Link href="/marketplace" className="px-4 py-2 text-gray-300 hover:text-emerald-400 font-medium transition-colors">Marketplace</Link>
-            <Link href="/nomad-fleets" className="px-4 py-2 text-gray-300 hover:text-emerald-400 font-medium transition-colors">Nomad Fleets</Link>
-            <Link href="/nomad-lands" className="px-4 py-2 text-gray-300 hover:text-emerald-400 font-medium transition-colors">Nomad Lands</Link>
-            <Link href="/smart-contracts" className="px-4 py-2 text-gray-300 hover:text-emerald-400 font-medium transition-colors">Smart Contracts</Link>
-            <Link href="/api-docs" className="px-4 py-2 text-gray-300 hover:text-emerald-400 font-medium transition-colors">API</Link>
+            <button 
+              onClick={() => window.location.href = '/marketplace'} 
+              className="px-4 py-2 text-gray-300 hover:text-emerald-400 font-medium transition-colors"
+            >
+              Marketplace
+            </button>
+            <button 
+              onClick={() => window.location.href = '/nomad-fleets'} 
+              className="px-4 py-2 text-gray-300 hover:text-emerald-400 font-medium transition-colors"
+            >
+              Nomad Fleets
+            </button>
+            <button 
+              onClick={() => window.location.href = '/nomad-lands'} 
+              className="px-4 py-2 text-gray-300 hover:text-emerald-400 font-medium transition-colors"
+            >
+              Nomad Lands
+            </button>
+            <button 
+              onClick={() => window.location.href = '/smart-contracts'} 
+              className="px-4 py-2 text-gray-300 hover:text-emerald-400 font-medium transition-colors"
+            >
+              Smart Contracts
+            </button>
+            <button 
+              onClick={() => window.location.href = '/api-docs'} 
+              className="px-4 py-2 text-gray-300 hover:text-emerald-400 font-medium transition-colors"
+            >
+              API
+            </button>
           </nav>
 
           {/* Right - User Menu */}
