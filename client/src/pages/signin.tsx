@@ -35,9 +35,14 @@ export default function Signin() {
   const signinMutation = useMutation({
     mutationFn: async (data: SigninForm) => {
       const response = await apiRequest("POST", "/api/auth/signin", data);
-      return response;
+      return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // Store JWT token in localStorage
+      if (data.token) {
+        localStorage.setItem('auth_token', data.token);
+      }
+      
       toast({
         title: "Welcome back!",
         description: "You have successfully signed in.",
