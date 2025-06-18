@@ -38,6 +38,7 @@ import {
   Clock,
   Trophy,
   Target,
+  Trash2,
   Zap,
   BarChart3,
   PieChart,
