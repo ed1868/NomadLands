@@ -200,11 +200,6 @@ export default function Dashboard() {
     }
   };
 
-  const { data: userProfile } = useQuery({
-    queryKey: [`/api/auth/user/${address}`],
-    enabled: !!address && isConnected,
-  });
-
   if (!isConnected) {
     return (
       <div className="min-h-screen bg-black">
@@ -237,7 +232,7 @@ export default function Dashboard() {
         <div className="mb-8">
           <h1 className="text-3xl font-light text-gray-200 mb-2">Dashboard</h1>
           <p className="text-gray-400 font-extralight">
-            Manage your AI agents and view your blockchain transactions
+            Manage your AI agents, contracts, and files in the Nomad Lands ecosystem
           </p>
         </div>
 
@@ -270,114 +265,88 @@ export default function Dashboard() {
           <PhoneVerification />
         </div>
 
-        {/* Dashboard Tabs */}
-        <Tabs defaultValue="agents" className="w-full">
-          <TabsList className="bg-black/40 border border-gray-800">
-            <TabsTrigger value="agents" className="text-gray-400 data-[state=active]:text-gray-200">
+        {/* Enhanced Dashboard Tabs */}
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="bg-black/40 border border-gray-800 grid w-full grid-cols-6">
+            <TabsTrigger value="overview" className="text-gray-400 data-[state=active]:text-gray-200">
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="my-agents" className="text-gray-400 data-[state=active]:text-gray-200">
               My Agents
+            </TabsTrigger>
+            <TabsTrigger value="files" className="text-gray-400 data-[state=active]:text-gray-200">
+              Files
+            </TabsTrigger>
+            <TabsTrigger value="contracts" className="text-gray-400 data-[state=active]:text-gray-200">
+              Contracts
+            </TabsTrigger>
+            <TabsTrigger value="uploads" className="text-gray-400 data-[state=active]:text-gray-200">
+              Upload Agent
             </TabsTrigger>
             <TabsTrigger value="transactions" className="text-gray-400 data-[state=active]:text-gray-200">
               Transactions
             </TabsTrigger>
           </TabsList>
 
-          {/* My Agents Tab */}
-          <TabsContent value="agents" className="mt-6">
-            {purchasesLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-black/40 border border-gray-800 rounded-lg p-6 animate-pulse">
-                    <div className="h-4 bg-gray-800 rounded mb-4"></div>
-                    <div className="h-3 bg-gray-800 rounded mb-2"></div>
-                    <div className="h-3 bg-gray-800 rounded mb-4"></div>
-                    <div className="h-8 bg-gray-800 rounded"></div>
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <Card className="bg-gradient-to-br from-emerald-900/20 to-emerald-800/10 border-emerald-700/30">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-emerald-400 text-sm font-light flex items-center">
+                    <Users className="w-4 h-4 mr-2" />
+                    Agents Owned
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-light text-white">
+                    {Array.isArray(userPurchases) ? userPurchases.length : 0}
                   </div>
-                ))}
-              </div>
-            ) : Array.isArray(userPurchases) && userPurchases.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {userPurchases.map((purchase: PurchasedAgent) => (
-                  <Card key={purchase.id} className="bg-black/40 border-gray-800 hover:border-gray-700 transition-all duration-300">
-                    <CardHeader>
-                      <CardTitle className="text-gray-200 font-light flex items-center justify-between">
-                        {purchase.agent.name}
-                        <Badge className="bg-emerald-900/40 text-emerald-400">
-                          Owned
-                        </Badge>
-                      </CardTitle>
-                      <CardDescription className="text-gray-400 font-extralight">
-                        {purchase.agent.description}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <div>
-                          <p className="text-gray-400 text-sm font-extralight mb-2">Features</p>
-                          <div className="flex flex-wrap gap-2">
-                            {purchase.agent.features.slice(0, 2).map((feature, index) => (
-                              <Badge key={index} variant="secondary" className="text-xs">
-                                {feature}
-                              </Badge>
-                            ))}
-                            {purchase.agent.features.length > 2 && (
-                              <Badge variant="secondary" className="text-xs">
-                                +{purchase.agent.features.length - 2} more
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                        
-                        <div className="pt-4 border-t border-gray-800">
-                          <div className="flex justify-between items-center mb-2">
-                            <span className="text-gray-400 text-sm font-extralight">Purchased</span>
-                            <span className="text-gray-300 text-sm">
-                              {new Date(purchase.purchasedAt).toLocaleDateString()}
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-gray-400 text-sm font-extralight">Price Paid</span>
-                            <span className="text-emerald-400 text-sm font-light">
-                              ${purchase.purchasePrice}
-                            </span>
-                          </div>
-                        </div>
+                  <p className="text-emerald-400/70 text-xs">Marketplace purchases</p>
+                </CardContent>
+              </Card>
 
-                        <div className="flex gap-2">
-                          <Button 
-                            size="sm" 
-                            className="flex-1 bg-emerald-900/40 hover:bg-emerald-800/60 text-emerald-300 border border-emerald-700/50"
-                          >
-                            <Download className="w-4 h-4 mr-2" />
-                            Deploy
-                          </Button>
-                          <Button 
-                            size="sm" 
-                            variant="outline" 
-                            className="border-gray-700 text-gray-400 hover:text-gray-200"
-                          >
-                            <Settings className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <ShoppingCart className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <h3 className="text-xl font-light text-gray-200 mb-2">No Agents Yet</h3>
-                <p className="text-gray-400 font-extralight mb-6">
-                  Start building your AI agent collection by purchasing from the marketplace.
-                </p>
-                <Button 
-                  onClick={() => window.location.href = '/marketplace'}
-                  className="bg-emerald-900/80 hover:bg-emerald-800/90 text-gray-200 border border-emerald-700/50"
-                >
-                  Browse Marketplace
-                </Button>
-              </div>
-            )}
+              <Card className="bg-gradient-to-br from-blue-900/20 to-blue-800/10 border-blue-700/30">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-blue-400 text-sm font-light flex items-center">
+                    <Building2 className="w-4 h-4 mr-2" />
+                    Nomad Agents
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-light text-white">{mockUserAgents.length}</div>
+                  <p className="text-blue-400/70 text-xs">Your uploaded agents</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-purple-900/20 to-purple-800/10 border-purple-700/30">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-purple-400 text-sm font-light flex items-center">
+                    <Code className="w-4 h-4 mr-2" />
+                    Active Contracts
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-light text-white">
+                    {mockContracts.filter(c => c.status === "active").length}
+                  </div>
+                  <p className="text-purple-400/70 text-xs">Smart contracts engaged</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-yellow-900/20 to-yellow-800/10 border-yellow-700/30">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-yellow-400 text-sm font-light flex items-center">
+                    <Zap className="w-4 h-4 mr-2" />
+                    Total Earnings
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-light text-white">4.32 ETH</div>
+                  <p className="text-yellow-400/70 text-xs">From agent hires</p>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           {/* Transactions Tab */}
@@ -389,7 +358,7 @@ export default function Dashboard() {
                   Transaction History
                 </CardTitle>
                 <CardDescription className="text-gray-400 font-extralight">
-                  Your blockchain transaction history for agent purchases
+                  Your blockchain transaction history for agent purchases and contract engagements
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -398,35 +367,32 @@ export default function Dashboard() {
                     {userPurchases.map((purchase: PurchasedAgent) => (
                       <div key={purchase.id} className="flex items-center justify-between p-4 bg-black/20 border border-gray-800 rounded-lg">
                         <div className="flex items-center space-x-4">
-                          <div className="w-10 h-10 bg-emerald-900/40 border border-emerald-700 rounded-full flex items-center justify-center">
+                          <div className="w-10 h-10 bg-emerald-900/30 rounded-lg flex items-center justify-center">
                             <ShoppingCart className="w-5 h-5 text-emerald-400" />
                           </div>
                           <div>
-                            <p className="text-gray-200 font-light">{purchase.agent.name}</p>
-                            <p className="text-gray-400 text-sm font-extralight">
-                              {new Date(purchase.purchasedAt).toLocaleString()}
-                            </p>
+                            <div className="text-gray-200 font-medium">{purchase.agent.name}</div>
+                            <div className="text-gray-400 text-sm">Agent Purchase</div>
+                            <div className="text-gray-500 text-xs font-mono">{purchase.transactionHash}</div>
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-emerald-400 font-light">${purchase.purchasePrice}</p>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="text-gray-400 hover:text-gray-200 p-0 h-auto"
-                            onClick={() => window.open(`https://etherscan.io/tx/${purchase.transactionHash}`, '_blank')}
-                          >
-                            <ExternalLink className="w-4 h-4 mr-1" />
-                            View on Etherscan
-                          </Button>
+                          <div className="text-emerald-400 font-medium">${purchase.purchasePrice}</div>
+                          <div className="text-gray-500 text-sm">{new Date(purchase.purchasedAt).toLocaleDateString()}</div>
+                          <Badge variant="secondary" className="text-xs">
+                            Block #{purchase.blockNumber}
+                          </Badge>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8">
-                    <Activity className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                    <p className="text-gray-400 font-extralight">No transactions yet</p>
+                  <div className="text-center py-12">
+                    <Activity className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                    <h3 className="text-xl font-light text-gray-200 mb-2">No Transactions Yet</h3>
+                    <p className="text-gray-400 font-extralight">
+                      Your transaction history will appear here once you start purchasing agents or engaging contracts.
+                    </p>
                   </div>
                 )}
               </CardContent>
