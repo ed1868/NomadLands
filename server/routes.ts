@@ -315,6 +315,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         firstName: validatedData.firstName,
         lastName: validatedData.lastName,
         phoneNumber: validatedData.phoneNumber,
+        dateOfBirth: validatedData.dateOfBirth,
         password: hashedPassword,
         walletAddress: validatedData.walletAddress || null,
       });
