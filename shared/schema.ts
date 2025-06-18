@@ -42,6 +42,17 @@ export const users = pgTable("users", {
   password: varchar("password"), // For non-wallet users
   isActive: boolean("is_active").default(true),
   lastLoginAt: timestamp("last_login_at"),
+  
+  // Subscription fields
+  subscriptionPlan: varchar("subscription_plan").default("trial"), // trial, nomad, pioneer, sovereign
+  subscriptionStatus: varchar("subscription_status").default("trial"), // trial, active, cancelled, expired
+  trialStartDate: timestamp("trial_start_date").defaultNow(),
+  trialEndDate: timestamp("trial_end_date"),
+  subscriptionStartDate: timestamp("subscription_start_date"),
+  subscriptionEndDate: timestamp("subscription_end_date"),
+  stripeCustomerId: varchar("stripe_customer_id"),
+  stripeSubscriptionId: varchar("stripe_subscription_id"),
+  
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

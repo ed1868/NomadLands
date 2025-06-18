@@ -308,7 +308,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       const hashedPassword = await bcrypt.hash(validatedData.password, 12);
       
-      // Create user
+      // Calculate trial end date (3 days from now)
+      const trialEndDate = new Date();
+      trialEndDate.setDate(trialEndDate.getDate() + 3);
+
+      // Create user with subscription trial
       const user = await storage.createUser({
         email: validatedData.email,
         username: validatedData.username,
@@ -318,6 +322,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         dateOfBirth: validatedData.dateOfBirth,
         password: hashedPassword,
         walletAddress: validatedData.walletAddress || null,
+        subscriptionPlan: req.body.selectedPlan || "pioneer",
+        subscriptionStatus: "trial",
+        trialEndDate: trialEndDate,
       });
       
       // Generate JWT token
