@@ -231,7 +231,7 @@ export default function SignupPremium() {
             </h1>
             
             <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
-              Unlock the power of AI agents and automate your digital life. Start your journey to becoming an AI Nomad today.
+              Unlock new horizons endlessly
             </p>
           </div>
 
