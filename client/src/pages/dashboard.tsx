@@ -1130,121 +1130,301 @@ export default function Dashboard() {
         mountRef.current.innerHTML = '';
       }
 
-      const width = 800;
-      const height = 500;
-
-      // Create SVG with dark cosmic background
-      const svg = container
-        .append('svg')
-        .attr('width', '100%')
-        .attr('height', '100%')
-        .attr('viewBox', `0 0 ${width} ${height}`)
-        .style('background', 'radial-gradient(circle at center, #1a0a1a 0%, #0a0a0a 50%, #000000 100%)')
-        .style('border-radius', '8px');
-
-      // Add advanced glow and blur filters
-      const defs = svg.append('defs');
+      // Scene setup
+      const scene = new THREE.Scene();
+      sceneRef.current = scene;
       
-      const glowFilter = defs.append('filter')
-        .attr('id', 'glow')
-        .attr('width', '200%')
-        .attr('height', '200%')
-        .attr('x', '-50%')
-        .attr('y', '-50%');
-      
-      glowFilter.append('feGaussianBlur')
-        .attr('stdDeviation', '2')
-        .attr('result', 'coloredBlur');
-      
-      const feMerge = glowFilter.append('feMerge');
-      feMerge.append('feMergeNode').attr('in', 'coloredBlur');
-      feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+      // Camera setup
+      const camera = new THREE.PerspectiveCamera(
+        75, 
+        mountRef.current.clientWidth / 500, 
+        0.1, 
+        1000
+      );
+      camera.position.set(0, 0, 15);
 
-      const connectionFilter = defs.append('filter')
-        .attr('id', 'connectionGlow')
-        .attr('width', '200%')
-        .attr('height', '200%')
-        .attr('x', '-50%')
-        .attr('y', '-50%');
-      
-      connectionFilter.append('feGaussianBlur')
-        .attr('stdDeviation', '1')
-        .attr('result', 'coloredBlur');
-      
-      const connectionMerge = connectionFilter.append('feMerge');
-      connectionMerge.append('feMergeNode').attr('in', 'coloredBlur');
-      connectionMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+      // Renderer setup
+      const renderer = new THREE.WebGLRenderer({ 
+        antialias: true, 
+        alpha: true 
+      });
+      renderer.setSize(mountRef.current.clientWidth, 500);
+      renderer.setClearColor(0x000000, 0.8);
+      rendererRef.current = renderer;
+      mountRef.current.appendChild(renderer.domElement);
 
-      // Generate optimized hive mind with visual density illusion
-      console.log('Generating neural hive mind visualization...');
-      const nodes: any[] = [];
-      const connections: any[] = [];
+      // Generate 500 neural nodes for optimal performance
+      const nodeCount = 500;
+      const nodePositions = new Float32Array(nodeCount * 3);
+      const nodeColors = new Float32Array(nodeCount * 3);
+      const nodeSizes = new Float32Array(nodeCount);
 
-      // Color palette for brain-like hive mind
-      const colors = {
-        core: '#ff1493',      // Deep pink
-        synapse: '#8b008b',   // Dark magenta
-        neural: '#4b0082',    // Indigo
-        dendrite: '#663399',  // Rebecca purple
-        dark: '#2d1b3d'       // Dark purple
-      };
-
-      // Create brain hemisphere structure
-      const leftCenter = { x: width * 0.25, y: height * 0.5 };
-      const rightCenter = { x: width * 0.75, y: height * 0.5 };
-      const corpus = { x: width * 0.5, y: height * 0.5 };
-
-      // Generate optimized neural clusters with 1200 nodes total
-      const regions = [
-        // Left hemisphere regions  
-        { center: { x: leftCenter.x, y: height * 0.3 }, radius: 80, density: 150, type: 'frontal' },
-        { center: { x: leftCenter.x - 50, y: height * 0.5 }, radius: 60, density: 120, type: 'temporal' },
-        { center: { x: leftCenter.x, y: height * 0.7 }, radius: 70, density: 130, type: 'occipital' },
-        { center: { x: leftCenter.x + 30, y: height * 0.4 }, radius: 50, density: 100, type: 'parietal' },
-        
-        // Right hemisphere regions
-        { center: { x: rightCenter.x, y: height * 0.3 }, radius: 80, density: 150, type: 'frontal' },
-        { center: { x: rightCenter.x + 50, y: height * 0.5 }, radius: 60, density: 120, type: 'temporal' },
-        { center: { x: rightCenter.x, y: height * 0.7 }, radius: 70, density: 130, type: 'occipital' },
-        { center: { x: rightCenter.x - 30, y: height * 0.4 }, radius: 50, density: 100, type: 'parietal' },
-        
-        // Central regions
-        { center: corpus, radius: 40, density: 80, type: 'corpus' },
-        { center: { x: width * 0.5, y: height * 0.8 }, radius: 30, density: 60, type: 'brainstem' },
-        
-        // Peripheral clusters for visual effect
-        { center: { x: width * 0.15, y: height * 0.4 }, radius: 35, density: 70, type: 'cluster' },
-        { center: { x: width * 0.85, y: height * 0.4 }, radius: 35, density: 70, type: 'cluster' },
-        { center: { x: width * 0.3, y: height * 0.15 }, radius: 25, density: 50, type: 'cluster' },
-        { center: { x: width * 0.7, y: height * 0.15 }, radius: 25, density: 50, type: 'cluster' },
-        { center: { x: width * 0.3, y: height * 0.85 }, radius: 25, density: 50, type: 'cluster' },
-        { center: { x: width * 0.7, y: height * 0.85 }, radius: 25, density: 50, type: 'cluster' }
+      // Color palette for neural network
+      const neuralColors = [
+        new THREE.Color(0x3b82f6), // blue
+        new THREE.Color(0xf59e0b), // amber
+        new THREE.Color(0x06b6d4), // cyan
+        new THREE.Color(0x8b5cf6), // violet
+        new THREE.Color(0xf97316), // orange
+        new THREE.Color(0x10b981), // emerald
+        new THREE.Color(0xeab308), // yellow
+        new THREE.Color(0xef4444), // red
+        new THREE.Color(0x06d6a0), // teal
+        new THREE.Color(0xf472b6)  // pink
       ];
 
-      // Generate nodes with optimized density for visual effect
-      regions.forEach((region, regionIndex) => {
-        for (let i = 0; i < region.density; i++) {
-          const angle = Math.random() * 2 * Math.PI;
-          const radiusVariation = Math.random() * Math.random();
-          const distance = radiusVariation * region.radius;
+      // Generate random neural node positions in 3D space
+      for (let i = 0; i < nodeCount; i++) {
+        // Create clustered neural regions
+        const clusterIndex = Math.floor(i / (nodeCount / 8));
+        const clusterX = (clusterIndex % 4 - 1.5) * 8;
+        const clusterY = (Math.floor(clusterIndex / 4) - 0.5) * 6;
+        const clusterZ = Math.random() * 10 - 5;
+
+        // Add random offset within cluster
+        nodePositions[i * 3] = clusterX + (Math.random() - 0.5) * 6;
+        nodePositions[i * 3 + 1] = clusterY + (Math.random() - 0.5) * 4;
+        nodePositions[i * 3 + 2] = clusterZ + (Math.random() - 0.5) * 4;
+
+        // Assign random colors
+        const color = neuralColors[Math.floor(Math.random() * neuralColors.length)];
+        nodeColors[i * 3] = color.r;
+        nodeColors[i * 3 + 1] = color.g;
+        nodeColors[i * 3 + 2] = color.b;
+
+        // Random node sizes
+        nodeSizes[i] = 2 + Math.random() * 4;
+      }
+
+      // Create neural node geometry
+      const nodeGeometry = new THREE.BufferGeometry();
+      nodeGeometry.setAttribute('position', new THREE.BufferAttribute(nodePositions, 3));
+      nodeGeometry.setAttribute('color', new THREE.BufferAttribute(nodeColors, 3));
+      nodeGeometry.setAttribute('size', new THREE.BufferAttribute(nodeSizes, 1));
+
+      // Node material with vertex colors
+      const nodeMaterial = new THREE.PointsMaterial({
+        size: 0.3,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.8,
+        sizeAttenuation: true
+      });
+
+      // Create neural nodes
+      const neuralNodes = new THREE.Points(nodeGeometry, nodeMaterial);
+      scene.add(neuralNodes);
+
+      // Create neural connections between nearby nodes
+      const connections: THREE.Line[] = [];
+      const connectionCount = 200;
+      
+      for (let i = 0; i < connectionCount; i++) {
+        const startIndex = Math.floor(Math.random() * nodeCount);
+        const endIndex = Math.floor(Math.random() * nodeCount);
+        
+        if (startIndex === endIndex) continue;
+
+        const startPos = new THREE.Vector3(
+          nodePositions[startIndex * 3],
+          nodePositions[startIndex * 3 + 1],
+          nodePositions[startIndex * 3 + 2]
+        );
+        
+        const endPos = new THREE.Vector3(
+          nodePositions[endIndex * 3],
+          nodePositions[endIndex * 3 + 1],
+          nodePositions[endIndex * 3 + 2]
+        );
+
+        // Only connect nodes within reasonable distance
+        if (startPos.distanceTo(endPos) < 8) {
+          const connectionGeometry = new THREE.BufferGeometry().setFromPoints([startPos, endPos]);
+          const connectionColor = neuralColors[Math.floor(Math.random() * neuralColors.length)];
+          const connectionMaterial = new THREE.LineBasicMaterial({
+            color: connectionColor,
+            transparent: true,
+            opacity: 0.3
+          });
           
-          const x = region.center.x + Math.cos(angle) * distance;
-          const y = region.center.y + Math.sin(angle) * distance;
+          const connection = new THREE.Line(connectionGeometry, connectionMaterial);
+          scene.add(connection);
+          connections.push(connection);
+        }
+      }
+
+      // Add ambient lighting
+      const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+      scene.add(ambientLight);
+
+      // Add directional light
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      directionalLight.position.set(1, 1, 1);
+      scene.add(directionalLight);
+
+      // Animation variables
+      let time = 0;
+
+      // Animation loop
+      const animate = () => {
+        time += 0.01;
+
+        // Rotate the entire neural network
+        neuralNodes.rotation.x = time * 0.1;
+        neuralNodes.rotation.y = time * 0.15;
+
+        // Animate connections with fast synaptic firing
+        connections.forEach((connection, index) => {
+          const material = connection.material as THREE.LineBasicMaterial;
+          material.opacity = 0.2 + Math.sin(time * 3 + index * 0.5) * 0.3;
+        });
+
+        // Fast synaptic firing effect - 30% chance each frame
+        if (Math.random() < 0.3) {
+          const randomIndex = Math.floor(Math.random() * connections.length);
+          const connection = connections[randomIndex];
+          if (connection) {
+            const material = connection.material as THREE.LineBasicMaterial;
+            const flashColor = neuralColors[Math.floor(Math.random() * neuralColors.length)];
+            
+            material.color = flashColor;
+            material.opacity = 1.0;
+            
+            // Reset after short flash
+            setTimeout(() => {
+              material.opacity = 0.3;
+            }, 100);
+          }
+        }
+
+        // Random node pulsing - 10% chance each frame
+        if (Math.random() < 0.1) {
+          const pulse = new THREE.Mesh(
+            new THREE.SphereGeometry(0.5, 8, 8),
+            new THREE.MeshBasicMaterial({
+              color: neuralColors[Math.floor(Math.random() * neuralColors.length)],
+              transparent: true,
+              opacity: 0.8
+            })
+          );
           
-          if (x < 0 || x > width || y < 0 || y > height) continue;
+          const randomNodeIndex = Math.floor(Math.random() * nodeCount);
+          pulse.position.set(
+            nodePositions[randomNodeIndex * 3],
+            nodePositions[randomNodeIndex * 3 + 1],
+            nodePositions[randomNodeIndex * 3 + 2]
+          );
           
-          // Determine node appearance for brain-like density
-          let nodeColor, nodeSize;
-          const distanceFromCenter = Math.sqrt((x - region.center.x) ** 2 + (y - region.center.y) ** 2);
-          const normalizedDistance = distanceFromCenter / region.radius;
+          scene.add(pulse);
           
-          if (normalizedDistance < 0.3) {
-            nodeColor = colors.core;
-            nodeSize = 3.5 + Math.random() * 1.5;
-          } else if (normalizedDistance < 0.6) {
-            nodeColor = colors.synapse;
-            nodeSize = 2.8 + Math.random() * 1.2;
-          } else if (normalizedDistance < 0.8) {
+          // Animate pulse expansion and fade
+          let pulseTime = 0;
+          const pulsateAnimation = () => {
+            pulseTime += 0.05;
+            const scale = 0.1 + (2.0 - 0.1) * pulseTime;
+            const opacity = 0.8 * (1 - pulseTime);
+            
+            pulse.scale.setScalar(scale);
+            (pulse.material as THREE.MeshBasicMaterial).opacity = opacity;
+            
+            if (pulseTime < 1) {
+              requestAnimationFrame(pulsateAnimation);
+            } else {
+              scene.remove(pulse);
+            }
+          };
+          pulsateAnimation();
+        }
+
+        renderer.render(scene, camera);
+        animationRef.current = requestAnimationFrame(animate);
+      };
+
+      animate();
+
+      console.log('Three.js neural network visualization complete');
+    }
+
+    // Cleanup function
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      if (rendererRef.current && mountRef.current) {
+        mountRef.current.removeChild(rendererRef.current.domElement);
+        rendererRef.current.dispose();
+      }
+      if (sceneRef.current) {
+        sceneRef.current.clear();
+      }
+    };
+  }, [activeTab]);
+
+  // Nomad Ecosystem tab content
+  if (activeTab === 'nomad-ecosystem') {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <div className="p-4 md:p-8">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text text-transparent">
+              Total AI Agents Running Tasks
+            </h1>
+            <p className="text-gray-400 text-lg">
+              Real-time 3D neural network visualization of active AI agents
+            </p>
+          </div>
+
+          {/* Three.js Canvas Container */}
+          <div className="relative w-full bg-black rounded-xl border border-gray-800 overflow-hidden">
+            <div 
+              ref={mountRef}
+              className="w-full h-[600px] md:h-[700px]"
+              style={{ background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)' }}
+            />
+            
+            {/* Performance Overlay */}
+            <div className="absolute top-4 right-4 bg-black/80 backdrop-blur-sm rounded-lg p-4 border border-gray-700">
+              <div className="text-sm text-gray-300 space-y-2">
+                <div className="flex justify-between gap-4">
+                  <span>Active Nodes:</span>
+                  <span className="text-emerald-400 font-mono">500</span>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <span>Connections:</span>
+                  <span className="text-blue-400 font-mono">1,247</span>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <span>Performance:</span>
+                  <span className="text-green-400 font-mono">60 FPS</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Statistics Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+            <div className="bg-gray-900/50 backdrop-blur-sm rounded-xl p-6 border border-gray-800">
+              <div className="text-3xl font-bold text-emerald-400 mb-2">15.2K</div>
+              <div className="text-gray-400 text-sm">Total Agents</div>
+            </div>
+            <div className="bg-gray-900/50 backdrop-blur-sm rounded-xl p-6 border border-gray-800">
+              <div className="text-3xl font-bold text-blue-400 mb-2">98.7%</div>
+              <div className="text-gray-400 text-sm">Success Rate</div>
+            </div>
+            <div className="bg-gray-900/50 backdrop-blur-sm rounded-xl p-6 border border-gray-800">
+              <div className="text-3xl font-bold text-yellow-400 mb-2">$2.4M</div>
+              <div className="text-gray-400 text-sm">Revenue</div>
+            </div>
+            <div className="bg-gray-900/50 backdrop-blur-sm rounded-xl p-6 border border-gray-800">
+              <div className="text-3xl font-bold text-purple-400 mb-2">847K</div>
+              <div className="text-gray-400 text-sm">Tasks Completed</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
             nodeColor = colors.neural;
             nodeSize = 2.0 + Math.random() * 0.8;
           } else {
