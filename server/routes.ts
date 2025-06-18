@@ -85,6 +85,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get agents by tag
+  app.get("/api/agents/tag/:tagSlug", async (req, res) => {
+    try {
+      const { tagSlug } = req.params;
+      const agents = await storage.getAgentsByTag(tagSlug);
+      res.json(agents);
+    } catch (error) {
+      console.error(`Error fetching agents by tag ${req.params.tagSlug}:`, error);
+      res.status(500).json({ error: "Failed to fetch agents by tag" });
+    }
+  });
+
+  // Get all tags
+  app.get("/api/tags", async (req, res) => {
+    try {
+      const tags = await storage.getAllTags();
+      res.json(tags);
+    } catch (error) {
+      console.error("Error fetching tags:", error);
+      res.status(500).json({ error: "Failed to fetch tags" });
+    }
+  });
+
   // Get specific agent
   app.get("/api/agents/:id", async (req, res) => {
     try {

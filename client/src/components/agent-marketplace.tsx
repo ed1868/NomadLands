@@ -2,27 +2,26 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import AgentCard from "@/components/agent-card";
 import { Button } from "@/components/ui/button";
-import type { Agent } from "@shared/schema";
-
-const categories = [
-  { id: "all", label: "All Nomads" },
-  { id: "productivity", label: "Productivity" },
-  { id: "communication", label: "Communication" },
-  { id: "business", label: "Business" },
-  { id: "lifestyle", label: "Lifestyle" },
-  { id: "wellness", label: "Wellness" },
-];
+import type { Agent, AgentTag } from "@shared/schema";
 
 export default function AgentMarketplace() {
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const { data: allAgents = [], isLoading } = useQuery<Agent[]>({
+  const { data: allAgents = [], isLoading: agentsLoading } = useQuery<Agent[]>({
     queryKey: ["/api/agents"],
   });
 
-  const filteredAgents = selectedCategory === "all" 
-    ? allAgents 
-    : allAgents.filter(agent => agent.category === selectedCategory);
+  const { data: tags = [], isLoading: tagsLoading } = useQuery<AgentTag[]>({
+    queryKey: ["/api/tags"],
+  });
+
+  const { data: taggedAgents = [], isLoading: taggedLoading } = useQuery<Agent[]>({
+    queryKey: ["/api/agents/tag", selectedCategory],
+    enabled: selectedCategory !== "all",
+  });
+
+  const filteredAgents = selectedCategory === "all" ? allAgents : taggedAgents;
+  const isLoading = agentsLoading || tagsLoading || taggedLoading;
 
   return (
     <section id="marketplace" className="py-20 bg-gradient-to-br from-black via-gray-950 to-emerald-950/20">
@@ -40,20 +39,31 @@ export default function AgentMarketplace() {
           </div>
         </div>
 
-        {/* Category Filters */}
+        {/* Tag Filters */}
         <div className="flex flex-wrap justify-center gap-3 mb-14">
-          {categories.map((category) => (
+          <Button
+            onClick={() => setSelectedCategory("all")}
+            className={
+              selectedCategory === "all"
+                ? "obsidian-gradient text-gray-300 shadow-lg shadow-gray-900/30 border border-gray-700 font-light px-5 py-2 rounded backdrop-blur-sm"
+                : "bg-black/40 border border-gray-800 text-gray-500 hover:bg-gray-900/40 hover:text-gray-400 font-extralight px-5 py-2 rounded backdrop-blur-sm"
+            }
+            variant={selectedCategory === "all" ? "default" : "outline"}
+          >
+            All Nomads
+          </Button>
+          {tags.map((tag) => (
             <Button
-              key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
+              key={tag.id}
+              onClick={() => setSelectedCategory(tag.slug)}
               className={
-                selectedCategory === category.id
+                selectedCategory === tag.slug
                   ? "obsidian-gradient text-gray-300 shadow-lg shadow-gray-900/30 border border-gray-700 font-light px-5 py-2 rounded backdrop-blur-sm"
                   : "bg-black/40 border border-gray-800 text-gray-500 hover:bg-gray-900/40 hover:text-gray-400 font-extralight px-5 py-2 rounded backdrop-blur-sm"
               }
-              variant={selectedCategory === category.id ? "default" : "outline"}
+              variant={selectedCategory === tag.slug ? "default" : "outline"}
             >
-              {category.label}
+              {tag.name}
             </Button>
           ))}
         </div>
