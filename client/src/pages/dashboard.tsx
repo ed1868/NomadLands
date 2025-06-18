@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { useWallet } from "@/hooks/use-wallet";
+import { useToast } from "@/hooks/use-toast";
 import ReactFlow, { 
   MiniMap, 
   Controls, 
@@ -167,7 +168,6 @@ import {
 } from "recharts";
 import Navigation from "@/components/navigation";
 import { apiRequest } from "@/lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
 
 interface DroppedAgent {
   id: string;
@@ -1845,10 +1845,42 @@ export default function Dashboard() {
                     <Trash2 className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
                     Clear
                   </Button>
-                  <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800 text-xs lg:text-sm px-3 lg:px-4 py-2">
-                    <Save className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
-                    Save
-                  </Button>
+                  <div className="relative group">
+                    <Button 
+                      variant="outline" 
+                      className={`text-xs lg:text-sm px-3 lg:px-4 py-2 ${
+                        user?.subscriptionStatus === 'active' 
+                          ? 'border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white' 
+                          : 'border-gray-700 text-gray-500 bg-gray-800/50 cursor-not-allowed'
+                      }`}
+                      disabled={user?.subscriptionStatus !== 'active'}
+                      onClick={() => {
+                        if (user?.subscriptionStatus === 'active') {
+                          // Handle save functionality here
+                          console.log('Saving fleet configuration...');
+                          toast({
+                            title: "Fleet Saved",
+                            description: "Your fleet configuration has been saved successfully.",
+                          });
+                        } else {
+                          toast({
+                            title: "Upgrade Required",
+                            description: "Save functionality requires a paid subscription. Upgrade to Nomad, Pioneer, or Sovereign plan.",
+                            variant: "destructive",
+                          });
+                        }
+                      }}
+                    >
+                      <Save className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
+                      {user?.subscriptionStatus === 'active' ? 'Save' : 'Save (Pro)'}
+                    </Button>
+                    {user?.subscriptionStatus !== 'active' && (
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-gray-200 text-xs rounded-lg border border-gray-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                        Upgrade to save fleet configurations
+                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
