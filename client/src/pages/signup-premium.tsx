@@ -111,6 +111,7 @@ export default function SignupPremium() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState("plus");
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("credit_card");
   const { toast } = useToast();
   const { isConnected, address, connectWallet } = useWallet();
 
@@ -126,6 +127,8 @@ export default function SignupPremium() {
       dateOfBirth: "",
       password: "",
       confirmPassword: "",
+      subscriptionPlan: selectedPlan,
+      paymentMethod: selectedPaymentMethod,
     },
   });
 
@@ -494,6 +497,45 @@ export default function SignupPremium() {
                           <p className="text-red-400 text-xs mt-1">{errors.confirmPassword.message}</p>
                         )}
                       </div>
+                    </div>
+
+                    {/* Payment Method Selection */}
+                    <div className="space-y-4">
+                      <Label className="text-white font-medium">Payment Method *</Label>
+                      <RadioGroup 
+                        value={selectedPaymentMethod} 
+                        onValueChange={setSelectedPaymentMethod}
+                        className="grid grid-cols-2 gap-4"
+                      >
+                        <div className="flex items-center space-x-2 p-4 border border-gray-700 rounded-lg hover:border-emerald-500/50 transition-colors">
+                          <RadioGroupItem value="credit_card" id="credit_card" />
+                          <Label htmlFor="credit_card" className="flex items-center gap-2 text-white cursor-pointer">
+                            <CreditCard className="w-4 h-4" />
+                            Credit Card
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2 p-4 border border-gray-700 rounded-lg hover:border-emerald-500/50 transition-colors">
+                          <RadioGroupItem value="stripe" id="stripe" />
+                          <Label htmlFor="stripe" className="flex items-center gap-2 text-white cursor-pointer">
+                            <Shield className="w-4 h-4" />
+                            Stripe
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2 p-4 border border-gray-700 rounded-lg hover:border-emerald-500/50 transition-colors">
+                          <RadioGroupItem value="paypal" id="paypal" />
+                          <Label htmlFor="paypal" className="flex items-center gap-2 text-white cursor-pointer">
+                            <Wallet className="w-4 h-4" />
+                            PayPal
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2 p-4 border border-gray-700 rounded-lg hover:border-emerald-500/50 transition-colors">
+                          <RadioGroupItem value="apple_pay" id="apple_pay" />
+                          <Label htmlFor="apple_pay" className="flex items-center gap-2 text-white cursor-pointer">
+                            <Smartphone className="w-4 h-4" />
+                            Apple Pay
+                          </Label>
+                        </div>
+                      </RadioGroup>
                     </div>
 
                     {/* Selected Plan Summary */}
