@@ -49,6 +49,16 @@ export default function SignupNew() {
     setValue,
   } = useForm<SignupForm>({
     resolver: zodResolver(signupSchema),
+    defaultValues: {
+      email: "",
+      username: "",
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      password: "",
+      confirmPassword: "",
+      walletAddress: "",
+    },
   });
 
   const signupMutation = useMutation({
