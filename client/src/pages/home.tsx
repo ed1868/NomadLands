@@ -3,6 +3,7 @@ import HeroSection from "@/components/hero-section";
 import AgentMarketplace from "@/components/agent-marketplace";
 import FeaturesSection from "@/components/features-section";
 import Footer from "@/components/footer";
+import FloatingCTA from "@/components/floating-cta";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <AgentMarketplace />
       <FeaturesSection />
       <Footer />
+      <FloatingCTA />
     </div>
   );
 }

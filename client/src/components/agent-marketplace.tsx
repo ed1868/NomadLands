@@ -25,13 +25,13 @@ export default function AgentMarketplace() {
     : allAgents.filter(agent => agent.category === selectedCategory);
 
   return (
-    <section id="marketplace" className="py-24 bg-gradient-to-br from-background via-muted/30 to-background">
+    <section id="marketplace" className="py-24 bg-gradient-to-br from-slate-50 via-emerald-50/30 to-white">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-20">
-          <h2 className="text-5xl font-light mb-8 bg-gradient-to-r from-green-600 to-stone-600 bg-clip-text text-transparent tracking-tight">
+          <h2 className="text-5xl font-light mb-8 bg-gradient-to-r from-emerald-800 to-emerald-600 bg-clip-text text-transparent tracking-tight">
             Nomad Collection
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-light leading-relaxed">
+          <p className="text-xl text-emerald-700 max-w-3xl mx-auto font-light leading-relaxed">
             Curated with intention for mindful professionals seeking balance in their digital practice. Each agent flows seamlessly into your conscious workflow.
           </p>
         </div>
@@ -44,8 +44,8 @@ export default function AgentMarketplace() {
               onClick={() => setSelectedCategory(category.id)}
               className={
                 selectedCategory === category.id
-                  ? "sage-gradient text-white shadow-lg shadow-green-500/20 border-none"
-                  : "bg-muted/50 hover:bg-muted text-foreground border border-muted-foreground/20 hover:border-green-400/40"
+                  ? "forest-gradient text-white shadow-lg shadow-emerald-500/20 border-none"
+                  : "bg-white/80 hover:bg-white text-emerald-700 border border-emerald-200/50 hover:border-emerald-400/40 backdrop-blur-sm"
               }
               variant={selectedCategory === category.id ? "default" : "outline"}
               size="sm"

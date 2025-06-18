@@ -91,27 +91,27 @@ export default function Navigation() {
         
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden mt-6 pb-6 border-t border-stone-200/30">
+          <div className={`md:hidden mt-6 pb-6 border-t ${isScrolled ? 'border-emerald-100/30' : 'border-white/30'}`}>
             <div className="flex flex-col space-y-6 pt-6">
               <button
                 onClick={() => scrollToSection('marketplace')}
-                className="text-stone-600 hover:text-stone-900 transition-colors text-left font-light tracking-wide"
+                className={`${isScrolled ? 'text-emerald-600 hover:text-emerald-900' : 'text-emerald-100 hover:text-white'} transition-colors text-left font-light tracking-wide`}
               >
                 Collection
               </button>
               <button
                 onClick={() => scrollToSection('features')}
-                className="text-stone-600 hover:text-stone-900 transition-colors text-left font-light tracking-wide"
+                className={`${isScrolled ? 'text-emerald-600 hover:text-emerald-900' : 'text-emerald-100 hover:text-white'} transition-colors text-left font-light tracking-wide`}
               >
                 Features
               </button>
               <button
                 onClick={() => scrollToSection('features')}
-                className="text-stone-600 hover:text-stone-900 transition-colors text-left font-light tracking-wide"
+                className={`${isScrolled ? 'text-emerald-600 hover:text-emerald-900' : 'text-emerald-100 hover:text-white'} transition-colors text-left font-light tracking-wide`}
               >
                 Story
               </button>
-              <Button className="premium-gradient w-full py-4 rounded-full text-stone-900 font-medium">
+              <Button className={`${isScrolled ? 'forest-gradient text-white' : 'bg-white/95 text-emerald-900'} w-full py-4 rounded-full font-medium`}>
                 Start Journey
               </Button>
             </div>
