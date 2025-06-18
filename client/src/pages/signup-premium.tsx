@@ -20,67 +20,96 @@ type SignupForm = z.infer<typeof signupUserSchema>;
 
 const subscriptionPlans = [
   {
-    id: "nomad",
-    name: "Nomad Explorer",
-    price: 29,
-    originalPrice: 39,
-    description: "Perfect for individuals starting their AI journey",
+    id: "developer",
+    name: "Developer",
+    price: 0,
+    originalPrice: null,
+    description: "Get started in your own environment with self-hosted deployment.",
+    longDescription: "Designed for startups and hobbyists with low volume usage to explore agent development.",
+    pricing: "Includes up to 100k nodes executed per month",
     features: [
-      "Access to 50+ Premium AI Agents",
-      "5 Agent Deployments per month",
-      "Basic Analytics Dashboard",
-      "Community Support",
-      "Mobile App Access"
+      "Horizontally scalable task queues and servers",
+      "APIs for retrieving & updating state and conversational history",
+      "APIs for retrieving & updating long-term memory",
+      "Real-time streaming",
+      "Assistants API"
     ],
     gradient: "from-emerald-400 via-teal-500 to-blue-600",
     glowColor: "emerald-400",
-    popular: false
+    popular: false,
+    cta: "Get started"
   },
   {
-    id: "pioneer",
-    name: "Digital Pioneer", 
-    price: 79,
-    originalPrice: 99,
-    description: "For teams building the future",
+    id: "plus",
+    name: "Plus", 
+    price: 25,
+    originalPrice: null,
+    description: "Self-serve with Cloud SaaS deployment.",
+    longDescription: "Designed for teams to quickly deploy agentic apps, accessible from anywhere.",
+    pricing: "$0.001/node executed + standby charges",
+    pricingDetails: "Requires LangSmith Plus ($25/user/month). Includes 1 free Dev deployment with usage included. Then, pay per node executed + per minute of standby.",
     features: [
-      "Everything in Nomad Explorer",
-      "Unlimited Agent Deployments",
-      "Advanced Analytics & Insights",
-      "Priority Support (24/7)",
-      "Custom Agent Training",
-      "Team Collaboration Tools",
-      "API Access & Webhooks"
+      "All features in Developer tier",
+      "Cron scheduling",
+      "Auth to call LangGraph APIs",
+      "Smart caching"
     ],
     gradient: "from-purple-400 via-pink-500 to-orange-500",
     glowColor: "purple-400",
-    popular: true
+    popular: true,
+    cta: "Get started"
   },
   {
-    id: "sovereign",
-    name: "AI Sovereign",
-    price: 199,
-    originalPrice: 249,
-    description: "Enterprise-grade AI automation",
+    id: "nomad-fleet",
+    name: "Nomad Fleet",
+    price: 149,
+    originalPrice: null,
+    description: "Enterprise-scale AI agent orchestration and fleet management.",
+    longDescription: "Designed for organizations deploying multiple agent teams with advanced coordination and monitoring.",
+    pricing: "$0.0008/node executed + fleet management",
+    pricingDetails: "Includes advanced fleet coordination, cross-team communication, and enterprise monitoring dashboards.",
     features: [
-      "Everything in Digital Pioneer",
-      "White-label Solutions",
-      "Dedicated Account Manager",
-      "Custom Integrations",
-      "On-premise Deployment",
-      "Advanced Security Features",
-      "SLA Guarantees",
-      "Unlimited Everything"
+      "All features in Plus tier",
+      "Multi-agent fleet coordination",
+      "Advanced team collaboration",
+      "Enterprise monitoring dashboards",
+      "Cross-department synchronization",
+      "Fleet performance analytics",
+      "Priority technical support"
     ],
     gradient: "from-yellow-400 via-orange-500 to-red-500",
     glowColor: "yellow-400",
-    popular: false
+    popular: false,
+    cta: "Get started"
+  },
+  {
+    id: "enterprise",
+    name: "Enterprise",
+    price: null,
+    originalPrice: null,
+    description: "Deployed where you need it - fully Self-Hosted, Hybrid, or Cloud SaaS options.",
+    longDescription: "Designed for teams with more security, deployment, and support needs.",
+    pricing: "Custom",
+    features: [
+      "All features in Plus tier",
+      "Enterprise deployment options, including full self-hosted and hybrid",
+      "SLA for managed offerings",
+      "Team trainings",
+      "Shared Slack channel",
+      "Architectural guidance",
+      "Dedicated customer success engineer"
+    ],
+    gradient: "from-gray-400 via-gray-500 to-gray-600",
+    glowColor: "gray-400",
+    popular: false,
+    cta: "Contact us"
   }
 ];
 
 export default function SignupPremium() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState("pioneer");
+  const [selectedPlan, setSelectedPlan] = useState("plus");
   const { toast } = useToast();
   const { isConnected, address, connectWallet } = useWallet();
 
@@ -185,7 +214,7 @@ export default function SignupPremium() {
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-6 py-2 mb-6">
               <Sparkles className="w-4 h-4 text-emerald-400" />
-              <span className="text-emerald-400 text-sm font-medium">3-Day Free Trial • No Credit Card Required</span>
+              <span className="text-emerald-400 text-sm font-medium">Free Developer Plan Available • No Credit Card Required</span>
             </div>
             
             <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tight">
@@ -230,18 +259,25 @@ export default function SignupPremium() {
                           </Badge>
                         )}
                         
-                        <div className="flex items-center justify-between">
-                          <div>
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
                             <CardTitle className="text-white text-xl">{plan.name}</CardTitle>
                             <CardDescription className="text-gray-400 mt-1">{plan.description}</CardDescription>
+                            <p className="text-gray-500 text-sm mt-2">{plan.longDescription}</p>
                           </div>
                           
-                          <div className="text-right">
-                            <div className="flex items-baseline gap-1">
-                              <span className="text-3xl font-bold text-white">${plan.price}</span>
-                              <span className="text-gray-400">/mo</span>
-                            </div>
-                            <div className="text-sm text-gray-500 line-through">${plan.originalPrice}/mo</div>
+                          <div className="text-right ml-4">
+                            {plan.price === null ? (
+                              <div className="text-2xl font-bold text-white">Custom</div>
+                            ) : plan.price === 0 ? (
+                              <div className="text-2xl font-bold text-emerald-400">Free</div>
+                            ) : (
+                              <div className="flex items-baseline gap-1">
+                                <span className="text-3xl font-bold text-white">${plan.price}</span>
+                                <span className="text-gray-400">/month</span>
+                              </div>
+                            )}
+                            <div className="text-xs text-gray-500 mt-1">{plan.pricing}</div>
                           </div>
                         </div>
                       </CardHeader>
@@ -465,7 +501,11 @@ export default function SignupPremium() {
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-white font-medium">{selectedPlanData.name}</p>
-                            <p className="text-gray-400 text-sm">3-day free trial, then ${selectedPlanData.price}/month</p>
+                            <p className="text-gray-400 text-sm">
+                              {selectedPlanData.price === null ? 'Custom pricing' : 
+                               selectedPlanData.price === 0 ? 'Free forever' : 
+                               `$${selectedPlanData.price}/month`}
+                            </p>
                           </div>
                           <Badge variant="secondary" className="bg-emerald-900/20 text-emerald-400 border-emerald-700/50">
                             Selected

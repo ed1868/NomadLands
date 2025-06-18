@@ -286,6 +286,9 @@ export const insertUserSchema = createInsertSchema(users).pick({
   phoneNumber: true,
   dateOfBirth: true,
   password: true,
+  subscriptionPlan: true,
+  subscriptionStatus: true,
+  trialEndDate: true,
 });
 
 export const upsertUserSchema = createInsertSchema(users).pick({
