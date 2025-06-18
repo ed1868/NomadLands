@@ -4,6 +4,7 @@ import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { useWallet } from "@/hooks/use-wallet";
 import { useToast } from "@/hooks/use-toast";
+import * as d3 from "d3";
 import ReactFlow, { 
   MiniMap, 
   Controls, 
