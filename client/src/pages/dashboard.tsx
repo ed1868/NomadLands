@@ -204,7 +204,7 @@ export default function Dashboard() {
   const [droppedAgents, setDroppedAgents] = useState<DroppedAgent[]>([]);
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
-  const [departmentCount, setDepartmentCount] = useState({
+  const [departmentCount, setDepartmentCount] = useState<{[key: string]: number}>({
     'Executive Director': 0,
     'Department Manager': 0,
     'Senior Associate': 0,
