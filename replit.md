@@ -227,6 +227,15 @@ Changelog:
   * Built instanced mesh rendering for high-performance particle visualization
   * Added wireframe brain hemispheres with independent rotation for anatomical reference
   * Integrated organic clustering and force-based movement for realistic neural behavior
+- June 18, 2025. Unified warrior/shadow messaging with motion sensor scroll effects
+  * Implemented aggressive warrior-themed messaging across all landing page sections
+  * Updated marketplace to "Agents Built Like Legends" with shadow operations branding
+  * Transformed features section to "Shadow Ops" with lethal efficiency messaging
+  * Applied unified dark emerald abstract wave background across hero, marketplace, features, and used-by sections
+  * Created motion sensor scroll effects using IntersectionObserver for progressive lighting
+  * Each section brightens with unique color gradients when scrolled into view: emerald (hero), emerald (marketplace), blue (features), purple (used-by)
+  * Enhanced all sections with consistent background overlay system and atmospheric depth effects
+  * Updated content messaging: "Built in the shadows. Born to disrupt." and "Zero tolerance for weakness"
 ```
 
 ## User Preferences
