@@ -3,6 +3,7 @@ import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import Navigation from "@/components/navigation";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -57,6 +58,7 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-emerald-950/10">
+      <Navigation />
       <div className="max-w-6xl mx-auto px-6 py-20">
         {/* Header */}
         <div className="text-center mb-16">
