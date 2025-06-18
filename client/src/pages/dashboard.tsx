@@ -1186,31 +1186,31 @@ export default function Dashboard() {
       const rightCenter = { x: width * 0.75, y: height * 0.5 };
       const corpus = { x: width * 0.5, y: height * 0.5 };
 
-      // Generate dense neural clusters (brain regions)
+      // Generate optimized neural clusters (brain regions)
       const regions = [
         // Left hemisphere regions
-        { center: { x: leftCenter.x, y: height * 0.3 }, radius: 80, density: 15000, type: 'frontal' },
-        { center: { x: leftCenter.x - 50, y: height * 0.5 }, radius: 60, density: 12000, type: 'temporal' },
-        { center: { x: leftCenter.x, y: height * 0.7 }, radius: 70, density: 13000, type: 'occipital' },
-        { center: { x: leftCenter.x + 30, y: height * 0.4 }, radius: 50, density: 10000, type: 'parietal' },
+        { center: { x: leftCenter.x, y: height * 0.3 }, radius: 80, density: 3000, type: 'frontal' },
+        { center: { x: leftCenter.x - 50, y: height * 0.5 }, radius: 60, density: 2500, type: 'temporal' },
+        { center: { x: leftCenter.x, y: height * 0.7 }, radius: 70, density: 2800, type: 'occipital' },
+        { center: { x: leftCenter.x + 30, y: height * 0.4 }, radius: 50, density: 2000, type: 'parietal' },
         
         // Right hemisphere regions
-        { center: { x: rightCenter.x, y: height * 0.3 }, radius: 80, density: 15000, type: 'frontal' },
-        { center: { x: rightCenter.x + 50, y: height * 0.5 }, radius: 60, density: 12000, type: 'temporal' },
-        { center: { x: rightCenter.x, y: height * 0.7 }, radius: 70, density: 13000, type: 'occipital' },
-        { center: { x: rightCenter.x - 30, y: height * 0.4 }, radius: 50, density: 10000, type: 'parietal' },
+        { center: { x: rightCenter.x, y: height * 0.3 }, radius: 80, density: 3000, type: 'frontal' },
+        { center: { x: rightCenter.x + 50, y: height * 0.5 }, radius: 60, density: 2500, type: 'temporal' },
+        { center: { x: rightCenter.x, y: height * 0.7 }, radius: 70, density: 2800, type: 'occipital' },
+        { center: { x: rightCenter.x - 30, y: height * 0.4 }, radius: 50, density: 2000, type: 'parietal' },
         
         // Central regions (corpus callosum, brainstem)
-        { center: corpus, radius: 40, density: 8000, type: 'corpus' },
-        { center: { x: width * 0.5, y: height * 0.8 }, radius: 30, density: 6000, type: 'brainstem' },
+        { center: corpus, radius: 40, density: 1800, type: 'corpus' },
+        { center: { x: width * 0.5, y: height * 0.8 }, radius: 30, density: 1500, type: 'brainstem' },
         
         // Additional neural clusters for density
-        { center: { x: width * 0.15, y: height * 0.4 }, radius: 35, density: 7000, type: 'cluster' },
-        { center: { x: width * 0.85, y: height * 0.4 }, radius: 35, density: 7000, type: 'cluster' },
-        { center: { x: width * 0.3, y: height * 0.15 }, radius: 25, density: 5000, type: 'cluster' },
-        { center: { x: width * 0.7, y: height * 0.15 }, radius: 25, density: 5000, type: 'cluster' },
-        { center: { x: width * 0.3, y: height * 0.85 }, radius: 25, density: 5000, type: 'cluster' },
-        { center: { x: width * 0.7, y: height * 0.85 }, radius: 25, density: 5000, type: 'cluster' }
+        { center: { x: width * 0.15, y: height * 0.4 }, radius: 35, density: 1200, type: 'cluster' },
+        { center: { x: width * 0.85, y: height * 0.4 }, radius: 35, density: 1200, type: 'cluster' },
+        { center: { x: width * 0.3, y: height * 0.15 }, radius: 25, density: 800, type: 'cluster' },
+        { center: { x: width * 0.7, y: height * 0.15 }, radius: 25, density: 800, type: 'cluster' },
+        { center: { x: width * 0.3, y: height * 0.85 }, radius: 25, density: 800, type: 'cluster' },
+        { center: { x: width * 0.7, y: height * 0.85 }, radius: 25, density: 800, type: 'cluster' }
       ];
 
       // Generate nodes for each brain region
@@ -1264,45 +1264,44 @@ export default function Dashboard() {
       // Generate massive connection network
       console.log('Generating neural connections...');
       
-      // Create regional connections (within brain regions)
+      // Create optimized regional connections (within brain regions)
       regions.forEach((region, regionIndex) => {
         const regionNodes = nodes.filter(n => n.region === regionIndex);
         
-        // Connect nearby nodes within region
-        for (let i = 0; i < Math.min(regionNodes.length, 2000); i += 3) {
+        // Limit connections per region for performance
+        const maxConnections = Math.min(500, Math.floor(regionNodes.length / 10));
+        
+        for (let i = 0; i < maxConnections; i += 5) {
           const sourceNode = regionNodes[i];
+          if (!sourceNode) continue;
           
-          // Find nearby nodes for connections
-          const nearbyNodes = regionNodes.filter(n => {
-            const distance = Math.sqrt((n.x - sourceNode.x) ** 2 + (n.y - sourceNode.y) ** 2);
-            return distance < 25 && n.id !== sourceNode.id;
-          });
-          
-          // Connect to 2-4 nearby nodes
-          const connectionsCount = Math.min(2 + Math.floor(Math.random() * 3), nearbyNodes.length);
+          // Connect to 1-2 nearby nodes only
+          const connectionsCount = 1 + Math.floor(Math.random() * 2);
           for (let j = 0; j < connectionsCount; j++) {
-            const targetNode = nearbyNodes[j];
-            if (targetNode) {
+            const targetIndex = (i + j + 1) % regionNodes.length;
+            const targetNode = regionNodes[targetIndex];
+            
+            if (targetNode && targetNode.id !== sourceNode.id) {
               connections.push({
                 source: sourceNode,
                 target: targetNode,
                 color: sourceNode.color,
-                opacity: 0.1 + Math.random() * 0.2,
-                width: 0.3 + Math.random() * 0.2
+                opacity: 0.15 + Math.random() * 0.2,
+                width: 0.4 + Math.random() * 0.3
               });
             }
           }
         }
       });
 
-      // Create inter-regional connections (corpus callosum, long-range)
+      // Create limited inter-regional connections
       for (let i = 0; i < regions.length - 1; i++) {
         for (let j = i + 1; j < regions.length; j++) {
           const region1Nodes = nodes.filter(n => n.region === i);
           const region2Nodes = nodes.filter(n => n.region === j);
           
-          // Create sparse long-range connections
-          const connectionCount = Math.min(500, Math.min(region1Nodes.length, region2Nodes.length) / 20);
+          // Drastically reduce inter-regional connections
+          const connectionCount = Math.min(50, Math.min(region1Nodes.length, region2Nodes.length) / 100);
           
           for (let k = 0; k < connectionCount; k++) {
             const source = region1Nodes[Math.floor(Math.random() * region1Nodes.length)];
@@ -1313,8 +1312,8 @@ export default function Dashboard() {
                 source: source,
                 target: target,
                 color: colors.neural,
-                opacity: 0.05 + Math.random() * 0.1,
-                width: 0.2 + Math.random() * 0.15
+                opacity: 0.1 + Math.random() * 0.15,
+                width: 0.3 + Math.random() * 0.2
               });
             }
           }
@@ -1326,9 +1325,9 @@ export default function Dashboard() {
       // Render connections first (background layer)
       const connectionGroup = svg.append('g').attr('class', 'connections');
       
-      // Batch render connections for performance
+      // Render connections with strict limits for performance
       const connectionPaths = connectionGroup.selectAll('line')
-        .data(connections.slice(0, 50000)) // Limit to 50k visible connections for performance
+        .data(connections.slice(0, 5000)) // Limit to 5k visible connections to prevent timeout
         .enter()
         .append('line')
         .attr('x1', d => d.source.x)
@@ -1340,11 +1339,11 @@ export default function Dashboard() {
         .attr('stroke-opacity', 0)
         .attr('filter', 'url(#connectionGlow)');
 
-      // Render nodes in batches for performance
+      // Render nodes in smaller, optimized batches
       const nodeGroup = svg.append('g').attr('class', 'nodes');
       
-      // Render high-importance nodes (cores and synapses)
-      const importantNodes = nodes.filter(n => n.color === colors.core || n.color === colors.synapse);
+      // Render high-importance nodes first
+      const importantNodes = nodes.filter(n => n.color === colors.core || n.color === colors.synapse).slice(0, 2000);
       const importantCircles = nodeGroup.selectAll('.important-node')
         .data(importantNodes)
         .enter()
@@ -1357,23 +1356,26 @@ export default function Dashboard() {
         .attr('opacity', 0)
         .attr('filter', 'url(#glow)');
 
-      // Render regular nodes in batches
-      const batchSize = 20000;
+      // Progressive loading of regular nodes in smaller batches
       const regularNodes = nodes.filter(n => n.color !== colors.core && n.color !== colors.synapse);
+      const maxRegularNodes = Math.min(25000, regularNodes.length); // Limit total nodes
+      const batchSize = 5000; // Smaller batch size
       
-      for (let i = 0; i < regularNodes.length; i += batchSize) {
+      for (let i = 0; i < maxRegularNodes; i += batchSize) {
         const batch = regularNodes.slice(i, i + batchSize);
         
-        nodeGroup.selectAll(`.node-batch-${i}`)
-          .data(batch)
-          .enter()
-          .append('circle')
-          .attr('class', `node-batch-${i}`)
-          .attr('cx', d => d.x)
-          .attr('cy', d => d.y)
-          .attr('r', d => d.size)
-          .attr('fill', d => d.color)
-          .attr('opacity', 0);
+        setTimeout(() => {
+          nodeGroup.selectAll(`.node-batch-${i}`)
+            .data(batch)
+            .enter()
+            .append('circle')
+            .attr('class', `node-batch-${i}`)
+            .attr('cx', d => d.x)
+            .attr('cy', d => d.y)
+            .attr('r', d => d.size)
+            .attr('fill', d => d.color)
+            .attr('opacity', 0);
+        }, i / batchSize * 100); // Stagger batch loading
       }
 
       // Animate the brain coming alive
