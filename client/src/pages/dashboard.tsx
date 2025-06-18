@@ -1483,11 +1483,11 @@ export default function Dashboard() {
               {/* Agent Deployment Palette */}
               <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg">
                 <CardHeader>
-                  <CardTitle className="text-white font-bold">Organizational Hierarchy</CardTitle>
-                  <p className="text-gray-400 text-sm">Deploy agents by department and configure reporting structures</p>
+                  <CardTitle className="text-white font-bold text-lg lg:text-xl">Organizational Hierarchy</CardTitle>
+                  <p className="text-gray-400 text-xs lg:text-sm">Deploy agents by department and configure reporting structures</p>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
                     {[
                       { 
                         type: 'Executive Director', 
@@ -1528,18 +1528,18 @@ export default function Dashboard() {
                     ].map((agent, index) => (
                       <div
                         key={index}
-                        className={`p-4 rounded-xl ${agent.bgColor} ${agent.borderColor} border-2 cursor-move hover:scale-105 hover:shadow-lg transition-all duration-300 backdrop-blur-sm`}
+                        className={`p-3 lg:p-4 rounded-xl ${agent.bgColor} ${agent.borderColor} border-2 cursor-move hover:scale-105 hover:shadow-lg transition-all duration-300 backdrop-blur-sm touch-manipulation`}
                         draggable
                         onDragStart={(e) => {
                           e.dataTransfer.setData('text/plain', JSON.stringify(agent));
                         }}
                       >
-                        <div className="text-3xl mb-2 text-center">{agent.icon}</div>
-                        <h3 className="text-white font-bold text-sm text-center">{agent.type}</h3>
-                        <div className={`text-xs text-center mt-1 px-2 py-1 rounded-full bg-gradient-to-r ${agent.color} text-black font-medium`}>
+                        <div className="text-2xl lg:text-3xl mb-1 lg:mb-2 text-center">{agent.icon}</div>
+                        <h3 className="text-white font-bold text-xs lg:text-sm text-center leading-tight">{agent.type}</h3>
+                        <div className={`text-xs text-center mt-1 px-1 lg:px-2 py-0.5 lg:py-1 rounded-full bg-gradient-to-r ${agent.color} text-black font-medium`}>
                           {agent.level}
                         </div>
-                        <p className="text-gray-300 text-xs text-center mt-2">{agent.description}</p>
+                        <p className="text-gray-300 text-xs text-center mt-1 lg:mt-2 leading-tight">{agent.description}</p>
                       </div>
                     ))}
                   </div>
@@ -1549,12 +1549,12 @@ export default function Dashboard() {
               {/* React Flow Fleet Canvas */}
               <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg">
                 <CardHeader>
-                  <CardTitle className="text-white font-bold">Enterprise Network Canvas</CardTitle>
-                  <p className="text-gray-400 text-sm">Professional flow-based agent network builder with advanced connections</p>
+                  <CardTitle className="text-white font-bold text-lg lg:text-xl">Enterprise Network Canvas</CardTitle>
+                  <p className="text-gray-400 text-xs lg:text-sm">Professional flow-based agent network builder with advanced connections</p>
                 </CardHeader>
                 <CardContent>
                   <div 
-                    className="h-[700px] bg-gray-900/30 rounded-xl border border-gray-600/40"
+                    className="h-[400px] lg:h-[700px] bg-gray-900/30 rounded-xl border border-gray-600/40"
                     onDrop={handleDrop}
                     onDragOver={handleDragOver}
                   >
@@ -1571,11 +1571,11 @@ export default function Dashboard() {
                       style={{ backgroundColor: 'transparent' }}
                     >
                       <Controls 
-                        className="bg-gray-800/80 border border-gray-600/40 rounded-lg"
+                        className="bg-gray-800/80 border border-gray-600/40 rounded-lg scale-75 lg:scale-100"
                         style={{ color: 'white' }}
                       />
                       <MiniMap 
-                        className="bg-gray-800/80 border border-gray-600/40 rounded-lg"
+                        className="bg-gray-800/80 border border-gray-600/40 rounded-lg scale-75 lg:scale-100"
                         nodeColor="#10b981"
                         maskColor="rgba(0, 0, 0, 0.8)"
                       />
@@ -1590,22 +1590,22 @@ export default function Dashboard() {
                   </div>
 
                   {/* Fleet Instructions */}
-                  <div className="mt-4 bg-gray-800/40 rounded-lg p-4">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm text-gray-300">
+                  <div className="mt-3 lg:mt-4 bg-gray-800/40 rounded-lg p-3 lg:p-4">
+                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 lg:gap-4 text-xs lg:text-sm text-gray-300">
                       <div className="flex items-center space-x-2">
-                        <span className="w-3 h-3 bg-emerald-500 rounded-full"></span>
+                        <span className="w-2 h-2 lg:w-3 lg:h-3 bg-emerald-500 rounded-full"></span>
                         <span>Drag roles from palette above</span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
+                        <span className="w-2 h-2 lg:w-3 lg:h-3 bg-blue-500 rounded-full"></span>
                         <span>Connect nodes by dragging handles</span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <span className="w-3 h-3 bg-purple-500 rounded-full"></span>
+                        <span className="w-2 h-2 lg:w-3 lg:h-3 bg-purple-500 rounded-full"></span>
                         <span>Use templates for quick setup</span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <span className="w-3 h-3 bg-amber-500 rounded-full"></span>
+                        <span className="w-2 h-2 lg:w-3 lg:h-3 bg-amber-500 rounded-full"></span>
                         <span>Zoom and pan to navigate</span>
                       </div>
                     </div>
@@ -1614,30 +1614,30 @@ export default function Dashboard() {
               </Card>
 
               {/* Fleet Configuration */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                 <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg">
                   <CardHeader>
-                    <CardTitle className="text-white font-bold">Organizational Structure</CardTitle>
+                    <CardTitle className="text-white font-bold text-lg lg:text-xl">Organizational Structure</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-3 lg:space-y-4">
                     <div>
-                      <label className="text-gray-300 text-sm font-medium">Department Name</label>
+                      <label className="text-gray-300 text-xs lg:text-sm font-medium">Department Name</label>
                       <input 
                         type="text" 
-                        className="w-full mt-1 bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-emerald-400 transition-colors"
+                        className="w-full mt-1 bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm lg:text-base focus:border-emerald-400 transition-colors"
                         placeholder="Data Operations Department"
                       />
                     </div>
                     <div>
-                      <label className="text-gray-300 text-sm font-medium">Mission Statement</label>
+                      <label className="text-gray-300 text-xs lg:text-sm font-medium">Mission Statement</label>
                       <textarea 
-                        className="w-full mt-1 bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2 text-white h-20 focus:border-emerald-400 transition-colors"
+                        className="w-full mt-1 bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm lg:text-base h-16 lg:h-20 focus:border-emerald-400 transition-colors resize-none"
                         placeholder="Automated enterprise data processing, analysis, and strategic decision support"
                       />
                     </div>
                     <div>
-                      <label className="text-gray-300 text-sm font-medium">Workflow Pattern</label>
-                      <select className="w-full mt-1 bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-emerald-400 transition-colors">
+                      <label className="text-gray-300 text-xs lg:text-sm font-medium">Workflow Pattern</label>
+                      <select className="w-full mt-1 bg-gray-800/50 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm lg:text-base focus:border-emerald-400 transition-colors">
                         <option>Hierarchical Command Structure</option>
                         <option>Collaborative Network</option>
                         <option>Event-Driven Response</option>
@@ -1667,74 +1667,74 @@ export default function Dashboard() {
 
                 <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg">
                   <CardHeader>
-                    <CardTitle className="text-white font-bold">Network Analytics</CardTitle>
+                    <CardTitle className="text-white font-bold text-lg lg:text-xl">Network Analytics</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/10 border border-emerald-500/30 p-4 rounded-lg">
-                        <p className="text-emerald-400 text-sm font-medium">Deployed Agents</p>
-                        <p className="text-2xl font-bold text-white">{nodes.length}</p>
+                  <CardContent className="space-y-3 lg:space-y-4">
+                    <div className="grid grid-cols-2 gap-2 lg:gap-4">
+                      <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/10 border border-emerald-500/30 p-3 lg:p-4 rounded-lg">
+                        <p className="text-emerald-400 text-xs lg:text-sm font-medium">Deployed Agents</p>
+                        <p className="text-xl lg:text-2xl font-bold text-white">{nodes.length}</p>
                       </div>
-                      <div className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 border border-blue-500/30 p-4 rounded-lg">
-                        <p className="text-blue-400 text-sm font-medium">Network Links</p>
-                        <p className="text-2xl font-bold text-white">{edges.length}</p>
+                      <div className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 border border-blue-500/30 p-3 lg:p-4 rounded-lg">
+                        <p className="text-blue-400 text-xs lg:text-sm font-medium">Network Links</p>
+                        <p className="text-xl lg:text-2xl font-bold text-white">{edges.length}</p>
                       </div>
-                      <div className="bg-gradient-to-br from-amber-500/10 to-amber-600/10 border border-amber-500/30 p-4 rounded-lg">
-                        <p className="text-amber-400 text-sm font-medium">Estimated Cost/Hour</p>
-                        <p className="text-2xl font-bold text-white">
+                      <div className="bg-gradient-to-br from-amber-500/10 to-amber-600/10 border border-amber-500/30 p-3 lg:p-4 rounded-lg">
+                        <p className="text-amber-400 text-xs lg:text-sm font-medium">Cost/Hour</p>
+                        <p className="text-xl lg:text-2xl font-bold text-white">
                           ${(nodes.length * 0.48 + edges.length * 0.12).toFixed(2)}
                         </p>
                       </div>
-                      <div className="bg-gradient-to-br from-purple-500/10 to-purple-600/10 border border-purple-500/30 p-4 rounded-lg">
-                        <p className="text-purple-400 text-sm font-medium">Network Density</p>
-                        <p className="text-2xl font-bold text-white">
+                      <div className="bg-gradient-to-br from-purple-500/10 to-purple-600/10 border border-purple-500/30 p-3 lg:p-4 rounded-lg">
+                        <p className="text-purple-400 text-xs lg:text-sm font-medium">Net Density</p>
+                        <p className="text-xl lg:text-2xl font-bold text-white">
                           {nodes.length > 0 ? (edges.length / nodes.length).toFixed(1) : '0'}
                         </p>
                       </div>
                     </div>
 
                     {/* Organizational Health Metrics */}
-                    <div className="pt-4 border-t border-gray-700">
-                      <h4 className="text-gray-300 text-sm font-medium mb-3">Organizational Health</h4>
-                      <div className="space-y-3">
+                    <div className="pt-3 lg:pt-4 border-t border-gray-700">
+                      <h4 className="text-gray-300 text-xs lg:text-sm font-medium mb-2 lg:mb-3">Organizational Health</h4>
+                      <div className="space-y-2 lg:space-y-3">
                         <div>
-                          <div className="flex justify-between text-sm mb-1">
+                          <div className="flex justify-between text-xs lg:text-sm mb-1">
                             <span className="text-gray-400">Leadership Coverage</span>
                             <span className="text-white">
                               {departmentCount['Executive Director'] > 0 ? '100%' : '0%'}
                             </span>
                           </div>
-                          <div className="w-full bg-gray-700 rounded-full h-2">
+                          <div className="w-full bg-gray-700 rounded-full h-1.5 lg:h-2">
                             <div 
-                              className="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full transition-all duration-500"
+                              className="bg-gradient-to-r from-indigo-500 to-purple-500 h-1.5 lg:h-2 rounded-full transition-all duration-500"
                               style={{ width: departmentCount['Executive Director'] > 0 ? '100%' : '0%' }}
                             />
                           </div>
                         </div>
                         <div>
-                          <div className="flex justify-between text-sm mb-1">
+                          <div className="flex justify-between text-xs lg:text-sm mb-1">
                             <span className="text-gray-400">Management Span</span>
                             <span className="text-white">
                               {departmentCount['Department Manager'] > 0 ? 'Optimal' : 'Needs Management'}
                             </span>
                           </div>
-                          <div className="w-full bg-gray-700 rounded-full h-2">
+                          <div className="w-full bg-gray-700 rounded-full h-1.5 lg:h-2">
                             <div 
-                              className="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full transition-all duration-500"
+                              className="bg-gradient-to-r from-cyan-500 to-blue-500 h-1.5 lg:h-2 rounded-full transition-all duration-500"
                               style={{ width: departmentCount['Department Manager'] > 0 ? '100%' : '20%' }}
                             />
                           </div>
                         </div>
                         <div>
-                          <div className="flex justify-between text-sm mb-1">
+                          <div className="flex justify-between text-xs lg:text-sm mb-1">
                             <span className="text-gray-400">Operational Capacity</span>
                             <span className="text-white">
                               {Object.values(departmentCount).reduce((a, b) => a + b, 0) > 3 ? 'High' : 'Building'}
                             </span>
                           </div>
-                          <div className="w-full bg-gray-700 rounded-full h-2">
+                          <div className="w-full bg-gray-700 rounded-full h-1.5 lg:h-2">
                             <div 
-                              className="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all duration-500"
+                              className="bg-gradient-to-r from-emerald-500 to-teal-500 h-1.5 lg:h-2 rounded-full transition-all duration-500"
                               style={{ 
                                 width: `${Math.min(100, (Object.values(departmentCount).reduce((a, b) => a + b, 0) / 5) * 100)}%` 
                               }}
