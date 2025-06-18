@@ -326,7 +326,7 @@ agents = sdk.agents.search(
 )
 
 for agent in agents:
-    print(f"{agent['name']}: {agent['rating']}/5 - ${agent['price']}")`
+    print(f"{agent['name']}: {agent['rating']}/5 - " + str(agent['price']))`
         },
         {
           title: "Monitor Agent Execution",
