@@ -225,18 +225,27 @@ export default function Dashboard() {
       backgroundAttachment: 'fixed'
     }}>
       {/* Top Navigation - Full Width */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-lg border-b border-gray-800/30">
+      <div className="fixed top-0 left-0 right-0 z-50 bg-transparent backdrop-blur-sm border-b border-gray-800/30">
         <div className="flex items-center justify-between px-8 py-4">
           {/* Left - Logo */}
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">AN</span>
             </div>
-            <span className="text-xl font-bold text-white tracking-tight">AI Nomads</span>
+            <span className="text-2xl font-bold text-white tracking-tight">AI Nomads</span>
           </div>
 
-          {/* Right - User Icon (Transparent) */}
-          <div className="flex items-center">
+          {/* Center - Navigation Tabs */}
+          <nav className="flex items-center space-x-1">
+            <Link href="/marketplace" className="px-4 py-2 text-gray-300 hover:text-emerald-400 font-medium transition-colors">Marketplace</Link>
+            <Link href="/nomad-fleets" className="px-4 py-2 text-gray-300 hover:text-emerald-400 font-medium transition-colors">Nomad Fleets</Link>
+            <Link href="/nomad-lands" className="px-4 py-2 text-gray-300 hover:text-emerald-400 font-medium transition-colors">Nomad Lands</Link>
+            <Link href="/smart-contracts" className="px-4 py-2 text-gray-300 hover:text-emerald-400 font-medium transition-colors">Smart Contracts</Link>
+            <Link href="/api-docs" className="px-4 py-2 text-gray-300 hover:text-emerald-400 font-medium transition-colors">API</Link>
+          </nav>
+
+          {/* Right - User Menu */}
+          <div className="flex items-center space-x-4">
             <Avatar className="w-10 h-10 border border-gray-700/50">
               <AvatarImage src={user.profileImageUrl || ''} />
               <AvatarFallback className="bg-transparent text-gray-400 border-0">
