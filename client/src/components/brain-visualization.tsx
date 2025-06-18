@@ -20,8 +20,14 @@ export default function BrainVisualization({ className = "" }: BrainVisualizatio
   const [spinningStrength, setSpinningStrength] = useState(2.75);
   const [scale, setScale] = useState(0.008);
   const [boundHalfExtent, setBoundHalfExtent] = useState(8);
-  const [colorA, setColorA] = useState('#5900ff');
-  const [colorB, setColorB] = useState('#ffa575');
+  
+  // Fleet color controls
+  const [fleet1ColorA, setFleet1ColorA] = useState('#5900ff');
+  const [fleet1ColorB, setFleet1ColorB] = useState('#ffa575');
+  const [fleet2ColorA, setFleet2ColorA] = useState('#00ff59');
+  const [fleet2ColorB, setFleet2ColorB] = useState('#75a5ff');
+  const [fleet3ColorA, setFleet3ColorA] = useState('#ff5900');
+  const [fleet3ColorB, setFleet3ColorB] = useState('#a575ff');
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -78,6 +84,13 @@ export default function BrainVisualization({ className = "" }: BrainVisualizatio
       new THREE.Vector3(1, 0, -0.5).normalize()
     ];
 
+    // Fleet colors for attractors
+    const fleetColors = [
+      0x5900ff, // Fleet 1 - Purple
+      0x00ff59, // Fleet 2 - Green
+      0xff5900  // Fleet 3 - Orange
+    ];
+
     // Create attractor helpers
     const attractorHelpers = attractorPositions.map((pos, i) => {
       const helper = new THREE.Group();
@@ -86,7 +99,7 @@ export default function BrainVisualization({ className = "" }: BrainVisualizatio
       // Ring
       const ringGeometry = new THREE.RingGeometry(1, 1.02, 32, 1, 0, Math.PI * 1.5);
       const ringMaterial = new THREE.MeshBasicMaterial({ 
-        color: 0x10b981, 
+        color: fleetColors[i], 
         side: THREE.DoubleSide,
         transparent: true,
         opacity: 0.7
@@ -98,7 +111,7 @@ export default function BrainVisualization({ className = "" }: BrainVisualizatio
 
       // Arrow
       const arrowGeometry = new THREE.ConeGeometry(0.1, 0.4, 12, 1, false);
-      const arrowMaterial = new THREE.MeshBasicMaterial({ color: 0xff6b35 });
+      const arrowMaterial = new THREE.MeshBasicMaterial({ color: fleetColors[i] });
       const arrow = new THREE.Mesh(arrowGeometry, arrowMaterial);
       arrow.position.set(0.325, 0, 0.065);
       arrow.rotation.x = Math.PI * 0.5;
@@ -147,8 +160,12 @@ export default function BrainVisualization({ className = "" }: BrainVisualizatio
     // Particle material
     const particleMaterial = new THREE.ShaderMaterial({
       uniforms: {
-        colorA: { value: new THREE.Color(colorA) },
-        colorB: { value: new THREE.Color(colorB) }
+        fleet1ColorA: { value: new THREE.Color(fleet1ColorA) },
+        fleet1ColorB: { value: new THREE.Color(fleet1ColorB) },
+        fleet2ColorA: { value: new THREE.Color(fleet2ColorA) },
+        fleet2ColorB: { value: new THREE.Color(fleet2ColorB) },
+        fleet3ColorA: { value: new THREE.Color(fleet3ColorA) },
+        fleet3ColorB: { value: new THREE.Color(fleet3ColorB) }
       },
       vertexShader: `
         attribute float scale;
@@ -163,8 +180,12 @@ export default function BrainVisualization({ className = "" }: BrainVisualizatio
         }
       `,
       fragmentShader: `
-        uniform vec3 colorA;
-        uniform vec3 colorB;
+        uniform vec3 fleet1ColorA;
+        uniform vec3 fleet1ColorB;
+        uniform vec3 fleet2ColorA;
+        uniform vec3 fleet2ColorB;
+        uniform vec3 fleet3ColorA;
+        uniform vec3 fleet3ColorB;
         varying vec3 vColor;
         
         void main() {
@@ -273,12 +294,39 @@ export default function BrainVisualization({ className = "" }: BrainVisualizatio
         if (positions[i3 + 2] > halfExtent) positions[i3 + 2] -= boundHalfExtent;
         if (positions[i3 + 2] < -halfExtent) positions[i3 + 2] += boundHalfExtent;
         
-        // Update colors based on speed
+        // Find closest attractor to determine fleet color
+        let closestAttractorIndex = 0;
+        let closestDistance = Infinity;
+        
+        for (let j = 0; j < attractorPositions.length; j++) {
+          const attractor = attractorPositions[j];
+          const dx = attractor.x - px;
+          const dy = attractor.y - py;
+          const dz = attractor.z - pz;
+          const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+          
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestAttractorIndex = j;
+          }
+        }
+        
+        // Update colors based on speed and fleet
         const normalizedSpeed = Math.min(speed / maxSpeed, 1);
         const colorMix = Math.max(0, Math.min(1, normalizedSpeed * 2));
         
-        const colorAObj = new THREE.Color(colorA);
-        const colorBObj = new THREE.Color(colorB);
+        let colorAObj, colorBObj;
+        if (closestAttractorIndex === 0) {
+          colorAObj = new THREE.Color(fleet1ColorA);
+          colorBObj = new THREE.Color(fleet1ColorB);
+        } else if (closestAttractorIndex === 1) {
+          colorAObj = new THREE.Color(fleet2ColorA);
+          colorBObj = new THREE.Color(fleet2ColorB);
+        } else {
+          colorAObj = new THREE.Color(fleet3ColorA);
+          colorBObj = new THREE.Color(fleet3ColorB);
+        }
+        
         const finalColor = colorAObj.lerp(colorBObj, colorMix);
         
         colors[i3] = finalColor.r;
@@ -323,7 +371,7 @@ export default function BrainVisualization({ className = "" }: BrainVisualizatio
       }
       renderer.dispose();
     };
-  }, [attractorMass, particleMass, maxSpeed, velocityDamping, spinningStrength, scale, boundHalfExtent, colorA, colorB]);
+  }, [attractorMass, particleMass, maxSpeed, velocityDamping, spinningStrength, scale, boundHalfExtent, fleet1ColorA, fleet1ColorB, fleet2ColorA, fleet2ColorB, fleet3ColorA, fleet3ColorB]);
 
   return (
     <div className={`relative w-full h-full ${className}`} style={{ minHeight: '400px' }}>
@@ -441,24 +489,84 @@ export default function BrainVisualization({ className = "" }: BrainVisualizatio
               <span className="text-gray-400">{boundHalfExtent.toFixed(2)}</span>
             </div>
             
-            <div>
-              <label className="text-gray-300 block mb-1">colorA</label>
-              <input
-                type="color"
-                value={colorA}
-                onChange={(e) => setColorA(e.target.value)}
-                className="w-full h-8 rounded border border-gray-600"
-              />
-            </div>
-            
-            <div>
-              <label className="text-gray-300 block mb-1">colorB</label>
-              <input
-                type="color"
-                value={colorB}
-                onChange={(e) => setColorB(e.target.value)}
-                className="w-full h-8 rounded border border-gray-600"
-              />
+            {/* Fleet Color Controls */}
+            <div className="border-t border-gray-600 pt-3 mt-3">
+              <h4 className="text-gray-200 font-semibold text-xs mb-3">Fleet Colors</h4>
+              
+              {/* Massive Fleet One */}
+              <div className="mb-4">
+                <h5 className="text-purple-400 font-medium text-xs mb-2">Massive Fleet One</h5>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-gray-400 block mb-1 text-xs">colorA</label>
+                    <input
+                      type="color"
+                      value={fleet1ColorA}
+                      onChange={(e) => setFleet1ColorA(e.target.value)}
+                      className="w-full h-6 rounded border border-gray-600"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-gray-400 block mb-1 text-xs">colorB</label>
+                    <input
+                      type="color"
+                      value={fleet1ColorB}
+                      onChange={(e) => setFleet1ColorB(e.target.value)}
+                      className="w-full h-6 rounded border border-gray-600"
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              {/* Massive Fleet Two */}
+              <div className="mb-4">
+                <h5 className="text-green-400 font-medium text-xs mb-2">Massive Fleet Two</h5>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-gray-400 block mb-1 text-xs">colorA</label>
+                    <input
+                      type="color"
+                      value={fleet2ColorA}
+                      onChange={(e) => setFleet2ColorA(e.target.value)}
+                      className="w-full h-6 rounded border border-gray-600"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-gray-400 block mb-1 text-xs">colorB</label>
+                    <input
+                      type="color"
+                      value={fleet2ColorB}
+                      onChange={(e) => setFleet2ColorB(e.target.value)}
+                      className="w-full h-6 rounded border border-gray-600"
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              {/* Massive Fleet Three */}
+              <div className="mb-4">
+                <h5 className="text-orange-400 font-medium text-xs mb-2">Massive Fleet Three</h5>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-gray-400 block mb-1 text-xs">colorA</label>
+                    <input
+                      type="color"
+                      value={fleet3ColorA}
+                      onChange={(e) => setFleet3ColorA(e.target.value)}
+                      className="w-full h-6 rounded border border-gray-600"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-gray-400 block mb-1 text-xs">colorB</label>
+                    <input
+                      type="color"
+                      value={fleet3ColorB}
+                      onChange={(e) => setFleet3ColorB(e.target.value)}
+                      className="w-full h-6 rounded border border-gray-600"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
             
             <button
@@ -470,8 +578,12 @@ export default function BrainVisualization({ className = "" }: BrainVisualizatio
                 setSpinningStrength(2.75);
                 setScale(0.008);
                 setBoundHalfExtent(8);
-                setColorA('#5900ff');
-                setColorB('#ffa575');
+                setFleet1ColorA('#5900ff');
+                setFleet1ColorB('#ffa575');
+                setFleet2ColorA('#00ff59');
+                setFleet2ColorB('#75a5ff');
+                setFleet3ColorA('#ff5900');
+                setFleet3ColorB('#a575ff');
               }}
               className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-xs"
             >
