@@ -1,4 +1,24 @@
+import { useEffect, useRef, useState } from "react";
+import backgroundImage from '@assets/back_1750268064928.png';
+
 export default function UsedBySection() {
+  const [isInView, setIsInView] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.2, rootMargin: '0px 0px -20% 0px' }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
   const companies = [
     { name: "Google", logo: "https://logos-world.net/wp-content/uploads/2020/09/Google-Logo.png" },
     { name: "Microsoft", logo: "https://logoeps.com/wp-content/uploads/2013/03/microsoft-vector-logo.png" },

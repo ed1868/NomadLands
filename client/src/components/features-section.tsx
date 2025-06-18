@@ -1,4 +1,6 @@
 import { Heart, Leaf, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import backgroundImage from '@assets/back_1750268064928.png';
 
 const features = [
   {
@@ -22,8 +24,44 @@ const features = [
 ];
 
 export default function FeaturesSection() {
+  const [isInView, setIsInView] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.2, rootMargin: '0px 0px -20% 0px' }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section id="features" className="py-24 bg-gradient-to-br from-muted/20 via-background to-muted/20">
+    <section 
+      ref={sectionRef}
+      id="features" 
+      className="relative py-24 overflow-hidden"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
+    >
+      <div className="absolute inset-0 bg-black/70"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/50"></div>
+      
+      <div className={`absolute inset-0 transition-all duration-1000 ${
+        isInView 
+          ? 'bg-gradient-to-br from-blue-500/5 via-transparent to-blue-400/10 border-t border-blue-500/20' 
+          : 'bg-transparent border-t border-gray-900/50'
+      }`}></div>
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-20">
           <h2 className="text-4xl font-light mb-8 text-foreground tracking-tight">Why Choose Mindful AI?</h2>
