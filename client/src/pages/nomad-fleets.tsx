@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ArrowRight, Users, Zap, Shield, Globe, Activity, TrendingUp, Network } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import Navigation from "@/components/navigation";
 
 export default function NomadFleets() {
@@ -9,6 +10,7 @@ export default function NomadFleets() {
   const [animationProgress, setAnimationProgress] = useState(0);
   const [hoveredNode, setHoveredNode] = useState<number | null>(null);
   const [activeMetric, setActiveMetric] = useState(0);
+  const [isYearly, setIsYearly] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -31,7 +33,8 @@ export default function NomadFleets() {
       name: "Enterprise Fleet",
       description: "Complete AI workforce for large organizations",
       agents: 25,
-      price: 2499,
+      monthlyPrice: 2499,
+      yearlyPrice: 1999,
       features: ["Advanced Analytics", "Custom Integrations", "24/7 Support", "Dedicated Infrastructure"],
       gradient: "obsidian-gradient"
     },
@@ -40,7 +43,8 @@ export default function NomadFleets() {
       name: "Growth Fleet",
       description: "Scalable AI teams for growing businesses",
       agents: 12,
-      price: 999,
+      monthlyPrice: 999,
+      yearlyPrice: 799,
       features: ["Team Collaboration", "Workflow Automation", "API Access", "Priority Support"],
       gradient: "shadow-gradient"
     },
@@ -49,7 +53,8 @@ export default function NomadFleets() {
       name: "Startup Fleet",
       description: "Essential AI agents for new ventures",
       agents: 6,
-      price: 499,
+      monthlyPrice: 499,
+      yearlyPrice: 399,
       features: ["Core Automation", "Basic Analytics", "Email Support", "Standard API"],
       gradient: "emerald-knight"
     }
@@ -64,11 +69,33 @@ export default function NomadFleets() {
           <h1 className="text-5xl md:text-7xl font-extralight mb-8 text-gray-200 tracking-wide fade-in-luxury">
             Nomad Fleets
           </h1>
-          <p className="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto font-extralight leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto font-extralight leading-relaxed mb-12">
             AI agent teams at scale. Where individual power becomes
             <br className="hidden md:block" />
             <span className="knight-text font-light">collective intelligence.</span>
           </p>
+          
+          {/* Pricing Toggle */}
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <span className={`text-sm font-extralight transition-colors ${!isYearly ? 'text-gray-200' : 'text-gray-500'}`}>
+              Monthly
+            </span>
+            <div className="relative">
+              <Switch
+                checked={isYearly}
+                onCheckedChange={setIsYearly}
+                className="data-[state=checked]:bg-emerald-800 data-[state=unchecked]:bg-gray-700"
+              />
+            </div>
+            <span className={`text-sm font-extralight transition-colors ${isYearly ? 'text-gray-200' : 'text-gray-500'}`}>
+              Yearly
+            </span>
+            {isYearly && (
+              <Badge className="bg-emerald-900/40 text-emerald-400 border-emerald-700 text-xs font-extralight">
+                Save 20%
+              </Badge>
+            )}
+          </div>
         </div>
 
         {/* Fleet Cards */}
@@ -91,9 +118,18 @@ export default function NomadFleets() {
 
               <div className="mb-6">
                 <div className="flex items-baseline mb-4">
-                  <span className="text-4xl font-extralight knight-text">${fleet.price}</span>
-                  <span className="text-gray-500 text-sm font-extralight ml-2">/month</span>
+                  <span className="text-4xl font-extralight knight-text">
+                    ${isYearly ? fleet.yearlyPrice : fleet.monthlyPrice}
+                  </span>
+                  <span className="text-gray-500 text-sm font-extralight ml-2">
+                    /{isYearly ? 'year' : 'month'}
+                  </span>
                 </div>
+                {isYearly && (
+                  <div className="text-gray-500 text-xs font-extralight mb-2">
+                    Save ${fleet.monthlyPrice - fleet.yearlyPrice}/month
+                  </div>
+                )}
                 <Badge className="bg-gray-900/60 text-gray-400 text-sm font-extralight px-3 py-1 rounded border border-gray-800">
                   {fleet.agents} AI Agents
                 </Badge>
