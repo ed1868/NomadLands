@@ -121,26 +121,27 @@ Changelog:
 - June 17, 2025. Initial setup with dark cyberpunk theme
 - June 17, 2025. Complete redesign with Alo Yoga-inspired aesthetic
 - June 18, 2025. Major transformation to Dark Forest Green Cyberpunk aesthetic
-- June 18, 2025. Final transformation to Luxurious Dark Green Interior aesthetic
-  * Implemented sophisticated dark green velvet color palette inspired by luxury interior design
-  * Added high-quality agent images from Unsplash with professional photography
-  * Created interactive modal system for detailed agent information with click animations
-  * Enhanced cards with luxury styling: velvet gradients, emerald accents, warm brass highlights
-  * Updated hero section with refined typography and luxury text gradients
-  * Modified navigation with sleek, minimalist design and smooth hover transitions
-  * Applied premium animations: fade-in-luxury, slide-up-luxury, floating-luxury effects
-  * Added image overlays, backdrop blur effects, and sophisticated shadow systems
-  * Implemented clickable agent cards with detailed modal views and deployment functionality
+- June 18, 2025. Final transformation to Dark Knight aesthetic
+  * Implemented ultra-dark "Dark Knight" color palette inspired by moody architecture
+  * Updated agent images to use stunning architectural references from user's provided images
+  * Created obsidian gradients and shadow effects for dramatic depth
+  * Transformed hero section with atmospheric fog effects and radial gradients
+  * Updated marketplace to "Shadow Archives" with darker, more mysterious branding
+  * Modified navigation to use minimal "Archives," "Arsenal," "Origins" terminology
+  * Enhanced agent cards with darker glass morphism and subtle backdrop blur
+  * Applied darker modal styling with enhanced shadow and depth effects
+  * Implemented ultra-minimal typography with extralight fonts throughout
+  * Created sophisticated dark overlays and gradient masks for all images
 ```
 
 ## User Preferences
 
 ```
 Preferred communication style: Simple, everyday language.
-Design aesthetic: Luxurious Dark Green Interior - velvet green, charcoal black, warm brass accents
-Animation style: Smooth, refined luxury animations with sophisticated transitions
-Target audience: Discerning professionals seeking premium automation tools
-Color scheme: Dark forest green, velvet emerald, charcoal black, warm brass highlights
-Reference inspiration: Luxury interior design with dark green velvet furniture and warm lighting
-Key features: High-quality images, interactive modals, sophisticated animations
+Design aesthetic: Dark Knight - ultra-dark, moody architecture-inspired with minimal lighting
+Animation style: Subtle, sophisticated transitions with atmospheric depth effects
+Target audience: Professionals seeking powerful, mysterious automation tools
+Color scheme: Pure black, charcoal grey, minimal emerald accents, steel grey highlights
+Reference inspiration: Modern dark architecture with fog, dramatic lighting, minimalist structures
+Key features: Architectural imagery, dark glass morphism, atmospheric effects, ultra-minimal UI
 ```

@@ -31,51 +31,51 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-8 py-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className={`w-10 h-10 velvet-gradient rounded-md flex items-center justify-center transition-all duration-500 ${isScrolled ? 'warm-glow' : ''}`}>
-              <Bot className="text-white text-lg" />
+            <div className={`w-10 h-10 obsidian-gradient rounded border border-gray-700 flex items-center justify-center transition-all duration-500 backdrop-blur-sm ${isScrolled ? 'shadow-lg' : ''}`}>
+              <Bot className="text-gray-300 text-lg" />
             </div>
-            <span className={`text-2xl font-light tracking-wide transition-all duration-500 ${
+            <span className={`text-xl font-extralight tracking-wide transition-all duration-500 ${
               isScrolled 
-                ? 'text-white' 
-                : 'text-white drop-shadow-sm'
+                ? 'text-gray-200' 
+                : 'text-gray-200 drop-shadow-sm'
             }`}>
-              AI Nomads
+              AI <span className="knight-text font-light">Nomads</span>
             </span>
           </div>
           
-          <div className="hidden md:flex items-center space-x-12">
+          <div className="hidden md:flex items-center space-x-10">
             <button
               onClick={() => scrollToSection('marketplace')}
-              className={`font-light tracking-wide transition-all duration-500 smooth-hover ${
+              className={`font-extralight tracking-wide transition-all duration-500 ${
                 isScrolled 
-                  ? 'text-gray-300 hover:text-amber-300' 
-                  : 'text-gray-300 hover:text-amber-300'
+                  ? 'text-gray-500 hover:text-gray-300' 
+                  : 'text-gray-500 hover:text-gray-300'
               }`}
             >
-              Collection
+              Archives
             </button>
             <button
               onClick={() => scrollToSection('features')}
-              className={`font-light tracking-wide transition-all duration-500 smooth-hover ${
+              className={`font-extralight tracking-wide transition-all duration-500 ${
                 isScrolled 
-                  ? 'text-gray-300 hover:text-amber-300' 
-                  : 'text-gray-300 hover:text-amber-300'
+                  ? 'text-gray-500 hover:text-gray-300' 
+                  : 'text-gray-500 hover:text-gray-300'
               }`}
             >
-              Features
+              Arsenal
             </button>
             <button
               onClick={() => scrollToSection('features')}
-              className={`font-light tracking-wide transition-all duration-500 smooth-hover ${
+              className={`font-extralight tracking-wide transition-all duration-500 ${
                 isScrolled 
-                  ? 'text-gray-300 hover:text-amber-300' 
-                  : 'text-gray-300 hover:text-amber-300'
+                  ? 'text-gray-500 hover:text-gray-300' 
+                  : 'text-gray-500 hover:text-gray-300'
               }`}
             >
-              Story
+              Origins
             </button>
-            <Button className="velvet-gradient hover:shadow-xl hover:shadow-emerald-500/30 transition-all duration-500 border-none rounded-md px-8 py-3 font-medium text-white smooth-hover">
-              Begin Journey
+            <Button className="obsidian-gradient hover:shadow-lg hover:shadow-gray-900/30 transition-all duration-500 border border-gray-700 rounded px-6 py-2 font-light text-gray-300 backdrop-blur-sm hover:border-gray-600">
+              Deploy
             </Button>
           </div>
           
@@ -91,28 +91,28 @@ export default function Navigation() {
         
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className={`md:hidden mt-6 pb-6 border-t ${isScrolled ? 'border-emerald-600/30' : 'border-emerald-600/30'}`}>
+          <div className={`md:hidden mt-6 pb-6 border-t ${isScrolled ? 'border-gray-800' : 'border-gray-800'}`}>
             <div className="flex flex-col space-y-6 pt-6">
               <button
                 onClick={() => scrollToSection('marketplace')}
-                className="text-gray-300 hover:text-amber-300 transition-colors text-left font-light tracking-wide"
+                className="text-gray-500 hover:text-gray-300 transition-colors text-left font-extralight tracking-wide"
               >
-                Collection
+                Archives
               </button>
               <button
                 onClick={() => scrollToSection('features')}
-                className="text-gray-300 hover:text-amber-300 transition-colors text-left font-light tracking-wide"
+                className="text-gray-500 hover:text-gray-300 transition-colors text-left font-extralight tracking-wide"
               >
-                Features
+                Arsenal
               </button>
               <button
                 onClick={() => scrollToSection('features')}
-                className="text-gray-300 hover:text-amber-300 transition-colors text-left font-light tracking-wide"
+                className="text-gray-500 hover:text-gray-300 transition-colors text-left font-extralight tracking-wide"
               >
-                Story
+                Origins
               </button>
-              <Button className="velvet-gradient w-full py-4 rounded-md font-medium text-white">
-                Begin Journey
+              <Button className="obsidian-gradient w-full py-3 rounded border border-gray-700 font-light text-gray-300 backdrop-blur-sm">
+                Deploy
               </Button>
             </div>
           </div>

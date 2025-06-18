@@ -25,31 +25,31 @@ export default function AgentMarketplace() {
     : allAgents.filter(agent => agent.category === selectedCategory);
 
   return (
-    <section id="marketplace" className="py-24 bg-background">
+    <section id="marketplace" className="py-20 bg-black">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-20">
-          <h2 className="text-5xl md:text-7xl font-light mb-8 text-white tracking-tight fade-in-luxury">
-            Nomad Collection
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-6xl font-extralight mb-8 text-gray-200 tracking-wide fade-in-luxury">
+            Shadow Archives
           </h2>
           <div className="slide-up-luxury" style={{ animationDelay: '0.4s' }}>
-            <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto font-light leading-relaxed">
-              Curated with intention for discerning professionals seeking excellence.
+            <p className="text-lg md:text-xl text-gray-500 max-w-4xl mx-auto font-extralight leading-relaxed">
+              Forged in darkness, refined by intelligence.
               <br className="hidden md:block" />
-              <span className="luxury-text">Each agent crafted to elevate your practice.</span>
+              <span className="knight-text font-light">Each agent emerges from the void.</span>
             </p>
           </div>
         </div>
 
         {/* Category Filters */}
-        <div className="flex flex-wrap justify-center gap-3 mb-16">
+        <div className="flex flex-wrap justify-center gap-3 mb-14">
           {categories.map((category) => (
             <Button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
               className={
                 selectedCategory === category.id
-                  ? "velvet-gradient text-white shadow-lg shadow-emerald-500/20 border-none font-medium px-6 py-3 rounded-md smooth-hover"
-                  : "bg-secondary border border-border text-gray-300 hover:bg-accent hover:text-amber-200 font-light px-6 py-3 rounded-md smooth-hover"
+                  ? "obsidian-gradient text-gray-300 shadow-lg shadow-gray-900/30 border border-gray-700 font-light px-5 py-2 rounded backdrop-blur-sm"
+                  : "bg-black/40 border border-gray-800 text-gray-500 hover:bg-gray-900/40 hover:text-gray-400 font-extralight px-5 py-2 rounded backdrop-blur-sm"
               }
               variant={selectedCategory === category.id ? "default" : "outline"}
             >

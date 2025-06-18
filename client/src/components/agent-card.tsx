@@ -68,7 +68,7 @@ export default function AgentCard({ agent }: AgentCardProps) {
   return (
     <>
       <div 
-        className="agent-card luxury-card p-0 fade-in-luxury group cursor-pointer" 
+        className="agent-card bg-black/60 border border-gray-800 p-0 fade-in-luxury group cursor-pointer backdrop-blur-sm hover:border-gray-700 transition-all duration-700" 
         style={{ animationDelay: `${Math.random() * 0.5}s` }}
         onClick={handleCardClick}
       >
@@ -77,24 +77,25 @@ export default function AgentCard({ agent }: AgentCardProps) {
           <img 
             src={agentImage} 
             alt={agent.name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700"
+            className="w-full h-full object-cover group-hover:scale-105 transition-all duration-1000 opacity-80"
           />
-          <div className="absolute inset-0 image-overlay" />
-          <div className={`absolute top-4 left-4 w-12 h-12 ${gradientClass} rounded-lg flex items-center justify-center shadow-lg`}>
-            <IconComponent className="text-white text-xl" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-black/30" />
+          <div className={`absolute top-4 left-4 w-10 h-10 ${gradientClass} rounded border border-gray-600 flex items-center justify-center shadow-2xl backdrop-blur-sm`}>
+            <IconComponent className="text-gray-300 text-sm" />
           </div>
         </div>
         
-        <div className="p-6">
+        <div className="p-5">
           <div className="flex items-start justify-between mb-4">
-            <h3 className="text-xl font-medium text-white tracking-tight">{agent.name}</h3>
+            <h3 className="text-lg font-light text-gray-200 tracking-tight">{agent.name}</h3>
             <div className="text-right">
-              <span className="text-2xl font-light luxury-text">${agent.price}</span>
-              <span className="text-amber-300 text-sm block font-light">/month</span>
+              <span className="text-xl font-extralight knight-text">${agent.price}</span>
+              <span className="text-gray-500 text-xs block font-extralight">/month</span>
             </div>
           </div>
           
-          <p className="text-gray-400 mb-6 text-sm leading-relaxed font-light line-clamp-3">
+          <p className="text-gray-500 mb-6 text-xs leading-relaxed font-extralight line-clamp-3">
             {agent.description}
           </p>
           
@@ -103,14 +104,14 @@ export default function AgentCard({ agent }: AgentCardProps) {
               <Badge 
                 key={index}
                 variant="secondary"
-                className="bg-emerald-900/40 text-emerald-300 text-xs font-light px-3 py-1 rounded-md border border-emerald-700/30"
+                className="bg-gray-900/60 text-gray-400 text-xs font-extralight px-3 py-1 rounded border border-gray-800"
               >
                 {feature}
               </Badge>
             ))}
             {agent.features.length > 3 && (
-              <Badge className="bg-slate-700/40 text-gray-400 text-xs font-light px-3 py-1 rounded-md">
-                +{agent.features.length - 3} more
+              <Badge className="bg-gray-900/40 text-gray-500 text-xs font-extralight px-3 py-1 rounded border border-gray-800">
+                +{agent.features.length - 3}
               </Badge>
             )}
           </div>
@@ -121,56 +122,56 @@ export default function AgentCard({ agent }: AgentCardProps) {
               handleDeploy();
             }}
             disabled={isDeploying}
-            className={`w-full ${gradientClass} py-3 rounded-md font-medium hover:shadow-xl hover:shadow-emerald-500/20 transition-all duration-500 disabled:opacity-50 text-white border-none smooth-hover`}
+            className={`w-full ${gradientClass} py-3 rounded font-light hover:shadow-xl hover:shadow-gray-900/50 transition-all duration-700 disabled:opacity-50 text-gray-300 border border-gray-700 hover:border-gray-600 backdrop-blur-sm`}
           >
-            {isDeploying ? "Integrating..." : "Begin Journey"}
+            {isDeploying ? "Activating..." : "Deploy"}
           </Button>
         </div>
       </div>
 
-      {/* Modal for detailed view */}
+      {/* Dark Knight Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center modal-backdrop" onClick={() => setShowModal(false)}>
-          <div className="bg-card border border-border rounded-lg max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto luxury-shadow" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm" onClick={() => setShowModal(false)}>
+          <div className="bg-black/80 border border-gray-800 rounded max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto backdrop-blur-md shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="relative">
               <img 
                 src={agentImage} 
                 alt={agent.name}
-                className="w-full h-64 object-cover"
+                className="w-full h-64 object-cover opacity-70"
               />
-              <div className="absolute inset-0 image-overlay" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/50" />
               <Button
                 onClick={() => setShowModal(false)}
-                className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 text-white border-none rounded-full w-10 h-10 p-0"
+                className="absolute top-4 right-4 bg-black/60 hover:bg-black/80 text-gray-400 border border-gray-700 rounded w-10 h-10 p-0 backdrop-blur-sm"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </Button>
-              <div className={`absolute bottom-4 left-4 w-16 h-16 ${gradientClass} rounded-xl flex items-center justify-center shadow-lg`}>
-                <IconComponent className="text-white text-2xl" />
+              <div className={`absolute bottom-4 left-4 w-12 h-12 ${gradientClass} rounded border border-gray-600 flex items-center justify-center shadow-2xl backdrop-blur-sm`}>
+                <IconComponent className="text-gray-300 text-lg" />
               </div>
             </div>
             
-            <div className="p-8">
+            <div className="p-6">
               <div className="flex items-start justify-between mb-6">
-                <h2 className="text-3xl font-medium text-white">{agent.name}</h2>
+                <h2 className="text-2xl font-light text-gray-200">{agent.name}</h2>
                 <div className="text-right">
-                  <span className="text-3xl font-light luxury-text">${agent.price}</span>
-                  <span className="text-amber-300 text-base block font-light">/month</span>
+                  <span className="text-2xl font-extralight knight-text">${agent.price}</span>
+                  <span className="text-gray-500 text-sm block font-extralight">/month</span>
                 </div>
               </div>
               
-              <p className="text-gray-300 mb-8 text-lg leading-relaxed">
+              <p className="text-gray-400 mb-8 text-base leading-relaxed font-light">
                 {agent.description}
               </p>
               
               <div className="mb-8">
-                <h3 className="text-xl font-medium text-white mb-4">Capabilities</h3>
-                <div className="flex flex-wrap gap-3">
+                <h3 className="text-lg font-light text-gray-300 mb-4">Capabilities</h3>
+                <div className="flex flex-wrap gap-2">
                   {agent.features.map((feature, index) => (
                     <Badge 
                       key={index}
                       variant="secondary"
-                      className="bg-emerald-900/40 text-emerald-300 text-sm font-light px-4 py-2 rounded-md border border-emerald-700/30"
+                      className="bg-gray-900/60 text-gray-400 text-sm font-extralight px-3 py-2 rounded border border-gray-800"
                     >
                       {feature}
                     </Badge>
@@ -182,16 +183,16 @@ export default function AgentCard({ agent }: AgentCardProps) {
                 <Button
                   onClick={handleDeploy}
                   disabled={isDeploying}
-                  className={`flex-1 ${gradientClass} py-4 rounded-md font-medium hover:shadow-xl hover:shadow-emerald-500/20 transition-all duration-500 disabled:opacity-50 text-white border-none smooth-hover`}
+                  className={`flex-1 ${gradientClass} py-3 rounded font-light hover:shadow-xl hover:shadow-gray-900/50 transition-all duration-700 disabled:opacity-50 text-gray-300 border border-gray-700 backdrop-blur-sm`}
                 >
-                  {isDeploying ? "Integrating..." : "Begin Journey"}
+                  {isDeploying ? "Activating..." : "Deploy"}
                 </Button>
                 <Button
                   variant="outline"
-                  className="brass-border bg-transparent px-6 py-4 rounded-md font-light text-amber-200 hover:bg-amber-500/5"
+                  className="bg-transparent border-gray-700 px-6 py-3 rounded font-extralight text-gray-400 hover:text-gray-300 hover:border-gray-600 backdrop-blur-sm"
                 >
-                  <ExternalLink className="w-5 h-5 mr-2" />
-                  Learn More
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Details
                 </Button>
               </div>
             </div>
