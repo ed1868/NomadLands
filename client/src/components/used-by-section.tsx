@@ -62,22 +62,22 @@ export default function UsedBySection() {
         </div>
 
         {/* Company Logos Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6 items-center">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-8 items-center">
           {companies.map((company, index) => (
             <div
               key={company.name}
-              className="flex flex-col items-center justify-center p-6 bg-white/95 border border-white/30 rounded-xl hover:border-white/60 hover:bg-white transition-all duration-500 group hover:scale-110 floating-luxury backdrop-blur-sm shadow-2xl hover:shadow-white/20"
+              className="flex items-center justify-center h-20 p-6 bg-black/40 border border-white/20 rounded-lg hover:border-emerald-500/50 hover:bg-black/60 transition-all duration-500 group backdrop-blur-sm"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <img
                 src={company.logo}
                 alt={company.name}
-                className="h-14 w-auto opacity-90 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105 mb-3"
-                style={{ maxWidth: '160px', filter: 'brightness(0.1) contrast(1.2)' }}
+                className="h-8 w-auto opacity-60 group-hover:opacity-90 transition-all duration-300 group-hover:scale-105"
+                style={{ 
+                  maxWidth: '120px', 
+                  filter: 'brightness(0) invert(1) opacity(0.7)' 
+                }}
               />
-              <span className="text-gray-800 group-hover:text-black text-xs font-medium transition-colors duration-300">
-                {company.name}
-              </span>
             </div>
           ))}
         </div>
