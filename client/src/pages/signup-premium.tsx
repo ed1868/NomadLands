@@ -3,12 +3,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { Eye, EyeOff, Mail, Phone, User, Wallet, Shield, Zap, Crown, Sparkles, ArrowRight, CheckCircle } from "lucide-react";
+import { Eye, EyeOff, Mail, Phone, User, Wallet, Shield, Zap, Crown, Sparkles, ArrowRight, CheckCircle, CreditCard, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { useWallet } from "@/hooks/use-wallet";
 import { apiRequest } from "@/lib/queryClient";
@@ -208,13 +209,13 @@ export default function SignupPremium() {
 
       <Navigation />
 
-      <div className="relative z-10 container mx-auto px-6 py-12">
+      <div className="relative z-10 container mx-auto px-6 py-12 pt-24">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-6 py-2 mb-6">
               <Sparkles className="w-4 h-4 text-emerald-400" />
-              <span className="text-emerald-400 text-sm font-medium">Free Developer Plan Available • No Credit Card Required</span>
+              <span className="text-emerald-400 text-sm font-medium">Free Developer Plan Available • Free Trial Available</span>
             </div>
             
             <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tight">

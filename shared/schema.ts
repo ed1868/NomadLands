@@ -52,6 +52,7 @@ export const users = pgTable("users", {
   subscriptionEndDate: timestamp("subscription_end_date"),
   stripeCustomerId: varchar("stripe_customer_id"),
   stripeSubscriptionId: varchar("stripe_subscription_id"),
+  paymentMethod: varchar("payment_method"), // credit_card, stripe, paypal, apple_pay
   
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -289,6 +290,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
   subscriptionPlan: true,
   subscriptionStatus: true,
   trialEndDate: true,
+  paymentMethod: true,
 });
 
 export const upsertUserSchema = createInsertSchema(users).pick({
