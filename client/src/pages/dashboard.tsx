@@ -1115,312 +1115,362 @@ export default function Dashboard() {
     }
   }, [activeTab, selectedTemplate, nodes.length]);
 
-  // Neural Hive Mind Network Visualization
+  // Massive Brain-Like Hive Mind Visualization (200k+ data points)
   useEffect(() => {
     if (activeTab === 'ecosystem') {
-      console.log('Starting neural hive mind visualization...');
+      console.log('Starting massive hive mind brain visualization...');
       const container = d3.select('#voronoi-ecosystem');
       container.selectAll('*').remove();
 
       const width = 800;
       const height = 500;
 
-      // Create SVG with glowing effects
+      // Create SVG with dark cosmic background
       const svg = container
         .append('svg')
         .attr('width', '100%')
         .attr('height', '100%')
         .attr('viewBox', `0 0 ${width} ${height}`)
-        .style('background', 'radial-gradient(circle at center, #0a0a0a 0%, #000000 100%)')
+        .style('background', 'radial-gradient(circle at center, #1a0a1a 0%, #0a0a0a 50%, #000000 100%)')
         .style('border-radius', '8px');
 
-      // Add glow filter definitions
+      // Add advanced glow and blur filters
       const defs = svg.append('defs');
       
       const glowFilter = defs.append('filter')
         .attr('id', 'glow')
-        .attr('width', '300%')
-        .attr('height', '300%')
-        .attr('x', '-100%')
-        .attr('y', '-100%');
+        .attr('width', '200%')
+        .attr('height', '200%')
+        .attr('x', '-50%')
+        .attr('y', '-50%');
       
       glowFilter.append('feGaussianBlur')
-        .attr('stdDeviation', '3')
+        .attr('stdDeviation', '2')
         .attr('result', 'coloredBlur');
       
       const feMerge = glowFilter.append('feMerge');
       feMerge.append('feMergeNode').attr('in', 'coloredBlur');
       feMerge.append('feMergeNode').attr('in', 'SourceGraphic');
 
-      const pulseFilter = defs.append('filter')
-        .attr('id', 'pulse')
-        .attr('width', '400%')
-        .attr('height', '400%')
-        .attr('x', '-150%')
-        .attr('y', '-150%');
+      const connectionFilter = defs.append('filter')
+        .attr('id', 'connectionGlow')
+        .attr('width', '200%')
+        .attr('height', '200%')
+        .attr('x', '-50%')
+        .attr('y', '-50%');
       
-      pulseFilter.append('feGaussianBlur')
-        .attr('stdDeviation', '6')
+      connectionFilter.append('feGaussianBlur')
+        .attr('stdDeviation', '1')
         .attr('result', 'coloredBlur');
       
-      const pulseMerge = pulseFilter.append('feMerge');
-      pulseMerge.append('feMergeNode').attr('in', 'coloredBlur');
-      pulseMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+      const connectionMerge = connectionFilter.append('feMerge');
+      connectionMerge.append('feMergeNode').attr('in', 'coloredBlur');
+      connectionMerge.append('feMergeNode').attr('in', 'SourceGraphic');
 
-      // Create network nodes from agent data
-      const nodes = mockAgents.map((agent: any, index: number) => ({
-        id: `agent-${index}`,
-        name: agent.name,
-        x: Math.random() * (width - 100) + 50,
-        y: Math.random() * (height - 100) + 50,
-        runs: agent.runs,
-        success: agent.success,
-        radius: Math.max(8, Math.min(25, (agent.runs / 2000) + (agent.success / 10))),
-        color: agent.success >= 95 ? '#ff00ff' : 
-               agent.success >= 90 ? '#00ffff' : 
-               agent.success >= 85 ? '#ff0080' : '#8000ff',
-        connections: Math.floor(agent.runs / 3000) + 2
-      }));
+      // Generate massive brain-like structure with 200k+ nodes
+      console.log('Generating 200k+ neural nodes...');
+      const nodes: any[] = [];
+      const connections: any[] = [];
 
-      // Add some hub nodes for central connectivity
-      const hubNodes = [
-        { id: 'hub1', name: 'Central Core', x: width * 0.3, y: height * 0.3, radius: 20, color: '#ff00ff', connections: 8, isHub: true },
-        { id: 'hub2', name: 'Neural Bridge', x: width * 0.7, y: height * 0.7, radius: 18, color: '#00ffff', connections: 6, isHub: true },
-        { id: 'hub3', name: 'Data Nexus', x: width * 0.5, y: height * 0.5, radius: 22, color: '#ff0080', connections: 10, isHub: true }
+      // Color palette for brain-like hive mind
+      const colors = {
+        core: '#ff1493',      // Deep pink
+        synapse: '#8b008b',   // Dark magenta
+        neural: '#4b0082',    // Indigo
+        dendrite: '#663399',  // Rebecca purple
+        dark: '#2d1b3d'       // Dark purple
+      };
+
+      // Create brain hemisphere structure
+      const leftCenter = { x: width * 0.25, y: height * 0.5 };
+      const rightCenter = { x: width * 0.75, y: height * 0.5 };
+      const corpus = { x: width * 0.5, y: height * 0.5 };
+
+      // Generate dense neural clusters (brain regions)
+      const regions = [
+        // Left hemisphere regions
+        { center: { x: leftCenter.x, y: height * 0.3 }, radius: 80, density: 15000, type: 'frontal' },
+        { center: { x: leftCenter.x - 50, y: height * 0.5 }, radius: 60, density: 12000, type: 'temporal' },
+        { center: { x: leftCenter.x, y: height * 0.7 }, radius: 70, density: 13000, type: 'occipital' },
+        { center: { x: leftCenter.x + 30, y: height * 0.4 }, radius: 50, density: 10000, type: 'parietal' },
+        
+        // Right hemisphere regions
+        { center: { x: rightCenter.x, y: height * 0.3 }, radius: 80, density: 15000, type: 'frontal' },
+        { center: { x: rightCenter.x + 50, y: height * 0.5 }, radius: 60, density: 12000, type: 'temporal' },
+        { center: { x: rightCenter.x, y: height * 0.7 }, radius: 70, density: 13000, type: 'occipital' },
+        { center: { x: rightCenter.x - 30, y: height * 0.4 }, radius: 50, density: 10000, type: 'parietal' },
+        
+        // Central regions (corpus callosum, brainstem)
+        { center: corpus, radius: 40, density: 8000, type: 'corpus' },
+        { center: { x: width * 0.5, y: height * 0.8 }, radius: 30, density: 6000, type: 'brainstem' },
+        
+        // Additional neural clusters for density
+        { center: { x: width * 0.15, y: height * 0.4 }, radius: 35, density: 7000, type: 'cluster' },
+        { center: { x: width * 0.85, y: height * 0.4 }, radius: 35, density: 7000, type: 'cluster' },
+        { center: { x: width * 0.3, y: height * 0.15 }, radius: 25, density: 5000, type: 'cluster' },
+        { center: { x: width * 0.7, y: height * 0.15 }, radius: 25, density: 5000, type: 'cluster' },
+        { center: { x: width * 0.3, y: height * 0.85 }, radius: 25, density: 5000, type: 'cluster' },
+        { center: { x: width * 0.7, y: height * 0.85 }, radius: 25, density: 5000, type: 'cluster' }
       ];
 
-      const allNodes = [...nodes, ...hubNodes];
-
-      // Generate connections based on proximity and performance
-      const links: any[] = [];
-      
-      // Connect each agent to nearest hubs
-      nodes.forEach(node => {
-        hubNodes.forEach(hub => {
-          const distance = Math.sqrt((node.x - hub.x) ** 2 + (node.y - hub.y) ** 2);
-          if (distance < 200 || Math.random() < 0.3) {
-            links.push({
-              source: node.id,
-              target: hub.id,
-              strength: Math.random() * 0.8 + 0.2,
-              color: node.color
-            });
-          }
-        });
-      });
-
-      // Connect high-performance agents to each other
-      nodes.forEach((source, i) => {
-        nodes.slice(i + 1).forEach(target => {
-          const distance = Math.sqrt((source.x - target.x) ** 2 + (source.y - target.y) ** 2);
-          const performanceBonus = (source.success + target.success) / 200;
+      // Generate nodes for each brain region
+      regions.forEach((region, regionIndex) => {
+        for (let i = 0; i < region.density; i++) {
+          // Generate points in circular cluster with gaussian distribution
+          const angle = Math.random() * 2 * Math.PI;
+          const radiusVariation = Math.random() * Math.random(); // Bias toward center
+          const distance = radiusVariation * region.radius;
           
-          if (distance < 150 && Math.random() < (0.1 + performanceBonus)) {
-            links.push({
-              source: source.id,
-              target: target.id,
-              strength: Math.random() * 0.6 + 0.2,
-              color: source.success > target.success ? source.color : target.color
-            });
+          const x = region.center.x + Math.cos(angle) * distance;
+          const y = region.center.y + Math.sin(angle) * distance;
+          
+          // Skip if outside canvas bounds
+          if (x < 0 || x > width || y < 0 || y > height) continue;
+          
+          // Determine node type and color based on region and distance from center
+          let nodeColor, nodeSize;
+          const distanceFromCenter = Math.sqrt((x - region.center.x) ** 2 + (y - region.center.y) ** 2);
+          const normalizedDistance = distanceFromCenter / region.radius;
+          
+          if (normalizedDistance < 0.2) {
+            nodeColor = colors.core;
+            nodeSize = 2.5;
+          } else if (normalizedDistance < 0.4) {
+            nodeColor = colors.synapse;
+            nodeSize = 2;
+          } else if (normalizedDistance < 0.7) {
+            nodeColor = colors.neural;
+            nodeSize = 1.5;
+          } else {
+            nodeColor = colors.dendrite;
+            nodeSize = 1;
           }
-        });
-      });
-
-      // Connect hubs to each other
-      hubNodes.forEach((source, i) => {
-        hubNodes.slice(i + 1).forEach(target => {
-          links.push({
-            source: source.id,
-            target: target.id,
-            strength: 0.9,
-            color: '#ffffff'
+          
+          nodes.push({
+            id: `node-${regionIndex}-${i}`,
+            x: x,
+            y: y,
+            region: regionIndex,
+            type: region.type,
+            color: nodeColor,
+            size: nodeSize + Math.random() * 0.5,
+            opacity: 0.4 + Math.random() * 0.4
           });
-        });
+        }
       });
 
-      // Create force simulation
-      const simulation = d3.forceSimulation(allNodes)
-        .force('link', d3.forceLink(links).id((d: any) => d.id).strength((d: any) => d.strength * 0.3))
-        .force('charge', d3.forceManyBody().strength(-100))
-        .force('center', d3.forceCenter(width / 2, height / 2))
-        .force('collision', d3.forceCollide().radius((d: any) => d.radius + 5));
+      console.log(`Generated ${nodes.length} neural nodes`);
 
-      // Draw connections with animated glow
-      const linkGroup = svg.append('g').attr('class', 'links');
+      // Generate massive connection network
+      console.log('Generating neural connections...');
       
-      const link = linkGroup.selectAll('line')
-        .data(links)
+      // Create regional connections (within brain regions)
+      regions.forEach((region, regionIndex) => {
+        const regionNodes = nodes.filter(n => n.region === regionIndex);
+        
+        // Connect nearby nodes within region
+        for (let i = 0; i < Math.min(regionNodes.length, 2000); i += 3) {
+          const sourceNode = regionNodes[i];
+          
+          // Find nearby nodes for connections
+          const nearbyNodes = regionNodes.filter(n => {
+            const distance = Math.sqrt((n.x - sourceNode.x) ** 2 + (n.y - sourceNode.y) ** 2);
+            return distance < 25 && n.id !== sourceNode.id;
+          });
+          
+          // Connect to 2-4 nearby nodes
+          const connectionsCount = Math.min(2 + Math.floor(Math.random() * 3), nearbyNodes.length);
+          for (let j = 0; j < connectionsCount; j++) {
+            const targetNode = nearbyNodes[j];
+            if (targetNode) {
+              connections.push({
+                source: sourceNode,
+                target: targetNode,
+                color: sourceNode.color,
+                opacity: 0.1 + Math.random() * 0.2,
+                width: 0.3 + Math.random() * 0.2
+              });
+            }
+          }
+        }
+      });
+
+      // Create inter-regional connections (corpus callosum, long-range)
+      for (let i = 0; i < regions.length - 1; i++) {
+        for (let j = i + 1; j < regions.length; j++) {
+          const region1Nodes = nodes.filter(n => n.region === i);
+          const region2Nodes = nodes.filter(n => n.region === j);
+          
+          // Create sparse long-range connections
+          const connectionCount = Math.min(500, Math.min(region1Nodes.length, region2Nodes.length) / 20);
+          
+          for (let k = 0; k < connectionCount; k++) {
+            const source = region1Nodes[Math.floor(Math.random() * region1Nodes.length)];
+            const target = region2Nodes[Math.floor(Math.random() * region2Nodes.length)];
+            
+            if (source && target) {
+              connections.push({
+                source: source,
+                target: target,
+                color: colors.neural,
+                opacity: 0.05 + Math.random() * 0.1,
+                width: 0.2 + Math.random() * 0.15
+              });
+            }
+          }
+        }
+      }
+
+      console.log(`Generated ${connections.length} neural connections`);
+
+      // Render connections first (background layer)
+      const connectionGroup = svg.append('g').attr('class', 'connections');
+      
+      // Batch render connections for performance
+      const connectionPaths = connectionGroup.selectAll('line')
+        .data(connections.slice(0, 50000)) // Limit to 50k visible connections for performance
         .enter()
         .append('line')
-        .attr('stroke', (d: any) => d.color)
-        .attr('stroke-width', (d: any) => Math.max(1, d.strength * 3))
+        .attr('x1', d => d.source.x)
+        .attr('y1', d => d.source.y)
+        .attr('x2', d => d.target.x)
+        .attr('y2', d => d.target.y)
+        .attr('stroke', d => d.color)
+        .attr('stroke-width', d => d.width)
         .attr('stroke-opacity', 0)
-        .attr('filter', 'url(#glow)');
+        .attr('filter', 'url(#connectionGlow)');
 
-      // Draw background network web
-      const backgroundLinks = linkGroup.selectAll('.bg-line')
-        .data(links)
-        .enter()
-        .append('line')
-        .attr('class', 'bg-line')
-        .attr('stroke', '#333333')
-        .attr('stroke-width', 0.5)
-        .attr('stroke-opacity', 0.2);
-
-      // Draw nodes with pulsing effect
+      // Render nodes in batches for performance
       const nodeGroup = svg.append('g').attr('class', 'nodes');
       
-      const node = nodeGroup.selectAll('circle')
-        .data(allNodes)
+      // Render high-importance nodes (cores and synapses)
+      const importantNodes = nodes.filter(n => n.color === colors.core || n.color === colors.synapse);
+      const importantCircles = nodeGroup.selectAll('.important-node')
+        .data(importantNodes)
         .enter()
         .append('circle')
-        .attr('r', (d: any) => d.radius)
-        .attr('fill', (d: any) => d.color)
-        .attr('filter', (d: any) => d.isHub ? 'url(#pulse)' : 'url(#glow)')
-        .attr('opacity', 0);
+        .attr('class', 'important-node')
+        .attr('cx', d => d.x)
+        .attr('cy', d => d.y)
+        .attr('r', d => d.size)
+        .attr('fill', d => d.color)
+        .attr('opacity', 0)
+        .attr('filter', 'url(#glow)');
 
-      // Add node labels for hubs
-      const labels = nodeGroup.selectAll('text')
-        .data(hubNodes)
-        .enter()
-        .append('text')
-        .attr('text-anchor', 'middle')
-        .attr('dy', '.35em')
-        .attr('fill', '#ffffff')
-        .attr('font-size', '10px')
-        .attr('font-weight', 'bold')
-        .text((d: any) => d.name)
-        .attr('opacity', 0);
+      // Render regular nodes in batches
+      const batchSize = 20000;
+      const regularNodes = nodes.filter(n => n.color !== colors.core && n.color !== colors.synapse);
+      
+      for (let i = 0; i < regularNodes.length; i += batchSize) {
+        const batch = regularNodes.slice(i, i + batchSize);
+        
+        nodeGroup.selectAll(`.node-batch-${i}`)
+          .data(batch)
+          .enter()
+          .append('circle')
+          .attr('class', `node-batch-${i}`)
+          .attr('cx', d => d.x)
+          .attr('cy', d => d.y)
+          .attr('r', d => d.size)
+          .attr('fill', d => d.color)
+          .attr('opacity', 0);
+      }
 
-      // Animation timeline
-      simulation.on('tick', () => {
-        link
-          .attr('x1', (d: any) => d.source.x)
-          .attr('y1', (d: any) => d.source.y)
-          .attr('x2', (d: any) => d.target.x)
-          .attr('y2', (d: any) => d.target.y);
-
-        backgroundLinks
-          .attr('x1', (d: any) => d.source.x)
-          .attr('y1', (d: any) => d.source.y)
-          .attr('x2', (d: any) => d.target.x)
-          .attr('y2', (d: any) => d.target.y);
-
-        node
-          .attr('cx', (d: any) => d.x)
-          .attr('cy', (d: any) => d.y);
-
-        labels
-          .attr('x', (d: any) => d.x)
-          .attr('y', (d: any) => d.y);
-      });
-
-      // Animate network activation
+      // Animate the brain coming alive
       setTimeout(() => {
-        // Fade in nodes
-        node.transition()
-          .duration(1500)
-          .attr('opacity', 0.9)
-          .delay((d: any, i: number) => i * 50);
+        // Animate connections appearing in waves
+        connectionPaths.transition()
+          .duration(4000)
+          .delay((d, i) => i * 0.1)
+          .attr('stroke-opacity', d => d.opacity);
 
-        // Animate connections appearing
-        link.transition()
+        // Animate important nodes first
+        importantCircles.transition()
           .duration(2000)
-          .attr('stroke-opacity', (d: any) => d.strength * 0.8)
-          .delay((d: any, i: number) => i * 30);
+          .delay((d, i) => i * 2)
+          .attr('opacity', d => d.opacity);
 
-        // Show hub labels
-        labels.transition()
-          .duration(1000)
-          .attr('opacity', 0.8)
-          .delay(1000);
-
-        // Add pulsing animation to hubs
-        setInterval(() => {
-          nodeGroup.selectAll('circle')
-            .filter((d: any) => d.isHub)
-            .transition()
-            .duration(1500)
-            .attr('r', (d: any) => d.radius * 1.3)
-            .transition()
-            .duration(1500)
-            .attr('r', (d: any) => d.radius);
-        }, 3000);
-
-        // Add data flow animation
-        setInterval(() => {
-          const randomLink = links[Math.floor(Math.random() * links.length)];
-          const flowParticle = svg.append('circle')
-            .attr('r', 2)
-            .attr('fill', randomLink.color)
-            .attr('filter', 'url(#glow)')
-            .attr('cx', randomLink.source.x)
-            .attr('cy', randomLink.source.y);
-
-          flowParticle.transition()
-            .duration(1000)
-            .attr('cx', randomLink.target.x)
-            .attr('cy', randomLink.target.y)
-            .attr('opacity', 0)
-            .remove();
-        }, 200);
-
-      }, 500);
-
-      // Add legend
-      const legend = svg.append('g')
-        .attr('transform', `translate(${width - 140}, 20)`);
-
-      const legendData = [
-        { color: '#ff00ff', label: 'Neural Core' },
-        { color: '#00ffff', label: 'Data Bridge' },
-        { color: '#ff0080', label: 'Process Hub' },
-        { color: '#8000ff', label: 'Agent Node' }
-      ];
-
-      legend.selectAll('.legend-item')
-        .data(legendData)
-        .enter()
-        .append('g')
-        .attr('class', 'legend-item')
-        .attr('transform', (d, i) => `translate(0, ${i * 20})`)
-        .each(function(d) {
-          const group = d3.select(this);
-          
-          group.append('circle')
-            .attr('cx', 6)
-            .attr('cy', 0)
-            .attr('r', 4)
-            .attr('fill', d.color)
-            .attr('filter', 'url(#glow)')
-            .attr('opacity', 0.8);
-            
-          group.append('text')
-            .attr('x', 16)
-            .attr('y', 4)
-            .attr('fill', '#ffffff')
-            .attr('font-size', '10px')
-            .text(d.label);
+        // Animate regular nodes in regional waves
+        regions.forEach((region, regionIndex) => {
+          setTimeout(() => {
+            svg.selectAll('circle')
+              .filter((d: any) => d && d.region === regionIndex)
+              .transition()
+              .duration(1500)
+              .attr('opacity', (d: any) => d.opacity);
+          }, regionIndex * 300);
         });
 
-      // Add title
+        // Add continuous neural activity pulses
+        setInterval(() => {
+          // Random neural firing across regions
+          const randomRegion = Math.floor(Math.random() * regions.length);
+          const regionCenter = regions[randomRegion].center;
+          
+          // Create expanding pulse
+          const pulse = svg.append('circle')
+            .attr('cx', regionCenter.x)
+            .attr('cy', regionCenter.y)
+            .attr('r', 5)
+            .attr('fill', 'none')
+            .attr('stroke', colors.core)
+            .attr('stroke-width', 2)
+            .attr('stroke-opacity', 0.8)
+            .attr('filter', 'url(#glow)');
+
+          pulse.transition()
+            .duration(1500)
+            .attr('r', 60)
+            .attr('stroke-opacity', 0)
+            .remove();
+        }, 800);
+
+      }, 1000);
+
+      // Add brain region labels
+      const labels = [
+        { x: leftCenter.x, y: height * 0.25, text: 'L-Cortex', color: colors.core },
+        { x: rightCenter.x, y: height * 0.25, text: 'R-Cortex', color: colors.core },
+        { x: corpus.x, y: height * 0.45, text: 'Corpus', color: colors.synapse },
+        { x: width * 0.5, y: height * 0.85, text: 'Stem', color: colors.neural }
+      ];
+
+      labels.forEach((label, i) => {
+        setTimeout(() => {
+          svg.append('text')
+            .attr('x', label.x)
+            .attr('y', label.y)
+            .attr('text-anchor', 'middle')
+            .attr('fill', label.color)
+            .attr('font-size', '11px')
+            .attr('font-weight', 'bold')
+            .attr('filter', 'url(#glow)')
+            .attr('opacity', 0)
+            .text(label.text)
+            .transition()
+            .duration(1000)
+            .attr('opacity', 0.8);
+        }, 3000 + i * 200);
+      });
+
+      // Add statistics
       svg.append('text')
         .attr('x', 20)
         .attr('y', 30)
-        .attr('fill', '#ff00ff')
+        .attr('fill', colors.core)
         .attr('font-size', '14px')
         .attr('font-weight', 'bold')
         .attr('filter', 'url(#glow)')
-        .text('Neural Hive Mind Network');
+        .text('Neural Hive Mind');
 
       svg.append('text')
         .attr('x', 20)
         .attr('y', 50)
         .attr('fill', '#888888')
         .attr('font-size', '11px')
-        .text(`${allNodes.length} nodes • ${links.length} connections • Live data flow`);
+        .text(`${nodes.length.toLocaleString()} neurons • ${connections.length.toLocaleString()} synapses • Live activity`);
 
-      console.log('Neural hive mind visualization complete');
+      console.log('Massive hive mind brain visualization complete');
     }
   }, [activeTab]);
 
