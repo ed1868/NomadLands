@@ -47,8 +47,8 @@ export default function HeroSection() {
         backgroundAttachment: 'fixed'
       }}
     >
-      <div className="absolute inset-0 bg-black/70"></div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/50"></div>
+      <div className="absolute inset-0 bg-black/50"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30"></div>
       
       {/* Motion sensor lighting effect */}
       <div className={`absolute inset-0 transition-all duration-1000 ${
@@ -58,7 +58,7 @@ export default function HeroSection() {
       }`}></div>
       
       {/* Dark overlay for readability */}
-      <div className="absolute inset-0 bg-black/60"></div>
+      <div className="absolute inset-0 bg-black/40"></div>
       
       {/* Additional atmospheric layers */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40"></div>

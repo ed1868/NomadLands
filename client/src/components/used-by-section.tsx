@@ -66,16 +66,16 @@ export default function UsedBySection() {
           {companies.map((company, index) => (
             <div
               key={company.name}
-              className="flex flex-col items-center justify-center p-8 bg-black/30 border border-gray-800/60 rounded-lg hover:border-gray-600/60 hover:bg-black/40 transition-all duration-500 group hover:scale-105 floating-luxury backdrop-blur-sm"
+              className="flex flex-col items-center justify-center p-6 bg-white/95 border border-white/30 rounded-xl hover:border-white/60 hover:bg-white transition-all duration-500 group hover:scale-110 floating-luxury backdrop-blur-sm shadow-2xl hover:shadow-white/20"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <img
                 src={company.logo}
                 alt={company.name}
-                className="h-12 w-auto opacity-60 group-hover:opacity-90 transition-all duration-300 group-hover:scale-110 mb-3"
-                style={{ maxWidth: '150px', filter: 'grayscale(100%) brightness(1.2)' }}
+                className="h-14 w-auto opacity-90 group-hover:opacity-100 transition-all duration-300 group-hover:scale-105 mb-3"
+                style={{ maxWidth: '160px', filter: 'brightness(0.1) contrast(1.2)' }}
               />
-              <span className="text-gray-500 group-hover:text-gray-300 text-xs font-extralight transition-colors duration-300">
+              <span className="text-gray-800 group-hover:text-black text-xs font-medium transition-colors duration-300">
                 {company.name}
               </span>
             </div>
