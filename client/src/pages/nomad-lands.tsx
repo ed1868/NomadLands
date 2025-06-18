@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Users, Building2, Star, Clock, Zap, Plus, Search, Filter, Wallet, User } from "lucide-react";
+import { Users, Building2, Star, Clock, Zap, Plus, Search, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Navigation from "@/components/navigation";
 import type { NomadAgent, Company } from "@shared/schema";
 
 export default function NomadLands() {
@@ -26,18 +27,18 @@ export default function NomadLands() {
   const mockNomadAgents: NomadAgent[] = [
     {
       id: 1,
-      name: "Pipeline Pete",
-      description: "Master of ETL pipelines and data transformation. Turns messy data into pristine analytics-ready datasets.",
-      category: "Engineering",
-      ownerId: "user1",
+      name: "Generate Youtube Video Metadata",
+      description: "Timestamps, Tags, Description & more for YouTube content optimization.",
+      category: "Content",
+      ownerId: "nasser",
       companyId: 1,
       pricePerRun: "25000000000000000", // 0.025 ETH
       pricePerHour: "100000000000000000", // 0.1 ETH  
       availability: "available",
-      skills: ["Python", "Apache Spark", "PostgreSQL", "AWS", "Data Modeling"],
+      skills: ["YouTube", "SEO", "Metadata", "Content Creation"],
       rating: 5,
-      totalRuns: 247,
-      icon: "Database",
+      totalRuns: 8,
+      icon: "Video",
       featured: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -45,18 +46,18 @@ export default function NomadLands() {
     },
     {
       id: 2,
-      name: "Fortress Felix",
-      description: "Cybersecurity ninja who finds vulnerabilities before the bad guys do. Expert penetration tester and security auditor.",
-      category: "Security",
-      ownerId: "user2", 
+      name: "Extract & Enrich LinkedIn Comments",
+      description: "Extract LinkedIn comments to leads with Apify → Google Sheets/CSV automation.",
+      category: "Social Media",
+      ownerId: "saveflow", 
       companyId: 2,
       pricePerRun: "50000000000000000", // 0.05 ETH
       pricePerHour: "200000000000000000", // 0.2 ETH
-      availability: "busy",
-      skills: ["Solidity", "Security Auditing", "Penetration Testing", "Smart Contracts", "Vulnerability Assessment"],
+      availability: "available",
+      skills: ["LinkedIn", "Data Extraction", "Lead Generation", "Apify", "Google Sheets"],
       rating: 5,
-      totalRuns: 189,
-      icon: "Shield",
+      totalRuns: 10,
+      icon: "Users",
       featured: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -179,38 +180,7 @@ export default function NomadLands() {
 
   return (
     <div className="min-h-screen bg-black">
-      {/* Fixed Navigation with Fade Effect */}
-      <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-black/95 backdrop-blur-lg border-b border-gray-800/50' 
-          : 'bg-transparent'
-      }`}>
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="text-2xl font-light text-white">
-              AI <span className="knight-text">Nomads</span>
-            </div>
-            <div className="flex items-center space-x-8">
-              <nav className="hidden md:flex space-x-8">
-                <a href="/marketplace" className="text-gray-300 hover:text-white transition-colors">Marketplace</a>
-                <a href="/nomad-lands" className="text-emerald-400">Nomad Lands</a>
-                <a href="/nomad-fleets" className="text-gray-300 hover:text-white transition-colors">Nomad Fleets</a>
-                <a href="/smart-contracts" className="text-gray-300 hover:text-white transition-colors">Smart Contracts</a>
-                <a href="/api-docs" className="text-gray-300 hover:text-white transition-colors">API</a>
-              </nav>
-              
-              <div className="flex items-center space-x-4">
-                <button className="text-gray-300 hover:text-white transition-colors">
-                  <Wallet className="w-5 h-5" />
-                </button>
-                <button className="text-gray-300 hover:text-white transition-colors">
-                  <User className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Navigation />
 
       {/* Hero Section */}
       <section className="relative py-32 bg-gradient-to-br from-black via-gray-950 to-emerald-950/20">
