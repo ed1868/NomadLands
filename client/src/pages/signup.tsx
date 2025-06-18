@@ -8,6 +8,7 @@ import Navigation from "@/components/navigation";
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState("growth");
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,29 +18,59 @@ export default function Signup() {
 
   const plans = [
     {
-      id: "startup",
-      name: "Startup",
-      price: 99,
-      description: "Perfect for individual professionals",
-      features: ["3 AI Agents", "Basic Support", "API Access", "Community Forum"],
-      gradient: "emerald-knight"
+      id: "developer",
+      name: "Developer",
+      monthlyPrice: 29,
+      yearlyPrice: 19,
+      description: "Get started in your own environment with self-hosted deployment.",
+      longDescription: "Designed for individual developers and hobbyists with low volume usage to explore agent deployment.",
+      features: [
+        "Includes up to 10k nodes executed per month",
+        "Self-hosted deployment options",
+        "Community support",
+        "Basic API access",
+        "Documentation and tutorials"
+      ],
+      gradient: "emerald-knight",
+      cta: "Get started"
     },
     {
-      id: "growth",
-      name: "Growth",
-      price: 299,
-      description: "For growing teams and businesses",
-      features: ["10 AI Agents", "Priority Support", "Advanced Analytics", "Team Collaboration"],
+      id: "plus",
+      name: "Plus", 
+      monthlyPrice: 99,
+      yearlyPrice: 79,
+      description: "Self-serve with Cloud SaaS deployment.",
+      longDescription: "Designed for teams to quickly deploy agentic apps, accessible from anywhere.",
+      features: [
+        "Includes up to 100k nodes executed per month",
+        "Cloud SaaS deployment",
+        "Priority email support",
+        "Advanced analytics dashboard",
+        "Team collaboration tools",
+        "Custom integrations"
+      ],
       gradient: "obsidian-gradient",
-      popular: true
+      popular: true,
+      cta: "Get started"
     },
     {
       id: "enterprise",
       name: "Enterprise",
-      price: 999,
-      description: "For large organizations",
-      features: ["Unlimited Agents", "24/7 Support", "Custom Integrations", "Dedicated Manager"],
-      gradient: "shadow-gradient"
+      monthlyPrice: 499,
+      yearlyPrice: 399,
+      description: "Deployed where you need it - fully Self-Hosted, Hybrid, or Cloud SaaS options.",
+      longDescription: "Designed for teams with more security, deployment, and support needs.",
+      features: [
+        "Unlimited agent executions",
+        "Advanced security controls",
+        "Dedicated support manager",
+        "Custom deployment options",
+        "SLA guarantees",
+        "Advanced monitoring"
+      ],
+      gradient: "shadow-gradient",
+      cta: "Contact us",
+      isCustom: true
     }
   ];
 
@@ -189,55 +220,116 @@ export default function Signup() {
 
           {/* Plan Selection */}
           <div className="order-1 lg:order-2">
-            <h3 className="text-xl font-light text-gray-200 mb-8">Choose Your Arsenal</h3>
-            <div className="space-y-4">
-              {plans.map((plan) => (
-                <div
-                  key={plan.id}
-                  className={`relative bg-black/40 border rounded-lg p-6 cursor-pointer transition-all duration-500 backdrop-blur-sm ${
-                    selectedPlan === plan.id
-                      ? "border-emerald-700 shadow-lg shadow-emerald-900/20"
-                      : "border-gray-800 hover:border-gray-700"
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-xl font-light text-gray-200">Choose Your Plan</h3>
+              
+              {/* Billing Toggle */}
+              <div className="flex items-center space-x-3">
+                <span className={`text-sm font-extralight ${billingCycle === 'monthly' ? 'text-gray-200' : 'text-gray-500'}`}>
+                  Monthly
+                </span>
+                <button
+                  onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
+                  className={`relative w-12 h-6 rounded-full transition-colors duration-300 ${
+                    billingCycle === 'yearly' ? 'bg-emerald-600' : 'bg-gray-700'
                   }`}
-                  onClick={() => setSelectedPlan(plan.id)}
                 >
-                  {plan.popular && (
-                    <Badge className="absolute -top-2 left-4 bg-emerald-900/60 text-emerald-400 text-xs px-3 py-1">
-                      Most Popular
-                    </Badge>
-                  )}
-                  
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h4 className="text-lg font-light text-gray-200">{plan.name}</h4>
-                      <p className="text-gray-500 text-sm font-extralight">{plan.description}</p>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-2xl font-extralight knight-text">${plan.price}</span>
-                      <span className="text-gray-500 text-sm font-extralight block">/month</span>
-                    </div>
-                  </div>
+                  <div
+                    className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 ${
+                      billingCycle === 'yearly' ? 'transform translate-x-7' : 'transform translate-x-1'
+                    }`}
+                  />
+                </button>
+                <span className={`text-sm font-extralight ${billingCycle === 'yearly' ? 'text-gray-200' : 'text-gray-500'}`}>
+                  Yearly
+                </span>
+                {billingCycle === 'yearly' && (
+                  <Badge className="bg-emerald-900/40 text-emerald-400 text-xs px-2 py-1">
+                    Save 20%
+                  </Badge>
+                )}
+              </div>
+            </div>
 
-                  <div className="space-y-2">
-                    {plan.features.map((feature, index) => (
-                      <div key={index} className="flex items-center text-gray-400 text-sm">
-                        <div className="w-1.5 h-1.5 bg-emerald-600 rounded-full mr-3"></div>
-                        {feature}
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className={`w-4 h-4 rounded-full border-2 absolute top-6 right-6 ${
-                    selectedPlan === plan.id
-                      ? "border-emerald-600 bg-emerald-600"
-                      : "border-gray-600"
-                  }`}>
-                    {selectedPlan === plan.id && (
-                      <div className="w-2 h-2 bg-white rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+            <div className="space-y-4">
+              {plans.map((plan) => {
+                const currentPrice = billingCycle === 'yearly' ? plan.yearlyPrice : plan.monthlyPrice;
+                const savings = billingCycle === 'yearly' ? plan.monthlyPrice - plan.yearlyPrice : 0;
+                
+                return (
+                  <div
+                    key={plan.id}
+                    className={`relative bg-black/40 border rounded-lg p-6 cursor-pointer transition-all duration-500 backdrop-blur-sm ${
+                      selectedPlan === plan.id
+                        ? "border-emerald-700 shadow-lg shadow-emerald-900/20"
+                        : "border-gray-800 hover:border-gray-700"
+                    }`}
+                    onClick={() => setSelectedPlan(plan.id)}
+                  >
+                    {plan.popular && (
+                      <Badge className="absolute -top-2 left-4 bg-emerald-900/60 text-emerald-400 text-xs px-3 py-1">
+                        Most Popular
+                      </Badge>
                     )}
+                    
+                    <div className="mb-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <h4 className="text-lg font-light text-gray-200 mb-2">{plan.name}</h4>
+                          <p className="text-gray-400 text-sm font-extralight mb-2">{plan.description}</p>
+                          <p className="text-gray-500 text-xs font-extralight">{plan.longDescription}</p>
+                        </div>
+                        <div className="text-right ml-4">
+                          <div className="flex items-baseline">
+                            <span className="text-2xl font-extralight knight-text">${currentPrice}</span>
+                            <span className="text-gray-500 text-sm font-extralight ml-1">
+                              /{billingCycle === 'yearly' ? 'month' : 'month'}
+                            </span>
+                          </div>
+                          {billingCycle === 'yearly' && savings > 0 && (
+                            <div className="text-emerald-400 text-xs font-extralight">
+                              Save ${savings}/month
+                            </div>
+                          )}
+                          {billingCycle === 'yearly' && (
+                            <div className="text-gray-600 text-xs font-extralight">
+                              Billed ${currentPrice * 12} yearly
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="space-y-2 mb-4">
+                        {plan.features.map((feature, index) => (
+                          <div key={index} className="flex items-start text-gray-400 text-sm">
+                            <div className="w-1.5 h-1.5 bg-emerald-600 rounded-full mr-3 mt-2 flex-shrink-0"></div>
+                            <span className="font-extralight">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <Button
+                        className={`w-full ${plan.gradient} py-3 rounded font-light hover:shadow-xl hover:shadow-gray-900/50 transition-all duration-700 text-gray-300 border border-gray-700 hover:border-gray-600 backdrop-blur-sm ${
+                          plan.isCustom ? 'bg-transparent' : ''
+                        }`}
+                        variant={plan.isCustom ? "outline" : "default"}
+                      >
+                        {plan.cta}
+                      </Button>
+                    </div>
+
+                    <div className={`w-4 h-4 rounded-full border-2 absolute top-6 right-6 ${
+                      selectedPlan === plan.id
+                        ? "border-emerald-600 bg-emerald-600"
+                        : "border-gray-600"
+                    }`}>
+                      {selectedPlan === plan.id && (
+                        <div className="w-2 h-2 bg-white rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             <div className="mt-8 bg-emerald-950/20 border border-emerald-800/30 rounded-lg p-6">
