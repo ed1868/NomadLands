@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Cloud, Receipt, Search, Share, Calendar, Database, Heart, Sun, Wind, X, ExternalLink } from "lucide-react";
+import { Mail, Cloud, Receipt, Search, Share, Calendar, Database, Heart, Sun, Wind, X, ExternalLink, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Agent } from "@shared/schema";
@@ -86,46 +86,86 @@ export default function AgentCard({ agent }: AgentCardProps) {
           </div>
         </div>
         
-        <div className="p-4 sm:p-5">
-          <div className="flex items-start justify-between mb-4">
-            <h3 className="text-lg font-light text-gray-200 tracking-tight">{agent.name}</h3>
-            <div className="text-right">
-              <span className="text-xl font-extralight knight-text">${agent.price}</span>
-              <span className="text-gray-500 text-xs block font-extralight">/month</span>
+        <div className="p-4 sm:p-6">
+          {/* Agent Name */}
+          <div className="mb-4">
+            <h3 className="text-lg sm:text-xl font-light text-gray-200 tracking-tight leading-tight">
+              {agent.name}
+            </h3>
+          </div>
+          
+          {/* Pricing Section */}
+          <div className="mb-6 p-3 sm:p-4 bg-black/30 border border-gray-800 rounded-lg">
+            <div className="flex items-baseline justify-between">
+              <div>
+                <span className="text-2xl sm:text-3xl font-extralight knight-text">
+                  ${agent.price}
+                </span>
+                <span className="text-gray-400 text-sm font-extralight ml-2">
+                  /month
+                </span>
+              </div>
+              <div className="text-right">
+                <div className="text-xs text-gray-500 font-extralight">
+                  {(parseFloat(agent.priceInWei) / 1e18).toFixed(3)} ETH
+                </div>
+              </div>
             </div>
           </div>
           
-          <p className="text-gray-500 mb-6 text-xs leading-relaxed font-extralight line-clamp-3">
-            {agent.description}
-          </p>
-          
-          <div className="flex flex-wrap gap-2 mb-6">
-            {agent.features.slice(0, 3).map((feature, index) => (
-              <Badge 
-                key={index}
-                variant="secondary"
-                className="bg-gray-900/60 text-gray-400 text-xs font-extralight px-3 py-1 rounded border border-gray-800"
-              >
-                {feature}
-              </Badge>
-            ))}
-            {agent.features.length > 3 && (
-              <Badge className="bg-gray-900/40 text-gray-500 text-xs font-extralight px-3 py-1 rounded border border-gray-800">
-                +{agent.features.length - 3}
-              </Badge>
-            )}
+          {/* Description */}
+          <div className="mb-6">
+            <p className="text-gray-400 text-sm leading-relaxed font-extralight">
+              {agent.description}
+            </p>
+          </div>
+
+          {/* Features Grid */}
+          <div className="mb-6">
+            <h4 className="text-xs font-light text-gray-300 uppercase tracking-wide mb-3">
+              Capabilities
+            </h4>
+            <div className="space-y-2">
+              {agent.features.slice(0, 3).map((feature, index) => (
+                <div 
+                  key={index} 
+                  className="flex items-center text-xs text-gray-400 font-extralight"
+                >
+                  <div className="w-1.5 h-1.5 bg-emerald-600 rounded-full mr-3 flex-shrink-0"></div>
+                  <span className="truncate">{feature}</span>
+                </div>
+              ))}
+              {agent.features.length > 3 && (
+                <div className="text-xs text-gray-500 font-extralight mt-2">
+                  +{agent.features.length - 3} more capabilities
+                </div>
+              )}
+            </div>
           </div>
           
-          <Button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDeploy();
-            }}
-            disabled={isDeploying}
-            className={`w-full ${gradientClass} py-3 rounded font-light hover:shadow-xl hover:shadow-gray-900/50 transition-all duration-700 disabled:opacity-50 text-gray-300 border border-gray-700 hover:border-gray-600 backdrop-blur-sm`}
-          >
-            {isDeploying ? "Activating..." : "Deploy"}
-          </Button>
+          {/* Deploy Button */}
+          <div className="pt-2">
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeploy();
+              }}
+              disabled={isDeploying}
+              className={`w-full ${gradientClass} py-3 sm:py-4 rounded-lg font-light hover:shadow-xl hover:shadow-gray-900/50 transition-all duration-700 disabled:opacity-50 text-gray-300 border border-gray-700 hover:border-gray-600 backdrop-blur-sm text-sm sm:text-base`}
+            >
+              {isDeploying ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                  Activating...
+                </div>
+              ) : (
+                <div className="flex items-center justify-center gap-2">
+                  <span>Deploy Agent</span>
+                  <ArrowRight className="w-4 h-4" />
+                </div>
+              )}
+            </Button>
+          </div>
         </div>
       </div>
 
