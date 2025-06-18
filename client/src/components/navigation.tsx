@@ -32,7 +32,7 @@ export default function Navigation() {
     }`}>
       <div className="max-w-7xl mx-auto px-8 py-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
+          <a href="/" className="flex items-center space-x-4 hover:opacity-80 transition-opacity duration-300">
             <div className={`w-10 h-10 obsidian-gradient rounded border border-gray-700 flex items-center justify-center transition-all duration-500 backdrop-blur-sm ${isScrolled ? 'shadow-lg' : ''}`}>
               <Bot className="text-gray-300 text-lg" />
             </div>
@@ -43,7 +43,7 @@ export default function Navigation() {
             }`}>
               AI <span className="knight-text font-light">Nomads</span>
             </span>
-          </div>
+          </a>
           
           <div className="hidden md:flex items-center space-x-6">
             <a

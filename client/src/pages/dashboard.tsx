@@ -16,6 +16,7 @@ import {
   Settings
 } from "lucide-react";
 import Navigation from "@/components/navigation";
+import PhoneVerification from "@/components/phone-verification";
 
 interface PurchasedAgent {
   id: number;
@@ -80,7 +81,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-black">
       <Navigation />
       
-      <div className="max-w-7xl mx-auto px-6 pt-24 pb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 sm:pt-24 pb-12">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-light text-gray-200 mb-2">Dashboard</h1>
@@ -90,7 +91,7 @@ export default function Dashboard() {
         </div>
 
         {/* User Info Card */}
-        <Card className="bg-black/40 border-gray-800 mb-8">
+        <Card className="bg-black/40 border-gray-800 mb-6">
           <CardHeader>
             <CardTitle className="text-gray-200 font-light flex items-center">
               <User className="w-5 h-5 mr-2" />
@@ -98,7 +99,7 @@ export default function Dashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
                 <p className="text-gray-400 text-sm font-extralight mb-1">Wallet Address</p>
                 <p className="text-gray-200 font-mono text-sm break-all">{address}</p>
@@ -106,12 +107,17 @@ export default function Dashboard() {
               <div>
                 <p className="text-gray-400 text-sm font-extralight mb-1">Total Agents Owned</p>
                 <p className="text-gray-200 text-lg font-light">
-                  {userPurchases?.length || 0}
+                  {Array.isArray(userPurchases) ? userPurchases.length : 0}
                 </p>
               </div>
             </div>
           </CardContent>
         </Card>
+
+        {/* Phone Verification Card */}
+        <div className="mb-8">
+          <PhoneVerification />
+        </div>
 
         {/* Dashboard Tabs */}
         <Tabs defaultValue="agents" className="w-full">
@@ -137,7 +143,7 @@ export default function Dashboard() {
                   </div>
                 ))}
               </div>
-            ) : userPurchases?.length > 0 ? (
+            ) : Array.isArray(userPurchases) && userPurchases.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {userPurchases.map((purchase: PurchasedAgent) => (
                   <Card key={purchase.id} className="bg-black/40 border-gray-800 hover:border-gray-700 transition-all duration-300">
@@ -236,7 +242,7 @@ export default function Dashboard() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {userPurchases?.length > 0 ? (
+                {Array.isArray(userPurchases) && userPurchases.length > 0 ? (
                   <div className="space-y-4">
                     {userPurchases.map((purchase: PurchasedAgent) => (
                       <div key={purchase.id} className="flex items-center justify-between p-4 bg-black/20 border border-gray-800 rounded-lg">
