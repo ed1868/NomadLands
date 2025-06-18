@@ -49,7 +49,7 @@ export default function HeroSection() {
           
           {/* Subheadline */}
           <div className={`${isVisible ? 'slide-up-luxury' : 'opacity-0'}`} style={{ animationDelay: '0.4s' }}>
-            <p className="text-lg md:text-xl text-gray-500 mb-16 max-w-4xl mx-auto leading-relaxed font-extralight">
+            <p className="text-base sm:text-lg md:text-xl text-gray-500 mb-12 sm:mb-16 max-w-4xl mx-auto leading-relaxed font-extralight px-4">
               In the shadows of innovation.
               <br className="hidden md:block" />
               <span className="text-gray-400">Where darkness meets intelligence.</span>
@@ -57,10 +57,10 @@ export default function HeroSection() {
           </div>
           
           {/* CTA Buttons */}
-          <div className={`flex flex-col sm:flex-row gap-6 justify-center items-center ${isVisible ? 'slide-up-luxury' : 'opacity-0'}`} style={{ animationDelay: '0.8s' }}>
+          <div className={`flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center ${isVisible ? 'slide-up-luxury' : 'opacity-0'}`} style={{ animationDelay: '0.8s' }}>
             <Button
               onClick={scrollToMarketplace}
-              className="obsidian-gradient px-10 py-5 rounded border border-gray-800 text-lg font-light hover:border-emerald-800 hover:shadow-2xl hover:shadow-emerald-900/30 transition-all duration-700 text-gray-300 backdrop-blur-sm"
+              className="obsidian-gradient px-8 sm:px-10 py-4 sm:py-5 rounded border border-gray-800 text-base sm:text-lg font-light hover:border-emerald-800 hover:shadow-2xl hover:shadow-emerald-900/30 transition-all duration-700 text-gray-300 backdrop-blur-sm w-full sm:w-auto"
               size="lg"
             >
               Enter the Shadows
@@ -68,7 +68,7 @@ export default function HeroSection() {
             </Button>
             <Button
               variant="outline"
-              className="bg-transparent border-gray-700 px-10 py-5 rounded text-lg font-extralight transition-all duration-500 text-gray-400 hover:text-gray-300 hover:border-gray-600 backdrop-blur-sm"
+              className="bg-transparent border-gray-700 px-8 sm:px-10 py-4 sm:py-5 rounded text-base sm:text-lg font-extralight transition-all duration-500 text-gray-400 hover:text-gray-300 hover:border-gray-600 backdrop-blur-sm w-full sm:w-auto"
               size="lg"
             >
               <Play className="mr-2 w-4 h-4" />
