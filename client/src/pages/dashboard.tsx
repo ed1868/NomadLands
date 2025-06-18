@@ -1491,9 +1491,18 @@ export default function Dashboard() {
                             </span>
                           </div>
                           <div className="flex justify-between text-xs">
+                            <span className="text-gray-400"># of Tools:</span>
+                            <span className="text-blue-400 font-semibold">
+                              {key === 'sales-domination' ? '247' : 
+                               key === 'customer-success' ? '312' : 
+                               key === 'product-innovation' ? '289' : 
+                               key === 'compliance-governance' ? '358' : '180'}
+                            </span>
+                          </div>
+                          <div className="flex justify-between text-xs">
                             <span className="text-gray-400">Complexity:</span>
                             <span className="text-emerald-400 font-semibold">
-                              {template.agents.length > 6 ? 'High' : template.agents.length > 4 ? 'Medium' : 'Low'}
+                              {template.agents.length > 15 ? 'High' : template.agents.length > 10 ? 'Medium' : 'Low'}
                             </span>
                           </div>
                         </div>

@@ -191,6 +191,7 @@ Changelog:
   * Added specialized compliance agents: Policy Ops AI, Legal Analyst AI, GDPR Sentinel, Risk Score Generator
   * Enhanced organizational health metrics to track Director span and strategic alignment
   * Expanded agent palette from 4 to 5 roles with proper mobile-responsive grid layout
+  * Added "# of Tools" metric to all fleet templates: Sales (247), Customer Success (312), Product Innovation (289), Compliance (358)
 ```
 
 ## User Preferences
