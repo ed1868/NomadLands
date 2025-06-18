@@ -1522,54 +1522,116 @@ export default function Dashboard() {
                 </Card>
               </div>
 
+              {/* Quick Actions - Mobile Friendly */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                <Button 
+                  variant="outline" 
+                  className="h-auto p-3 flex flex-col items-center space-y-2 border-emerald-600/30 text-emerald-400 hover:bg-emerald-600/10"
+                  onClick={() => window.location.href = '/nomad-lands'}
+                >
+                  <Globe className="w-5 h-5" />
+                  <span className="text-xs">Browse All</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="h-auto p-3 flex flex-col items-center space-y-2 border-emerald-600/30 text-emerald-400 hover:bg-emerald-600/10"
+                >
+                  <Plus className="w-5 h-5" />
+                  <span className="text-xs">Deploy New</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="h-auto p-3 flex flex-col items-center space-y-2 border-emerald-600/30 text-emerald-400 hover:bg-emerald-600/10"
+                >
+                  <BarChart3 className="w-5 h-5" />
+                  <span className="text-xs">Analytics</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="h-auto p-3 flex flex-col items-center space-y-2 border-emerald-600/30 text-emerald-400 hover:bg-emerald-600/10"
+                >
+                  <Settings className="w-5 h-5" />
+                  <span className="text-xs">Settings</span>
+                </Button>
+              </div>
+
               {/* Nomad Agents List */}
               <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
-                <CardHeader>
-                  <CardTitle className="text-white">Nomad Lands Agents</CardTitle>
+                <CardHeader className="pb-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
+                    <CardTitle className="text-white text-lg">My Nomad Agents</CardTitle>
+                    <div className="flex items-center space-x-2">
+                      <Button size="sm" variant="outline" className="border-emerald-600/50 text-emerald-400 text-xs">
+                        Filter
+                      </Button>
+                      <Button size="sm" className="bg-emerald-600/20 text-emerald-300 text-xs">
+                        Add Agent
+                      </Button>
+                    </div>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {mockNomadAgents.map((agent) => (
-                      <div key={agent.id} className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
-                        <div className="flex items-center justify-between mb-3">
+                      <div key={agent.id} className="p-3 sm:p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 space-y-2 sm:space-y-0">
                           <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                            <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
                               <Cpu className="w-5 h-5 text-emerald-500" />
                             </div>
-                            <div>
-                              <h4 className="text-white font-semibold">{agent.name}</h4>
-                              <p className="text-gray-400 text-sm">{agent.location}</p>
+                            <div className="min-w-0 flex-1">
+                              <h4 className="text-white font-semibold truncate">{agent.name}</h4>
+                              <p className="text-gray-400 text-sm truncate">{agent.location}</p>
                             </div>
                           </div>
-                          <Badge 
-                            className={
-                              agent.status === 'Working' 
-                                ? "bg-emerald-600 text-white"
-                                : agent.status === 'Hired'
-                                ? "bg-blue-600 text-white"
-                                : "bg-gray-600 text-white"
-                            }
-                          >
-                            {agent.status}
-                          </Badge>
+                          <div className="flex justify-end sm:justify-start">
+                            <Badge 
+                              className={
+                                agent.status === 'Working' 
+                                  ? "bg-emerald-600 text-white"
+                                  : agent.status === 'Hired'
+                                  ? "bg-blue-600 text-white"
+                                  : "bg-gray-600 text-white"
+                              }
+                            >
+                              {agent.status}
+                            </Badge>
+                          </div>
                         </div>
-                        <div className="grid grid-cols-4 gap-4 text-sm">
-                          <div>
-                            <span className="text-gray-400">Earnings:</span>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 text-sm">
+                          <div className="text-center md:text-left">
+                            <span className="text-gray-400 block md:inline">Earnings:</span>
                             <p className="text-emerald-400 font-semibold">${agent.earnings.toLocaleString()}</p>
                           </div>
-                          <div>
-                            <span className="text-gray-400">Hires:</span>
+                          <div className="text-center md:text-left">
+                            <span className="text-gray-400 block md:inline">Hires:</span>
                             <p className="text-white">{agent.hires}</p>
                           </div>
-                          <div>
-                            <span className="text-gray-400">Rating:</span>
+                          <div className="text-center md:text-left">
+                            <span className="text-gray-400 block md:inline">Rating:</span>
                             <p className="text-white">{agent.rating}/5.0</p>
                           </div>
-                          <div>
-                            <span className="text-gray-400">Uptime:</span>
+                          <div className="text-center md:text-left">
+                            <span className="text-gray-400 block md:inline">Uptime:</span>
                             <p className="text-emerald-400">{agent.uptime}%</p>
                           </div>
+                        </div>
+                        
+                        {/* Mobile Action Buttons */}
+                        <div className="mt-3 pt-3 border-t border-gray-700/30 flex flex-col sm:flex-row gap-2 sm:gap-3">
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="flex-1 sm:flex-none border-emerald-600/50 text-emerald-400 hover:bg-emerald-600/10"
+                          >
+                            View Details
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            className="flex-1 sm:flex-none bg-emerald-600/20 text-emerald-300 hover:bg-emerald-600/30"
+                          >
+                            {agent.status === 'Available' ? 'Hire Agent' : 'Manage'}
+                          </Button>
                         </div>
                       </div>
                     ))}
