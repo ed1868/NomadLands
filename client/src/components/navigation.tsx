@@ -23,59 +23,59 @@ export default function Navigation() {
   }, []);
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${
+    <nav className={`fixed top-0 w-full z-50 transition-all duration-700 ${
       isScrolled 
-        ? 'bg-black/98 backdrop-blur-xl modern-shadow border-b border-green-400/20' 
+        ? 'bg-slate-900/95 backdrop-blur-xl luxury-shadow border-b border-emerald-600/20' 
         : 'bg-transparent'
     }`}>
       <div className="max-w-7xl mx-auto px-8 py-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className={`w-12 h-12 bright-gradient rounded-2xl flex items-center justify-center transition-all duration-300 elastic-hover ${isScrolled ? 'bright-border' : ''}`}>
-              <Bot className="text-white text-xl" />
+            <div className={`w-10 h-10 velvet-gradient rounded-md flex items-center justify-center transition-all duration-500 ${isScrolled ? 'warm-glow' : ''}`}>
+              <Bot className="text-white text-lg" />
             </div>
-            <span className={`text-3xl font-black tracking-tight transition-all duration-300 ${
+            <span className={`text-2xl font-light tracking-wide transition-all duration-500 ${
               isScrolled 
                 ? 'text-white' 
-                : 'text-white drop-shadow-lg'
+                : 'text-white drop-shadow-sm'
             }`}>
-              AI NOMADS
+              AI Nomads
             </span>
           </div>
           
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-12">
             <button
               onClick={() => scrollToSection('marketplace')}
-              className={`font-bold tracking-wide transition-all duration-300 elastic-hover ${
+              className={`font-light tracking-wide transition-all duration-500 smooth-hover ${
                 isScrolled 
-                  ? 'text-white hover:text-green-400' 
-                  : 'text-white hover:text-green-400'
+                  ? 'text-gray-300 hover:text-amber-300' 
+                  : 'text-gray-300 hover:text-amber-300'
               }`}
             >
-              AGENTS
+              Collection
             </button>
             <button
               onClick={() => scrollToSection('features')}
-              className={`font-bold tracking-wide transition-all duration-300 elastic-hover ${
+              className={`font-light tracking-wide transition-all duration-500 smooth-hover ${
                 isScrolled 
-                  ? 'text-white hover:text-green-400' 
-                  : 'text-white hover:text-green-400'
+                  ? 'text-gray-300 hover:text-amber-300' 
+                  : 'text-gray-300 hover:text-amber-300'
               }`}
             >
-              FEATURES
+              Features
             </button>
             <button
               onClick={() => scrollToSection('features')}
-              className={`font-bold tracking-wide transition-all duration-300 elastic-hover ${
+              className={`font-light tracking-wide transition-all duration-500 smooth-hover ${
                 isScrolled 
-                  ? 'text-white hover:text-green-400' 
-                  : 'text-white hover:text-green-400'
+                  ? 'text-gray-300 hover:text-amber-300' 
+                  : 'text-gray-300 hover:text-amber-300'
               }`}
             >
-              ABOUT
+              Story
             </button>
-            <Button className="bright-gradient hover:shadow-xl hover:shadow-green-500/40 transition-all duration-300 border-none rounded-full px-10 py-4 font-black text-white elastic-hover pulse-bright">
-              GET STARTED
+            <Button className="velvet-gradient hover:shadow-xl hover:shadow-emerald-500/30 transition-all duration-500 border-none rounded-md px-8 py-3 font-medium text-white smooth-hover">
+              Begin Journey
             </Button>
           </div>
           
@@ -91,28 +91,28 @@ export default function Navigation() {
         
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className={`md:hidden mt-6 pb-6 border-t ${isScrolled ? 'border-green-400/30' : 'border-green-400/30'}`}>
+          <div className={`md:hidden mt-6 pb-6 border-t ${isScrolled ? 'border-emerald-600/30' : 'border-emerald-600/30'}`}>
             <div className="flex flex-col space-y-6 pt-6">
               <button
                 onClick={() => scrollToSection('marketplace')}
-                className="text-white hover:text-green-400 transition-colors text-left font-bold tracking-wide"
+                className="text-gray-300 hover:text-amber-300 transition-colors text-left font-light tracking-wide"
               >
-                AGENTS
+                Collection
               </button>
               <button
                 onClick={() => scrollToSection('features')}
-                className="text-white hover:text-green-400 transition-colors text-left font-bold tracking-wide"
+                className="text-gray-300 hover:text-amber-300 transition-colors text-left font-light tracking-wide"
               >
-                FEATURES
+                Features
               </button>
               <button
                 onClick={() => scrollToSection('features')}
-                className="text-white hover:text-green-400 transition-colors text-left font-bold tracking-wide"
+                className="text-gray-300 hover:text-amber-300 transition-colors text-left font-light tracking-wide"
               >
-                ABOUT
+                Story
               </button>
-              <Button className="bright-gradient w-full py-4 rounded-full font-black text-white">
-                GET STARTED
+              <Button className="velvet-gradient w-full py-4 rounded-md font-medium text-white">
+                Begin Journey
               </Button>
             </div>
           </div>

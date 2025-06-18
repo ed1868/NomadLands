@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Cloud, Receipt, Search, Share, Calendar, Database, Heart, Sun, Wind } from "lucide-react";
+import { Mail, Cloud, Receipt, Search, Share, Calendar, Database, Heart, Sun, Wind, X, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Agent } from "@shared/schema";

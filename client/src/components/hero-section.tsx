@@ -19,59 +19,58 @@ export default function HeroSection() {
 
   return (
     <section className="relative h-screen hero-section flex items-center justify-center overflow-hidden">
-      {/* Bright ambient effects */}
+      {/* Luxury ambient effects */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/6 w-96 h-96 bg-green-600/10 rounded-full blur-3xl floating-animation" />
-        <div className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-green-500/15 rounded-full blur-3xl floating-animation" style={{ animationDelay: '1.5s' }} />
-        <div className="absolute top-2/3 left-1/2 w-64 h-64 bg-green-400/8 rounded-full blur-3xl floating-animation" style={{ animationDelay: '3s' }} />
+        <div className="absolute top-1/3 left-1/5 w-96 h-96 bg-emerald-800/8 rounded-full blur-3xl floating-luxury" />
+        <div className="absolute bottom-1/3 right-1/5 w-80 h-80 bg-amber-600/5 rounded-full blur-3xl floating-luxury" style={{ animationDelay: '2s' }} />
       </div>
 
       <div className="max-w-6xl mx-auto px-8 text-center relative z-10">
-        <div className={`${isVisible ? 'bounce-in' : 'opacity-0'}`}>
+        <div className={`${isVisible ? 'fade-in-luxury' : 'opacity-0'}`}>
           {/* Main Headline */}
-          <h1 className="text-7xl md:text-9xl font-black mb-8 leading-[0.85] tracking-[-0.03em] text-white glow-text">
-            WORK LESS.
+          <h1 className="text-6xl md:text-8xl font-light mb-8 leading-[0.9] tracking-[-0.02em] text-white">
+            Work Less.
             <br />
-            <span className="vibrant-text font-black">
-              LIVE SMART.
+            <span className="luxury-text font-medium">
+              Live Smart.
             </span>
           </h1>
           
           {/* Subheadline */}
-          <div className={`${isVisible ? 'slide-up' : 'opacity-0'}`} style={{ animationDelay: '0.3s' }}>
-            <p className="text-2xl md:text-3xl text-white mb-16 max-w-4xl mx-auto leading-relaxed font-medium">
-              Revolutionary AI agents that work <span className="text-green-400 font-bold">brilliantly</span> in the background.
+          <div className={`${isVisible ? 'slide-up-luxury' : 'opacity-0'}`} style={{ animationDelay: '0.4s' }}>
+            <p className="text-xl md:text-2xl text-gray-300 mb-16 max-w-4xl mx-auto leading-relaxed font-light">
+              Exquisitely crafted AI agents for discerning professionals.
               <br className="hidden md:block" />
-              <span className="text-green-300">Transform your workflow. Amplify your impact.</span>
+              <span className="text-amber-200">Sophisticated automation that elevates your practice.</span>
             </p>
           </div>
           
           {/* CTA Buttons */}
-          <div className={`flex flex-col sm:flex-row gap-8 justify-center items-center ${isVisible ? 'slide-up' : 'opacity-0'}`} style={{ animationDelay: '0.6s' }}>
+          <div className={`flex flex-col sm:flex-row gap-6 justify-center items-center ${isVisible ? 'slide-up-luxury' : 'opacity-0'}`} style={{ animationDelay: '0.8s' }}>
             <Button
               onClick={scrollToMarketplace}
-              className="bright-gradient px-16 py-8 rounded-full text-xl font-bold hover:shadow-2xl transition-all duration-300 text-white border-none elastic-hover pulse-bright"
+              className="velvet-gradient px-12 py-6 rounded-md text-lg font-medium hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 text-white border-none smooth-hover luxury-shadow"
               size="lg"
             >
-              EXPLORE AGENTS
-              <ArrowRight className="ml-3 w-6 h-6" />
+              Explore Collection
+              <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
             <Button
               variant="outline"
-              className="bright-border bg-transparent px-16 py-8 rounded-full text-xl font-bold transition-all duration-300 text-white backdrop-blur-sm elastic-hover"
+              className="brass-border bg-transparent px-12 py-6 rounded-md text-lg font-light transition-all duration-500 text-amber-200 backdrop-blur-sm smooth-hover"
               size="lg"
             >
-              <Play className="mr-3 w-6 h-6" />
-              WATCH DEMO
+              <Play className="mr-2 w-5 h-5" />
+              Watch Story
             </Button>
           </div>
         </div>
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 floating-animation">
-        <div className="w-8 h-12 border-2 border-green-400 rounded-full flex justify-center backdrop-blur-sm bright-border">
-          <div className="w-2 h-4 bg-green-400 rounded-full mt-2 pulse-bright" />
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 floating-luxury">
+        <div className="w-6 h-10 border-2 border-amber-300/60 rounded-full flex justify-center backdrop-blur-sm">
+          <div className="w-1 h-3 bg-amber-300/80 rounded-full mt-2 animate-pulse" />
         </div>
       </div>
     </section>
