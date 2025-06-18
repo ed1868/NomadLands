@@ -40,21 +40,24 @@ export default function HeroSection() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         <div className={`${isVisible ? 'fade-in-luxury' : 'opacity-0'}`}>
           {/* Main Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extralight mb-6 sm:mb-8 leading-[0.9] tracking-wide text-gray-200">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extralight mb-6 sm:mb-8 leading-[0.9] tracking-wide text-white drop-shadow-2xl">
             AI
             <br />
-            <span className="knight-text font-light">
+            <span className="knight-text font-light text-emerald-300 drop-shadow-lg">
               Nomads
             </span>
           </h1>
           
           {/* Subheadline */}
           <div className={`${isVisible ? 'slide-up-luxury' : 'opacity-0'}`} style={{ animationDelay: '0.4s' }}>
-            <p className="text-base sm:text-lg md:text-xl text-gray-500 mb-12 sm:mb-16 max-w-4xl mx-auto leading-relaxed font-extralight px-4">
-              Wander where machines meet magic.
-              <br className="hidden md:block" />
-              <span className="text-gray-400">Built in the shadows. Born to disrupt.</span>
-            </p>
+            <div className="backdrop-blur-sm bg-black/30 border border-emerald-900/40 rounded-xl px-8 py-6 mb-12 sm:mb-16 max-w-4xl mx-auto shadow-2xl">
+              <p className="text-lg sm:text-xl md:text-2xl text-white mb-2 leading-relaxed font-light drop-shadow-lg">
+                Wander where machines meet magic.
+              </p>
+              <p className="text-base sm:text-lg md:text-xl text-emerald-200 leading-relaxed font-extralight drop-shadow-md">
+                Built in the shadows. Born to disrupt.
+              </p>
+            </div>
           </div>
           
           {/* CTA Buttons */}
