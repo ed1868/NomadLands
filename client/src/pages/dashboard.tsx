@@ -1,10 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useWallet } from "@/hooks/use-wallet";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   User, 
   Wallet, 
@@ -13,10 +18,24 @@ import {
   Calendar, 
   ExternalLink,
   Download,
-  Settings
+  Settings,
+  Upload,
+  FileText,
+  Plus,
+  Eye,
+  Trash2,
+  Users,
+  Zap,
+  Building2,
+  Clock,
+  Star,
+  Shield,
+  Code
 } from "lucide-react";
 import Navigation from "@/components/navigation";
 import PhoneVerification from "@/components/phone-verification";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
 interface PurchasedAgent {
   id: number;
@@ -43,11 +62,143 @@ interface PurchasedAgent {
 
 export default function Dashboard() {
   const { address, isConnected, connectWallet } = useWallet();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Form states for agent upload
+  const [agentName, setAgentName] = useState("");
+  const [agentDescription, setAgentDescription] = useState("");
+  const [agentCategory, setAgentCategory] = useState("");
+  const [pricePerRun, setPricePerRun] = useState("");
+  const [pricePerHour, setPricePerHour] = useState("");
+  const [agentSkills, setAgentSkills] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const { data: userPurchases, isLoading: purchasesLoading } = useQuery({
     queryKey: [`/api/user/${address}/purchases`],
     enabled: !!address && isConnected,
   });
+
+  // Mock data for new features - will implement backend later
+  const mockUserFiles = [
+    {
+      id: 1,
+      fileName: "agent-config.json",
+      fileType: "application/json",
+      fileSize: 2048,
+      category: "agent",
+      description: "Configuration file for DataFlow Jenkins agent",
+      createdAt: new Date().toISOString(),
+    },
+    {
+      id: 2,
+      fileName: "contract-terms.pdf",
+      fileType: "application/pdf", 
+      fileSize: 15360,
+      category: "contract",
+      description: "Terms and conditions for freelance work contract",
+      createdAt: new Date().toISOString(),
+    },
+    {
+      id: 3,
+      fileName: "project-spec.md",
+      fileType: "text/markdown",
+      fileSize: 8192,
+      category: "document",
+      description: "Project specification and requirements",
+      createdAt: new Date().toISOString(),
+    }
+  ];
+
+  const mockUserAgents = [
+    {
+      id: 1,
+      name: "DataFlow Jenkins",
+      description: "Expert at ETL pipelines and data transformation",
+      category: "Engineering",
+      pricePerRun: "25000000000000000",
+      pricePerHour: "100000000000000000",
+      availability: "available",
+      totalRuns: 247,
+      rating: 5,
+      earnings: "2.45 ETH",
+    },
+    {
+      id: 2,
+      name: "ContentCraft Maya",
+      description: "Creative strategist for viral content creation",
+      category: "Marketing",
+      pricePerRun: "15000000000000000",
+      pricePerHour: "75000000000000000",
+      availability: "busy",
+      totalRuns: 156,
+      rating: 4,
+      earnings: "1.87 ETH",
+    }
+  ];
+
+  const mockContracts = [
+    {
+      id: 1,
+      contractName: "Escrow Service Contract",
+      partyA: "0x742d...0001",
+      partyB: "0x8b3f...0002",
+      amount: "0.5 ETH",
+      taxAmount: "0.0125 ETH",
+      status: "active",
+      startTime: "2025-06-15T10:00:00Z",
+      terms: "Web development project with milestone-based payments",
+    },
+    {
+      id: 2,
+      contractName: "Freelance Payment Contract",
+      partyA: "0x742d...0001", 
+      partyB: "0x9a4c...0003",
+      amount: "1.2 ETH",
+      taxAmount: "0.036 ETH",
+      status: "completed",
+      startTime: "2025-06-10T14:30:00Z",
+      terms: "AI agent development and deployment services",
+    }
+  ];
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    setSelectedFiles(files);
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const formatEth = (wei: string) => {
+    const eth = parseFloat(wei) / 1e18;
+    return `${eth.toFixed(3)} ETH`;
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "active": return "bg-emerald-500";
+      case "completed": return "bg-blue-500";
+      case "pending": return "bg-yellow-500";
+      case "disputed": return "bg-red-500";
+      default: return "bg-gray-500";
+    }
+  };
+
+  const getAvailabilityColor = (availability: string) => {
+    switch (availability) {
+      case "available": return "bg-emerald-500";
+      case "busy": return "bg-yellow-500";
+      case "offline": return "bg-gray-500";
+      default: return "bg-gray-500";
+    }
+  };
 
   const { data: userProfile } = useQuery({
     queryKey: [`/api/auth/user/${address}`],
