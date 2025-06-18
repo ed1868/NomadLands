@@ -84,6 +84,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update user profile
+  app.patch("/api/auth/profile", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      if (!req.user?.userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const { firstName, lastName, email, phoneNumber } = req.body;
+      
+      // Get current user
+      const user = await storage.getUser(req.user.userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Update user profile
+      const updatedUser = await storage.upsertUser({
+        id: user.id,
+        walletAddress: user.walletAddress,
+        email: email || user.email,
+        firstName: firstName || user.firstName,
+        lastName: lastName || user.lastName,
+        phoneNumber: phoneNumber || user.phoneNumber,
+        subscriptionPlan: user.subscriptionPlan,
+        paymentMethod: user.paymentMethod
+      });
+
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      res.status(500).json({ message: "Failed to update profile" });
+    }
+  });
+
   // Get all agents
   app.get("/api/agents", async (req, res) => {
     try {
