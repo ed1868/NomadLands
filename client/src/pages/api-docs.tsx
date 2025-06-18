@@ -674,25 +674,25 @@ curl -X POST \\
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                 {/* JavaScript SDK */}
                 <div className="bg-black/40 border border-gray-800 rounded backdrop-blur-sm">
-                  <div className="p-6 border-b border-gray-800">
+                  <div className="p-4 lg:p-6 border-b border-gray-800">
                     <div className="flex items-center gap-3 mb-3">
                       <Code className="w-6 h-6 text-yellow-400" />
-                      <h4 className="text-xl font-light text-white">JavaScript</h4>
+                      <h4 className="text-lg lg:text-xl font-light text-white">JavaScript</h4>
                     </div>
                     <p className="text-gray-400 text-sm">For web applications and Node.js projects</p>
                   </div>
                   
-                  <div className="p-6">
+                  <div className="p-4 lg:p-6">
                     <h5 className="text-sm font-medium text-gray-200 mb-3">Installation</h5>
-                    <pre className="bg-gray-950 border border-gray-700 rounded p-3 text-sm text-gray-300 mb-4">
+                    <pre className="bg-gray-950 border border-gray-700 rounded p-3 text-xs lg:text-sm text-gray-300 mb-4 overflow-x-auto">
                       <code>{sdkDocs.javascript.installation}</code>
                     </pre>
                     
                     <h5 className="text-sm font-medium text-gray-200 mb-3">Initialization</h5>
-                    <pre className="bg-gray-950 border border-gray-700 rounded p-3 text-sm text-gray-300">
+                    <pre className="bg-gray-950 border border-gray-700 rounded p-3 text-xs lg:text-sm text-gray-300 overflow-x-auto">
                       <code>{sdkDocs.javascript.initialization}</code>
                     </pre>
                   </div>
@@ -700,40 +700,40 @@ curl -X POST \\
 
                 {/* Python SDK */}
                 <div className="bg-black/40 border border-gray-800 rounded backdrop-blur-sm">
-                  <div className="p-6 border-b border-gray-800">
+                  <div className="p-4 lg:p-6 border-b border-gray-800">
                     <div className="flex items-center gap-3 mb-3">
                       <Terminal className="w-6 h-6 text-blue-400" />
-                      <h4 className="text-xl font-light text-white">Python</h4>
+                      <h4 className="text-lg lg:text-xl font-light text-white">Python</h4>
                     </div>
                     <p className="text-gray-400 text-sm">For data science and backend automation</p>
                   </div>
                   
-                  <div className="p-6">
+                  <div className="p-4 lg:p-6">
                     <h5 className="text-sm font-medium text-gray-200 mb-3">Installation</h5>
-                    <pre className="bg-gray-950 border border-gray-700 rounded p-3 text-sm text-gray-300 mb-4">
+                    <pre className="bg-gray-950 border border-gray-700 rounded p-3 text-xs lg:text-sm text-gray-300 mb-4 overflow-x-auto">
                       <code>{sdkDocs.python.installation}</code>
                     </pre>
                     
                     <h5 className="text-sm font-medium text-gray-200 mb-3">Initialization</h5>
-                    <pre className="bg-gray-950 border border-gray-700 rounded p-3 text-sm text-gray-300">
+                    <pre className="bg-gray-950 border border-gray-700 rounded p-3 text-xs lg:text-sm text-gray-300 overflow-x-auto">
                       <code>{sdkDocs.python.initialization}</code>
                     </pre>
                   </div>
                 </div>
 
                 {/* cURL Examples */}
-                <div className="bg-black/40 border border-gray-800 rounded backdrop-blur-sm">
-                  <div className="p-6 border-b border-gray-800">
+                <div className="bg-black/40 border border-gray-800 rounded backdrop-blur-sm md:col-span-2 lg:col-span-1">
+                  <div className="p-4 lg:p-6 border-b border-gray-800">
                     <div className="flex items-center gap-3 mb-3">
                       <ExternalLink className="w-6 h-6 text-green-400" />
-                      <h4 className="text-xl font-light text-white">REST API</h4>
+                      <h4 className="text-lg lg:text-xl font-light text-white">REST API</h4>
                     </div>
                     <p className="text-gray-400 text-sm">Direct HTTP requests for any language</p>
                   </div>
                   
-                  <div className="p-6">
+                  <div className="p-4 lg:p-6">
                     <h5 className="text-sm font-medium text-gray-200 mb-3">Authentication</h5>
-                    <pre className="bg-gray-950 border border-gray-700 rounded p-3 text-sm text-gray-300">
+                    <pre className="bg-gray-950 border border-gray-700 rounded p-3 text-xs lg:text-sm text-gray-300 overflow-x-auto">
                       <code>{sdkDocs.curl.examples[0].code}</code>
                     </pre>
                   </div>
@@ -741,16 +741,16 @@ curl -X POST \\
               </div>
 
               {/* Code Examples */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
                 {/* JavaScript Examples */}
                 <div>
-                  <h4 className="text-2xl font-light text-white mb-6">JavaScript Examples</h4>
-                  <div className="space-y-6">
+                  <h4 className="text-xl lg:text-2xl font-light text-white mb-4 lg:mb-6">JavaScript Examples</h4>
+                  <div className="space-y-4 lg:space-y-6">
                     {sdkDocs.javascript.examples.map((example, index) => (
                       <div key={index} className="bg-black/40 border border-gray-800 rounded backdrop-blur-sm">
-                        <div className="p-4 border-b border-gray-800">
+                        <div className="p-3 lg:p-4 border-b border-gray-800">
                           <div className="flex items-center justify-between">
-                            <h5 className="text-lg font-medium text-gray-200">{example.title}</h5>
+                            <h5 className="text-sm lg:text-lg font-medium text-gray-200">{example.title}</h5>
                             <Button
                               size="sm"
                               variant="ghost"
@@ -761,8 +761,8 @@ curl -X POST \\
                             </Button>
                           </div>
                         </div>
-                        <div className="p-4">
-                          <pre className="text-sm text-gray-300 overflow-x-auto">
+                        <div className="p-3 lg:p-4">
+                          <pre className="text-xs lg:text-sm text-gray-300 overflow-x-auto bg-gray-950 border border-gray-700 rounded p-2 lg:p-3">
                             <code>{example.code}</code>
                           </pre>
                         </div>
@@ -773,13 +773,13 @@ curl -X POST \\
 
                 {/* Python Examples */}
                 <div>
-                  <h4 className="text-2xl font-light text-white mb-6">Python Examples</h4>
-                  <div className="space-y-6">
+                  <h4 className="text-xl lg:text-2xl font-light text-white mb-4 lg:mb-6">Python Examples</h4>
+                  <div className="space-y-4 lg:space-y-6">
                     {sdkDocs.python.examples.map((example, index) => (
                       <div key={index} className="bg-black/40 border border-gray-800 rounded backdrop-blur-sm">
-                        <div className="p-4 border-b border-gray-800">
+                        <div className="p-3 lg:p-4 border-b border-gray-800">
                           <div className="flex items-center justify-between">
-                            <h5 className="text-lg font-medium text-gray-200">{example.title}</h5>
+                            <h5 className="text-sm lg:text-lg font-medium text-gray-200">{example.title}</h5>
                             <Button
                               size="sm"
                               variant="ghost"
@@ -790,8 +790,8 @@ curl -X POST \\
                             </Button>
                           </div>
                         </div>
-                        <div className="p-4">
-                          <pre className="text-sm text-gray-300 overflow-x-auto">
+                        <div className="p-3 lg:p-4">
+                          <pre className="text-xs lg:text-sm text-gray-300 overflow-x-auto bg-gray-950 border border-gray-700 rounded p-2 lg:p-3">
                             <code>{example.code}</code>
                           </pre>
                         </div>
@@ -803,13 +803,13 @@ curl -X POST \\
 
               {/* cURL Examples */}
               <div>
-                <h4 className="text-2xl font-light text-white mb-6">cURL Examples</h4>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <h4 className="text-xl lg:text-2xl font-light text-white mb-4 lg:mb-6">cURL Examples</h4>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                   {sdkDocs.curl.examples.map((example, index) => (
                     <div key={index} className="bg-black/40 border border-gray-800 rounded backdrop-blur-sm">
-                      <div className="p-4 border-b border-gray-800">
+                      <div className="p-3 lg:p-4 border-b border-gray-800">
                         <div className="flex items-center justify-between">
-                          <h5 className="text-lg font-medium text-gray-200">{example.title}</h5>
+                          <h5 className="text-sm lg:text-lg font-medium text-gray-200">{example.title}</h5>
                           <Button
                             size="sm"
                             variant="ghost"
@@ -820,8 +820,8 @@ curl -X POST \\
                           </Button>
                         </div>
                       </div>
-                      <div className="p-4">
-                        <pre className="text-sm text-gray-300 overflow-x-auto">
+                      <div className="p-3 lg:p-4">
+                        <pre className="text-xs lg:text-sm text-gray-300 overflow-x-auto bg-gray-950 border border-gray-700 rounded p-2 lg:p-3">
                           <code>{example.code}</code>
                         </pre>
                       </div>
