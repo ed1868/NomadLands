@@ -12,22 +12,22 @@ export default function BrainVisualization({ className = "" }: BrainVisualizatio
   const animationRef = useRef<number | null>(null);
   const [showControls, setShowControls] = useState(true);
   
-  // Control parameters
-  const [attractorMass, setAttractorMass] = useState(1e7);
-  const [particleMass, setParticleMass] = useState(1e4);
-  const [maxSpeed, setMaxSpeed] = useState(8);
+  // Control parameters - set to maximum values
+  const [attractorMass, setAttractorMass] = useState(1e8);
+  const [particleMass, setParticleMass] = useState(1e5);
+  const [maxSpeed, setMaxSpeed] = useState(20);
   const [velocityDamping, setVelocityDamping] = useState(0.1);
-  const [spinningStrength, setSpinningStrength] = useState(2.75);
-  const [scale, setScale] = useState(0.008);
-  const [boundHalfExtent, setBoundHalfExtent] = useState(8);
+  const [spinningStrength, setSpinningStrength] = useState(5.0);
+  const [scale, setScale] = useState(0.05);
+  const [boundHalfExtent, setBoundHalfExtent] = useState(15);
   
-  // Fleet color controls
-  const [fleet1ColorA, setFleet1ColorA] = useState('#5900ff');
-  const [fleet1ColorB, setFleet1ColorB] = useState('#ffa575');
-  const [fleet2ColorA, setFleet2ColorA] = useState('#00ff59');
-  const [fleet2ColorB, setFleet2ColorB] = useState('#75a5ff');
-  const [fleet3ColorA, setFleet3ColorA] = useState('#ff5900');
-  const [fleet3ColorB, setFleet3ColorB] = useState('#a575ff');
+  // Fixed fleet colors - green, blue, purple, orange
+  const fleet1ColorA = '#10b981'; // green
+  const fleet1ColorB = '#34d399'; // light green
+  const fleet2ColorA = '#3b82f6'; // blue
+  const fleet2ColorB = '#60a5fa'; // light blue
+  const fleet3ColorA = '#8b5cf6'; // purple
+  const fleet3ColorB = '#a78bfa'; // light purple
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -424,7 +424,7 @@ export default function BrainVisualization({ className = "" }: BrainVisualizatio
               <input
                 type="range"
                 min="0"
-                max="10"
+                max="20"
                 step="0.01"
                 value={maxSpeed}
                 onChange={(e) => setMaxSpeed(parseFloat(e.target.value))}
@@ -489,105 +489,51 @@ export default function BrainVisualization({ className = "" }: BrainVisualizatio
               <span className="text-gray-400">{boundHalfExtent.toFixed(2)}</span>
             </div>
             
-            {/* Fleet Color Controls */}
+            {/* Fleet Color Display */}
             <div className="border-t border-gray-600 pt-3 mt-3">
               <h4 className="text-gray-200 font-semibold text-xs mb-3">Fleet Colors</h4>
               
-              {/* Massive Fleet One */}
-              <div className="mb-4">
-                <h5 className="text-purple-400 font-medium text-xs mb-2">Massive Fleet One</h5>
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <label className="text-gray-400 block mb-1 text-xs">colorA</label>
-                    <input
-                      type="color"
-                      value={fleet1ColorA}
-                      onChange={(e) => setFleet1ColorA(e.target.value)}
-                      className="w-full h-6 rounded border border-gray-600"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-gray-400 block mb-1 text-xs">colorB</label>
-                    <input
-                      type="color"
-                      value={fleet1ColorB}
-                      onChange={(e) => setFleet1ColorB(e.target.value)}
-                      className="w-full h-6 rounded border border-gray-600"
-                    />
-                  </div>
+              {/* Massive Fleet One - Green */}
+              <div className="mb-3">
+                <h5 className="text-green-400 font-medium text-xs mb-1">Massive Fleet One - Green</h5>
+                <div className="flex space-x-2">
+                  <div className="w-4 h-4 rounded" style={{ backgroundColor: fleet1ColorA }}></div>
+                  <div className="w-4 h-4 rounded" style={{ backgroundColor: fleet1ColorB }}></div>
                 </div>
               </div>
               
-              {/* Massive Fleet Two */}
-              <div className="mb-4">
-                <h5 className="text-green-400 font-medium text-xs mb-2">Massive Fleet Two</h5>
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <label className="text-gray-400 block mb-1 text-xs">colorA</label>
-                    <input
-                      type="color"
-                      value={fleet2ColorA}
-                      onChange={(e) => setFleet2ColorA(e.target.value)}
-                      className="w-full h-6 rounded border border-gray-600"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-gray-400 block mb-1 text-xs">colorB</label>
-                    <input
-                      type="color"
-                      value={fleet2ColorB}
-                      onChange={(e) => setFleet2ColorB(e.target.value)}
-                      className="w-full h-6 rounded border border-gray-600"
-                    />
-                  </div>
+              {/* Massive Fleet Two - Blue */}
+              <div className="mb-3">
+                <h5 className="text-blue-400 font-medium text-xs mb-1">Massive Fleet Two - Blue</h5>
+                <div className="flex space-x-2">
+                  <div className="w-4 h-4 rounded" style={{ backgroundColor: fleet2ColorA }}></div>
+                  <div className="w-4 h-4 rounded" style={{ backgroundColor: fleet2ColorB }}></div>
                 </div>
               </div>
               
-              {/* Massive Fleet Three */}
-              <div className="mb-4">
-                <h5 className="text-orange-400 font-medium text-xs mb-2">Massive Fleet Three</h5>
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <label className="text-gray-400 block mb-1 text-xs">colorA</label>
-                    <input
-                      type="color"
-                      value={fleet3ColorA}
-                      onChange={(e) => setFleet3ColorA(e.target.value)}
-                      className="w-full h-6 rounded border border-gray-600"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-gray-400 block mb-1 text-xs">colorB</label>
-                    <input
-                      type="color"
-                      value={fleet3ColorB}
-                      onChange={(e) => setFleet3ColorB(e.target.value)}
-                      className="w-full h-6 rounded border border-gray-600"
-                    />
-                  </div>
+              {/* Massive Fleet Three - Purple */}
+              <div className="mb-3">
+                <h5 className="text-purple-400 font-medium text-xs mb-1">Massive Fleet Three - Purple</h5>
+                <div className="flex space-x-2">
+                  <div className="w-4 h-4 rounded" style={{ backgroundColor: fleet3ColorA }}></div>
+                  <div className="w-4 h-4 rounded" style={{ backgroundColor: fleet3ColorB }}></div>
                 </div>
               </div>
             </div>
             
             <button
               onClick={() => {
-                setAttractorMass(1e7);
-                setParticleMass(1e4);
-                setMaxSpeed(8);
+                setAttractorMass(1e8);
+                setParticleMass(1e5);
+                setMaxSpeed(20);
                 setVelocityDamping(0.1);
-                setSpinningStrength(2.75);
-                setScale(0.008);
-                setBoundHalfExtent(8);
-                setFleet1ColorA('#5900ff');
-                setFleet1ColorB('#ffa575');
-                setFleet2ColorA('#00ff59');
-                setFleet2ColorB('#75a5ff');
-                setFleet3ColorA('#ff5900');
-                setFleet3ColorB('#a575ff');
+                setSpinningStrength(5.0);
+                setScale(0.05);
+                setBoundHalfExtent(15);
               }}
               className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-xs"
             >
-              reset
+              Reset to Maximum
             </button>
           </div>
         </div>
