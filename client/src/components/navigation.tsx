@@ -91,28 +91,28 @@ export default function Navigation() {
         
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className={`md:hidden mt-6 pb-6 border-t ${isScrolled ? 'border-green-500/30' : 'border-green-500/30'}`}>
+          <div className={`md:hidden mt-6 pb-6 border-t ${isScrolled ? 'border-emerald-600/30' : 'border-emerald-600/30'}`}>
             <div className="flex flex-col space-y-6 pt-6">
               <button
                 onClick={() => scrollToSection('marketplace')}
-                className="text-gray-300 hover:text-green-400 transition-colors text-left font-semibold tracking-wide"
+                className="text-gray-300 hover:text-emerald-400 transition-colors text-left font-light tracking-wide"
               >
-                AGENTS
+                Collection
               </button>
               <button
                 onClick={() => scrollToSection('features')}
-                className="text-gray-300 hover:text-green-400 transition-colors text-left font-semibold tracking-wide"
+                className="text-gray-300 hover:text-emerald-400 transition-colors text-left font-light tracking-wide"
               >
-                FEATURES
+                Features
               </button>
               <button
                 onClick={() => scrollToSection('features')}
-                className="text-gray-300 hover:text-green-400 transition-colors text-left font-semibold tracking-wide"
+                className="text-gray-300 hover:text-emerald-400 transition-colors text-left font-light tracking-wide"
               >
-                TECH
+                Story
               </button>
-              <Button className="neon-gradient w-full py-4 rounded-lg font-bold text-black">
-                GET STARTED
+              <Button className="forest-gradient w-full py-4 rounded-full font-medium text-white">
+                Begin Journey
               </Button>
             </div>
           </div>

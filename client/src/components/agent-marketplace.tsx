@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import type { Agent } from "@shared/schema";
 
 const categories = [
-  { id: "all", label: "ALL AGENTS" },
-  { id: "productivity", label: "STEALTH OPS" },
-  { id: "communication", label: "NET INFILTRATION" },
-  { id: "business", label: "CORP WARFARE" },
-  { id: "lifestyle", label: "GHOST PROTOCOL" },
-  { id: "wellness", label: "NEURAL SYNC" },
+  { id: "all", label: "All Nomads" },
+  { id: "productivity", label: "Productivity" },
+  { id: "communication", label: "Communication" },
+  { id: "business", label: "Business" },
+  { id: "lifestyle", label: "Lifestyle" },
+  { id: "wellness", label: "Wellness" },
 ];
 
 export default function AgentMarketplace() {
@@ -25,15 +25,15 @@ export default function AgentMarketplace() {
     : allAgents.filter(agent => agent.category === selectedCategory);
 
   return (
-    <section id="marketplace" className="py-24 bg-gradient-to-br from-black via-slate-900 to-slate-800 matrix-rain">
+    <section id="marketplace" className="py-24 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-20">
-          <h2 className="text-5xl font-black mb-8 bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent tracking-tight matrix-glow">
-            AGENT ARSENAL
+          <h2 className="text-5xl font-light mb-8 bg-gradient-to-r from-emerald-400 to-emerald-300 bg-clip-text text-transparent tracking-tight">
+            Nomad Collection
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto font-light leading-relaxed">
-            Elite AI operatives engineered for maximum efficiency and stealth operation. 
-            <span className="text-green-400">Select your digital weapon of choice.</span>
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto font-light leading-relaxed">
+            Curated with intention for mindful professionals seeking balance. 
+            <span className="text-emerald-400">Each agent flows seamlessly into your conscious workflow.</span>
           </p>
         </div>
 
@@ -45,8 +45,8 @@ export default function AgentMarketplace() {
               onClick={() => setSelectedCategory(category.id)}
               className={
                 selectedCategory === category.id
-                  ? "neon-gradient text-black shadow-lg shadow-green-500/30 border-none font-bold"
-                  : "bg-slate-800/80 hover:bg-slate-700/80 text-green-400 border border-green-500/30 hover:border-green-400/60 backdrop-blur-sm font-semibold"
+                  ? "forest-gradient text-white shadow-lg shadow-emerald-500/20 border-none font-medium"
+                  : "bg-slate-800/60 hover:bg-slate-700/60 text-emerald-300 border border-emerald-600/30 hover:border-emerald-500/50 backdrop-blur-sm font-light"
               }
               variant={selectedCategory === category.id ? "default" : "outline"}
               size="sm"

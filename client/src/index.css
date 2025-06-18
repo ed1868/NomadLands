@@ -89,7 +89,7 @@
   }
   
   .premium-card {
-    @apply bg-card/95 backdrop-blur-xl border border-border/60 shadow-2xl;
+    @apply bg-slate-800/95 backdrop-blur-xl border border-emerald-600/20 shadow-2xl;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
     transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
