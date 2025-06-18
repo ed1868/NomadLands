@@ -1173,23 +1173,37 @@ export default function Dashboard() {
 
       console.log('Generated points:', points.length);
 
+      // Add test circle to verify SVG is working
+      svg.append('circle')
+        .attr('cx', 50)
+        .attr('cy', 50)
+        .attr('r', 10)
+        .attr('fill', '#ff0000')
+        .attr('opacity', 1);
+
+      // Add test text
+      svg.append('text')
+        .attr('x', 80)
+        .attr('y', 55)
+        .attr('fill', '#ffffff')
+        .attr('font-size', '12px')
+        .text('Test Point');
+
       // Render points with stroke for visibility
-      svg.selectAll('circle')
+      const circles = svg.selectAll('.data-point')
         .data(points)
         .enter()
         .append('circle')
+        .attr('class', 'data-point')
         .attr('cx', d => d.x)
         .attr('cy', d => d.y)
-        .attr('r', 0)
-        .attr('fill', d => d.color)
-        .attr('stroke', d => d.agent ? d.color : 'none')
-        .attr('stroke-width', d => d.agent ? 0.5 : 0)
-        .attr('opacity', 0)
-        .transition()
-        .duration(2000)
-        .delay((d, i) => Math.min(i * 2, 1000))
         .attr('r', d => d.size)
+        .attr('fill', d => d.color)
+        .attr('stroke', d => d.agent ? '#ffffff' : 'none')
+        .attr('stroke-width', d => d.agent ? 1 : 0)
         .attr('opacity', d => d.opacity);
+
+      console.log('Circles created:', circles.size());
 
       // Add legend
       const legend = svg.append('g')
