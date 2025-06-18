@@ -68,7 +68,7 @@ export default function AgentCard({ agent }: AgentCardProps) {
   return (
     <>
       <div 
-        className="agent-card bg-black/60 border border-gray-800 p-0 fade-in-luxury group cursor-pointer backdrop-blur-sm hover:border-gray-700 transition-all duration-700" 
+        className="agent-card bg-black/60 border border-gray-800 p-0 fade-in-luxury group cursor-pointer backdrop-blur-sm hover:border-gray-700 transition-all duration-700 rounded-xl overflow-hidden hover:bg-black/70 hover:shadow-2xl hover:shadow-black/30" 
         style={{ animationDelay: `${Math.random() * 0.5}s` }}
         onClick={handleCardClick}
       >
