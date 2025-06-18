@@ -43,40 +43,43 @@ export default function Navigation() {
             </span>
           </div>
           
-          <div className="hidden md:flex items-center space-x-10">
-            <button
-              onClick={() => scrollToSection('marketplace')}
+          <div className="hidden md:flex items-center space-x-8">
+            <a
+              href="/marketplace"
               className={`font-extralight tracking-wide transition-all duration-500 ${
                 isScrolled 
                   ? 'text-gray-500 hover:text-gray-300' 
                   : 'text-gray-500 hover:text-gray-300'
               }`}
             >
-              Archives
-            </button>
-            <button
-              onClick={() => scrollToSection('features')}
+              Marketplace
+            </a>
+            <a
+              href="/nomad-fleets"
               className={`font-extralight tracking-wide transition-all duration-500 ${
                 isScrolled 
                   ? 'text-gray-500 hover:text-gray-300' 
                   : 'text-gray-500 hover:text-gray-300'
               }`}
             >
-              Arsenal
-            </button>
-            <button
-              onClick={() => scrollToSection('features')}
+              Nomad Fleets
+            </a>
+            <a
+              href="/api-docs"
               className={`font-extralight tracking-wide transition-all duration-500 ${
                 isScrolled 
                   ? 'text-gray-500 hover:text-gray-300' 
                   : 'text-gray-500 hover:text-gray-300'
               }`}
             >
-              Origins
-            </button>
-            <Button className="obsidian-gradient hover:shadow-lg hover:shadow-gray-900/30 transition-all duration-500 border border-gray-700 rounded px-6 py-2 font-light text-gray-300 backdrop-blur-sm hover:border-gray-600">
+              API
+            </a>
+            <a
+              href="/signup"
+              className="obsidian-gradient hover:shadow-lg hover:shadow-gray-900/30 transition-all duration-500 border border-gray-700 rounded px-6 py-2 font-light text-gray-300 backdrop-blur-sm hover:border-gray-600"
+            >
               Deploy
-            </Button>
+            </a>
           </div>
           
           <button
@@ -93,27 +96,30 @@ export default function Navigation() {
         {isMenuOpen && (
           <div className={`md:hidden mt-6 pb-6 border-t ${isScrolled ? 'border-gray-800' : 'border-gray-800'}`}>
             <div className="flex flex-col space-y-6 pt-6">
-              <button
-                onClick={() => scrollToSection('marketplace')}
+              <a
+                href="/marketplace"
                 className="text-gray-500 hover:text-gray-300 transition-colors text-left font-extralight tracking-wide"
               >
-                Archives
-              </button>
-              <button
-                onClick={() => scrollToSection('features')}
+                Marketplace
+              </a>
+              <a
+                href="/nomad-fleets"
                 className="text-gray-500 hover:text-gray-300 transition-colors text-left font-extralight tracking-wide"
               >
-                Arsenal
-              </button>
-              <button
-                onClick={() => scrollToSection('features')}
+                Nomad Fleets
+              </a>
+              <a
+                href="/api-docs"
                 className="text-gray-500 hover:text-gray-300 transition-colors text-left font-extralight tracking-wide"
               >
-                Origins
-              </button>
-              <Button className="obsidian-gradient w-full py-3 rounded border border-gray-700 font-light text-gray-300 backdrop-blur-sm">
+                API
+              </a>
+              <a
+                href="/signup"
+                className="obsidian-gradient w-full py-3 rounded border border-gray-700 font-light text-gray-300 backdrop-blur-sm block text-center"
+              >
                 Deploy
-              </Button>
+              </a>
             </div>
           </div>
         )}

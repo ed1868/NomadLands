@@ -19,20 +19,22 @@ export default function HeroSection() {
 
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Dark Knight background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-950 to-black"></div>
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: 'url(https://img.freepik.com/premium-photo/abstract-background-design-hd-dark-dark-cal-poly-green-color_851755-34811.jpg?semt=ais_hybrid&w=740)'
+        }}
+      ></div>
       
-      {/* Moody atmospheric layers */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/60"></div>
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-black/60"></div>
       
-      {/* Subtle fog/mist effects */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-emerald-900/30 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-slate-800/20 rounded-full blur-3xl"></div>
-      </div>
+      {/* Additional atmospheric layers */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40"></div>
       
-      {/* Shadows and depth */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,black_70%)]"></div>
+      {/* Subtle depth effects */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,black_60%)]"></div>
 
       <div className="max-w-6xl mx-auto px-8 text-center relative z-10">
         <div className={`${isVisible ? 'fade-in-luxury' : 'opacity-0'}`}>

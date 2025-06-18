@@ -25,7 +25,7 @@ export default function AgentMarketplace() {
     : allAgents.filter(agent => agent.category === selectedCategory);
 
   return (
-    <section id="marketplace" className="py-20 bg-black">
+    <section id="marketplace" className="py-20 bg-gradient-to-br from-black via-gray-950 to-emerald-950/20">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-6xl font-extralight mb-8 text-gray-200 tracking-wide fade-in-luxury">
