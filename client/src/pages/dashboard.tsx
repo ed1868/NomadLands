@@ -1091,9 +1091,20 @@ export default function Dashboard() {
   }, [activeTab, selectedTemplate, nodes.length]);
 
   // Logout function
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    window.location.href = '/';
+  const handleLogout = async () => {
+    try {
+      // Call logout endpoint
+      await fetch("/api/logout");
+      // Clear local storage
+      localStorage.removeItem('token');
+      // Redirect to main landing page
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Still redirect even if API call fails
+      localStorage.removeItem('token');
+      window.location.href = "/";
+    }
   };
 
   if (isLoading) {

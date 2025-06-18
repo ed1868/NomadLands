@@ -18,8 +18,20 @@ export default function Navigation() {
   const { address, isConnected, isConnecting, connectWallet, disconnectWallet, formatAddress } = useWallet();
   const { user, isLoading: isUserLoading } = useAuth();
 
-  const handleLogout = () => {
-    window.location.href = "/api/logout";
+  const handleLogout = async () => {
+    try {
+      // Call logout endpoint
+      await fetch("/api/logout");
+      // Clear local storage
+      localStorage.removeItem('token');
+      // Redirect to main landing page
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Still redirect even if API call fails
+      localStorage.removeItem('token');
+      window.location.href = "/";
+    }
   };
 
   const scrollToSection = (sectionId: string) => {
