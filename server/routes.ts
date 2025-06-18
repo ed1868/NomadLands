@@ -478,6 +478,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Logout endpoint
+  app.get("/api/logout", (req, res) => {
+    // Since we're using JWT tokens, logout is handled on the client side
+    // by removing the token from localStorage. This endpoint confirms logout.
+    res.json({ message: "Logged out successfully" });
+  });
+
+  app.post("/api/logout", (req, res) => {
+    // Alternative POST method for logout
+    res.json({ message: "Logged out successfully" });
+  });
+
   // Get current authenticated user
   app.get("/api/auth/user", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
