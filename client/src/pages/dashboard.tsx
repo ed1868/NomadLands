@@ -59,7 +59,8 @@ import {
   Timer,
   Coins,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Menu
 } from "lucide-react";
 
 // Custom Agent Node Component with visible handles
@@ -804,8 +805,8 @@ export default function Dashboard() {
 
           {/* Content based on active tab */}
           {activeTab === 'wallet' && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="space-y-4 lg:space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                 {/* Account Information */}
                 <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg shadow-xl">
                   <CardHeader>
@@ -815,7 +816,7 @@ export default function Dashboard() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <Label className="text-gray-300 text-sm font-semibold">Wallet Address</Label>
                         <p className="text-white font-mono text-sm break-all bg-gray-800/50 p-2 rounded mt-1">
