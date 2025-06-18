@@ -218,13 +218,15 @@ export default function SignupPremium() {
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-6 py-2 mb-6">
               <Sparkles className="w-4 h-4 text-emerald-400" />
-              <span className="text-emerald-400 text-sm font-medium">Free Developer Plan Available • Free Trial Available</span>
+              <span className="text-emerald-400 text-sm font-medium">Free Trial Available</span>
             </div>
             
             <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tight">
-              Join the
               <span className="block bg-gradient-to-r from-emerald-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
-                AI Revolution
+                Join Nomad Lands Ecosystem
+              </span>
+              <span className="block text-3xl md:text-4xl mt-4">
+                where our agents are shaping the new horizon for us
               </span>
             </h1>
             

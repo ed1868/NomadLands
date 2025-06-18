@@ -135,6 +135,12 @@ Changelog:
   * Added ultra-minimal navigation with "Marketplace," "Nomad Fleets," "API," "Deploy" structure
   * Created enterprise-grade fleet pricing and team collaboration features
   * Built interactive API documentation with code examples and SDKs
+- June 18, 2025. Premium subscription system with payment method selection
+  * Added payment method selection (Credit Card, Stripe, PayPal, Apple Pay)
+  * Updated banner to "Free Trial Available" for cleaner messaging
+  * Changed main title to "Join Nomad Lands Ecosystem where our agents are shaping the new horizon for us"
+  * Implemented subscription plan tracking with trial expiration functionality
+  * Database schema updated with payment method field for future billing
 ```
 
 ## User Preferences
