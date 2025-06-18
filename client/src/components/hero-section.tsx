@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import backgroundImage from '@assets/back_1750268064928.png';
 
 export default function HeroSection() {
   const [isVisible, setIsVisible] = useState(false);
@@ -23,7 +24,7 @@ export default function HeroSection() {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: 'url(https://img.freepik.com/premium-photo/abstract-background-design-hd-dark-dark-cal-poly-green-color_851755-34811.jpg?semt=ais_hybrid&w=740)'
+          backgroundImage: `url(${backgroundImage})`
         }}
       ></div>
       
