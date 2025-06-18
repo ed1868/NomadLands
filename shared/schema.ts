@@ -35,6 +35,7 @@ export const users = pgTable("users", {
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
   phoneNumber: varchar("phone_number"),
+  dateOfBirth: varchar("date_of_birth"),
   phoneVerified: boolean("phone_verified").default(false),
   phoneVerificationCode: varchar("phone_verification_code"),
   phoneVerificationExpiry: timestamp("phone_verification_expiry"),
@@ -294,6 +295,7 @@ export const signupUserSchema = createInsertSchema(users).pick({
   firstName: true,
   lastName: true,
   phoneNumber: true,
+  dateOfBirth: true,
   password: true,
 }).extend({
   confirmPassword: z.string().min(8, "Password must be at least 8 characters"),

@@ -20,7 +20,8 @@ const signupSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters").max(20, "Username must be less than 20 characters"),
   firstName: z.string().min(2, "First name must be at least 2 characters"),
   lastName: z.string().min(2, "Last name must be at least 2 characters"),
-  phoneNumber: z.string().regex(/^\+?[1-9]\d{1,14}$/, "Please enter a valid phone number"),
+  phoneNumber: z.string().min(10, "Please enter a valid phone number"),
+  dateOfBirth: z.string().min(1, "Date of birth is required"),
   password: z.string().min(8, "Password must be at least 8 characters"),
   confirmPassword: z.string(),
   walletAddress: z.string().optional(),
@@ -55,6 +56,7 @@ export default function SignupNew() {
       firstName: "",
       lastName: "",
       phoneNumber: "",
+      dateOfBirth: "",
       password: "",
       confirmPassword: "",
       walletAddress: "",
@@ -85,12 +87,6 @@ export default function SignupNew() {
   const onSubmit = async (data: SignupForm) => {
     console.log("Form submitted with data:", data);
     console.log("Form errors:", errors);
-    
-    // Log if form has validation errors
-    if (Object.keys(errors).length > 0) {
-      console.log("Form validation errors detected:", errors);
-      return;
-    }
     
     try {
       console.log("Calling signup mutation...");
@@ -364,6 +360,19 @@ export default function SignupNew() {
                   </div>
                   {errors.phoneNumber && (
                     <p className="text-red-400 text-sm mt-1">{errors.phoneNumber.message}</p>
+                  )}
+                </div>
+
+                <div>
+                  <Label htmlFor="dateOfBirth" className="text-gray-300">Date of Birth</Label>
+                  <Input
+                    id="dateOfBirth"
+                    type="date"
+                    {...register("dateOfBirth")}
+                    className="bg-gray-900/40 border-gray-700 text-white"
+                  />
+                  {errors.dateOfBirth && (
+                    <p className="text-red-400 text-sm mt-1">{errors.dateOfBirth.message}</p>
                   )}
                 </div>
 
