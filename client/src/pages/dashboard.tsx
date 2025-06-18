@@ -2389,6 +2389,299 @@ export default function Dashboard() {
               </div>
             </div>
           )}
+
+          {activeTab === 'ecosystem' && (
+            <div className="space-y-6">
+              {/* Brain Visualization Header */}
+              <div className="text-center mb-8">
+                <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4 tracking-tight">
+                  The Nomad Agents Ecosystem Synapses with Every Agent Task
+                </h2>
+                <p className="text-gray-300 text-lg max-w-3xl mx-auto">
+                  Experience the neural network of our AI agent ecosystem, where every connection represents intelligent automation at work.
+                </p>
+              </div>
+
+              {/* Brain Visualization */}
+              <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="h-[500px] lg:h-[600px] w-full">
+                    <BrainVisualization className="rounded-lg" />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Ecosystem KPIs Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <Card className="bg-gradient-to-br from-emerald-950/50 to-emerald-900/30 border-emerald-500/30">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-emerald-400 text-sm font-medium">Active Synapses</p>
+                        <p className="text-3xl font-bold text-white">47,293</p>
+                        <p className="text-emerald-300 text-xs mt-1">+12.4% from last hour</p>
+                      </div>
+                      <Activity className="w-8 h-8 text-emerald-500" />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gradient-to-br from-blue-950/50 to-blue-900/30 border-blue-500/30">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-blue-400 text-sm font-medium">Neural Efficiency</p>
+                        <p className="text-3xl font-bold text-white">98.7%</p>
+                        <p className="text-blue-300 text-xs mt-1">+0.3% optimization</p>
+                      </div>
+                      <TrendingUp className="w-8 h-8 text-blue-500" />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gradient-to-br from-purple-950/50 to-purple-900/30 border-purple-500/30">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-purple-400 text-sm font-medium">Tasks Processed</p>
+                        <p className="text-3xl font-bold text-white">2.4M</p>
+                        <p className="text-purple-300 text-xs mt-1">Last 24 hours</p>
+                      </div>
+                      <Bot className="w-8 h-8 text-purple-500" />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gradient-to-br from-amber-950/50 to-amber-900/30 border-amber-500/30">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-amber-400 text-sm font-medium">Revenue Generated</p>
+                        <p className="text-3xl font-bold text-white">$847K</p>
+                        <p className="text-amber-300 text-xs mt-1">+18.9% this month</p>
+                      </div>
+                      <DollarSign className="w-8 h-8 text-amber-500" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Ecosystem Table */}
+              <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg">
+                <CardHeader>
+                  <CardTitle className="text-white font-bold text-xl lg:text-2xl">Global Ecosystem Overview</CardTitle>
+                  <p className="text-gray-400">Real-time agent performance across all organizational hierarchies</p>
+                </CardHeader>
+                <CardContent>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-gray-700/50">
+                          <th className="text-left py-4 px-2 text-emerald-400 font-semibold">Agent Type</th>
+                          <th className="text-left py-4 px-2 text-emerald-400 font-semibold">Active Units</th>
+                          <th className="text-left py-4 px-2 text-emerald-400 font-semibold">Avg. Response Time</th>
+                          <th className="text-left py-4 px-2 text-emerald-400 font-semibold">Success Rate</th>
+                          <th className="text-left py-4 px-2 text-emerald-400 font-semibold">Neural Load</th>
+                          <th className="text-left py-4 px-2 text-emerald-400 font-semibold">Revenue Impact</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b border-gray-800/30 hover:bg-gray-800/20 transition-colors">
+                          <td className="py-4 px-2">
+                            <div className="flex items-center space-x-3">
+                              <span className="text-2xl">👨‍💼</span>
+                              <div>
+                                <p className="text-white font-medium">Executive Director</p>
+                                <p className="text-gray-400 text-sm">Strategic oversight</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-4 px-2 text-white font-semibold">247</td>
+                          <td className="py-4 px-2 text-emerald-400">34ms</td>
+                          <td className="py-4 px-2 text-emerald-400">99.2%</td>
+                          <td className="py-4 px-2">
+                            <div className="w-full bg-gray-700 rounded-full h-2">
+                              <div className="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full" style={{width: '78%'}} />
+                            </div>
+                          </td>
+                          <td className="py-4 px-2 text-white font-semibold">$194K</td>
+                        </tr>
+                        <tr className="border-b border-gray-800/30 hover:bg-gray-800/20 transition-colors">
+                          <td className="py-4 px-2">
+                            <div className="flex items-center space-x-3">
+                              <span className="text-2xl">🎯</span>
+                              <div>
+                                <p className="text-white font-medium">Director</p>
+                                <p className="text-gray-400 text-sm">Division leadership</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-4 px-2 text-white font-semibold">1,847</td>
+                          <td className="py-4 px-2 text-emerald-400">28ms</td>
+                          <td className="py-4 px-2 text-emerald-400">98.7%</td>
+                          <td className="py-4 px-2">
+                            <div className="w-full bg-gray-700 rounded-full h-2">
+                              <div className="bg-gradient-to-r from-violet-500 to-purple-500 h-2 rounded-full" style={{width: '82%'}} />
+                            </div>
+                          </td>
+                          <td className="py-4 px-2 text-white font-semibold">$312K</td>
+                        </tr>
+                        <tr className="border-b border-gray-800/30 hover:bg-gray-800/20 transition-colors">
+                          <td className="py-4 px-2">
+                            <div className="flex items-center space-x-3">
+                              <span className="text-2xl">👩‍💼</span>
+                              <div>
+                                <p className="text-white font-medium">Department Manager</p>
+                                <p className="text-gray-400 text-sm">Cross-functional coordination</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-4 px-2 text-white font-semibold">4,293</td>
+                          <td className="py-4 px-2 text-emerald-400">45ms</td>
+                          <td className="py-4 px-2 text-emerald-400">97.9%</td>
+                          <td className="py-4 px-2">
+                            <div className="w-full bg-gray-700 rounded-full h-2">
+                              <div className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full" style={{width: '86%'}} />
+                            </div>
+                          </td>
+                          <td className="py-4 px-2 text-white font-semibold">$198K</td>
+                        </tr>
+                        <tr className="border-b border-gray-800/30 hover:bg-gray-800/20 transition-colors">
+                          <td className="py-4 px-2">
+                            <div className="flex items-center space-x-3">
+                              <span className="text-2xl">👨‍🔬</span>
+                              <div>
+                                <p className="text-white font-medium">Senior Associate</p>
+                                <p className="text-gray-400 text-sm">Complex task execution</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-4 px-2 text-white font-semibold">8,947</td>
+                          <td className="py-4 px-2 text-emerald-400">67ms</td>
+                          <td className="py-4 px-2 text-emerald-400">96.4%</td>
+                          <td className="py-4 px-2">
+                            <div className="w-full bg-gray-700 rounded-full h-2">
+                              <div className="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full" style={{width: '91%'}} />
+                            </div>
+                          </td>
+                          <td className="py-4 px-2 text-white font-semibold">$89K</td>
+                        </tr>
+                        <tr className="border-b border-gray-800/30 hover:bg-gray-800/20 transition-colors">
+                          <td className="py-4 px-2">
+                            <div className="flex items-center space-x-3">
+                              <span className="text-2xl">👩‍💻</span>
+                              <div>
+                                <p className="text-white font-medium">Associate</p>
+                                <p className="text-gray-400 text-sm">Operational task processing</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-4 px-2 text-white font-semibold">31,959</td>
+                          <td className="py-4 px-2 text-emerald-400">89ms</td>
+                          <td className="py-4 px-2 text-emerald-400">95.8%</td>
+                          <td className="py-4 px-2">
+                            <div className="w-full bg-gray-700 rounded-full h-2">
+                              <div className="bg-gradient-to-r from-amber-500 to-orange-500 h-2 rounded-full" style={{width: '94%'}} />
+                            </div>
+                          </td>
+                          <td className="py-4 px-2 text-white font-semibold">$54K</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Real-time Neural Activity */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg">
+                  <CardHeader>
+                    <CardTitle className="text-white font-bold">Neural Activity Heatmap</CardTitle>
+                    <p className="text-gray-400 text-sm">Real-time synaptic firing patterns</p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-300">Frontal Cortex (Strategy)</span>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-20 bg-gray-700 rounded-full h-2">
+                            <div className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full animate-pulse" style={{width: '92%'}} />
+                          </div>
+                          <span className="text-emerald-400 font-semibold">92%</span>
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-300">Motor Cortex (Execution)</span>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-20 bg-gray-700 rounded-full h-2">
+                            <div className="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full animate-pulse" style={{width: '87%'}} />
+                          </div>
+                          <span className="text-emerald-400 font-semibold">87%</span>
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-300">Neural Pathways (Data Flow)</span>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-20 bg-gray-700 rounded-full h-2">
+                            <div className="bg-gradient-to-r from-blue-500 to-cyan-500 h-2 rounded-full animate-pulse" style={{width: '95%'}} />
+                          </div>
+                          <span className="text-emerald-400 font-semibold">95%</span>
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-300">Memory Centers (Learning)</span>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-20 bg-gray-700 rounded-full h-2">
+                            <div className="bg-gradient-to-r from-amber-500 to-orange-500 h-2 rounded-full animate-pulse" style={{width: '89%'}} />
+                          </div>
+                          <span className="text-emerald-400 font-semibold">89%</span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gradient-to-br from-gray-950/80 via-black/60 to-gray-900/80 border-gray-700/30 backdrop-blur-lg">
+                  <CardHeader>
+                    <CardTitle className="text-white font-bold">System Vitals</CardTitle>
+                    <p className="text-gray-400 text-sm">Critical ecosystem health metrics</p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center p-3 bg-emerald-500/10 rounded-lg border border-emerald-500/20">
+                        <div className="flex items-center space-x-2">
+                          <CheckCircle className="w-4 h-4 text-emerald-500" />
+                          <span className="text-white">System Status</span>
+                        </div>
+                        <span className="text-emerald-400 font-semibold">Optimal</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                        <div className="flex items-center space-x-2">
+                          <Activity className="w-4 h-4 text-blue-500" />
+                          <span className="text-white">Network Latency</span>
+                        </div>
+                        <span className="text-blue-400 font-semibold">12ms</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-purple-500/10 rounded-lg border border-purple-500/20">
+                        <div className="flex items-center space-x-2">
+                          <TrendingUp className="w-4 h-4 text-purple-500" />
+                          <span className="text-white">Processing Capacity</span>
+                        </div>
+                        <span className="text-purple-400 font-semibold">847 TPS</span>
+                      </div>
+                      <div className="flex justify-between items-center p-3 bg-amber-500/10 rounded-lg border border-amber-500/20">
+                        <div className="flex items-center space-x-2">
+                          <AlertCircle className="w-4 h-4 text-amber-500" />
+                          <span className="text-white">Memory Usage</span>
+                        </div>
+                        <span className="text-amber-400 font-semibold">73.4%</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
