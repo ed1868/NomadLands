@@ -9,7 +9,7 @@ import NomadLands from "@/pages/nomad-lands";
 import SmartContracts from "@/pages/smart-contracts";
 import NomadFleets from "@/pages/nomad-fleets";
 import ApiDocs from "@/pages/api-docs";
-import Signup from "@/pages/signup";
+import Signup from "@/pages/signup-new";
 import Dashboard from "@/pages/dashboard";
 import NotFound from "@/pages/not-found";
 

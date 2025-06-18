@@ -273,6 +273,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
   lastName: true,
   profileImageUrl: true,
   phoneNumber: true,
+  dateOfBirth: true,
   password: true,
 });
 
