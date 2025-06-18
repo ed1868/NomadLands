@@ -20,6 +20,8 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserByWallet(walletAddress: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
+  updateUserPhone(userId: string, phoneNumber: string, verificationCode: string, expiry: Date): Promise<void>;
+  verifyUserPhone(userId: string, code: string): Promise<boolean>;
   
   // Agent operations
   getAllAgents(): Promise<Agent[]>;
@@ -68,6 +70,49 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return user;
+  }
+
+  async updateUserPhone(userId: string, phoneNumber: string, verificationCode: string, expiry: Date): Promise<void> {
+    await db
+      .update(users)
+      .set({
+        phoneNumber,
+        phoneVerificationCode: verificationCode,
+        phoneVerificationExpiry: expiry,
+        phoneVerified: false,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId));
+  }
+
+  async verifyUserPhone(userId: string, code: string): Promise<boolean> {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId));
+
+    if (!user || !user.phoneVerificationCode || !user.phoneVerificationExpiry) {
+      return false;
+    }
+
+    if (new Date() > user.phoneVerificationExpiry) {
+      return false;
+    }
+
+    if (user.phoneVerificationCode === code) {
+      await db
+        .update(users)
+        .set({
+          phoneVerified: true,
+          phoneVerificationCode: null,
+          phoneVerificationExpiry: null,
+          updatedAt: new Date(),
+        })
+        .where(eq(users.id, userId));
+      return true;
+    }
+
+    return false;
   }
 
   // Agent operations

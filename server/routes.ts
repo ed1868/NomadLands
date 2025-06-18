@@ -204,6 +204,93 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // SMS Verification Routes
+  app.post("/api/user/:walletAddress/send-verification", async (req, res) => {
+    try {
+      const { walletAddress } = req.params;
+      const { phoneNumber } = req.body;
+      
+      if (!ethers.isAddress(walletAddress)) {
+        return res.status(400).json({ message: "Invalid wallet address" });
+      }
+
+      if (!phoneNumber || !/^\+?[\d\s\-\(\)]+$/.test(phoneNumber)) {
+        return res.status(400).json({ message: "Valid phone number required" });
+      }
+
+      const user = await storage.getUserByWallet(walletAddress);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Generate 6-digit verification code
+      const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+      const expiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+      // Save verification code to database
+      await storage.updateUserPhone(user.id, phoneNumber, verificationCode, expiry);
+
+      // Send SMS via TextBelt
+      const textbeltResponse = await fetch('https://textbelt.com/text', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          phone: phoneNumber,
+          message: `Your AI Nomads verification code is: ${verificationCode}. This code expires in 10 minutes.`,
+          key: process.env.TEXTBELT_API_KEY,
+        }),
+      });
+
+      const result = await textbeltResponse.json();
+      
+      if (!result.success) {
+        console.error("TextBelt error:", result.error);
+        return res.status(500).json({ message: "Failed to send verification code" });
+      }
+
+      res.json({ 
+        message: "Verification code sent successfully",
+        quotaRemaining: result.quotaRemaining 
+      });
+    } catch (error) {
+      console.error("Error sending verification:", error);
+      res.status(500).json({ message: "Failed to send verification code" });
+    }
+  });
+
+  app.post("/api/user/:walletAddress/verify-phone", async (req, res) => {
+    try {
+      const { walletAddress } = req.params;
+      const { code } = req.body;
+      
+      if (!ethers.isAddress(walletAddress)) {
+        return res.status(400).json({ message: "Invalid wallet address" });
+      }
+
+      if (!code || code.length !== 6) {
+        return res.status(400).json({ message: "Valid 6-digit code required" });
+      }
+
+      const user = await storage.getUserByWallet(walletAddress);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const isValid = await storage.verifyUserPhone(user.id, code);
+      
+      if (isValid) {
+        res.json({ message: "Phone number verified successfully" });
+      } else {
+        res.status(400).json({ message: "Invalid or expired verification code" });
+      }
+    } catch (error) {
+      console.error("Error verifying phone:", error);
+      res.status(500).json({ message: "Failed to verify phone number" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
