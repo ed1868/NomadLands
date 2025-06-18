@@ -1425,343 +1425,349 @@ export default function Dashboard() {
       </div>
     );
   }
-            nodeColor = colors.neural;
-            nodeSize = 2.0 + Math.random() * 0.8;
-          } else {
-            nodeColor = colors.dendrite;
-            nodeSize = 1.5 + Math.random() * 0.6;
-          }
-          
-          nodes.push({
-            id: `node-${regionIndex}-${i}`,
-            x: x,
-            y: y,
-            region: regionIndex,
-            type: region.type,
-            color: nodeColor,
-            size: nodeSize,
-            opacity: 0.5 + Math.random() * 0.4
-          });
-        }
-      });
 
-      console.log(`Generated ${nodes.length} visual neural nodes`);
+  // Overview tab content  
+  if (activeTab === 'overview') {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <div className="p-4 md:p-8">
+          <h1 className="text-3xl font-bold mb-6">Command Center</h1>
+          <p className="text-gray-400">Dashboard overview content goes here.</p>
+        </div>
+      </div>
+    );
+  }
 
-      // Generate massive connection network
-      console.log('Generating neural connections...');
-      
-      // Create optimized regional connections (within brain regions)
-      regions.forEach((region, regionIndex) => {
-        const regionNodes = nodes.filter(n => n.region === regionIndex);
-        
-        // Limit connections per region for performance
-        const maxConnections = Math.min(500, Math.floor(regionNodes.length / 10));
-        
-        for (let i = 0; i < maxConnections; i += 5) {
-          const sourceNode = regionNodes[i];
-          if (!sourceNode) continue;
-          
-          // Connect to 1-2 nearby nodes only
-          const connectionsCount = 1 + Math.floor(Math.random() * 2);
-          for (let j = 0; j < connectionsCount; j++) {
-            const targetIndex = (i + j + 1) % regionNodes.length;
-            const targetNode = regionNodes[targetIndex];
-            
-            if (targetNode && targetNode.id !== sourceNode.id) {
-              // Colorful synapses like the screenshot
-              const synapseColors = ['#3b82f6', '#f59e0b', '#06b6d4', '#8b5cf6', '#f97316', '#10b981'];
-              const randomColor = synapseColors[Math.floor(Math.random() * synapseColors.length)];
-              
-              connections.push({
-                source: sourceNode,
-                target: targetNode,
-                color: randomColor,
-                opacity: 0.2 + Math.random() * 0.3,
-                width: 0.5 + Math.random() * 0.4
-              });
-            }
-          }
-        }
-      });
+  // Profile tab content
+  if (activeTab === 'profile') {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <div className="p-4 md:p-8">
+          <h1 className="text-3xl font-bold mb-6">Profile</h1>
+          <p className="text-gray-400">Profile content goes here.</p>
+        </div>
+      </div>
+    );
+  }
 
-      // Create limited inter-regional connections
-      for (let i = 0; i < regions.length - 1; i++) {
-        for (let j = i + 1; j < regions.length; j++) {
-          const region1Nodes = nodes.filter(n => n.region === i);
-          const region2Nodes = nodes.filter(n => n.region === j);
-          
-          // Drastically reduce inter-regional connections
-          const connectionCount = Math.min(50, Math.min(region1Nodes.length, region2Nodes.length) / 100);
-          
-          for (let k = 0; k < connectionCount; k++) {
-            const source = region1Nodes[Math.floor(Math.random() * region1Nodes.length)];
-            const target = region2Nodes[Math.floor(Math.random() * region2Nodes.length)];
-            
-            if (source && target) {
-              // Colorful inter-regional synapses
-              const synapseColors = ['#3b82f6', '#f59e0b', '#06b6d4', '#8b5cf6', '#f97316', '#10b981'];
-              const randomColor = synapseColors[Math.floor(Math.random() * synapseColors.length)];
-              
-              connections.push({
-                source: source,
-                target: target,
-                color: randomColor,
-                opacity: 0.15 + Math.random() * 0.25,
-                width: 0.4 + Math.random() * 0.3
-              });
-            }
-          }
-        }
-      }
+  // My Agents tab content
+  if (activeTab === 'my-agents') {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <div className="p-4 md:p-8">
+          <h1 className="text-3xl font-bold mb-6">My Agents</h1>
+          <p className="text-gray-400">My agents content goes here.</p>
+        </div>
+      </div>
+    );
+  }
 
-      console.log(`Generated ${connections.length} neural connections`);
+  // Contracts tab content
+  if (activeTab === 'contracts') {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <div className="p-4 md:p-8">
+          <h1 className="text-3xl font-bold mb-6">Contracts</h1>
+          <p className="text-gray-400">Contracts content goes here.</p>
+        </div>
+      </div>
+    );
+  }
 
-      // Render connections first (background layer)
-      const connectionGroup = svg.append('g').attr('class', 'connections');
-      
-      // Render connections with strict limits for performance
-      const connectionPaths = connectionGroup.selectAll('line')
-        .data(connections.slice(0, 5000)) // Limit to 5k visible connections to prevent timeout
-        .enter()
-        .append('line')
-        .attr('x1', d => d.source.x)
-        .attr('y1', d => d.source.y)
-        .attr('x2', d => d.target.x)
-        .attr('y2', d => d.target.y)
-        .attr('stroke', d => d.color)
-        .attr('stroke-width', d => d.width)
-        .attr('stroke-opacity', 0)
-        .attr('filter', 'url(#connectionGlow)');
+  // Analytics tab content
+  if (activeTab === 'analytics') {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <div className="p-4 md:p-8">
+          <h1 className="text-3xl font-bold mb-6">Analytics</h1>
+          <p className="text-gray-400">Analytics content goes here.</p>
+        </div>
+      </div>
+    );
+  }
 
-      // Render nodes in smaller, optimized batches
-      const nodeGroup = svg.append('g').attr('class', 'nodes');
-      
-      // Render high-importance nodes first
-      const importantNodes = nodes.filter(n => n.color === colors.core || n.color === colors.synapse).slice(0, 2000);
-      const importantCircles = nodeGroup.selectAll('.important-node')
-        .data(importantNodes)
-        .enter()
-        .append('circle')
-        .attr('class', 'important-node')
-        .attr('cx', d => d.x)
-        .attr('cy', d => d.y)
-        .attr('r', d => d.size)
-        .attr('fill', d => d.color)
-        .attr('opacity', 0)
-        .attr('filter', 'url(#glow)');
+  // Fleet tab content
+  if (activeTab === 'fleet') {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <div className="p-4 md:p-8">
+          <h1 className="text-3xl font-bold mb-6">My Fleet (beta)</h1>
+          <p className="text-gray-400">Fleet content goes here.</p>
+        </div>
+      </div>
+    );
+  }
 
-      // Progressive loading of regular nodes in smaller batches
-      const regularNodes = nodes.filter(n => n.color !== colors.core && n.color !== colors.synapse);
-      const maxRegularNodes = Math.min(25000, regularNodes.length); // Limit total nodes
-      const batchSize = 5000; // Smaller batch size
-      
-      for (let i = 0; i < maxRegularNodes; i += batchSize) {
-        const batch = regularNodes.slice(i, i + batchSize);
-        
-        setTimeout(() => {
-          nodeGroup.selectAll(`.node-batch-${i}`)
-            .data(batch)
-            .enter()
-            .append('circle')
-            .attr('class', `node-batch-${i}`)
-            .attr('cx', d => d.x)
-            .attr('cy', d => d.y)
-            .attr('r', d => d.size)
-            .attr('fill', d => d.color)
-            .attr('opacity', 0);
-        }, i / batchSize * 100); // Stagger batch loading
-      }
+  // Default fallback
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <div className="p-4 md:p-8">
+        <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+        <p className="text-gray-400">Please select a tab to view content.</p>
+      </div>
+    </div>
+  );
+}
 
-      // Animate the brain coming alive
-      setTimeout(() => {
-        // Animate connections appearing in waves
-        connectionPaths.transition()
-          .duration(4000)
-          .delay((d, i) => i * 0.1)
-          .attr('stroke-opacity', d => d.opacity);
+// Three.js Neural Network Visualization Component
+const ThreeJSNeuralNetwork = () => {
+  const mountRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<THREE.Scene | null>(null);
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const animationIdRef = useRef<number | null>(null);
 
-        // Animate important nodes first
-        importantCircles.transition()
-          .duration(2000)
-          .delay((d, i) => i * 2)
-          .attr('opacity', d => d.opacity);
+  useEffect(() => {
+    if (!mountRef.current) return;
 
-        // Animate regular nodes in regional waves
-        regions.forEach((region, regionIndex) => {
-          setTimeout(() => {
-            svg.selectAll('circle')
-              .filter((d: any) => d && d.region === regionIndex)
-              .transition()
-              .duration(1500)
-              .attr('opacity', (d: any) => d.opacity);
-          }, regionIndex * 300);
-        });
+    // Scene setup
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000);
+    sceneRef.current = scene;
 
-        // Add continuous neural activity pulses
-        setInterval(() => {
-          // Random neural firing across regions
-          const randomRegion = Math.floor(Math.random() * regions.length);
-          const regionCenter = regions[randomRegion].center;
-          
-          // Create expanding pulse
-          const pulse = svg.append('circle')
-            .attr('cx', regionCenter.x)
-            .attr('cy', regionCenter.y)
-            .attr('r', 5)
-            .attr('fill', 'none')
-            .attr('stroke', colors.core)
-            .attr('stroke-width', 2)
-            .attr('stroke-opacity', 0.8)
-            .attr('filter', 'url(#glow)');
+    // Camera setup
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      mountRef.current.clientWidth / mountRef.current.clientHeight,
+      0.1,
+      1000
+    );
+    camera.position.z = 5;
 
-          pulse.transition()
-            .duration(1500)
-            .attr('r', 60)
-            .attr('stroke-opacity', 0)
-            .remove();
-        }, 800);
+    // Renderer setup
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
+    renderer.setClearColor(0x000000, 1);
+    mountRef.current.appendChild(renderer.domElement);
+    rendererRef.current = renderer;
 
-      }, 1000);
+    // Create 500 nodes for point cloud
+    const nodeCount = 500;
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(nodeCount * 3);
+    const colors = new Float32Array(nodeCount * 3);
+    const sizes = new Float32Array(nodeCount);
 
-      // Add brain region labels
-      const labels = [
-        { x: leftCenter.x, y: height * 0.25, text: 'L-Cortex', color: colors.core },
-        { x: rightCenter.x, y: height * 0.25, text: 'R-Cortex', color: colors.core },
-        { x: corpus.x, y: height * 0.45, text: 'Corpus', color: colors.synapse },
-        { x: width * 0.5, y: height * 0.85, text: 'Stem', color: colors.neural }
-      ];
+    // Colorful neural network colors
+    const neuralColors = [
+      new THREE.Color(0x3b82f6), // blue
+      new THREE.Color(0xf59e0b), // orange
+      new THREE.Color(0x06b6d4), // cyan
+      new THREE.Color(0x8b5cf6), // violet
+      new THREE.Color(0xf97316), // orange
+      new THREE.Color(0x10b981), // emerald
+      new THREE.Color(0xeab308), // yellow
+      new THREE.Color(0xef4444), // red
+    ];
 
-      labels.forEach((label, i) => {
-        setTimeout(() => {
-          svg.append('text')
-            .attr('x', label.x)
-            .attr('y', label.y)
-            .attr('text-anchor', 'middle')
-            .attr('fill', label.color)
-            .attr('font-size', '11px')
-            .attr('font-weight', 'bold')
-            .attr('filter', 'url(#glow)')
-            .attr('opacity', 0)
-            .text(label.text)
-            .transition()
-            .duration(1000)
-            .attr('opacity', 0.8);
-        }, 3000 + i * 200);
-      });
+    // Generate random 3D positions and colors
+    for (let i = 0; i < nodeCount; i++) {
+      // Random spherical distribution
+      const radius = 2 + Math.random() * 2;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
 
-      // Add title at the top
-      svg.append('text')
-        .attr('x', width / 2)
-        .attr('y', 25)
-        .attr('fill', colors.core)
-        .attr('font-size', '18px')
-        .attr('font-weight', 'bold')
-        .attr('text-anchor', 'middle')
-        .attr('filter', 'url(#glow)')
-        .text('Total AI Agents Running Tasks');
+      positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+      positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+      positions[i * 3 + 2] = radius * Math.cos(phi);
 
-      svg.append('text')
-        .attr('x', width / 2)
-        .attr('y', 45)
-        .attr('fill', '#888888')
-        .attr('font-size', '12px')
-        .attr('text-anchor', 'middle')
-        .text(`247,382 agents • 89,574 active tasks • Live activity`);
+      // Random color from neural palette
+      const color = neuralColors[Math.floor(Math.random() * neuralColors.length)];
+      colors[i * 3] = color.r;
+      colors[i * 3 + 1] = color.g;
+      colors[i * 3 + 2] = color.b;
 
-      // Fast synaptic firing animation
-      const createSynapticFiring = () => {
-        // Select random start and end points from existing nodes
-        if (nodes.length < 2) return;
-        
-        const startNode = nodes[Math.floor(Math.random() * nodes.length)];
-        const endNode = nodes[Math.floor(Math.random() * nodes.length)];
-        
-        if (startNode === endNode) return;
-
-        // Create fast-moving pulse
-        const pulse = svg.append('circle')
-          .attr('cx', startNode.x)
-          .attr('cy', startNode.y)
-          .attr('r', 1.5)
-          .attr('fill', colors.core)
-          .attr('opacity', 1)
-          .attr('filter', 'url(#glow)');
-
-        // Animate pulse along path
-        pulse.transition()
-          .duration(150) // Very fast - 150ms
-          .attr('cx', endNode.x)
-          .attr('cy', endNode.y)
-          .attr('r', 3)
-          .attr('opacity', 0.8)
-          .transition()
-          .duration(50)
-          .attr('r', 0.5)
-          .attr('opacity', 0)
-          .remove();
-
-        // Colorful synaptic flash like the screenshot
-        const synapseColors = [
-          '#3b82f6', // blue
-          '#f59e0b', // amber/orange  
-          '#06b6d4', // cyan
-          '#8b5cf6', // violet
-          '#f97316', // orange
-          '#10b981', // emerald
-          '#eab308', // yellow
-          '#ef4444', // red
-          '#06d6a0', // teal
-          '#f472b6'  // pink
-        ];
-        const flashColor = synapseColors[Math.floor(Math.random() * synapseColors.length)];
-        
-        const flash = svg.append('line')
-          .attr('x1', startNode.x)
-          .attr('y1', startNode.y)
-          .attr('x2', endNode.x)
-          .attr('y2', endNode.y)
-          .attr('stroke', flashColor)
-          .attr('stroke-width', 1.5 + Math.random() * 1)
-          .attr('stroke-opacity', 0.8)
-          .attr('filter', `drop-shadow(0 0 4px ${flashColor})`);
-
-        flash.transition()
-          .duration(120)
-          .attr('stroke-opacity', 0)
-          .remove();
-      };
-
-      // Ultra-fast synaptic firing every 50ms for continuous activity
-      const firingInterval = setInterval(createSynapticFiring, 50);
-
-      // Cleanup interval when component unmounts or tab changes
-      const cleanup = () => {
-        clearInterval(firingInterval);
-      };
-
-      // Store cleanup function for later use
-      (svg.node() as any).__cleanup = cleanup;
-
-      console.log('Massive hive mind brain visualization complete');
+      // Random size
+      sizes[i] = 2 + Math.random() * 4;
     }
 
-    // Cleanup function when tab changes or component unmounts
-    return () => {
-      const container = d3.select('#voronoi-ecosystem');
-      const svgNode = container.select('svg').node();
-      if (svgNode && (svgNode as any).__cleanup) {
-        (svgNode as any).__cleanup();
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+    // Point material with vertex colors
+    const material = new THREE.PointsMaterial({
+      size: 0.1,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.8,
+      sizeAttenuation: true,
+    });
+
+    // Create point cloud
+    const points = new THREE.Points(geometry, material);
+    scene.add(points);
+
+    // Create connections between nearby nodes
+    const connectionGeometry = new THREE.BufferGeometry();
+    const connectionPositions: number[] = [];
+    const connectionColors: number[] = [];
+
+    // Find connections between nearby nodes
+    for (let i = 0; i < nodeCount; i++) {
+      const pos1 = new THREE.Vector3(
+        positions[i * 3],
+        positions[i * 3 + 1],
+        positions[i * 3 + 2]
+      );
+
+      // Connect to 2-3 nearby nodes
+      const connections = Math.floor(Math.random() * 2) + 2;
+      let connected = 0;
+
+      for (let j = 0; j < nodeCount && connected < connections; j++) {
+        if (i === j) continue;
+
+        const pos2 = new THREE.Vector3(
+          positions[j * 3],
+          positions[j * 3 + 1],
+          positions[j * 3 + 2]
+        );
+
+        const distance = pos1.distanceTo(pos2);
+        if (distance < 1.5) {
+          // Add connection line
+          connectionPositions.push(pos1.x, pos1.y, pos1.z);
+          connectionPositions.push(pos2.x, pos2.y, pos2.z);
+
+          // Random connection color
+          const connectionColor = neuralColors[Math.floor(Math.random() * neuralColors.length)];
+          connectionColors.push(connectionColor.r, connectionColor.g, connectionColor.b);
+          connectionColors.push(connectionColor.r, connectionColor.g, connectionColor.b);
+
+          connected++;
+        }
       }
+    }
+
+    connectionGeometry.setAttribute('position', new THREE.Float32BufferAttribute(connectionPositions, 3));
+    connectionGeometry.setAttribute('color', new THREE.Float32BufferAttribute(connectionColors, 3));
+
+    const connectionMaterial = new THREE.LineBasicMaterial({
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.3,
+    });
+
+    const connections = new THREE.LineSegments(connectionGeometry, connectionMaterial);
+    scene.add(connections);
+
+    // Animation loop
+    const animate = () => {
+      animationIdRef.current = requestAnimationFrame(animate);
+
+      // Rotate the entire neural network
+      points.rotation.y += 0.005;
+      connections.rotation.y += 0.005;
+
+      // Pulse the nodes
+      const time = Date.now() * 0.001;
+      const sizeAttribute = geometry.getAttribute('size') as THREE.BufferAttribute;
+      for (let i = 0; i < nodeCount; i++) {
+        const originalSize = 2 + Math.random() * 4;
+        const pulse = Math.sin(time * 2 + i * 0.1) * 0.5 + 1;
+        sizeAttribute.setX(i, originalSize * pulse * 0.1);
+      }
+      sizeAttribute.needsUpdate = true;
+
+      // Animate connection opacity for synaptic firing effect
+      const opacityBase = 0.1 + Math.sin(time * 3) * 0.2;
+      connectionMaterial.opacity = Math.max(0.1, opacityBase);
+
+      renderer.render(scene, camera);
     };
-  }, [activeTab]);
 
-  // Logout function
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    window.location.href = '/';
-  };
+    animate();
 
-  if (isLoading) {
+    // Handle resize
+    const handleResize = () => {
+      if (!mountRef.current) return;
+      
+      camera.aspect = mountRef.current.clientWidth / mountRef.current.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(mountRef.current.clientWidth, mountRef.current.clientHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (animationIdRef.current) {
+        cancelAnimationFrame(animationIdRef.current);
+      }
+      if (mountRef.current && renderer.domElement) {
+        mountRef.current.removeChild(renderer.domElement);
+      }
+      renderer.dispose();
+    };
+  }, []);
+
+  return (
+    <div 
+      ref={mountRef} 
+      className="w-full h-96 bg-black rounded-lg border border-gray-800"
+      style={{ minHeight: '400px' }}
+    />
+  );
+};
+
+// Nomad Ecosystem Tab with Three.js Neural Network
+if (activeTab === 'ecosystem') {
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <div className="p-4 md:p-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2 text-emerald-400">Nomad Ecosystem</h1>
+          <p className="text-gray-400">Real-time 3D neural network visualization of AI agent activity</p>
+        </div>
+
+        {/* Neural Network Visualization */}
+        <div className="mb-8">
+          <div className="relative">
+            <div className="absolute top-4 left-4 z-10 bg-black/80 backdrop-blur-sm rounded-lg p-4 border border-gray-800">
+              <h2 className="text-xl font-bold text-emerald-400 mb-2">Total AI Agents Running Tasks</h2>
+              <div className="space-y-1 text-sm">
+                <div className="text-blue-400">500 Active Nodes</div>
+                <div className="text-orange-400">Fast Synaptic Firing</div>
+                <div className="text-cyan-400">3D Point Cloud Network</div>
+                <div className="text-gray-400">Live Activity Visualization</div>
+              </div>
+            </div>
+            <ThreeJSNeuralNetwork />
+          </div>
+        </div>
+
+        {/* Ecosystem Statistics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="bg-gray-900 rounded-lg p-6 border border-gray-800">
+            <div className="text-2xl font-bold text-emerald-400">247,382</div>
+            <div className="text-gray-400">Total Agents</div>
+          </div>
+          <div className="bg-gray-900 rounded-lg p-6 border border-gray-800">
+            <div className="text-2xl font-bold text-blue-400">89,574</div>
+            <div className="text-gray-400">Active Tasks</div>
+          </div>
+          <div className="bg-gray-900 rounded-lg p-6 border border-gray-800">
+            <div className="text-2xl font-bold text-orange-400">95.7%</div>
+            <div className="text-gray-400">Success Rate</div>
+          </div>
+          <div className="bg-gray-900 rounded-lg p-6 border border-gray-800">
+            <div className="text-2xl font-bold text-cyan-400">$1.2M</div>
+            <div className="text-gray-400">Daily Revenue</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Logout function
+const handleLogout = () => {
+  localStorage.removeItem('token');
+  window.location.href = '/';
+};
+
+if (isLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="animate-spin w-8 h-8 border-4 border-emerald-400 border-t-transparent rounded-full" />
