@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { useWallet } from "@/hooks/use-wallet";
 import { useToast } from "@/hooks/use-toast";
+import * as d3 from "d3";
 import ReactFlow, { 
   MiniMap, 
   Controls, 
@@ -61,7 +62,8 @@ import {
   Coins,
   ChevronLeft,
   ChevronRight,
-  Menu
+  Menu,
+  Globe
 } from "lucide-react";
 
 // Custom Agent Node Component with visible handles and click functionality
@@ -1341,6 +1343,18 @@ export default function Dashboard() {
                   </Badge>
                 </div>
               </button>
+
+              <button
+                onClick={() => { setActiveTab('ecosystem'); setIsMobileSidebarOpen(false); }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
+                  activeTab === 'ecosystem' 
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20' 
+                    : 'text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/30 border border-transparent'
+                }`}
+              >
+                <Globe className="w-5 h-5" />
+                <span className="font-medium">Nomad Ecosystem</span>
+              </button>
             </nav>
           </div>
         </div>
@@ -2373,6 +2387,158 @@ export default function Dashboard() {
                     </div>
                   </CardContent>
                 </Card>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'ecosystem' && (
+            <div className="space-y-6">
+              {/* Ecosystem Header */}
+              <div className="mb-8">
+                <h2 className="text-2xl lg:text-3xl font-bold text-white mb-2">Nomad Ecosystem</h2>
+                <p className="text-gray-400">Real-time visualization of agent performance data using Voronoi stippling</p>
+              </div>
+
+              {/* Ecosystem Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">Total Agents</p>
+                        <p className="text-2xl font-bold text-white">{mockAgents.length}</p>
+                      </div>
+                      <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                        <Bot className="w-5 h-5 text-emerald-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">Total Runs</p>
+                        <p className="text-2xl font-bold text-white">
+                          {mockAgents.reduce((sum, agent) => sum + agent.runs, 0).toLocaleString()}
+                        </p>
+                      </div>
+                      <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center">
+                        <Activity className="w-5 h-5 text-blue-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">Success Rate</p>
+                        <p className="text-2xl font-bold text-white">
+                          {(mockAgents.reduce((sum, agent) => sum + agent.success, 0) / mockAgents.length).toFixed(1)}%
+                        </p>
+                      </div>
+                      <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
+                        <TrendingUp className="w-5 h-5 text-green-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">Total Revenue</p>
+                        <p className="text-2xl font-bold text-white">
+                          ${mockAgents.reduce((sum, agent) => sum + agent.revenue, 0).toLocaleString()}
+                        </p>
+                      </div>
+                      <div className="w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center">
+                        <DollarSign className="w-5 h-5 text-purple-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Voronoi Stippling Visualization */}
+              <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h3 className="text-xl font-bold text-white mb-2">Agent Performance Ecosystem</h3>
+                      <p className="text-gray-400 text-sm">
+                        Voronoi stippling visualization where each dot represents an agent, sized by total runs and colored by performance metrics
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
+                        <span className="text-xs text-gray-400">High Performance</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                        <span className="text-xs text-gray-400">Medium Performance</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                        <span className="text-xs text-gray-400">Low Performance</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* D3 Visualization Container */}
+                  <div 
+                    id="voronoi-ecosystem" 
+                    className="w-full bg-black/20 rounded-lg border border-gray-800/50"
+                    style={{ height: '600px' }}
+                  />
+                </CardContent>
+              </Card>
+
+              {/* Agent Details Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {mockAgents.slice(0, 6).map((agent, index) => (
+                  <Card key={index} className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="font-semibold text-white">{agent.name}</h4>
+                        <Badge 
+                          className={`text-xs px-2 py-1 ${
+                            agent.status === 'Active' 
+                              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400/40' 
+                              : agent.status === 'Paused'
+                              ? 'bg-yellow-500/20 text-yellow-300 border-yellow-400/40'
+                              : 'bg-red-500/20 text-red-300 border-red-400/40'
+                          }`}
+                        >
+                          {agent.status}
+                        </Badge>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        <div>
+                          <span className="text-gray-400">Runs:</span>
+                          <p className="text-white font-semibold">{agent.runs.toLocaleString()}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-400">Success:</span>
+                          <p className="text-emerald-400 font-semibold">{agent.success}%</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-400">Revenue:</span>
+                          <p className="text-white font-semibold">${agent.revenue.toLocaleString()}</p>
+                        </div>
+                        <div>
+                          <span className="text-gray-400">Type:</span>
+                          <p className="text-gray-300">{agent.type}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             </div>
           )}
