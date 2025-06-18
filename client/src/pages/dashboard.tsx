@@ -4,7 +4,7 @@ import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { useWallet } from "@/hooks/use-wallet";
 import { useToast } from "@/hooks/use-toast";
-import * as d3 from "d3";
+import * as THREE from "three";
 import ReactFlow, { 
   MiniMap, 
   Controls, 
@@ -1115,19 +1115,20 @@ export default function Dashboard() {
     }
   }, [activeTab, selectedTemplate, nodes.length]);
 
-  // Massive Brain-Like Hive Mind Visualization (200k+ data points)
+  // Three.js Neural Network Visualization 
+  const mountRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<THREE.Scene>();
+  const rendererRef = useRef<THREE.WebGLRenderer>();
+  const animationRef = useRef<number>();
+
   useEffect(() => {
-    if (activeTab === 'ecosystem') {
-      console.log('Starting massive hive mind brain visualization...');
-      const container = d3.select('#voronoi-ecosystem');
+    if (activeTab === 'ecosystem' && mountRef.current) {
+      console.log('Starting Three.js neural network visualization...');
       
-      // Clean up any existing intervals first
-      const existingSvg = container.select('svg').node();
-      if (existingSvg && (existingSvg as any).__cleanup) {
-        (existingSvg as any).__cleanup();
+      // Clear previous visualization
+      if (mountRef.current) {
+        mountRef.current.innerHTML = '';
       }
-      
-      container.selectAll('*').remove();
 
       const width = 800;
       const height = 500;
