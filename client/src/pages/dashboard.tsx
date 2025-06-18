@@ -66,6 +66,30 @@ import {
   Globe
 } from "lucide-react";
 
+// Mock agent data for ecosystem visualization
+const mockAgents = [
+  { name: "Data Analyst AI", runs: 15420, success: 94.2, revenue: 23400, status: "Active", type: "Analytics" },
+  { name: "Email Classifier", runs: 8650, success: 97.8, revenue: 12800, status: "Active", type: "NLP" },
+  { name: "Cloud Monitor", runs: 22100, success: 89.5, revenue: 18900, status: "Active", type: "Infrastructure" },
+  { name: "Sales Assistant", runs: 7230, success: 92.1, revenue: 31200, status: "Paused", type: "Sales" },
+  { name: "Code Reviewer", runs: 11850, success: 88.7, revenue: 15600, status: "Active", type: "Development" },
+  { name: "Report Generator", runs: 6420, success: 96.3, revenue: 9800, status: "Active", type: "Automation" },
+  { name: "Customer Support", runs: 18750, success: 91.4, revenue: 28500, status: "Active", type: "Support" },
+  { name: "Inventory Tracker", runs: 13200, success: 85.9, revenue: 16700, status: "Maintenance", type: "Operations" },
+  { name: "Security Scanner", runs: 9840, success: 98.1, revenue: 22100, status: "Active", type: "Security" },
+  { name: "Content Creator", runs: 4560, success: 87.3, revenue: 14300, status: "Active", type: "Creative" },
+  { name: "Financial Analyzer", runs: 16890, success: 93.8, revenue: 34500, status: "Active", type: "Finance" },
+  { name: "HR Assistant", runs: 5670, success: 90.2, revenue: 11900, status: "Paused", type: "HR" },
+  { name: "Project Manager", runs: 12340, success: 89.6, revenue: 25800, status: "Active", type: "Management" },
+  { name: "Quality Assurance", runs: 8920, success: 94.7, revenue: 17200, status: "Active", type: "QA" },
+  { name: "Marketing Optimizer", runs: 7810, success: 86.4, revenue: 19600, status: "Active", type: "Marketing" },
+  { name: "Compliance Checker", runs: 14560, success: 97.2, revenue: 26400, status: "Active", type: "Legal" },
+  { name: "Task Scheduler", runs: 19240, success: 91.8, revenue: 15300, status: "Active", type: "Automation" },
+  { name: "API Monitor", runs: 11630, success: 93.5, revenue: 18700, status: "Active", type: "Infrastructure" },
+  { name: "Translation Engine", runs: 6780, success: 95.1, revenue: 13500, status: "Active", type: "NLP" },
+  { name: "Backup Manager", runs: 21450, success: 88.9, revenue: 12100, status: "Active", type: "Infrastructure" }
+];
+
 // Custom Agent Node Component with visible handles and click functionality
 const AgentNode = ({ data }: { data: any }) => {
   const handleClick = () => {
@@ -411,6 +435,7 @@ export default function Dashboard() {
   const { isConnected, address, connectWallet } = useWallet();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const voronoiRef = useRef<SVGSVGElement>(null);
   
   const [activeTab, setActiveTab] = useState('wallet');
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -1089,6 +1114,181 @@ export default function Dashboard() {
       loadTemplate('sales-domination');
     }
   }, [activeTab, selectedTemplate, nodes.length]);
+
+  // D3.js Voronoi Stippling Visualization
+  useEffect(() => {
+    if (activeTab === 'ecosystem' && voronoiRef.current) {
+      const container = d3.select('#voronoi-ecosystem');
+      container.selectAll('*').remove();
+
+      const width = 800;
+      const height = 600;
+      const numPoints = 2000;
+
+      // Create SVG
+      const svg = container
+        .append('svg')
+        .attr('width', '100%')
+        .attr('height', '100%')
+        .attr('viewBox', `0 0 ${width} ${height}`)
+        .style('background', 'radial-gradient(circle, #0a0a0a 0%, #000000 100%)');
+
+      // Generate weighted points based on agent data
+      const weightedPoints = [];
+      mockAgents.forEach((agent, index) => {
+        const weight = Math.sqrt(agent.runs / 1000); // Size based on total runs
+        const numAgentPoints = Math.max(20, Math.min(200, weight * 5));
+        
+        for (let i = 0; i < numAgentPoints; i++) {
+          weightedPoints.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            agent: agent,
+            agentIndex: index,
+            size: Math.max(0.5, weight / 10),
+            performance: agent.success
+          });
+        }
+      });
+
+      // Add random background points
+      for (let i = 0; i < numPoints - weightedPoints.length; i++) {
+        weightedPoints.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          agent: null,
+          agentIndex: -1,
+          size: 0.3,
+          performance: 50
+        });
+      }
+
+      // Create Voronoi diagram
+      const voronoi = d3.Delaunay.from(weightedPoints, d => d.x, d => d.y).voronoi([0, 0, width, height]);
+
+      // Color scale based on performance
+      const colorScale = d3.scaleSequential(d3.interpolateViridis)
+        .domain([70, 100]);
+
+      // Performance-based color mapping
+      const getColor = (performance, hasAgent) => {
+        if (!hasAgent) return '#0a0a0a';
+        if (performance >= 95) return '#10b981'; // Emerald for high performance
+        if (performance >= 90) return '#3b82f6'; // Blue for good performance  
+        if (performance >= 85) return '#f59e0b'; // Yellow for medium performance
+        return '#ef4444'; // Red for low performance
+      };
+
+      // Animate stippling effect
+      const animate = () => {
+        // Clear previous points
+        svg.selectAll('circle').remove();
+
+        // Add stippling points with Voronoi-based distribution
+        svg.selectAll('circle')
+          .data(weightedPoints)
+          .enter()
+          .append('circle')
+          .attr('cx', d => d.x)
+          .attr('cy', d => d.y)
+          .attr('r', 0)
+          .attr('fill', d => getColor(d.performance, d.agent !== null))
+          .attr('opacity', d => d.agent ? 0.8 : 0.2)
+          .transition()
+          .duration(2000)
+          .delay((d, i) => i * 2)
+          .attr('r', d => d.size)
+          .attr('opacity', d => d.agent ? 0.9 : 0.3);
+
+        // Add agent labels for major agents
+        const majorAgents = mockAgents.filter(agent => agent.runs > 15000);
+        
+        svg.selectAll('text')
+          .data(majorAgents)
+          .enter()
+          .append('text')
+          .attr('x', (d, i) => (i + 1) * (width / (majorAgents.length + 1)))
+          .attr('y', height - 40)
+          .attr('text-anchor', 'middle')
+          .attr('fill', '#10b981')
+          .attr('font-size', '10px')
+          .attr('font-weight', 'bold')
+          .style('opacity', 0)
+          .text(d => d.name.split(' ')[0])
+          .transition()
+          .duration(1000)
+          .delay(3000)
+          .style('opacity', 0.7);
+
+        // Add performance legend
+        const legend = svg.append('g')
+          .attr('transform', `translate(${width - 120}, 20)`);
+
+        const legendData = [
+          { color: '#10b981', label: 'High (95%+)', performance: 98 },
+          { color: '#3b82f6', label: 'Good (90%+)', performance: 92 },
+          { color: '#f59e0b', label: 'Medium (85%+)', performance: 87 },
+          { color: '#ef4444', label: 'Low (<85%)', performance: 80 }
+        ];
+
+        legend.selectAll('circle')
+          .data(legendData)
+          .enter()
+          .append('circle')
+          .attr('cx', 0)
+          .attr('cy', (d, i) => i * 20)
+          .attr('r', 4)
+          .attr('fill', d => d.color)
+          .style('opacity', 0)
+          .transition()
+          .duration(500)
+          .delay(4000)
+          .style('opacity', 0.8);
+
+        legend.selectAll('text')
+          .data(legendData)
+          .enter()
+          .append('text')
+          .attr('x', 10)
+          .attr('y', (d, i) => i * 20 + 4)
+          .attr('fill', '#ffffff')
+          .attr('font-size', '8px')
+          .style('opacity', 0)
+          .text(d => d.label)
+          .transition()
+          .duration(500)
+          .delay(4000)
+          .style('opacity', 0.7);
+      };
+
+      // Start animation
+      animate();
+
+      // Update points periodically for dynamic effect
+      const interval = setInterval(() => {
+        weightedPoints.forEach(point => {
+          if (point.agent) {
+            point.x += (Math.random() - 0.5) * 0.5;
+            point.y += (Math.random() - 0.5) * 0.5;
+            point.x = Math.max(5, Math.min(width - 5, point.x));
+            point.y = Math.max(5, Math.min(height - 5, point.y));
+          }
+        });
+        
+        svg.selectAll('circle')
+          .transition()
+          .duration(1000)
+          .attr('cx', d => d.x)
+          .attr('cy', d => d.y);
+      }, 5000);
+
+      // Cleanup function
+      return () => {
+        clearInterval(interval);
+        container.selectAll('*').remove();
+      };
+    }
+  }, [activeTab]);
 
   // Logout function
   const handleLogout = () => {
@@ -2421,7 +2621,7 @@ export default function Dashboard() {
                       <div>
                         <p className="text-gray-400 text-sm font-medium">Total Runs</p>
                         <p className="text-2xl font-bold text-white">
-                          {mockAgents.reduce((sum, agent) => sum + agent.runs, 0).toLocaleString()}
+                          {mockAgents.reduce((sum: number, agent: any) => sum + agent.runs, 0).toLocaleString()}
                         </p>
                       </div>
                       <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center">
@@ -2437,7 +2637,7 @@ export default function Dashboard() {
                       <div>
                         <p className="text-gray-400 text-sm font-medium">Success Rate</p>
                         <p className="text-2xl font-bold text-white">
-                          {(mockAgents.reduce((sum, agent) => sum + agent.success, 0) / mockAgents.length).toFixed(1)}%
+                          {(mockAgents.reduce((sum: number, agent: any) => sum + agent.success, 0) / mockAgents.length).toFixed(1)}%
                         </p>
                       </div>
                       <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
