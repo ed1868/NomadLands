@@ -140,6 +140,11 @@
   .floating-luxury {
     animation: floatingLuxury 4s ease-in-out infinite;
   }
+
+  .scale-bar {
+    animation: scaleUp 1.5s ease-out forwards;
+    transform-origin: bottom;
+  }
   
   .luxury-shadow {
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(64, 112, 70, 0.1);
@@ -262,6 +267,17 @@
   }
   50% { 
     transform: translateY(-6px); 
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
   }
 }
 

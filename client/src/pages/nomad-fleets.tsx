@@ -99,6 +99,89 @@ export default function NomadFleets() {
           ))}
         </div>
 
+        {/* Enterprise Scale Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-20">
+          {/* Scale Description */}
+          <div className="bg-black/40 border border-gray-800 rounded-lg p-12 backdrop-blur-sm">
+            <h2 className="text-3xl font-light text-gray-200 mb-8">
+              Enterprise Scale <span className="knight-text">Deployment</span>
+            </h2>
+            <div className="space-y-6">
+              <div className="flex items-start space-x-4">
+                <div className="w-8 h-8 bg-emerald-900/40 rounded border border-emerald-700 flex items-center justify-center mt-1">
+                  <span className="text-emerald-400 font-light text-sm">10</span>
+                </div>
+                <div>
+                  <h4 className="text-gray-300 font-light mb-2">Companies</h4>
+                  <p className="text-gray-500 font-extralight">Multi-tenant deployment across enterprise organizations</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-4">
+                <div className="w-8 h-8 bg-emerald-900/40 rounded border border-emerald-700 flex items-center justify-center mt-1">
+                  <span className="text-emerald-400 font-light text-sm">500</span>
+                </div>
+                <div>
+                  <h4 className="text-gray-300 font-light mb-2">Active Agents</h4>
+                  <p className="text-gray-500 font-extralight">Simultaneous AI workforce operating at global scale</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-4">
+                <div className="w-8 h-8 bg-emerald-900/40 rounded border border-emerald-700 flex items-center justify-center mt-1">
+                  <span className="text-emerald-400 font-light text-sm">∞</span>
+                </div>
+                <div>
+                  <h4 className="text-gray-300 font-light mb-2">Departments</h4>
+                  <p className="text-gray-500 font-extralight">Cross-functional teams unified toward common objectives</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Scale Visualization */}
+          <div className="bg-black/40 border border-gray-800 rounded-lg p-12 backdrop-blur-sm">
+            <h3 className="text-xl font-light text-gray-200 mb-8">Network Topology</h3>
+            <div className="relative h-64">
+              {/* Central Hub */}
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-emerald-900/60 border-2 border-emerald-600 rounded-full flex items-center justify-center">
+                <Shield className="w-8 h-8 text-emerald-400" />
+              </div>
+              
+              {/* Company Nodes */}
+              {[...Array(8)].map((_, i) => {
+                const angle = (i * 45) * (Math.PI / 180);
+                const radius = 80;
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * radius;
+                
+                return (
+                  <div key={i}>
+                    {/* Connection Line */}
+                    <div 
+                      className="absolute top-1/2 left-1/2 origin-left h-0.5 bg-gradient-to-r from-emerald-600/60 to-transparent"
+                      style={{
+                        width: `${radius}px`,
+                        transform: `translate(-2px, -1px) rotate(${i * 45}deg)`,
+                        animationDelay: `${i * 0.2}s`
+                      }}
+                    />
+                    {/* Company Node */}
+                    <div 
+                      className="absolute w-6 h-6 bg-emerald-900/40 border border-emerald-700 rounded-full animate-pulse"
+                      style={{
+                        left: `calc(50% + ${x}px - 12px)`,
+                        top: `calc(50% + ${y}px - 12px)`,
+                        animationDelay: `${i * 0.3}s`
+                      }}
+                    >
+                      <div className="w-2 h-2 bg-emerald-500 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
         {/* Power Multiplier Section */}
         <div className="text-center bg-black/40 border border-gray-800 rounded-lg p-12 backdrop-blur-sm">
           <h2 className="text-3xl font-light text-gray-200 mb-6">
@@ -108,6 +191,31 @@ export default function NomadFleets() {
             When AI agents work together, their combined intelligence creates capabilities 
             far beyond the sum of their parts. Deploy fleets that think, adapt, and evolve as one.
           </p>
+          
+          {/* Animated Growth Chart */}
+          <div className="bg-black/60 border border-gray-700 rounded-lg p-8 mb-8">
+            <div className="flex items-end justify-center space-x-4 h-32">
+              {[
+                { label: "1 Agent", height: "20%", delay: "0s" },
+                { label: "5 Agents", height: "35%", delay: "0.5s" },
+                { label: "25 Agents", height: "60%", delay: "1s" },
+                { label: "100 Agents", height: "85%", delay: "1.5s" },
+                { label: "500 Agents", height: "100%", delay: "2s" }
+              ].map((bar, index) => (
+                <div key={index} className="text-center">
+                  <div 
+                    className="w-12 bg-gradient-to-t from-emerald-900 to-emerald-600 rounded-t scale-bar"
+                    style={{ 
+                      height: bar.height,
+                      animationDelay: bar.delay
+                    }}
+                  />
+                  <span className="text-gray-500 text-xs mt-2 block font-extralight">{bar.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="flex justify-center items-center space-x-8">
             <div className="text-center">
               <Zap className="w-12 h-12 text-emerald-600 mx-auto mb-2" />

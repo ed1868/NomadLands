@@ -1,13 +1,13 @@
 export default function UsedBySection() {
   const companies = [
-    { name: "Google", logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
-    { name: "Microsoft", logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" },
-    { name: "Apple", logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" },
-    { name: "Amazon", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
-    { name: "Meta", logo: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" },
-    { name: "Netflix", logo: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" },
-    { name: "Tesla", logo: "https://upload.wikimedia.org/wikipedia/commons/b/bb/Tesla_T_symbol.svg" },
-    { name: "Spotify", logo: "https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg" }
+    { name: "Google", logo: "https://logos-world.net/wp-content/uploads/2020/09/Google-Logo.png" },
+    { name: "Microsoft", logo: "https://logoeps.com/wp-content/uploads/2013/03/microsoft-vector-logo.png" },
+    { name: "Apple", logo: "https://logos-world.net/wp-content/uploads/2020/04/Apple-Logo.png" },
+    { name: "Amazon", logo: "https://logos-world.net/wp-content/uploads/2020/04/Amazon-Logo.png" },
+    { name: "Meta", logo: "https://logos-world.net/wp-content/uploads/2021/10/Meta-Logo.png" },
+    { name: "Netflix", logo: "https://logos-world.net/wp-content/uploads/2020/04/Netflix-Logo.png" },
+    { name: "Tesla", logo: "https://logos-world.net/wp-content/uploads/2021/08/Tesla-Logo.png" },
+    { name: "Spotify", logo: "https://logos-world.net/wp-content/uploads/2020/06/Spotify-Logo.png" }
   ];
 
   return (
@@ -29,14 +29,14 @@ export default function UsedBySection() {
           {companies.map((company, index) => (
             <div
               key={company.name}
-              className="flex items-center justify-center p-6 bg-black/20 border border-gray-800 rounded-lg backdrop-blur-sm hover:border-gray-700 transition-all duration-500 group"
+              className="flex items-center justify-center p-6 hover:bg-black/10 transition-all duration-500 group floating-luxury"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <img
                 src={company.logo}
                 alt={company.name}
-                className="h-8 w-auto filter brightness-0 invert opacity-40 group-hover:opacity-60 transition-opacity duration-300"
-                style={{ maxWidth: '120px' }}
+                className="h-8 w-auto opacity-40 group-hover:opacity-70 transition-all duration-300 group-hover:scale-110"
+                style={{ maxWidth: '120px', filter: 'grayscale(100%) brightness(0.8)' }}
               />
             </div>
           ))}
