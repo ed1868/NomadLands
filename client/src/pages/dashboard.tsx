@@ -1038,7 +1038,8 @@ export default function Dashboard() {
           level: agentType?.level || 'Staff',
           description: agentType?.description || 'Team member',
           departmentId: `Dept-${index + 1}`,
-          agentType: agent.type
+          agentType: agent.type,
+          onClick: handleAgentClick
         },
         sourcePosition: Position.Right,
         targetPosition: Position.Left,
@@ -2377,6 +2378,148 @@ export default function Dashboard() {
           )}
         </div>
       </div>
+
+      {/* Agent Details Panel - Slides in from right when agent is clicked */}
+      {isAgentDetailsOpen && selectedAgent && (
+        <div className="fixed inset-0 z-50 lg:inset-auto lg:right-0 lg:top-0 lg:w-96 lg:h-full">
+          {/* Mobile overlay */}
+          <div 
+            className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setIsAgentDetailsOpen(false)}
+          />
+          
+          {/* Details panel */}
+          <div className="relative bg-gradient-to-b from-gray-900/95 to-black/95 h-full w-full lg:w-96 border-l border-emerald-500/30 backdrop-blur-lg shadow-2xl shadow-emerald-500/10 overflow-y-auto">
+            {/* Header */}
+            <div className="sticky top-0 bg-gray-900/80 backdrop-blur-md border-b border-emerald-500/20 p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="text-2xl">{selectedAgent.icon}</div>
+                  <div>
+                    <h3 className="font-bold text-white">{selectedAgent.type}</h3>
+                    <p className="text-sm text-emerald-300">{selectedAgent.level}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsAgentDetailsOpen(false)}
+                  className="w-8 h-8 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-4 space-y-6">
+              {/* Description */}
+              <div>
+                <h4 className="font-semibold text-white mb-2">Overview</h4>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                  {selectedAgent.description || `${selectedAgent.type} specializes in automated task execution and workflow optimization within organizational hierarchies.`}
+                </p>
+              </div>
+
+              {/* Performance Metrics */}
+              <div>
+                <h4 className="font-semibold text-white mb-3">Performance Metrics</h4>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-gray-800/40 rounded-lg p-3">
+                    <div className="text-xs text-gray-400 mb-1">Uptime</div>
+                    <div className="text-lg font-bold text-emerald-400">
+                      {selectedAgent.performance?.uptime.toFixed(1)}%
+                    </div>
+                  </div>
+                  <div className="bg-gray-800/40 rounded-lg p-3">
+                    <div className="text-xs text-gray-400 mb-1">Success Rate</div>
+                    <div className="text-lg font-bold text-emerald-400">
+                      {selectedAgent.performance?.successRate.toFixed(1)}%
+                    </div>
+                  </div>
+                  <div className="bg-gray-800/40 rounded-lg p-3">
+                    <div className="text-xs text-gray-400 mb-1">Tasks Done</div>
+                    <div className="text-lg font-bold text-white">
+                      {selectedAgent.performance?.tasksCompleted.toLocaleString()}
+                    </div>
+                  </div>
+                  <div className="bg-gray-800/40 rounded-lg p-3">
+                    <div className="text-xs text-gray-400 mb-1">Avg Response</div>
+                    <div className="text-lg font-bold text-white">
+                      {selectedAgent.performance?.avgResponseTime}ms
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Primary Tasks */}
+              <div>
+                <h4 className="font-semibold text-white mb-3">Primary Tasks</h4>
+                <div className="space-y-2">
+                  {selectedAgent.tasks?.map((task: string, index: number) => (
+                    <div key={index} className="flex items-start space-x-2 text-sm">
+                      <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full mt-2 flex-shrink-0" />
+                      <span className="text-gray-300">{task}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Toolkit */}
+              <div>
+                <h4 className="font-semibold text-white mb-3">Available Tools</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {selectedAgent.toolkit?.map((tool: string, index: number) => (
+                    <div key={index} className="bg-gray-800/30 rounded-md px-2 py-1.5 text-xs text-emerald-300 border border-emerald-500/20">
+                      {tool}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* System Connections */}
+              <div>
+                <h4 className="font-semibold text-white mb-3">System Connections</h4>
+                <div className="space-y-2">
+                  {selectedAgent.connections?.map((connection: string, index: number) => (
+                    <div key={index} className="flex items-center space-x-2 text-sm">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />
+                      <span className="text-gray-300">{connection}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Energy Efficiency */}
+              <div>
+                <h4 className="font-semibold text-white mb-3">Energy Efficiency</h4>
+                <div className="bg-gray-800/40 rounded-lg p-3">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm text-gray-400">Current Efficiency</span>
+                    <span className="text-sm font-semibold text-emerald-400">
+                      {selectedAgent.performance?.energyEfficiency.toFixed(1)}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div 
+                      className="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${selectedAgent.performance?.energyEfficiency}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Department Badge */}
+              {selectedAgent.departmentId && (
+                <div>
+                  <h4 className="font-semibold text-white mb-2">Department</h4>
+                  <div className="inline-block px-3 py-1.5 bg-purple-600/20 text-purple-300 text-sm rounded-md border border-purple-400/30">
+                    {selectedAgent.departmentId}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
