@@ -190,12 +190,24 @@ export default function NomadLands() {
             <div className="text-2xl font-light text-white">
               AI <span className="knight-text">Nomads</span>
             </div>
-            <nav className="hidden md:flex space-x-8">
-              <a href="/marketplace" className="text-gray-300 hover:text-white transition-colors">Marketplace</a>
-              <a href="/nomad-lands" className="text-emerald-400">Nomad Lands</a>
-              <a href="/smart-contracts" className="text-gray-300 hover:text-white transition-colors">Smart Contracts</a>
-              <a href="/api-docs" className="text-gray-300 hover:text-white transition-colors">API</a>
-            </nav>
+            <div className="flex items-center space-x-8">
+              <nav className="hidden md:flex space-x-8">
+                <a href="/marketplace" className="text-gray-300 hover:text-white transition-colors">Marketplace</a>
+                <a href="/nomad-lands" className="text-emerald-400">Nomad Lands</a>
+                <a href="/nomad-fleets" className="text-gray-300 hover:text-white transition-colors">Nomad Fleets</a>
+                <a href="/smart-contracts" className="text-gray-300 hover:text-white transition-colors">Smart Contracts</a>
+                <a href="/api-docs" className="text-gray-300 hover:text-white transition-colors">API</a>
+              </nav>
+              
+              <div className="flex items-center space-x-4">
+                <button className="text-gray-300 hover:text-white transition-colors">
+                  <Wallet className="w-5 h-5" />
+                </button>
+                <button className="text-gray-300 hover:text-white transition-colors">
+                  <User className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

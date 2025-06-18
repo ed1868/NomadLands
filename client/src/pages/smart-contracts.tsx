@@ -27,6 +27,51 @@ export default function SmartContracts() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Detect MetaMask wallet
+  useEffect(() => {
+    const detectWallet = async () => {
+      if (typeof window !== 'undefined' && (window as any).ethereum) {
+        try {
+          const accounts = await (window as any).ethereum.request({ method: 'eth_accounts' });
+          if (accounts.length > 0) {
+            setUserWallet(accounts[0]);
+            setPartyAWallet(accounts[0]); // Auto-populate user's wallet
+          }
+        } catch (error) {
+          console.log('Error detecting wallet:', error);
+        }
+      }
+    };
+
+    detectWallet();
+  }, []);
+
+  const handleEngageContract = (contract: SmartContract) => {
+    setSelectedContract(contract);
+    if (userWallet) {
+      setPartyAWallet(userWallet); // Auto-fill user's wallet
+    }
+  };
+
+  const handleRequestContract = () => {
+    if (!selectedContract || !partyAWallet || !partyBWallet || !amount) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    // Simulate contract request
+    alert(`Contract request submitted for ${selectedContract.name}!
+Party A: ${partyAWallet}
+Party B: ${partyBWallet}
+Amount: ${amount} ETH`);
+    
+    // Reset form
+    setPartyAWallet(userWallet || "");
+    setPartyBWallet("");
+    setAmount("");
+    setSelectedContract(null);
+  };
+
   // Smart Contracts including the 6 core contracts
   const mockSmartContracts: SmartContract[] = [
     // Core Smart Contracts
@@ -474,7 +519,7 @@ export default function SmartContracts() {
       {/* Contracts Grid */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredContracts.map((contract) => {
               const IconComponent = getIconComponent(contract.icon!);
               return (
@@ -541,7 +586,7 @@ export default function SmartContracts() {
                       <DialogTrigger asChild>
                         <Button 
                           className="w-full bg-blue-900/50 border border-blue-700/50 text-blue-300 hover:bg-blue-900/70"
-                          onClick={() => setSelectedContract(contract)}
+                          onClick={() => handleEngageContract(contract)}
                         >
                           Engage Contract
                           <ArrowRight className="w-4 h-4 ml-2" />
@@ -606,8 +651,11 @@ export default function SmartContracts() {
                             </div>
                           )}
                           <div className="flex gap-3">
-                            <Button className="flex-1 bg-blue-900/50 border border-blue-700/50 text-blue-300 hover:bg-blue-900/70">
-                              Execute Contract
+                            <Button 
+                              className="flex-1 bg-blue-900/50 border border-blue-700/50 text-blue-300 hover:bg-blue-900/70"
+                              onClick={handleRequestContract}
+                            >
+                              Request Contract
                             </Button>
                             <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800/50">
                               Save Draft
