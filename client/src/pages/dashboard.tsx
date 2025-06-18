@@ -289,7 +289,7 @@ export default function Dashboard() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [isConnecting, setIsConnecting] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>("sales-domination");
   const [departmentCount, setDepartmentCount] = useState<{[key: string]: number}>({
     'Executive Director': 0,
     'Department Manager': 0,
@@ -345,46 +345,67 @@ export default function Dashboard() {
     e.preventDefault();
   };
 
-  // Fleet templates
+  // Fleet templates - 3 power horse nomad fleets
   const fleetTemplates = {
-    'data-pipeline': {
-      name: 'Data Pipeline Fleet',
-      description: 'Complete data processing and analytics pipeline',
+    'sales-domination': {
+      name: 'Sales Domination Fleet',
+      description: 'Complete enterprise sales automation and lead conversion powerhouse',
       agents: [
-        { type: 'Executive Director', x: 50, y: 50, connections: ['manager-1'] },
-        { type: 'Department Manager', x: 300, y: 50, id: 'manager-1', connections: ['senior-1', 'senior-2'] },
-        { type: 'Senior Associate', x: 200, y: 200, id: 'senior-1', connections: ['associate-1'] },
-        { type: 'Senior Associate', x: 400, y: 200, id: 'senior-2', connections: ['associate-2'] },
-        { type: 'Associate', x: 200, y: 350, id: 'associate-1', connections: [] },
-        { type: 'Associate', x: 400, y: 350, id: 'associate-2', connections: [] }
+        { type: 'Executive Director', x: 300, y: 50, id: 'exec-1', connections: ['sales-mgr-1', 'sales-mgr-2'] },
+        { type: 'Department Manager', x: 150, y: 180, id: 'sales-mgr-1', connections: ['lead-gen-1', 'closer-1'] },
+        { type: 'Department Manager', x: 450, y: 180, id: 'sales-mgr-2', connections: ['nurture-1', 'analytics-1'] },
+        { type: 'Senior Associate', x: 80, y: 320, id: 'lead-gen-1', connections: ['prospector-1', 'qualifier-1'] },
+        { type: 'Senior Associate', x: 220, y: 320, id: 'closer-1', connections: ['negotiator-1'] },
+        { type: 'Senior Associate', x: 380, y: 320, id: 'nurture-1', connections: ['follow-up-1'] },
+        { type: 'Senior Associate', x: 520, y: 320, id: 'analytics-1', connections: ['reporter-1'] },
+        { type: 'Associate', x: 50, y: 480, id: 'prospector-1', connections: [] },
+        { type: 'Associate', x: 120, y: 480, id: 'qualifier-1', connections: [] },
+        { type: 'Associate', x: 220, y: 480, id: 'negotiator-1', connections: [] },
+        { type: 'Associate', x: 380, y: 480, id: 'follow-up-1', connections: [] },
+        { type: 'Associate', x: 520, y: 480, id: 'reporter-1', connections: [] }
       ]
     },
-    'customer-service': {
-      name: 'Customer Service Fleet',
-      description: 'Comprehensive customer support and engagement system',
+    'customer-success': {
+      name: 'Customer Success Fleet',
+      description: 'Advanced customer retention and growth optimization network',
       agents: [
-        { type: 'Executive Director', x: 300, y: 50, connections: ['manager-1', 'manager-2'] },
-        { type: 'Department Manager', x: 150, y: 180, id: 'manager-1', connections: ['senior-1'] },
-        { type: 'Department Manager', x: 450, y: 180, id: 'manager-2', connections: ['senior-2'] },
-        { type: 'Senior Associate', x: 150, y: 320, id: 'senior-1', connections: ['associate-1', 'associate-2'] },
-        { type: 'Senior Associate', x: 450, y: 320, id: 'senior-2', connections: ['associate-3'] },
-        { type: 'Associate', x: 50, y: 450, id: 'associate-1', connections: [] },
-        { type: 'Associate', x: 200, y: 450, id: 'associate-2', connections: [] },
-        { type: 'Associate', x: 450, y: 450, id: 'associate-3', connections: [] }
+        { type: 'Executive Director', x: 300, y: 50, id: 'exec-2', connections: ['success-mgr-1', 'success-mgr-2', 'success-mgr-3'] },
+        { type: 'Department Manager', x: 120, y: 200, id: 'success-mgr-1', connections: ['onboard-1', 'support-1'] },
+        { type: 'Department Manager', x: 300, y: 200, id: 'success-mgr-2', connections: ['health-1', 'expansion-1'] },
+        { type: 'Department Manager', x: 480, y: 200, id: 'success-mgr-3', connections: ['advocacy-1', 'renewal-1'] },
+        { type: 'Senior Associate', x: 80, y: 350, id: 'onboard-1', connections: ['trainer-1'] },
+        { type: 'Senior Associate', x: 160, y: 350, id: 'support-1', connections: ['resolver-1'] },
+        { type: 'Senior Associate', x: 260, y: 350, id: 'health-1', connections: ['monitor-1'] },
+        { type: 'Senior Associate', x: 340, y: 350, id: 'expansion-1', connections: ['upsell-1'] },
+        { type: 'Senior Associate', x: 440, y: 350, id: 'advocacy-1', connections: ['referral-1'] },
+        { type: 'Senior Associate', x: 520, y: 350, id: 'renewal-1', connections: ['retention-1'] },
+        { type: 'Associate', x: 80, y: 500, id: 'trainer-1', connections: [] },
+        { type: 'Associate', x: 160, y: 500, id: 'resolver-1', connections: [] },
+        { type: 'Associate', x: 260, y: 500, id: 'monitor-1', connections: [] },
+        { type: 'Associate', x: 340, y: 500, id: 'upsell-1', connections: [] },
+        { type: 'Associate', x: 440, y: 500, id: 'referral-1', connections: [] },
+        { type: 'Associate', x: 520, y: 500, id: 'retention-1', connections: [] }
       ]
     },
-    'security-ops': {
-      name: 'Security Operations Fleet',
-      description: 'Enterprise security monitoring and threat response',
+    'product-innovation': {
+      name: 'Product Innovation Fleet',
+      description: 'AI-driven product development and market analysis ecosystem',
       agents: [
-        { type: 'Executive Director', x: 250, y: 50, connections: ['manager-1'] },
-        { type: 'Department Manager', x: 250, y: 180, id: 'manager-1', connections: ['senior-1', 'senior-2', 'senior-3'] },
-        { type: 'Senior Associate', x: 100, y: 320, id: 'senior-1', connections: ['associate-1'] },
-        { type: 'Senior Associate', x: 250, y: 320, id: 'senior-2', connections: ['associate-2'] },
-        { type: 'Senior Associate', x: 400, y: 320, id: 'senior-3', connections: ['associate-3'] },
-        { type: 'Associate', x: 100, y: 450, id: 'associate-1', connections: [] },
-        { type: 'Associate', x: 250, y: 450, id: 'associate-2', connections: [] },
-        { type: 'Associate', x: 400, y: 450, id: 'associate-3', connections: [] }
+        { type: 'Executive Director', x: 350, y: 50, id: 'exec-3', connections: ['research-mgr-1', 'dev-mgr-1'] },
+        { type: 'Department Manager', x: 200, y: 180, id: 'research-mgr-1', connections: ['market-1', 'user-1', 'trend-1'] },
+        { type: 'Department Manager', x: 500, y: 180, id: 'dev-mgr-1', connections: ['proto-1', 'test-1', 'launch-1'] },
+        { type: 'Senior Associate', x: 100, y: 320, id: 'market-1', connections: ['competitor-1'] },
+        { type: 'Senior Associate', x: 200, y: 320, id: 'user-1', connections: ['feedback-1'] },
+        { type: 'Senior Associate', x: 300, y: 320, id: 'trend-1', connections: ['predictor-1'] },
+        { type: 'Senior Associate', x: 420, y: 320, id: 'proto-1', connections: ['builder-1'] },
+        { type: 'Senior Associate', x: 500, y: 320, id: 'test-1', connections: ['validator-1'] },
+        { type: 'Senior Associate', x: 580, y: 320, id: 'launch-1', connections: ['marketer-1'] },
+        { type: 'Associate', x: 100, y: 480, id: 'competitor-1', connections: [] },
+        { type: 'Associate', x: 200, y: 480, id: 'feedback-1', connections: [] },
+        { type: 'Associate', x: 300, y: 480, id: 'predictor-1', connections: [] },
+        { type: 'Associate', x: 420, y: 480, id: 'builder-1', connections: [] },
+        { type: 'Associate', x: 500, y: 480, id: 'validator-1', connections: [] },
+        { type: 'Associate', x: 580, y: 480, id: 'marketer-1', connections: [] }
       ]
     }
   };
@@ -485,6 +506,13 @@ export default function Dashboard() {
     queryKey: ["/api/user/purchases"],
     enabled: !!user
   });
+
+  // Auto-load Sales Domination Fleet template when fleet tab is accessed
+  useEffect(() => {
+    if (activeTab === 'fleet' && selectedTemplate === "sales-domination" && nodes.length === 0) {
+      loadTemplate('sales-domination');
+    }
+  }, [activeTab, selectedTemplate, nodes.length]);
 
   if (isLoading) {
     return (
@@ -1442,6 +1470,7 @@ export default function Dashboard() {
                       onNodesChange={onNodesChange}
                       onEdgesChange={onEdgesChange}
                       onConnect={onConnect}
+                      nodeTypes={nodeTypes}
                       fitView
                       attributionPosition="bottom-left"
                       className="rounded-xl"
