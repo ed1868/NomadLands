@@ -119,57 +119,107 @@ export default function NomadFleets() {
 
         {/* Interactive Dashboard Section */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-20">
-          {/* Real-time Metrics */}
+          {/* Live KPI Dashboard */}
           <div className="bg-black/40 border border-gray-800 rounded-lg p-8 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-light text-gray-200">Live Metrics</h3>
-              <Activity className="w-5 h-5 text-emerald-500" />
+              <h3 className="text-lg font-light text-gray-200">Live KPI Dashboard</h3>
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                <span className="text-emerald-500 text-sm font-extralight">Live</span>
+              </div>
             </div>
             
-            <div className="space-y-6">
-              <div className={`transition-all duration-500 ${activeMetric === 0 ? 'scale-105 bg-emerald-900/20' : ''} p-4 rounded`}>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-gray-400 font-extralight">Active Companies</span>
-                  <span className="text-2xl font-light knight-text">
-                    {Math.floor(8 + Math.sin(animationProgress / 10) * 2)}
-                  </span>
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              {/* Tasks Deployed */}
+              <div className="bg-emerald-900/10 border border-emerald-800/30 rounded-lg p-4">
+                <div className="text-emerald-400 text-xs font-extralight mb-1">Tasks Deployed</div>
+                <div className="text-2xl font-light text-white mb-2">
+                  {Math.floor(12847 + Math.sin(animationProgress / 5) * 50).toLocaleString()}
                 </div>
-                <div className="w-full bg-gray-800 rounded-full h-2">
-                  <div 
-                    className="bg-gradient-to-r from-emerald-600 to-emerald-400 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${80 + Math.sin(animationProgress / 10) * 20}%` }}
-                  />
+                <div className="text-emerald-400 text-xs">
+                  +{Math.floor(15 + Math.cos(animationProgress / 8) * 3)} in last hour
                 </div>
               </div>
 
-              <div className={`transition-all duration-500 ${activeMetric === 1 ? 'scale-105 bg-emerald-900/20' : ''} p-4 rounded`}>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-gray-400 font-extralight">Deployed Agents</span>
-                  <span className="text-2xl font-light knight-text">
-                    {Math.floor(450 + Math.cos(animationProgress / 8) * 50)}
-                  </span>
+              {/* Tasks Assigned */}
+              <div className="bg-blue-900/10 border border-blue-800/30 rounded-lg p-4">
+                <div className="text-blue-400 text-xs font-extralight mb-1">Tasks Assigned</div>
+                <div className="text-2xl font-light text-white mb-2">
+                  {Math.floor(8532 + Math.cos(animationProgress / 7) * 30).toLocaleString()}
                 </div>
-                <div className="w-full bg-gray-800 rounded-full h-2">
-                  <div 
-                    className="bg-gradient-to-r from-emerald-600 to-emerald-400 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${90 + Math.cos(animationProgress / 8) * 10}%` }}
-                  />
+                <div className="text-blue-400 text-xs">
+                  +{Math.floor(12 + Math.sin(animationProgress / 6) * 2)} active now
                 </div>
               </div>
 
-              <div className={`transition-all duration-500 ${activeMetric === 2 ? 'scale-105 bg-emerald-900/20' : ''} p-4 rounded`}>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-gray-400 font-extralight">Processing Power</span>
-                  <span className="text-2xl font-light knight-text">
-                    {Math.floor(95 + Math.sin(animationProgress / 15) * 5)}%
-                  </span>
+              {/* Tasks Rolled Back */}
+              <div className="bg-orange-900/10 border border-orange-800/30 rounded-lg p-4">
+                <div className="text-orange-400 text-xs font-extralight mb-1">Tasks Rolled Back</div>
+                <div className="text-2xl font-light text-white mb-2">
+                  {Math.floor(23 + Math.sin(animationProgress / 12) * 2)}
                 </div>
-                <div className="w-full bg-gray-800 rounded-full h-2">
-                  <div 
-                    className="bg-gradient-to-r from-emerald-600 to-emerald-400 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${95 + Math.sin(animationProgress / 15) * 5}%` }}
-                  />
+                <div className="text-orange-400 text-xs">
+                  0.18% error rate
                 </div>
+              </div>
+
+              {/* Teams Working Together */}
+              <div className="bg-purple-900/10 border border-purple-800/30 rounded-lg p-4">
+                <div className="text-purple-400 text-xs font-extralight mb-1">Teams Collaborating</div>
+                <div className="text-2xl font-light text-white mb-2">
+                  {Math.floor(47 + Math.cos(animationProgress / 9) * 3)}
+                </div>
+                <div className="text-purple-400 text-xs">
+                  Cross-department sync
+                </div>
+              </div>
+            </div>
+
+            {/* Real-time Activity Feed */}
+            <div className="space-y-3">
+              <div className="text-sm font-light text-gray-300 mb-3">Recent Activity</div>
+              
+              <div className="flex items-center space-x-3 text-sm">
+                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                <span className="text-gray-400 font-extralight">Agent deployment successful - Marketing Team</span>
+                <span className="text-gray-600 text-xs">2s ago</span>
+              </div>
+              
+              <div className="flex items-center space-x-3 text-sm">
+                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <span className="text-gray-400 font-extralight">Task assigned to Sales automation fleet</span>
+                <span className="text-gray-600 text-xs">8s ago</span>
+              </div>
+              
+              <div className="flex items-center space-x-3 text-sm">
+                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                <span className="text-gray-400 font-extralight">Cross-team collaboration initiated</span>
+                <span className="text-gray-600 text-xs">12s ago</span>
+              </div>
+
+              <div className="flex items-center space-x-3 text-sm">
+                <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                <span className="text-gray-400 font-extralight">Workflow optimization completed</span>
+                <span className="text-gray-600 text-xs">18s ago</span>
+              </div>
+            </div>
+
+            {/* Performance Indicator */}
+            <div className="mt-6 pt-4 border-t border-gray-800">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-gray-400 text-sm font-extralight">System Performance</span>
+                <span className="text-emerald-400 text-sm font-light">
+                  {Math.floor(98.5 + Math.sin(animationProgress / 20) * 1.5)}%
+                </span>
+              </div>
+              <div className="w-full bg-gray-800 rounded-full h-2">
+                <div 
+                  className="bg-gradient-to-r from-emerald-600 to-emerald-400 h-2 rounded-full transition-all duration-500"
+                  style={{ 
+                    width: `${98.5 + Math.sin(animationProgress / 20) * 1.5}%`,
+                    boxShadow: '0 0 10px #10b98140'
+                  }}
+                />
               </div>
             </div>
           </div>
