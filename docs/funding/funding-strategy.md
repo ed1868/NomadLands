@@ -6,6 +6,39 @@ AI Nomads requires $75M across multiple funding rounds to achieve market dominan
 
 ## Capital Requirements by Phase
 
+### Funding Timeline & Milestones
+
+```mermaid
+timeline
+    title AI Nomads Funding Journey
+    section Seed Round
+        Q2 2024 : $3M Raised
+                : MVP Launch
+                : 1K Creators
+    section Series A  
+        Q1 2025 : $15M Target
+                : 50K Creators
+                : $50M ARR
+    section Series B
+        Q4 2026 : $35M Target
+                : 200K Creators
+                : $200M ARR
+    section Series C
+        Q3 2027 : $50M Target
+                : Global Expansion
+                : IPO Preparation
+```
+
+### Capital Allocation Breakdown
+
+```mermaid
+pie title Series A Capital Allocation ($15M)
+    "Engineering & Product" : 50
+    "Sales & Marketing" : 30
+    "Operations & Infrastructure" : 15
+    "Working Capital" : 5
+```
+
 ### Seed Round - $3M (Completed)
 **Runway**: 18 months
 **Key Achievements**:
@@ -139,6 +172,24 @@ AI Nomads requires $75M across multiple funding rounds to achieve market dominan
 - Contribution Margin: 80%
 
 ### Return Scenarios for Series A Investors
+
+```mermaid
+graph TD
+    A[Series A Investment: $15M] --> B{Exit Scenarios}
+    
+    B --> C[Conservative: $5B IPO]
+    B --> D[Base Case: $10B IPO]
+    B --> E[Optimistic: $20B IPO]
+    
+    C --> F[7.5x Return: $750M]
+    D --> G[15x Return: $1.5B]
+    E --> H[30x Return: $3B]
+    
+    style A fill:#e3f2fd
+    style F fill:#fff3e0
+    style G fill:#e8f5e8
+    style H fill:#f3e5f5
+```
 
 **Conservative Case (IPO at $5B)**:
 - Series A investors: 15% ownership

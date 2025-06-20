@@ -60,6 +60,56 @@ AI Nomads operates as a distributed-first organization optimized for rapid scali
 
 ## Organizational Structure by Function
 
+### Team Structure Visualization
+
+```mermaid
+graph TD
+    CEO[CEO & Co-Founder] --> CTO[CTO & Co-Founder]
+    CEO --> CRO[Chief Revenue Officer]
+    CEO --> CFO[Chief Financial Officer]
+    
+    CTO --> VPE[VP Engineering - 60 people]
+    CTO --> VPP[VP Product - 20 people]
+    
+    CRO --> VPS[VP Sales - 20 people]
+    CRO --> VPM[VP Marketing - 15 people]
+    CRO --> CS[Customer Success - 15 people]
+    
+    CFO --> OPS[Operations - 25 people]
+    
+    VPE --> PE[Platform Engineering - 15]
+    VPE --> PRE[Product Engineering - 20]
+    VPE --> AI[AI/ML Engineering - 12]
+    VPE --> DO[DevOps & Security - 8]
+    VPE --> QA[Quality Assurance - 5]
+    
+    style CEO fill:#8B0000
+    style CTO fill:#4169E1
+    style CRO fill:#32CD32
+    style CFO fill:#FF6347
+```
+
+### Team Scaling Timeline
+
+```mermaid
+gantt
+    title Team Growth Plan 2025-2026
+    dateFormat  YYYY-MM-DD
+    section Engineering
+    Platform Team Growth    :2025-01-01, 365d
+    AI/ML Team Expansion   :2025-04-01, 275d
+    Security Team Build    :2025-07-01, 183d
+    
+    section Sales & Marketing
+    Enterprise Sales Scale :2025-02-01, 334d
+    Marketing Team Build   :2025-03-01, 305d
+    Customer Success       :2025-05-01, 245d
+    
+    section Operations
+    Operations Foundation  :2025-01-01, 365d
+    International Teams    :2025-09-01, 122d
+```
+
 ### Engineering Division (60 people by 2026)
 
 **Platform Engineering Team (15 people)**
@@ -176,6 +226,40 @@ AI Nomads operates as a distributed-first organization optimized for rapid scali
 - Data Analysts (2)
 
 ## Hiring Strategy & Timeline
+
+### Hiring Priority Matrix
+
+```mermaid
+quadrantChart
+    title Hiring Priorities: Impact vs Urgency
+    x-axis Low Impact --> High Impact
+    y-axis Low Urgency --> High Urgency
+    quadrant-1 Critical
+    quadrant-2 Important
+    quadrant-3 Consider
+    quadrant-4 Plan
+    
+    Senior Engineers: [0.9, 0.9]
+    Enterprise Sales: [0.8, 0.9]
+    AI/ML Engineers: [0.9, 0.7]
+    Customer Success: [0.7, 0.8]
+    Marketing Team: [0.6, 0.6]
+    Operations: [0.5, 0.7]
+```
+
+### Quarterly Hiring Plan
+
+```
+📈 Team Growth Trajectory 2025-2026
+
+Q1 2025: +15 hires  ████████████████████ Critical roles
+Q2 2025: +20 hires  ████████████████████████ Scale phase
+Q3 2025: +25 hires  ██████████████████████████████ Growth acceleration  
+Q4 2025: +15 hires  ████████████████████ Optimization
+2026:    +40 hires  ████████████████████████████████████████ Market expansion
+
+Total Team Size by End 2026: 200+ employees
+```
 
 ### Q1 2025 Priorities (15 new hires)
 - Senior Engineering talent for platform scaling

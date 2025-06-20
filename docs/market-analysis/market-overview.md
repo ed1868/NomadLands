@@ -6,6 +6,38 @@ AI Nomads is positioned at the intersection of three rapidly expanding markets: 
 
 ## Total Addressable Market (TAM)
 
+### Market Size Visualization
+
+```mermaid
+pie title Global Market Opportunity ($500B+ TAM)
+    "Enterprise AI Automation" : 395
+    "Creator Economy Platforms" : 104
+    "Enterprise Software Dev" : 836
+    "Adjacent Markets" : 165
+```
+
+### Market Growth Trajectory
+
+```
+📈 Market Evolution 2024-2030
+
+Enterprise AI Automation
+$150B ████████████████████████████████████████ $395B
+2024                                        2028
+
+Creator Economy
+ $80B ████████████████████████████████████████ $104B
+2024                                        2025
+
+Enterprise Software
+$650B ████████████████████████████████████████ $836B
+2024                                        2030
+
+AI Nomads Opportunity
+  $0 ████████████████████████████████████████  $29B
+2024                                        2030
+```
+
 ### Primary Market Segments
 
 **Enterprise AI Automation**
@@ -48,6 +80,42 @@ AI Nomads is positioned at the intersection of three rapidly expanding markets: 
 - Localization opportunities
 
 ## Competitive Landscape
+
+### Competitive Positioning Matrix
+
+```mermaid
+quadrantChart
+    title Competitive Landscape: AI Capability vs Market Accessibility
+    x-axis Low AI Intelligence --> High AI Intelligence
+    y-axis Low Accessibility --> High Accessibility
+    quadrant-1 Leaders
+    quadrant-2 Challengers  
+    quadrant-3 Legacy
+    quadrant-4 Innovators
+    
+    AI Nomads: [0.9, 0.9]
+    Zapier: [0.3, 0.8]
+    Microsoft Power Platform: [0.6, 0.3]
+    UiPath: [0.4, 0.2]
+    OpenAI API: [0.9, 0.4]
+    Freelance Platforms: [0.1, 0.7]
+```
+
+### Market Share Distribution
+
+```
+🏆 Current Automation Market Leaders
+
+Zapier (Workflow Automation)     ████████████████████ $5B (25%)
+Microsoft Power Platform         ████████████████     $2.5B (12.5%)
+UiPath (RPA)                     ████████████████████████ $14.8B (74%)
+Salesforce Automation           ████████████         $1.8B (9%)
+Other Players                    ████████             $1.2B (6%)
+
+AI Nomads Target Position by 2028
+Current Market Share: <0.1%
+Target Market Share: 4-5% ($15-25B)
+```
 
 ### Direct Competitors
 

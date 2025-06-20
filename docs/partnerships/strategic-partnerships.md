@@ -4,6 +4,61 @@
 
 AI Nomads leverages strategic partnerships to accelerate market penetration, enhance product capabilities, and expand global reach. Our partnership ecosystem spans technology providers, system integrators, channel partners, and industry leaders.
 
+### Partnership Ecosystem Map
+
+```mermaid
+graph TD
+    AI[AI Nomads Platform] --> TP[Technology Partners]
+    AI --> SI[System Integrators]
+    AI --> CP[Channel Partners]
+    AI --> IP[Industry Partners]
+    
+    TP --> AI1[OpenAI/Anthropic]
+    TP --> BC[Thirdweb/Polygon]
+    TP --> CL[AWS/Azure/GCP]
+    
+    SI --> GSI[Accenture/Deloitte/IBM]
+    SI --> RSI[Regional SIs]
+    SI --> BSI[Boutique Specialists]
+    
+    CP --> CP1[Certified Partners]
+    CP --> CP2[Gold Partners]
+    CP --> CP3[Platinum Partners]
+    
+    IP --> FS[Financial Services]
+    IP --> HC[Healthcare]
+    IP --> MF[Manufacturing]
+    
+    style AI fill:#8B0000
+    style TP fill:#4169E1
+    style SI fill:#32CD32
+    style CP fill:#FF6347
+    style IP fill:#9370DB
+```
+
+### Partnership Value Flow
+
+```mermaid
+graph LR
+    A[Market Access] --> B[AI Nomads Platform]
+    C[Technical Capabilities] --> B
+    D[Customer Relationships] --> B
+    E[Industry Expertise] --> B
+    
+    B --> F[Enhanced Product Value]
+    B --> G[Accelerated Growth]
+    B --> H[Global Reach]
+    B --> I[Competitive Advantage]
+    
+    F --> J[40% Partner-Sourced Revenue by 2026]
+    G --> K[25+ Countries Coverage]
+    H --> L[15+ Industry Verticals]
+    I --> M[500+ Certified Partners]
+    
+    style B fill:#FFD700
+    style J fill:#98FB98
+```
+
 ## Technology Partnerships
 
 ### AI Model Providers
@@ -95,6 +150,49 @@ AI Nomads leverages strategic partnerships to accelerate market penetration, enh
 ## Channel Partner Program
 
 ### Partner Tiers and Benefits
+
+```mermaid
+graph TD
+    A[Partner Program Entry] --> B{Qualification Level}
+    
+    B --> C[Certified Partner]
+    B --> D[Gold Partner]
+    B --> E[Platinum Partner]
+    
+    C --> C1[2 Certified Consultants]
+    C --> C2[$50K Annual Revenue]
+    C --> C3[15% Margin]
+    
+    D --> D1[5 Certified Consultants]
+    D --> D2[$250K Annual Revenue]
+    D --> D3[20% Margin + Co-marketing]
+    
+    E --> E1[10+ Certified Consultants]
+    E --> E2[$1M+ Annual Revenue]
+    E --> E3[25% Margin + Territory Rights]
+    
+    style C fill:#87CEEB
+    style D fill:#98FB98
+    style E fill:#FFD700
+```
+
+### Partner Revenue Growth Model
+
+```
+💰 Partner Revenue Trajectory
+
+Year 1: Partner-sourced revenue
+████████ $2M (20% of total revenue)
+
+Year 2: Scaling partnerships  
+████████████████ $8M (30% of total revenue)
+
+Year 3: Mature ecosystem
+████████████████████████ $40M (40% of total revenue)
+
+Target 2026: Market leadership
+████████████████████████████████ $280M (40% of $700M ARR)
+```
 
 **Certified Partner (Entry Level)**
 - **Requirements**: 2 certified consultants, $50K annual revenue commitment

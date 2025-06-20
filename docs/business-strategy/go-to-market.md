@@ -6,6 +6,44 @@ AI Nomads will capture market share through a dual-track approach: democratizing
 
 ## Market Entry Strategy
 
+### Go-to-Market Phase Diagram
+
+```mermaid
+graph TD
+    A[Phase 1: Creator Foundation] --> B[Phase 2: SMB Penetration]
+    B --> C[Phase 3: Enterprise Expansion]
+    
+    A1[Individual Developers] --> A2[50K Creators]
+    A2 --> A3[$120M Transaction Volume]
+    
+    B1[Startups 10-500 employees] --> B2[2K SMB Customers]
+    B2 --> B3[$50M ARR]
+    
+    C1[Fortune 500 Companies] --> C2[500 Enterprise Clients]
+    C2 --> C3[$500M ARR]
+    
+    A --> A1
+    B --> B1
+    C --> C1
+    
+    style A fill:#e3f2fd
+    style B fill:#e8f5e8
+    style C fill:#fff3e0
+```
+
+### Customer Acquisition Funnel
+
+```mermaid
+funnel
+    title Creator Acquisition Journey
+    "Market Awareness" 1000000
+    "Technical Interest" 100000
+    "Platform Trial" 50000
+    "First Agent Creation" 25000
+    "Revenue Generation" 15000
+    "Active Creator" 10000
+```
+
 ### Phase 1: Creator Economy Foundation (Months 1-12)
 
 **Target Segment**: Individual developers, freelancers, and AI enthusiasts
@@ -110,6 +148,50 @@ AI Nomads will capture market share through a dual-track approach: democratizing
 7. **Expansion**: Additional use cases, departments, and agent deployments
 
 ## Pricing Strategy
+
+### Pricing Architecture Flow
+
+```mermaid
+graph TD
+    A[User Segment] --> B{Creator or Enterprise?}
+    
+    B -->|Creator| C[Creator Tiers]
+    B -->|Enterprise| D[Enterprise Tiers]
+    
+    C --> C1[Free: $0/month]
+    C --> C2[Pro: $29/month]
+    C --> C3[Enterprise: $99/month]
+    
+    D --> D1[Starter: $1K/month]
+    D --> D2[Professional: $5K/month]
+    D --> D3[Enterprise: $15K+/month]
+    D --> D4[Enterprise Plus: Custom]
+    
+    C1 --> E[85% Revenue Share]
+    C2 --> F[87% Revenue Share]
+    C3 --> G[90% Revenue Share]
+    
+    style C1 fill:#e3f2fd
+    style D1 fill:#e8f5e8
+    style E fill:#fff3e0
+```
+
+### Value-Based Pricing Model
+
+```
+💰 Creator Pricing Tiers
+
+Free Tier        ████████████████████ 85% Revenue Share
+Creator Pro      ████████████████████ 87% Revenue Share  
+Creator Enterprise ██████████████████ 90% Revenue Share
+
+🏢 Enterprise Pricing Scale
+
+Starter          ████████             $1K/month (50 agents)
+Professional     ████████████████     $5K/month (500 agents)
+Enterprise       ████████████████████ $15K+/month (unlimited)
+Enterprise Plus  ████████████████████ Custom pricing
+```
 
 ### Creator Pricing Model
 
