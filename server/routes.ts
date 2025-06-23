@@ -7,6 +7,9 @@ import jwt from "jsonwebtoken";
 import type { Request, Response, NextFunction } from "express";
 import { signupUserSchema, loginUserSchema } from "@shared/schema";
 import { z } from "zod";
+import { PaymentService } from "./payment-service";
+import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./paypal";
+import Stripe from "stripe";
 
 // JWT Authentication Middleware
 interface AuthenticatedRequest extends Request {
@@ -35,6 +38,14 @@ const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextF
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Initialize payment service
+  const paymentService = new PaymentService();
+  
+  // Initialize Stripe if available
+  const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: "2024-06-20",
+  }) : null;
+
   // Seed database with agents on startup
   await storage.seedAgents();
 
@@ -594,6 +605,212 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error verifying phone:", error);
       res.status(500).json({ message: "Failed to verify phone number" });
+    }
+  });
+
+  // PAYMENT SYSTEM ROUTES
+
+  // Payment Methods
+  app.get("/api/payment-methods", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = req.user?.userId;
+      if (!userId) return res.status(401).json({ message: "User not authenticated" });
+      
+      const paymentMethods = await paymentService.getUserPaymentMethods(userId);
+      res.json(paymentMethods);
+    } catch (error) {
+      console.error("Error fetching payment methods:", error);
+      res.status(500).json({ message: "Failed to fetch payment methods" });
+    }
+  });
+
+  app.post("/api/payment-methods", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = req.user?.userId;
+      if (!userId) return res.status(401).json({ message: "User not authenticated" });
+      
+      const { type, provider, providerData } = req.body;
+      const paymentMethod = await paymentService.addPaymentMethod(userId, type, provider, providerData);
+      res.json(paymentMethod);
+    } catch (error) {
+      console.error("Error adding payment method:", error);
+      res.status(500).json({ message: "Failed to add payment method" });
+    }
+  });
+
+  app.patch("/api/payment-methods/:id/default", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = req.user?.userId;
+      if (!userId) return res.status(401).json({ message: "User not authenticated" });
+      
+      const { id } = req.params;
+      await paymentService.setDefaultPaymentMethod(userId, parseInt(id));
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error setting default payment method:", error);
+      res.status(500).json({ message: "Failed to set default payment method" });
+    }
+  });
+
+  // Stripe Payment Intent
+  app.post("/api/create-payment-intent", async (req, res) => {
+    try {
+      if (!stripe) {
+        return res.status(500).json({ message: "Stripe not configured" });
+      }
+      
+      const { amount, currency = "usd", paymentMethodTypes = ["card"] } = req.body;
+      
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(amount * 100), // Convert to cents
+        currency,
+        payment_method_types: paymentMethodTypes,
+        automatic_payment_methods: {
+          enabled: true,
+        },
+      });
+      
+      res.json({ clientSecret: paymentIntent.client_secret });
+    } catch (error: any) {
+      console.error("Error creating payment intent:", error);
+      res.status(500).json({ message: "Error creating payment intent: " + error.message });
+    }
+  });
+
+  // PayPal Routes
+  app.get("/api/paypal/setup", async (req, res) => {
+    await loadPaypalDefault(req, res);
+  });
+
+  app.post("/api/paypal/order", async (req, res) => {
+    await createPaypalOrder(req, res);
+  });
+
+  app.post("/api/paypal/order/:orderID/capture", async (req, res) => {
+    await capturePaypalOrder(req, res);
+  });
+
+  // Agent Purchase
+  app.post("/api/purchase-agent", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = req.user?.userId;
+      if (!userId) return res.status(401).json({ message: "User not authenticated" });
+      
+      const { agentId, paymentMethodId } = req.body;
+      const payment = await paymentService.purchaseAgent(userId, agentId, paymentMethodId);
+      res.json(payment);
+    } catch (error) {
+      console.error("Error purchasing agent:", error);
+      res.status(500).json({ message: "Failed to purchase agent" });
+    }
+  });
+
+  // Subscription Management
+  app.post("/api/subscriptions", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = req.user?.userId;
+      if (!userId) return res.status(401).json({ message: "User not authenticated" });
+      
+      const { planCode, paymentMethodId, billingCycle } = req.body;
+      const subscription = await paymentService.createSubscription(userId, planCode, paymentMethodId, billingCycle);
+      res.json(subscription);
+    } catch (error) {
+      console.error("Error creating subscription:", error);
+      res.status(500).json({ message: "Failed to create subscription" });
+    }
+  });
+
+  // Contract Management
+  app.post("/api/contracts", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = req.user?.userId;
+      if (!userId) return res.status(401).json({ message: "User not authenticated" });
+      
+      const { creatorUserId, contractData } = req.body;
+      const contract = await paymentService.createContract(userId, creatorUserId, contractData);
+      res.json(contract);
+    } catch (error) {
+      console.error("Error creating contract:", error);
+      res.status(500).json({ message: "Failed to create contract" });
+    }
+  });
+
+  app.post("/api/contracts/:id/payment", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { id } = req.params;
+      const { paymentMethodId } = req.body;
+      const payment = await paymentService.processContractPayment(parseInt(id), paymentMethodId);
+      res.json(payment);
+    } catch (error) {
+      console.error("Error processing contract payment:", error);
+      res.status(500).json({ message: "Failed to process contract payment" });
+    }
+  });
+
+  // Crypto Exchange
+  app.post("/api/crypto/exchange", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = req.user?.userId;
+      if (!userId) return res.status(401).json({ message: "User not authenticated" });
+      
+      const { fromCurrency, toCurrency, fromAmount } = req.body;
+      const exchange = await paymentService.exchangeCrypto(userId, fromCurrency, toCurrency, fromAmount);
+      res.json(exchange);
+    } catch (error) {
+      console.error("Error exchanging crypto:", error);
+      res.status(500).json({ message: "Failed to exchange crypto" });
+    }
+  });
+
+  // Payment History
+  app.get("/api/payments/history", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = req.user?.userId;
+      if (!userId) return res.status(401).json({ message: "User not authenticated" });
+      
+      const payments = await paymentService.getUserPaymentHistory(userId);
+      res.json(payments);
+    } catch (error) {
+      console.error("Error fetching payment history:", error);
+      res.status(500).json({ message: "Failed to fetch payment history" });
+    }
+  });
+
+  // Stripe Webhooks
+  app.post("/api/webhooks/stripe", async (req, res) => {
+    try {
+      if (!stripe) {
+        return res.status(500).json({ message: "Stripe not configured" });
+      }
+      
+      const sig = req.headers['stripe-signature'] as string;
+      const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+      
+      if (!webhookSecret) {
+        return res.status(500).json({ message: "Webhook secret not configured" });
+      }
+
+      const event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+      
+      // Handle different event types
+      switch (event.type) {
+        case 'payment_intent.succeeded':
+          console.log('Payment succeeded:', event.data.object);
+          break;
+        case 'payment_intent.payment_failed':
+          console.log('Payment failed:', event.data.object);
+          break;
+        case 'invoice.payment_succeeded':
+          console.log('Subscription payment succeeded:', event.data.object);
+          break;
+        default:
+          console.log(`Unhandled event type: ${event.type}`);
+      }
+      
+      res.json({ received: true });
+    } catch (error) {
+      console.error("Webhook error:", error);
+      res.status(400).json({ message: "Webhook error" });
     }
   });
 
