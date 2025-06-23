@@ -54,6 +54,10 @@ if (isPayPalConfigured) {
 /* Token generation helpers */
 
 export async function getClientToken() {
+  if (!isPayPalConfigured || !oAuthAuthorizationController) {
+    throw new Error("PayPal not configured");
+  }
+
   const auth = Buffer.from(
     `${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`,
   ).toString("base64");
@@ -72,6 +76,10 @@ export async function getClientToken() {
 
 export async function createPaypalOrder(req: Request, res: Response) {
   try {
+    if (!isPayPalConfigured || !ordersController) {
+      return res.status(503).json({ error: "PayPal not configured" });
+    }
+
     const { amount, currency, intent } = req.body;
 
     if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
@@ -124,6 +132,10 @@ export async function createPaypalOrder(req: Request, res: Response) {
 
 export async function capturePaypalOrder(req: Request, res: Response) {
   try {
+    if (!isPayPalConfigured || !ordersController) {
+      return res.status(503).json({ error: "PayPal not configured" });
+    }
+
     const { orderID } = req.params;
     const collect = {
       id: orderID,
@@ -131,22 +143,31 @@ export async function capturePaypalOrder(req: Request, res: Response) {
     };
 
     const { body, ...httpResponse } =
-          await ordersController.captureOrder(collect);
+          await ordersController!.captureOrder(collect);
 
     const jsonResponse = JSON.parse(String(body));
     const httpStatusCode = httpResponse.statusCode;
 
     res.status(httpStatusCode).json(jsonResponse);
   } catch (error) {
-    console.error("Failed to create order:", error);
+    console.error("Failed to capture order:", error);
     res.status(500).json({ error: "Failed to capture order." });
   }
 }
 
 export async function loadPaypalDefault(req: Request, res: Response) {
-  const clientToken = await getClientToken();
-  res.json({
-    clientToken,
-  });
+  try {
+    if (!isPayPalConfigured) {
+      return res.status(503).json({ error: "PayPal not configured" });
+    }
+    
+    const clientToken = await getClientToken();
+    res.json({
+      clientToken,
+    });
+  } catch (error) {
+    console.error("Failed to load PayPal default:", error);
+    res.status(500).json({ error: "Failed to load PayPal configuration" });
+  }
 }
 // <END_EXACT_CODE>
