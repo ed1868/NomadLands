@@ -193,24 +193,40 @@ export default function Navigation() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : isConnected ? (
-              <button
-                onClick={disconnectWallet}
-                className="flex items-center space-x-2 bg-emerald-900/40 border border-emerald-700/50 rounded px-4 py-2 font-light text-emerald-300 backdrop-blur-sm hover:bg-emerald-900/60 hover:border-emerald-600/70 transition-all duration-300"
-              >
-                <Wallet className="w-4 h-4" />
-                <span className="text-sm">{address && formatAddress(address)}</span>
-              </button>
+              <div className="flex items-center space-x-3">
+                <a
+                  href="/signin"
+                  className="text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
+                >
+                  Sign In
+                </a>
+                <button
+                  onClick={disconnectWallet}
+                  className="flex items-center space-x-2 bg-emerald-900/40 border border-emerald-700/50 rounded px-4 py-2 font-light text-emerald-300 backdrop-blur-sm hover:bg-emerald-900/60 hover:border-emerald-600/70 transition-all duration-300"
+                >
+                  <Wallet className="w-4 h-4" />
+                  <span className="text-sm">{address && formatAddress(address)}</span>
+                </button>
+              </div>
             ) : (
-              <button
-                onClick={connectWallet}
-                disabled={isConnecting}
-                className="flex items-center space-x-2 bg-black/40 border border-gray-700 rounded px-4 py-2 font-light text-gray-300 backdrop-blur-sm hover:border-gray-600 hover:bg-black/60 transition-all duration-300 disabled:opacity-50"
-              >
-                <Wallet className="w-4 h-4" />
-                <span className="text-sm">
-                  {isConnecting ? 'Connecting...' : 'Connect Wallet'}
-                </span>
-              </button>
+              <div className="flex items-center space-x-3">
+                <a
+                  href="/signin"
+                  className="text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
+                >
+                  Sign In
+                </a>
+                <button
+                  onClick={connectWallet}
+                  disabled={isConnecting}
+                  className="flex items-center space-x-2 bg-black/40 border border-gray-700 rounded px-4 py-2 font-light text-gray-300 backdrop-blur-sm hover:border-gray-600 hover:bg-black/60 transition-all duration-300 disabled:opacity-50"
+                >
+                  <Wallet className="w-4 h-4" />
+                  <span className="text-sm">
+                    {isConnecting ? 'Connecting...' : 'Connect Wallet'}
+                  </span>
+                </button>
+              </div>
             )}
             
             {!user && (
@@ -273,8 +289,19 @@ export default function Navigation() {
                 API
               </a>
               
+              {/* Sign In link for mobile */}
+              {!user && (
+                <a
+                  href="/signin"
+                  className="text-emerald-400 hover:text-emerald-300 transition-colors text-left font-medium tracking-wide"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Sign In
+                </a>
+              )}
+              
               {/* Dashboard link for mobile */}
-              {isConnected && (
+              {user && (
                 <a
                   href="/dashboard"
                   className="text-gray-500 hover:text-gray-300 transition-colors text-left font-extralight tracking-wide"
