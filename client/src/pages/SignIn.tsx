@@ -28,7 +28,10 @@ export default function SignIn() {
       const response = await apiRequest("POST", "/api/auth/signin", formData);
       const data = await response.json();
 
-      if (data.user) {
+      if (data.user && data.token) {
+        // Store the JWT token in localStorage
+        localStorage.setItem('token', data.token);
+        
         toast({
           title: "Welcome back",
           description: "Successfully signed in to AI Nomads",
