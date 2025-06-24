@@ -1,368 +1,349 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { Zap, Settings, DollarSign, Globe, Lock, Building } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import AgentCreationChat from "./AgentCreationChat";
+import AgentUploadMethods from "./AgentUploadMethods";
+import { 
+  Rocket, 
+  Zap, 
+  Globe, 
+  Lock, 
+  Building2,
+  DollarSign,
+  Bot,
+  Settings,
+  Code,
+  Upload,
+  MessageCircle
+} from "lucide-react";
 
-interface AgentDeploymentFormProps {
-  onSuccess?: () => void;
-}
+const deploymentSchema = z.object({
+  name: z.string().min(1, "Agent name is required"),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+  category: z.string().min(1, "Category is required"),
+  aiModel: z.string().min(1, "AI Model is required"),
+  systemPrompt: z.string().min(1, "System prompt is required"),
+  pricing: z.number().min(0.01, "Pricing must be at least $0.01"),
+  accessType: z.enum(["public", "private", "enterprise"]),
+  tags: z.array(z.string()).default([])
+});
 
-export default function AgentDeploymentForm({ onSuccess }: AgentDeploymentFormProps) {
+export default function AgentDeploymentForm() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    category: "",
-    configuration: {
-      model: "gpt-4",
-      temperature: 0.7,
-      maxTokens: 1000,
+  const [isDeploying, setIsDeploying] = useState(false);
+  const [activeCreationMethod, setActiveCreationMethod] = useState('chat');
+
+  const form = useForm<z.infer<typeof deploymentSchema>>({
+    resolver: zodResolver(deploymentSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      category: "",
+      aiModel: "gpt-4o",
       systemPrompt: "",
+      pricing: 0.05,
+      accessType: "public",
+      tags: []
     },
-    pricePerCall: "0.01",
-    currency: "USD",
-    accessType: "public",
-    environment: "production",
-    tags: [] as string[],
   });
 
-  const [tagInput, setTagInput] = useState("");
+  const handleChatAgentGenerated = (config: any) => {
+    form.setValue('name', config.name);
+    form.setValue('description', config.description);
+    form.setValue('category', config.category);
+    form.setValue('aiModel', config.aiModel);
+    form.setValue('pricing', config.pricing);
+    form.setValue('accessType', config.accessType);
+    
+    if (config.tools && config.tools.length > 0) {
+      form.setValue('systemPrompt', `This agent uses the following tools: ${config.tools.join(', ')}\n\nAgent behavior and capabilities will be configured based on the chat conversation.`);
+      form.setValue('tags', config.tools.slice(0, 5));
+    }
+    
+    setActiveCreationMethod('form');
+    
+    toast({
+      title: "Agent Configuration Generated",
+      description: "Review and customize the settings below, then deploy your agent.",
+    });
+  };
+
+  const handleUploadAgentGenerated = (config: any) => {
+    form.setValue('name', config.name);
+    form.setValue('description', config.description);
+    form.setValue('category', config.category);
+    form.setValue('aiModel', config.aiModel);
+    form.setValue('pricing', config.pricing);
+    form.setValue('accessType', config.accessType);
+    
+    if (config.sourceType === 'python') {
+      form.setValue('systemPrompt', `This agent is based on Python code: ${config.sourceFiles?.map((f: any) => f.name).join(', ')}\n\nThe agent will execute the provided Python functionality through API calls.`);
+    } else if (config.sourceType === 'n8n') {
+      form.setValue('systemPrompt', `This agent is based on an n8n workflow: ${config.n8nUrl}\n\nThe agent will trigger and manage the n8n workflow execution.`);
+    } else if (config.sourceType === 'json') {
+      form.setValue('systemPrompt', config.jsonConfig.systemPrompt || 'Agent configured from JSON specification.');
+    }
+    
+    if (config.tools) {
+      form.setValue('tags', config.tools.slice(0, 5));
+    }
+    
+    setActiveCreationMethod('form');
+    
+    toast({
+      title: "Agent Imported Successfully",
+      description: "Review the configuration and deploy your agent.",
+    });
+  };
 
   const deploymentMutation = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: z.infer<typeof deploymentSchema>) => {
       const response = await apiRequest("POST", "/api/deployments", data);
       return response.json();
     },
     onSuccess: (data) => {
       toast({
         title: "Agent Deployed Successfully",
-        description: `Your agent "${data.name}" is now live at ${data.apiEndpoint}`,
+        description: `Your agent "${data.name}" is now live!`,
       });
       queryClient.invalidateQueries({ queryKey: ["/api/deployments"] });
-      if (onSuccess) onSuccess();
+      form.reset();
     },
     onError: (error: any) => {
       toast({
         title: "Deployment Failed",
-        description: error.message || "Failed to deploy agent",
+        description: error.message || "Failed to deploy agent. Please try again.",
         variant: "destructive",
       });
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    deploymentMutation.mutate(formData);
-  };
-
-  const addTag = () => {
-    if (tagInput.trim() && !formData.tags.includes(tagInput.trim())) {
-      setFormData({
-        ...formData,
-        tags: [...formData.tags, tagInput.trim()],
-      });
-      setTagInput("");
-    }
-  };
-
-  const removeTag = (tag: string) => {
-    setFormData({
-      ...formData,
-      tags: formData.tags.filter(t => t !== tag),
-    });
+  const onSubmit = (data: z.infer<typeof deploymentSchema>) => {
+    deploymentMutation.mutate(data);
   };
 
   return (
-    <Card className="bg-black/40 border-green-500/20">
-      <CardHeader>
-        <CardTitle className="text-green-400 flex items-center gap-2">
-          <Zap className="w-5 h-5" />
-          Deploy New AI Agent
-        </CardTitle>
-        <CardDescription className="text-gray-400">
-          Configure and deploy your AI agent to the AI Nomads marketplace
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Basic Information */}
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="name" className="text-green-400">Agent Name</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Email Classification Agent"
-                className="bg-black/30 border-green-500/30 text-white"
-                required
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="description" className="text-green-400">Description</Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Automatically classifies and organizes emails based on content and priority"
-                className="bg-black/30 border-green-500/30 text-white min-h-[80px]"
-                required
-              />
-            </div>
+    <div className="space-y-6">
+      <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+        <CardContent className="p-6">
+          <Tabs value={activeCreationMethod} onValueChange={setActiveCreationMethod} className="w-full">
+            <TabsList className="grid w-full grid-cols-3 bg-gray-800/50">
+              <TabsTrigger value="chat" className="data-[state=active]:bg-emerald-600/20">
+                <MessageCircle className="w-4 h-4 mr-2" />
+                Chat Assistant
+              </TabsTrigger>
+              <TabsTrigger value="upload" className="data-[state=active]:bg-emerald-600/20">
+                <Upload className="w-4 h-4 mr-2" />
+                Import Code
+              </TabsTrigger>
+              <TabsTrigger value="form" className="data-[state=active]:bg-emerald-600/20">
+                <Settings className="w-4 h-4 mr-2" />
+                Manual Setup
+              </TabsTrigger>
+            </TabsList>
 
-            <div>
-              <Label htmlFor="category" className="text-green-400">Category</Label>
-              <Select
-                value={formData.category}
-                onValueChange={(value) => setFormData({ ...formData, category: value })}
-              >
-                <SelectTrigger className="bg-black/30 border-green-500/30 text-white">
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent className="bg-black border-green-500/30">
-                  <SelectItem value="productivity">Productivity</SelectItem>
-                  <SelectItem value="analytics">Analytics</SelectItem>
-                  <SelectItem value="marketing">Marketing</SelectItem>
-                  <SelectItem value="development">Development</SelectItem>
-                  <SelectItem value="communication">Communication</SelectItem>
-                  <SelectItem value="finance">Finance</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+            <TabsContent value="chat" className="mt-6">
+              <AgentCreationChat onAgentGenerated={handleChatAgentGenerated} />
+            </TabsContent>
 
-          <Separator className="bg-green-500/20" />
+            <TabsContent value="upload" className="mt-6">
+              <AgentUploadMethods onAgentConfigGenerated={handleUploadAgentGenerated} />
+            </TabsContent>
 
-          {/* AI Configuration */}
-          <div className="space-y-4">
-            <h3 className="text-green-400 font-semibold flex items-center gap-2">
-              <Settings className="w-4 h-4" />
-              AI Configuration
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="model" className="text-green-400">AI Model</Label>
-                <Select
-                  value={formData.configuration.model}
-                  onValueChange={(value) => setFormData({
-                    ...formData,
-                    configuration: { ...formData.configuration, model: value }
-                  })}
-                >
-                  <SelectTrigger className="bg-black/30 border-green-500/30 text-white">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-black border-green-500/30">
-                    <SelectItem value="gpt-4">GPT-4</SelectItem>
-                    <SelectItem value="gpt-3.5-turbo">GPT-3.5 Turbo</SelectItem>
-                    <SelectItem value="claude-3">Claude 3</SelectItem>
-                    <SelectItem value="gemini-pro">Gemini Pro</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            <TabsContent value="form" className="mt-6">
+              <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center space-x-2">
+                    <Rocket className="w-5 h-5 text-emerald-500" />
+                    <span>Manual Agent Configuration</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    {/* Basic Information */}
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
+                        <Bot className="w-5 h-5 text-emerald-500" />
+                        <span>Basic Information</span>
+                      </h3>
 
-              <div>
-                <Label htmlFor="temperature" className="text-green-400">Temperature</Label>
-                <Input
-                  id="temperature"
-                  type="number"
-                  min="0"
-                  max="2"
-                  step="0.1"
-                  value={formData.configuration.temperature}
-                  onChange={(e) => setFormData({
-                    ...formData,
-                    configuration: { ...formData.configuration, temperature: parseFloat(e.target.value) }
-                  })}
-                  className="bg-black/30 border-green-500/30 text-white"
-                />
-              </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="name" className="text-sm font-medium text-gray-300">
+                            Agent Name
+                          </Label>
+                          <Input
+                            id="name"
+                            {...form.register("name")}
+                            placeholder="e.g., Customer Support Agent"
+                            className="bg-gray-800/50 border-gray-600 text-white"
+                          />
+                          {form.formState.errors.name && (
+                            <p className="text-sm text-red-400">{form.formState.errors.name.message}</p>
+                          )}
+                        </div>
 
-              <div>
-                <Label htmlFor="maxTokens" className="text-green-400">Max Tokens</Label>
-                <Input
-                  id="maxTokens"
-                  type="number"
-                  min="1"
-                  max="4000"
-                  value={formData.configuration.maxTokens}
-                  onChange={(e) => setFormData({
-                    ...formData,
-                    configuration: { ...formData.configuration, maxTokens: parseInt(e.target.value) }
-                  })}
-                  className="bg-black/30 border-green-500/30 text-white"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="environment" className="text-green-400">Environment</Label>
-                <Select
-                  value={formData.environment}
-                  onValueChange={(value) => setFormData({ ...formData, environment: value })}
-                >
-                  <SelectTrigger className="bg-black/30 border-green-500/30 text-white">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-black border-green-500/30">
-                    <SelectItem value="production">Production</SelectItem>
-                    <SelectItem value="staging">Staging</SelectItem>
-                    <SelectItem value="development">Development</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="systemPrompt" className="text-green-400">System Prompt</Label>
-              <Textarea
-                id="systemPrompt"
-                value={formData.configuration.systemPrompt}
-                onChange={(e) => setFormData({
-                  ...formData,
-                  configuration: { ...formData.configuration, systemPrompt: e.target.value }
-                })}
-                placeholder="You are an AI assistant specialized in email classification..."
-                className="bg-black/30 border-green-500/30 text-white min-h-[100px]"
-              />
-            </div>
-          </div>
-
-          <Separator className="bg-green-500/20" />
-
-          {/* Pricing & Access */}
-          <div className="space-y-4">
-            <h3 className="text-green-400 font-semibold flex items-center gap-2">
-              <DollarSign className="w-4 h-4" />
-              Pricing & Access
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <Label htmlFor="pricePerCall" className="text-green-400">Price per Call</Label>
-                <Input
-                  id="pricePerCall"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={formData.pricePerCall}
-                  onChange={(e) => setFormData({ ...formData, pricePerCall: e.target.value })}
-                  className="bg-black/30 border-green-500/30 text-white"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="currency" className="text-green-400">Currency</Label>
-                <Select
-                  value={formData.currency}
-                  onValueChange={(value) => setFormData({ ...formData, currency: value })}
-                >
-                  <SelectTrigger className="bg-black/30 border-green-500/30 text-white">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-black border-green-500/30">
-                    <SelectItem value="USD">USD</SelectItem>
-                    <SelectItem value="EUR">EUR</SelectItem>
-                    <SelectItem value="GBP">GBP</SelectItem>
-                    <SelectItem value="ETH">ETH</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="accessType" className="text-green-400">Access Type</Label>
-                <Select
-                  value={formData.accessType}
-                  onValueChange={(value) => setFormData({ ...formData, accessType: value })}
-                >
-                  <SelectTrigger className="bg-black/30 border-green-500/30 text-white">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-black border-green-500/30">
-                    <SelectItem value="public">
-                      <div className="flex items-center gap-2">
-                        <Globe className="w-4 h-4" />
-                        Public
+                        <div className="space-y-2">
+                          <Label htmlFor="category" className="text-sm font-medium text-gray-300">
+                            Category
+                          </Label>
+                          <Select onValueChange={(value) => form.setValue("category", value)}>
+                            <SelectTrigger className="bg-gray-800/50 border-gray-600 text-white">
+                              <SelectValue placeholder="Select category" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-gray-800 border-gray-600">
+                              <SelectItem value="productivity">Productivity</SelectItem>
+                              <SelectItem value="customer-service">Customer Service</SelectItem>
+                              <SelectItem value="development">Development</SelectItem>
+                              <SelectItem value="marketing">Marketing</SelectItem>
+                              <SelectItem value="analytics">Analytics</SelectItem>
+                              <SelectItem value="automation">Automation</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          {form.formState.errors.category && (
+                            <p className="text-sm text-red-400">{form.formState.errors.category.message}</p>
+                          )}
+                        </div>
                       </div>
-                    </SelectItem>
-                    <SelectItem value="private">
-                      <div className="flex items-center gap-2">
-                        <Lock className="w-4 h-4" />
-                        Private
+
+                      <div className="space-y-2">
+                        <Label htmlFor="description" className="text-sm font-medium text-gray-300">
+                          Description
+                        </Label>
+                        <Textarea
+                          id="description"
+                          {...form.register("description")}
+                          placeholder="Describe what your agent does and how it helps users..."
+                          className="bg-gray-800/50 border-gray-600 text-white min-h-[100px]"
+                        />
+                        {form.formState.errors.description && (
+                          <p className="text-sm text-red-400">{form.formState.errors.description.message}</p>
+                        )}
                       </div>
-                    </SelectItem>
-                    <SelectItem value="enterprise">
-                      <div className="flex items-center gap-2">
-                        <Building className="w-4 h-4" />
-                        Enterprise
+                    </div>
+
+                    {/* AI Configuration */}
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
+                        <Zap className="w-5 h-5 text-emerald-500" />
+                        <span>AI Configuration</span>
+                      </h3>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="aiModel" className="text-sm font-medium text-gray-300">
+                            AI Model
+                          </Label>
+                          <Select onValueChange={(value) => form.setValue("aiModel", value)} defaultValue="gpt-4o">
+                            <SelectTrigger className="bg-gray-800/50 border-gray-600 text-white">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-gray-800 border-gray-600">
+                              <SelectItem value="gpt-4o">GPT-4o (Recommended)</SelectItem>
+                              <SelectItem value="gpt-4">GPT-4</SelectItem>
+                              <SelectItem value="claude-3">Claude 3</SelectItem>
+                              <SelectItem value="gemini-pro">Gemini Pro</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="accessType" className="text-sm font-medium text-gray-300">
+                            Access Type
+                          </Label>
+                          <Select onValueChange={(value) => form.setValue("accessType", value as "public" | "private" | "enterprise")} defaultValue="public">
+                            <SelectTrigger className="bg-gray-800/50 border-gray-600 text-white">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-gray-800 border-gray-600">
+                              <SelectItem value="public">
+                                <div className="flex items-center space-x-2">
+                                  <Globe className="w-4 h-4" />
+                                  <span>Public</span>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="private">
+                                <div className="flex items-center space-x-2">
+                                  <Lock className="w-4 h-4" />
+                                  <span>Private</span>
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="enterprise">
+                                <div className="flex items-center space-x-2">
+                                  <Building2 className="w-4 h-4" />
+                                  <span>Enterprise</span>
+                                </div>
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
 
-          <Separator className="bg-green-500/20" />
+                      <div className="space-y-2">
+                        <Label htmlFor="systemPrompt" className="text-sm font-medium text-gray-300">
+                          System Prompt
+                        </Label>
+                        <Textarea
+                          id="systemPrompt"
+                          {...form.register("systemPrompt")}
+                          placeholder="Define your agent's personality, behavior, and capabilities..."
+                          className="bg-gray-800/50 border-gray-600 text-white min-h-[120px]"
+                        />
+                        {form.formState.errors.systemPrompt && (
+                          <p className="text-sm text-red-400">{form.formState.errors.systemPrompt.message}</p>
+                        )}
+                      </div>
+                    </div>
 
-          {/* Tags */}
-          <div className="space-y-4">
-            <h3 className="text-green-400 font-semibold">Tags</h3>
-            
-            <div className="flex gap-2">
-              <Input
-                value={tagInput}
-                onChange={(e) => setTagInput(e.target.value)}
-                placeholder="Add a tag..."
-                className="bg-black/30 border-green-500/30 text-white"
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    addTag();
-                  }
-                }}
-              />
-              <Button type="button" onClick={addTag} variant="outline" className="border-green-500/30 text-green-400">
-                Add
-              </Button>
-            </div>
-            
-            <div className="flex flex-wrap gap-2">
-              {formData.tags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="bg-green-500/20 text-green-400">
-                  {tag}
-                  <button
-                    type="button"
-                    onClick={() => removeTag(tag)}
-                    className="ml-2 text-green-400 hover:text-red-400"
-                  >
-                    ×
-                  </button>
-                </Badge>
-              ))}
-            </div>
-          </div>
+                    {/* Pricing */}
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
+                        <DollarSign className="w-5 h-5 text-emerald-500" />
+                        <span>Pricing</span>
+                      </h3>
 
-          <Button
-            type="submit"
-            disabled={deploymentMutation.isPending}
-            className="w-full bg-green-600 hover:bg-green-700 text-white"
-          >
-            {deploymentMutation.isPending ? "Deploying..." : "Deploy Agent"}
-          </Button>
-                </form>
+                      <div className="space-y-2">
+                        <Label htmlFor="pricing" className="text-sm font-medium text-gray-300">
+                          Price per API Call (USD)
+                        </Label>
+                        <Input
+                          id="pricing"
+                          type="number"
+                          step="0.01"
+                          min="0.01"
+                          {...form.register("pricing", { valueAsNumber: true })}
+                          className="bg-gray-800/50 border-gray-600 text-white"
+                        />
+                        {form.formState.errors.pricing && (
+                          <p className="text-sm text-red-400">{form.formState.errors.pricing.message}</p>
+                        )}
+                        <p className="text-xs text-gray-500">
+                          Minimum $0.01 per call. Consider usage complexity when setting price.
+                        </p>
+                      </div>
+                    </div>
+
+                    <Button 
+                      type="submit" 
+                      disabled={deploymentMutation.isPending}
+                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+                    >
+                      {deploymentMutation.isPending ? "Deploying..." : "Deploy Agent"}
+                    </Button>
+                  </form>
                 </CardContent>
               </Card>
             </TabsContent>
