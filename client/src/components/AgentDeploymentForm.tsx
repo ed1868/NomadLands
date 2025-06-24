@@ -15,6 +15,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import AgentCreationChat from "./AgentCreationChat";
 import AgentUploadMethods from "./AgentUploadMethods";
+import DeploymentConfirmationModal from "./DeploymentConfirmationModal";
 import { 
   Rocket, 
   Zap, 
@@ -45,6 +46,8 @@ export default function AgentDeploymentForm() {
   const queryClient = useQueryClient();
   const [isDeploying, setIsDeploying] = useState(false);
   const [activeCreationMethod, setActiveCreationMethod] = useState('chat');
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [generatedPayload, setGeneratedPayload] = useState<any>(null);
 
   const form = useForm<z.infer<typeof deploymentSchema>>({
     resolver: zodResolver(deploymentSchema),
@@ -110,66 +113,74 @@ export default function AgentDeploymentForm() {
   };
 
   const deploymentMutation = useMutation({
-    mutationFn: async (data: z.infer<typeof deploymentSchema>) => {
-      // Create optimized payload for LLM n8n workflow generation
-      const optimizedPayload = {
-        agent: {
-          name: data.name,
-          description: data.description,
-          category: data.category,
-          systemPrompt: data.systemPrompt,
-          aiModel: data.aiModel,
-          pricing: data.pricing,
-          accessType: data.accessType,
-          tools: data.tags
-        },
-        n8nWorkflow: {
-          nodes: data.tags.map((tool, index) => ({
-            id: `node_${index}`,
-            type: tool.toLowerCase().replace(/\s+/g, '_'),
-            name: tool,
-            parameters: {},
-            position: { x: index * 200, y: 100 }
-          })),
-          connections: {},
-          metadata: {
-            generatedFor: data.name,
-            timestamp: new Date().toISOString(),
-            description: `Workflow for ${data.name}: ${data.description}`
-          }
-        },
-        llmInstructions: {
-          objective: `Create an n8n workflow for "${data.name}" agent`,
-          description: data.description,
-          systemPrompt: data.systemPrompt,
-          requiredIntegrations: data.tags,
-          expectedBehavior: "The workflow should handle incoming requests, process them through the specified tools, and return appropriate responses",
-          outputFormat: "n8n JSON workflow format with proper node connections and error handling"
-        }
-      };
-
+    mutationFn: async (optimizedPayload: any) => {
       const response = await apiRequest("POST", "/api/deployments", optimizedPayload);
       return response.json();
     },
     onSuccess: (data) => {
       toast({
-        title: "Agent Configuration Generated",
-        description: "Check the console for the optimized JSON payload.",
+        title: "Agent Submitted Successfully",
+        description: "Your agent has been submitted for testing and approval.",
       });
       queryClient.invalidateQueries({ queryKey: ["/api/deployments"] });
+      setShowConfirmationModal(false);
       form.reset();
     },
     onError: (error: any) => {
       toast({
-        title: "Generation Failed",
-        description: error.message || "Failed to generate agent configuration. Please try again.",
+        title: "Submission Failed",
+        description: error.message || "Failed to submit agent. Please try again.",
         variant: "destructive",
       });
     },
   });
 
   const onSubmit = (data: z.infer<typeof deploymentSchema>) => {
-    deploymentMutation.mutate(data);
+    // Create optimized payload for LLM n8n workflow generation
+    const optimizedPayload = {
+      agent: {
+        name: data.name,
+        description: data.description,
+        category: data.category,
+        systemPrompt: data.systemPrompt,
+        aiModel: data.aiModel,
+        pricing: data.pricing,
+        accessType: data.accessType,
+        tools: data.tags
+      },
+      n8nWorkflow: {
+        nodes: data.tags.map((tool, index) => ({
+          id: `node_${index}`,
+          type: tool.toLowerCase().replace(/\s+/g, '_'),
+          name: tool,
+          parameters: {},
+          position: { x: index * 200, y: 100 }
+        })),
+        connections: {},
+        metadata: {
+          generatedFor: data.name,
+          timestamp: new Date().toISOString(),
+          description: `Workflow for ${data.name}: ${data.description}`
+        }
+      },
+      llmInstructions: {
+        objective: `Create an n8n workflow for "${data.name}" agent`,
+        description: data.description,
+        systemPrompt: data.systemPrompt,
+        requiredIntegrations: data.tags,
+        expectedBehavior: "The workflow should handle incoming requests, process them through the specified tools, and return appropriate responses",
+        outputFormat: "n8n JSON workflow format with proper node connections and error handling"
+      }
+    };
+
+    setGeneratedPayload(optimizedPayload);
+    setShowConfirmationModal(true);
+  };
+
+  const handleConfirmDeployment = () => {
+    if (generatedPayload) {
+      deploymentMutation.mutate(generatedPayload);
+    }
   };
 
   return (
@@ -378,7 +389,7 @@ export default function AgentDeploymentForm() {
                       disabled={deploymentMutation.isPending}
                       className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
                     >
-                      {deploymentMutation.isPending ? "Deploying..." : "Deploy Agent"}
+                      Preview & Deploy Agent
                     </Button>
                   </form>
                 </CardContent>
@@ -387,6 +398,14 @@ export default function AgentDeploymentForm() {
           </Tabs>
         </CardContent>
       </Card>
+
+      <DeploymentConfirmationModal
+        isOpen={showConfirmationModal}
+        onClose={() => setShowConfirmationModal(false)}
+        jsonPayload={generatedPayload}
+        onConfirm={handleConfirmDeployment}
+        isLoading={deploymentMutation.isPending}
+      />
     </div>
   );
 }

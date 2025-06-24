@@ -396,7 +396,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
             })}
           </div>
           <div className="flex flex-wrap gap-2 mb-3">
-            {commonTools.filter(tool => !tools.includes(tool.name)).slice(0, 8).map((tool) => (
+            {commonTools.filter(tool => !tools.includes(tool.name)).map((tool) => (
               <button
                 key={tool.name}
                 onClick={() => addTool(tool.name)}
@@ -414,32 +414,6 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
                 <Plus className={`w-3 h-3 ${tool.textColor} opacity-60 group-hover:opacity-100`} />
               </button>
             ))}
-          </div>
-          <div className="flex space-x-2">
-            <Input
-              placeholder="Add custom tool..."
-              value={newTool}
-              onChange={(e) => setNewTool(e.target.value)}
-              className="flex-1 bg-gray-800/50 border-gray-600"
-              onKeyPress={(e) => {
-                if (e.key === 'Enter' && newTool.trim()) {
-                  addTool(newTool.trim());
-                  setNewTool('');
-                }
-              }}
-            />
-            <Button 
-              size="sm" 
-              onClick={() => {
-                if (newTool.trim()) {
-                  addTool(newTool.trim());
-                  setNewTool('');
-                }
-              }}
-              className="bg-emerald-600/20 text-emerald-300 hover:bg-emerald-600/30"
-            >
-              Add
-            </Button>
           </div>
         </div>
 
