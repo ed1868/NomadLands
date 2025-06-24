@@ -241,7 +241,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
       };
     }
 
-    if (lowerMessage.includes('ready') || lowerMessage.includes('create') || lowerMessage.includes('build')) {
+    if (lowerMessage.includes('ready') || lowerMessage.includes('create') || lowerMessage.includes('build') || lowerMessage.includes('deploy')) {
       const agentConfig = {
         name: "Custom AI Agent",
         description: "Generated from chat conversation",
@@ -255,7 +255,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
       return {
         id: Date.now().toString(),
         type: 'bot',
-        content: "Perfect! I've generated your agent configuration. You can review and deploy it using the form below.",
+        content: "Perfect! I've generated your agent configuration. Click the button below to review and deploy it.",
         timestamp: new Date(),
         agentConfig: agentConfig
       };
@@ -334,6 +334,17 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
                   </span>
                 </div>
                 <p className="text-sm">{message.content}</p>
+                
+                {message.agentConfig && (
+                  <div className="mt-3">
+                    <button
+                      onClick={() => onAgentGenerated(message.agentConfig)}
+                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors font-medium"
+                    >
+                      Review & Deploy Agent
+                    </button>
+                  </div>
+                )}
                 
                 {message.suggestions && (
                   <div className="mt-3 space-y-1">
@@ -420,7 +431,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
         {/* Message Input */}
         <div className="flex space-x-2">
           <Input
-            placeholder="Describe what you want your agent to do..."
+            placeholder="Describe what you want your agent to do... (try: 'I want to create a customer support agent')"
             value={currentMessage}
             onChange={(e) => setCurrentMessage(e.target.value)}
             className="flex-1 bg-gray-800/50 border-gray-600"
@@ -433,6 +444,17 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
           >
             <Send className="w-4 h-4" />
           </Button>
+        </div>
+        
+        {/* Quick Actions */}
+        <div className="flex flex-wrap gap-2 mt-3">
+          <button
+            onClick={() => handleSuggestionClick("I'm ready to create my agent")}
+            disabled={tools.length === 0}
+            className="text-xs bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded px-3 py-1 transition-colors disabled:opacity-50"
+          >
+            {tools.length > 0 ? "Create Agent Now" : "Select tools first"}
+          </button>
         </div>
       </CardContent>
     </Card>
