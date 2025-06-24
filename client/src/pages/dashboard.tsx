@@ -23,6 +23,8 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import BrainVisualization from "@/components/brain-visualization";
+import AgentDeploymentForm from "@/components/AgentDeploymentForm";
+import DeployedAgentsList from "@/components/DeployedAgentsList";
 import { 
   User, 
   Wallet, 
@@ -1326,6 +1328,23 @@ export default function Dashboard() {
               >
                 <Bot className="w-5 h-5" />
                 <span className="font-medium">My AI Agents</span>
+              </button>
+
+              <button
+                onClick={() => { setActiveTab('deploy'); setIsMobileSidebarOpen(false); }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all font-semibold ${
+                  activeTab === 'deploy' 
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-lg shadow-emerald-500/20' 
+                    : 'text-gray-300 hover:bg-emerald-500/10 hover:text-emerald-400 hover:border-emerald-500/30 border border-transparent'
+                }`}
+              >
+                <Upload className="w-5 h-5" />
+                <div className="flex items-center space-x-2">
+                  <span className="font-medium">Deploy Agent</span>
+                  <Badge className="bg-emerald-500/20 text-emerald-300 text-xs px-2 py-0.5 border border-emerald-400/40">
+                    NEW
+                  </Badge>
+                </div>
               </button>
 
               <button
