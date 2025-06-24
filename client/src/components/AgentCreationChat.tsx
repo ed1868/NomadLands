@@ -62,22 +62,102 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
   useEffect(scrollToBottom, [messages]);
 
   const commonTools = [
-    { name: "Google Sheets", icon: "📊", color: "bg-green-500" },
-    { name: "Gmail", icon: "📧", color: "bg-red-500" },
-    { name: "Slack", icon: "💬", color: "bg-purple-500" },
-    { name: "Discord", icon: "🎮", color: "bg-indigo-500" },
-    { name: "OpenAI", icon: "🤖", color: "bg-emerald-500" },
-    { name: "Telegram", icon: "📱", color: "bg-blue-500" },
-    { name: "MySQL", icon: "🗄️", color: "bg-orange-500" },
-    { name: "PostgreSQL", icon: "🐘", color: "bg-blue-600" },
-    { name: "AWS S3", icon: "☁️", color: "bg-yellow-500" },
-    { name: "Notion", icon: "📝", color: "bg-gray-600" },
-    { name: "Google Calendar", icon: "📅", color: "bg-blue-500" },
-    { name: "Airtable", icon: "📋", color: "bg-orange-400" },
-    { name: "Stripe", icon: "💳", color: "bg-purple-600" },
-    { name: "Webhooks", icon: "🔗", color: "bg-gray-500" },
-    { name: "HTTP Request", icon: "🌐", color: "bg-green-600" },
-    { name: "File Storage", icon: "📁", color: "bg-blue-400" }
+    { 
+      name: "Google Sheets", 
+      logo: "https://upload.wikimedia.org/wikipedia/commons/3/30/Google_Sheets_logo_%282014-2020%29.svg",
+      borderColor: "border-green-400",
+      textColor: "text-green-300"
+    },
+    { 
+      name: "Gmail", 
+      logo: "https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg",
+      borderColor: "border-red-400",
+      textColor: "text-red-300"
+    },
+    { 
+      name: "Slack", 
+      logo: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Slack_icon_2019.svg",
+      borderColor: "border-purple-400",
+      textColor: "text-purple-300"
+    },
+    { 
+      name: "Discord", 
+      logo: "https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a69f118df70ad7828d4_icon_clyde_blurple_RGB.svg",
+      borderColor: "border-indigo-400",
+      textColor: "text-indigo-300"
+    },
+    { 
+      name: "OpenAI", 
+      logo: "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
+      borderColor: "border-emerald-400",
+      textColor: "text-emerald-300"
+    },
+    { 
+      name: "Telegram", 
+      logo: "https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg",
+      borderColor: "border-blue-400",
+      textColor: "text-blue-300"
+    },
+    { 
+      name: "MySQL", 
+      logo: "https://upload.wikimedia.org/wikipedia/en/d/dd/MySQL_logo.svg",
+      borderColor: "border-orange-400",
+      textColor: "text-orange-300"
+    },
+    { 
+      name: "PostgreSQL", 
+      logo: "https://upload.wikimedia.org/wikipedia/commons/2/29/Postgresql_elephant.svg",
+      borderColor: "border-blue-400",
+      textColor: "text-blue-300"
+    },
+    { 
+      name: "AWS S3", 
+      logo: "https://upload.wikimedia.org/wikipedia/commons/b/bc/Amazon-S3-Logo.svg",
+      borderColor: "border-yellow-400",
+      textColor: "text-yellow-300"
+    },
+    { 
+      name: "Notion", 
+      logo: "https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png",
+      borderColor: "border-gray-400",
+      textColor: "text-gray-300"
+    },
+    { 
+      name: "Google Calendar", 
+      logo: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Google_Calendar_icon_%282020%29.svg",
+      borderColor: "border-blue-400",
+      textColor: "text-blue-300"
+    },
+    { 
+      name: "Airtable", 
+      logo: "https://upload.wikimedia.org/wikipedia/commons/4/4b/Airtable_Logo.svg",
+      borderColor: "border-orange-400",
+      textColor: "text-orange-300"
+    },
+    { 
+      name: "Stripe", 
+      logo: "https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg",
+      borderColor: "border-purple-400",
+      textColor: "text-purple-300"
+    },
+    { 
+      name: "Webhooks", 
+      logo: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDE1Ljc0TDEyIDIyTDEwLjkxIDE1Ljc0TDQgOUwxMC45MSA4LjI2TDEyIDJaIiBzdHJva2U9IiM2Mzc5ODEiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=",
+      borderColor: "border-gray-400",
+      textColor: "text-gray-300"
+    },
+    { 
+      name: "HTTP Request", 
+      logo: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIxIDEyQzIxIDEzLjEgMjAuMSAxNCAyMCAxNEgxNFYyMEM0IDE5IDQgMTcgMTQgN0gyMEMyMSA3IDIxIDEwLjkgMjEgMTJaIiBzdHJva2U9IiM0QUY0RjQiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=",
+      borderColor: "border-cyan-400",
+      textColor: "text-cyan-300"
+    },
+    { 
+      name: "File Storage", 
+      logo: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEzIDJINkM0LjkgMiA0IDIuOSA0IDRWMJDNC40IDIwIDIwIDIwSDhDMTkuMSAyMCAyMCAxOS4xIDIwIDE4VjlMMTMgMloiIHN0cm9rZT0iIzM5RDNGRiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPHBhdGggZD0iTTEzIDJWOUgyMCIgc3Ryb2tlPSIjMzlEM0ZGIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K",
+      borderColor: "border-blue-400",
+      textColor: "text-blue-300"
+    }
   ];
 
   const addTool = (toolName: string) => {
@@ -295,25 +375,43 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
             Tools & Integrations
           </label>
           <div className="flex flex-wrap gap-2 mb-3">
-            {tools.map((tool) => (
-              <Badge key={tool} className="bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 flex items-center">
-                <span className="mr-1">{commonTools.find(t => t.name === tool)?.icon || "🔧"}</span>
-                {tool}
-                <button onClick={() => removeTool(tool)} className="ml-1">
-                  <X className="w-3 h-3" />
-                </button>
-              </Badge>
-            ))}
+            {tools.map((tool) => {
+              const toolData = commonTools.find(t => t.name === tool);
+              return (
+                <div key={tool} className={`bg-black/40 backdrop-blur-sm border ${toolData?.borderColor || 'border-gray-400'} hover:bg-black/60 rounded-lg px-3 py-2 transition-all flex items-center space-x-2`}>
+                  <img 
+                    src={toolData?.logo} 
+                    alt={tool} 
+                    className="w-4 h-4 object-contain"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                  <span className={`text-sm font-medium ${toolData?.textColor || 'text-gray-300'}`}>{tool}</span>
+                  <button onClick={() => removeTool(tool)} className="ml-1 hover:bg-red-500/20 rounded p-0.5">
+                    <X className="w-3 h-3 text-red-400" />
+                  </button>
+                </div>
+              );
+            })}
           </div>
           <div className="flex flex-wrap gap-2 mb-3">
             {commonTools.filter(tool => !tools.includes(tool.name)).slice(0, 8).map((tool) => (
               <button
                 key={tool.name}
                 onClick={() => addTool(tool.name)}
-                className={`text-xs hover:opacity-80 rounded px-3 py-1.5 transition-all text-white flex items-center space-x-1 ${tool.color}`}
+                className={`bg-black/30 backdrop-blur-sm border ${tool.borderColor} hover:bg-black/50 hover:scale-105 rounded-lg px-3 py-2 transition-all duration-200 flex items-center space-x-2 group`}
               >
-                <span>{tool.icon}</span>
-                <span>{tool.name}</span>
+                <img 
+                  src={tool.logo} 
+                  alt={tool.name} 
+                  className="w-4 h-4 object-contain group-hover:scale-110 transition-transform"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+                <span className={`text-sm font-medium ${tool.textColor}`}>{tool.name}</span>
+                <Plus className={`w-3 h-3 ${tool.textColor} opacity-60 group-hover:opacity-100`} />
               </button>
             ))}
           </div>
