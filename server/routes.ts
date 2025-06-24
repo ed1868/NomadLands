@@ -762,6 +762,191 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Agent Deployment endpoints
+  app.post("/api/deployments", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = req.user!.userId;
+      const deployment = await storage.createAgentDeployment({
+        ...req.body,
+        creatorId: userId,
+      });
+      res.json(deployment);
+    } catch (error: any) {
+      console.error("Error creating agent deployment:", error);
+      res.status(500).json({ message: "Failed to create deployment" });
+    }
+  });
+
+  app.get("/api/deployments", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = req.user!.userId;
+      const deployments = await storage.getUserAgentDeployments(userId);
+      res.json(deployments);
+    } catch (error: any) {
+      console.error("Error fetching deployments:", error);
+      res.status(500).json({ message: "Failed to fetch deployments" });
+    }
+  });
+
+  app.get("/api/deployments/:id", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const deployment = await storage.getAgentDeployment(parseInt(req.params.id));
+      if (!deployment) {
+        return res.status(404).json({ message: "Deployment not found" });
+      }
+      res.json(deployment);
+    } catch (error: any) {
+      console.error("Error fetching deployment:", error);
+      res.status(500).json({ message: "Failed to fetch deployment" });
+    }
+  });
+
+  app.patch("/api/deployments/:id", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = req.user!.userId;
+      const deployment = await storage.getAgentDeployment(parseInt(req.params.id));
+      
+      if (!deployment || deployment.creatorId !== userId) {
+        return res.status(404).json({ message: "Deployment not found" });
+      }
+
+      const updated = await storage.updateAgentDeployment(parseInt(req.params.id), req.body);
+      res.json(updated);
+    } catch (error: any) {
+      console.error("Error updating deployment:", error);
+      res.status(500).json({ message: "Failed to update deployment" });
+    }
+  });
+
+  app.delete("/api/deployments/:id", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = req.user!.userId;
+      const deployment = await storage.getAgentDeployment(parseInt(req.params.id));
+      
+      if (!deployment || deployment.creatorId !== userId) {
+        return res.status(404).json({ message: "Deployment not found" });
+      }
+
+      await storage.deleteAgentDeployment(parseInt(req.params.id));
+      res.json({ message: "Deployment deleted successfully" });
+    } catch (error: any) {
+      console.error("Error deleting deployment:", error);
+      res.status(500).json({ message: "Failed to delete deployment" });
+    }
+  });
+
+  app.get("/api/deployments/:id/analytics", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = req.user!.userId;
+      const deployment = await storage.getAgentDeployment(parseInt(req.params.id));
+      
+      if (!deployment || deployment.creatorId !== userId) {
+        return res.status(404).json({ message: "Deployment not found" });
+      }
+
+      const timeframe = (req.query.timeframe as 'day' | 'week' | 'month') || 'week';
+      const analytics = await storage.getDeploymentAnalytics(parseInt(req.params.id), timeframe);
+      res.json(analytics);
+    } catch (error: any) {
+      console.error("Error fetching deployment analytics:", error);
+      res.status(500).json({ message: "Failed to fetch analytics" });
+    }
+  });
+
+  app.get("/api/deployments/:id/usage", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = req.user!.userId;
+      const deployment = await storage.getAgentDeployment(parseInt(req.params.id));
+      
+      if (!deployment || deployment.creatorId !== userId) {
+        return res.status(404).json({ message: "Deployment not found" });
+      }
+
+      const limit = parseInt(req.query.limit as string) || 100;
+      const usage = await storage.getDeploymentUsage(parseInt(req.params.id), limit);
+      res.json(usage);
+    } catch (error: any) {
+      console.error("Error fetching deployment usage:", error);
+      res.status(500).json({ message: "Failed to fetch usage" });
+    }
+  });
+
+  // Dynamic agent execution endpoint
+  app.post("/api/agents/deployed/:endpoint(*)", async (req, res) => {
+    try {
+      const endpoint = `/api/agents/deployed/${req.params.endpoint}`;
+      const deployment = await storage.getAgentDeploymentByEndpoint(endpoint);
+      
+      if (!deployment) {
+        return res.status(404).json({ message: "Agent not found" });
+      }
+
+      if (deployment.status !== 'active') {
+        return res.status(503).json({ message: "Agent is not active" });
+      }
+
+      // Record usage
+      const requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const startTime = Date.now();
+      
+      try {
+        // Simulate agent execution (in real implementation, this would call the actual AI model)
+        const result = await simulateAgentExecution(deployment, req.body);
+        const responseTime = Date.now() - startTime;
+        
+        // Record successful usage
+        await storage.recordAgentUsage({
+          deploymentId: deployment.id,
+          userId: req.headers.authorization ? (req as any).user?.userId : null,
+          requestId,
+          inputData: req.body,
+          outputData: result,
+          responseTime,
+          tokensUsed: Math.floor(Math.random() * 1000) + 100, // Mock token usage
+          cost: parseFloat(deployment.pricePerCall || '0.01'),
+          status: 'success',
+          httpStatusCode: 200,
+          userAgent: req.headers['user-agent'],
+          ipAddress: req.ip,
+        });
+
+        // Update deployment stats
+        await storage.updateDeploymentStats(deployment.id, {
+          totalCalls: (deployment.totalCalls || 0) + 1,
+          totalRevenue: parseFloat(deployment.totalRevenue || '0') + parseFloat(deployment.pricePerCall || '0.01'),
+          lastUsed: new Date(),
+          healthStatus: 'healthy',
+        });
+
+        res.json(result);
+      } catch (executionError: any) {
+        const responseTime = Date.now() - startTime;
+        
+        // Record failed usage
+        await storage.recordAgentUsage({
+          deploymentId: deployment.id,
+          userId: req.headers.authorization ? (req as any).user?.userId : null,
+          requestId,
+          inputData: req.body,
+          outputData: null,
+          responseTime,
+          tokensUsed: 0,
+          cost: 0,
+          status: 'error',
+          errorMessage: executionError.message,
+          httpStatusCode: 500,
+          userAgent: req.headers['user-agent'],
+          ipAddress: req.ip,
+        });
+
+        res.status(500).json({ message: "Agent execution failed", error: executionError.message });
+      }
+    } catch (error: any) {
+      console.error("Error executing deployed agent:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // Payment History
   app.get("/api/payments/history", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
@@ -816,4 +1001,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   const httpServer = createServer(app);
   return httpServer;
+}
+
+// Simulate agent execution for MVP (replace with actual AI model calls)
+async function simulateAgentExecution(deployment: any, input: any) {
+  const delay = Math.random() * 2000 + 500; // 500ms to 2.5s delay
+  await new Promise(resolve => setTimeout(resolve, delay));
+  
+  // Mock response based on agent category
+  const responses = {
+    'productivity': {
+      result: 'Task automated successfully',
+      confidence: 0.95,
+      suggestions: ['Consider scheduling this task', 'Add to your daily routine']
+    },
+    'analytics': {
+      metrics: { accuracy: 0.92, processing_time: '1.2s' },
+      insights: ['Data trend is positive', 'Outliers detected in recent data'],
+      visualization_url: 'https://charts.example.com/abc123'
+    },
+    'marketing': {
+      content: 'Generated marketing copy based on your input',
+      engagement_score: 8.7,
+      target_audience: 'Tech professionals aged 25-40'
+    },
+    'development': {
+      code_analysis: 'Code quality score: 85/100',
+      recommendations: ['Optimize database queries', 'Add error handling'],
+      estimated_improvement: '15% performance boost'
+    }
+  };
+
+  const category = deployment.category?.toLowerCase() || 'productivity';
+  return responses[category as keyof typeof responses] || responses.productivity;
 }

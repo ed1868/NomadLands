@@ -639,6 +639,108 @@ export class DatabaseStorage implements IStorage {
       await db.insert(agentTagRelations).values(agentTagRelationships);
     }
   }
+
+  // Agent Deployment operations
+  async createAgentDeployment(deployment: InsertAgentDeployment): Promise<AgentDeployment> {
+    // Generate unique API endpoint
+    const apiEndpoint = `/api/agents/deployed/${deployment.name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`;
+    
+    const [result] = await db
+      .insert(agentDeployments)
+      .values({
+        ...deployment,
+        apiEndpoint,
+      })
+      .returning();
+    return result;
+  }
+
+  async getUserAgentDeployments(userId: string): Promise<AgentDeployment[]> {
+    return await db.select().from(agentDeployments).where(eq(agentDeployments.creatorId, userId));
+  }
+
+  async getAgentDeployment(id: number): Promise<AgentDeployment | undefined> {
+    const [deployment] = await db.select().from(agentDeployments).where(eq(agentDeployments.id, id));
+    return deployment;
+  }
+
+  async getAgentDeploymentByEndpoint(endpoint: string): Promise<AgentDeployment | undefined> {
+    const [deployment] = await db.select().from(agentDeployments).where(eq(agentDeployments.apiEndpoint, endpoint));
+    return deployment;
+  }
+
+  async updateAgentDeployment(id: number, updates: Partial<AgentDeployment>): Promise<AgentDeployment> {
+    const [result] = await db
+      .update(agentDeployments)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(agentDeployments.id, id))
+      .returning();
+    return result;
+  }
+
+  async deleteAgentDeployment(id: number): Promise<void> {
+    await db.delete(agentDeployments).where(eq(agentDeployments.id, id));
+  }
+
+  // Agent Usage Analytics operations
+  async recordAgentUsage(usage: InsertAgentUsage): Promise<AgentUsage> {
+    const [result] = await db.insert(agentUsage).values(usage).returning();
+    return result;
+  }
+
+  async getDeploymentUsage(deploymentId: number, limit: number = 100): Promise<AgentUsage[]> {
+    return await db
+      .select()
+      .from(agentUsage)
+      .where(eq(agentUsage.deploymentId, deploymentId))
+      .orderBy(agentUsage.createdAt)
+      .limit(limit);
+  }
+
+  async getDeploymentAnalytics(deploymentId: number, timeframe: 'day' | 'week' | 'month'): Promise<{
+    totalCalls: number;
+    totalRevenue: number;
+    averageResponseTime: number;
+    successRate: number;
+    uniqueUsers: number;
+  }> {
+    // This would typically use SQL aggregation functions
+    // For now, implementing basic analytics
+    const usage = await db
+      .select()
+      .from(agentUsage)
+      .where(eq(agentUsage.deploymentId, deploymentId));
+
+    const totalCalls = usage.length;
+    const successfulCalls = usage.filter(u => u.status === 'success').length;
+    const totalRevenue = usage.reduce((sum, u) => sum + parseFloat(u.cost || '0'), 0);
+    const averageResponseTime = usage.reduce((sum, u) => sum + (u.responseTime || 0), 0) / totalCalls || 0;
+    const uniqueUsers = new Set(usage.map(u => u.userId).filter(Boolean)).size;
+
+    return {
+      totalCalls,
+      totalRevenue,
+      averageResponseTime: Math.round(averageResponseTime),
+      successRate: totalCalls > 0 ? (successfulCalls / totalCalls) * 100 : 0,
+      uniqueUsers,
+    };
+  }
+
+  async updateDeploymentStats(deploymentId: number, stats: {
+    totalCalls?: number;
+    totalRevenue?: number;
+    lastUsed?: Date;
+    healthStatus?: string;
+  }): Promise<void> {
+    await db
+      .update(agentDeployments)
+      .set({
+        ...stats,
+        updatedAt: new Date(),
+        lastHealthCheck: new Date(),
+      })
+      .where(eq(agentDeployments.id, deploymentId));
+  }
 }
 
 export const storage = new DatabaseStorage();
