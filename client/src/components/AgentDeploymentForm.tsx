@@ -362,8 +362,13 @@ export default function AgentDeploymentForm({ onSuccess }: AgentDeploymentFormPr
           >
             {deploymentMutation.isPending ? "Deploying..." : "Deploy Agent"}
           </Button>
-        </form>
-      </CardContent>
-    </Card>
+                </form>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
