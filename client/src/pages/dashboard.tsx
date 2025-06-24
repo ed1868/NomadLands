@@ -411,7 +411,7 @@ const getAgentConnections = (agentType: string) => {
 };
 
 export default function Dashboard() {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, isAuthenticated } = useAuth();
   const { isConnected, address, connectWallet } = useWallet();
   const { toast } = useToast();
   const queryClient = useQueryClient();
