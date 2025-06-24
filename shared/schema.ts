@@ -176,6 +176,8 @@ export const agentTagRelationsRelations = relations(agentTagRelations, ({ one })
   }),
 }));
 
+
+
 // Nomad Lands ecosystem tables
 export const companies = pgTable("companies", {
   id: serial("id").primaryKey(),
@@ -389,6 +391,100 @@ export type AgentTag = typeof agentTags.$inferSelect;
 export type InsertTagRelation = z.infer<typeof insertTagRelationSchema>;
 export type AgentTagRelation = typeof agentTagRelations.$inferSelect;
 
+// Agent Deployments - tracks deployed AI agents with their configurations
+export const agentDeployments = pgTable("agent_deployments", {
+  id: serial("id").primaryKey(),
+  creatorId: varchar("creator_id").notNull().references(() => users.id),
+  agentId: integer("agent_id").references(() => agents.id), // Optional reference to marketplace agent
+  
+  // Agent configuration
+  name: varchar("name").notNull(),
+  description: text("description"),
+  category: varchar("category").notNull(),
+  
+  // Technical configuration
+  apiEndpoint: varchar("api_endpoint").unique().notNull(),
+  configuration: jsonb("configuration").notNull(), // Agent parameters, model settings, etc.
+  environment: varchar("environment").default("production"), // production, staging, development
+  
+  // Pricing and access
+  pricePerCall: decimal("price_per_call", { precision: 10, scale: 4 }).default("0.01"),
+  currency: varchar("currency").default("USD"),
+  accessType: varchar("access_type").default("public"), // public, private, enterprise
+  
+  // Status and monitoring
+  status: varchar("status").default("active"), // active, inactive, suspended, error
+  lastHealthCheck: timestamp("last_health_check"),
+  healthStatus: varchar("health_status").default("healthy"), // healthy, warning, critical
+  
+  // Usage statistics
+  totalCalls: integer("total_calls").default(0),
+  totalRevenue: decimal("total_revenue", { precision: 12, scale: 2 }).default("0.00"),
+  lastUsed: timestamp("last_used"),
+  
+  // Metadata
+  tags: text("tags").array(),
+  version: varchar("version").default("1.0.0"),
+  metadata: jsonb("metadata"),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Agent Usage Analytics - tracks individual API calls and usage patterns
+export const agentUsage = pgTable("agent_usage", {
+  id: serial("id").primaryKey(),
+  deploymentId: integer("deployment_id").notNull().references(() => agentDeployments.id),
+  userId: varchar("user_id").references(() => users.id), // Null for anonymous usage
+  
+  // Request details
+  requestId: varchar("request_id").unique().notNull(),
+  inputData: jsonb("input_data"),
+  outputData: jsonb("output_data"),
+  
+  // Performance metrics
+  responseTime: integer("response_time"), // milliseconds
+  tokensUsed: integer("tokens_used"),
+  cost: decimal("cost", { precision: 10, scale: 4 }),
+  
+  // Status and errors
+  status: varchar("status").notNull(), // success, error, timeout
+  errorMessage: text("error_message"),
+  httpStatusCode: integer("http_status_code"),
+  
+  // Metadata
+  userAgent: varchar("user_agent"),
+  ipAddress: varchar("ip_address"),
+  metadata: jsonb("metadata"),
+  
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export type AgentTagRelation = typeof agentTagRelations.$inferSelect;
+
+// Schema validation for agent deployments
+export const insertAgentDeploymentSchema = createInsertSchema(agentDeployments).omit({
+  id: true,
+  apiEndpoint: true,
+  totalCalls: true,
+  totalRevenue: true,
+  lastUsed: true,
+  lastHealthCheck: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertAgentUsageSchema = createInsertSchema(agentUsage).omit({
+  id: true,
+  createdAt: true,
+});
+
+// Type exports for deployments
+export type AgentDeployment = typeof agentDeployments.$inferSelect;
+export type InsertAgentDeployment = z.infer<typeof insertAgentDeploymentSchema>;
+export type AgentUsage = typeof agentUsage.$inferSelect;
+export type InsertAgentUsage = z.infer<typeof insertAgentUsageSchema>;
+
 // Add relations for new tables
 export const companiesRelations = relations(companies, ({ one, many }) => ({
   owner: one(users, {
@@ -422,6 +518,30 @@ export const agentHiresRelations = relations(agentHires, ({ one }) => ({
   contract: one(smartContracts, {
     fields: [agentHires.contractId],
     references: [smartContracts.id],
+  }),
+}));
+
+// Agent deployment relations
+export const agentDeploymentsRelations = relations(agentDeployments, ({ one, many }) => ({
+  creator: one(users, {
+    fields: [agentDeployments.creatorId],
+    references: [users.id],
+  }),
+  agent: one(agents, {
+    fields: [agentDeployments.agentId],
+    references: [agents.id],
+  }),
+  usage: many(agentUsage),
+}));
+
+export const agentUsageRelations = relations(agentUsage, ({ one }) => ({
+  deployment: one(agentDeployments, {
+    fields: [agentUsage.deploymentId],
+    references: [agentDeployments.id],
+  }),
+  user: one(users, {
+    fields: [agentUsage.userId],
+    references: [users.id],
   }),
 }));
 

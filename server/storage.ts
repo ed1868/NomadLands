@@ -5,6 +5,8 @@ import {
   transactions,
   agentTags,
   agentTagRelations,
+  agentDeployments,
+  agentUsage,
   type User,
   type Agent,
   type UpsertUser,
@@ -17,6 +19,10 @@ import {
   type InsertTag,
   type AgentTagRelation,
   type InsertTagRelation,
+  type AgentDeployment,
+  type InsertAgentDeployment,
+  type AgentUsage,
+  type InsertAgentUsage,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and } from "drizzle-orm";
@@ -57,6 +63,31 @@ export interface IStorage {
   createTransaction(transaction: InsertTransaction): Promise<Transaction>;
   updateTransactionStatus(transactionHash: string, status: string, blockNumber?: number): Promise<void>;
   getUserTransactions(userId: string): Promise<Transaction[]>;
+
+  // Agent Deployment operations
+  createAgentDeployment(deployment: InsertAgentDeployment): Promise<AgentDeployment>;
+  getUserAgentDeployments(userId: string): Promise<AgentDeployment[]>;
+  getAgentDeployment(id: number): Promise<AgentDeployment | undefined>;
+  getAgentDeploymentByEndpoint(endpoint: string): Promise<AgentDeployment | undefined>;
+  updateAgentDeployment(id: number, updates: Partial<AgentDeployment>): Promise<AgentDeployment>;
+  deleteAgentDeployment(id: number): Promise<void>;
+  
+  // Agent Usage Analytics operations
+  recordAgentUsage(usage: InsertAgentUsage): Promise<AgentUsage>;
+  getDeploymentUsage(deploymentId: number, limit?: number): Promise<AgentUsage[]>;
+  getDeploymentAnalytics(deploymentId: number, timeframe: 'day' | 'week' | 'month'): Promise<{
+    totalCalls: number;
+    totalRevenue: number;
+    averageResponseTime: number;
+    successRate: number;
+    uniqueUsers: number;
+  }>;
+  updateDeploymentStats(deploymentId: number, stats: {
+    totalCalls?: number;
+    totalRevenue?: number;
+    lastUsed?: Date;
+    healthStatus?: string;
+  }): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
