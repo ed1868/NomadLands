@@ -18,7 +18,7 @@ import {
   type AgentTag,
   type InsertTag,
   type AgentTagRelation,
-  type InsertTagRelation,
+
   type AgentDeployment,
   type InsertAgentDeployment,
   type AgentUsage,
@@ -133,7 +133,7 @@ export class DatabaseStorage implements IStorage {
         phoneNumber,
         phoneVerificationCode: verificationCode,
         phoneVerificationExpiry: expiry,
-        phoneVerified: false,
+        isPhoneVerified: false,
         updatedAt: new Date(),
       })
       .where(eq(users.id, userId));
@@ -157,7 +157,7 @@ export class DatabaseStorage implements IStorage {
       await db
         .update(users)
         .set({
-          phoneVerified: true,
+          isPhoneVerified: true,
           phoneVerificationCode: null,
           phoneVerificationExpiry: null,
           updatedAt: new Date(),
@@ -196,7 +196,7 @@ export class DatabaseStorage implements IStorage {
     await db
       .update(users)
       .set({
-        password: hashedPassword,
+        passwordHash: hashedPassword,
         updatedAt: new Date(),
       })
       .where(eq(users.id, userId));
@@ -222,11 +222,65 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getFeaturedAgents(): Promise<Agent[]> {
-    return await db.select().from(agents).where(eq(agents.featured, true));
+    try {
+      const agentsResult = await db.select().from(agents).limit(6);
+      return agentsResult;
+    } catch (error) {
+      console.error("Error fetching featured agents:", error);
+      return [];
+    }
   }
 
   async getAgent(id: number): Promise<Agent | undefined> {
-    const [agent] = await db.select().from(agents).where(eq(agents.id, id));
+    try {
+      const [agent] = await db.select().from(agents).where(eq(agents.id, id));
+      return agent;
+    } catch (error) {
+      console.error("Error fetching agent:", error);
+      return undefined;
+    }
+  }
+
+  async createAgent(agentData: InsertAgent): Promise<Agent> {
+    const [agent] = await db
+      .insert(agents)
+      .values(agentData)
+      .returning();
+    return agent;
+  }
+
+  async updateAgent(id: number, updates: Partial<Agent>): Promise<Agent> {
+    const [agent] = await db
+      .update(agents)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(agents.id, id))
+      .returning();
+    return agent;
+  }
+
+  async approveAgent(id: number): Promise<Agent> {
+    const [agent] = await db
+      .update(agents)
+      .set({ 
+        deploymentStatus: "approved", 
+        approvedAt: new Date(),
+        updatedAt: new Date() 
+      })
+      .where(eq(agents.id, id))
+      .returning();
+    return agent;
+  }
+
+  async deployAgent(id: number): Promise<Agent> {
+    const [agent] = await db
+      .update(agents)
+      .set({ 
+        deploymentStatus: "deployed", 
+        deployedAt: new Date(),
+        updatedAt: new Date() 
+      })
+      .where(eq(agents.id, id))
+      .returning();
     return agent;
   }
 
