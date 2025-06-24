@@ -47,6 +47,10 @@ export interface IStorage {
   getAgentsByTag(tagSlug: string): Promise<Agent[]>;
   getFeaturedAgents(): Promise<Agent[]>;
   getAgent(id: number): Promise<Agent | undefined>;
+  createAgent(agent: InsertAgent): Promise<Agent>;
+  updateAgent(id: number, updates: Partial<Agent>): Promise<Agent>;
+  approveAgent(id: number): Promise<Agent>;
+  deployAgent(id: number): Promise<Agent>;
   
   // Tag operations
   getAllTags(): Promise<AgentTag[]>;

@@ -60,7 +60,7 @@ export default function AgentDeploymentForm() {
     resolver: zodResolver(deploymentSchema),
     defaultValues: {
       name: "",
-      description: "",
+      description: "AI agent created through AI Nomads platform",
       category: "",
       aiModel: "gpt-4o",
       systemPrompt: "",
