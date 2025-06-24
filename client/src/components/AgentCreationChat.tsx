@@ -185,13 +185,13 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
       return {
         id: Date.now().toString(),
         type: 'bot',
-        content: "Great! A customer support agent. I'll help you set this up. What specific tasks should it handle?",
+        content: "Great! A customer support agent. What's your target response time and escalation criteria?",
         timestamp: new Date(),
         suggestions: [
-          "Answer FAQs automatically",
-          "Escalate complex issues to humans", 
-          "Track customer satisfaction",
-          "Generate support tickets"
+          "Respond within 30 seconds",
+          "Escalate complex technical issues",
+          "Handle basic troubleshooting automatically",
+          "Track satisfaction scores"
         ]
       };
     }
@@ -200,13 +200,13 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
       return {
         id: Date.now().toString(),
         type: 'bot',
-        content: "Perfect! A data analysis agent. What type of data will it work with?",
+        content: "Perfect! A data analysis agent. What's your data volume and update frequency?",
         timestamp: new Date(),
         suggestions: [
-          "Sales and revenue data",
-          "Customer behavior analytics",
-          "Social media metrics",
-          "Financial reports"
+          "Process daily sales reports",
+          "Real-time dashboard updates",
+          "Weekly performance summaries",
+          "Monthly trend analysis"
         ]
       };
     }
@@ -215,13 +215,13 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
       return {
         id: Date.now().toString(),
         type: 'bot',
-        content: "Excellent! A content creation agent. What kind of content should it generate?",
+        content: "Excellent! What's your target audience and content tone?",
         timestamp: new Date(),
         suggestions: [
-          "Blog posts and articles",
-          "Social media content",
-          "Email newsletters", 
-          "Product descriptions"
+          "Professional B2B audience",
+          "Casual social media tone",
+          "Technical documentation style",
+          "Marketing copy with CTAs"
         ]
       };
     }
@@ -230,21 +230,51 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
       return {
         id: Date.now().toString(),
         type: 'bot',
-        content: "A scheduling assistant! What scheduling tasks should it handle?",
+        content: "A scheduling assistant! What are your availability constraints and meeting preferences?",
         timestamp: new Date(),
         suggestions: [
-          "Book meetings automatically",
-          "Send calendar reminders",
-          "Find optimal meeting times",
-          "Manage time zones"
+          "Only weekdays 9-5 EST",
+          "Buffer 15 minutes between meetings",
+          "Prefer video calls over phone",
+          "Block focus time automatically"
         ]
       };
     }
 
-    if (lowerMessage.includes('ready') || lowerMessage.includes('create') || lowerMessage.includes('build') || lowerMessage.includes('deploy')) {
+    if (lowerMessage.includes('response time') || lowerMessage.includes('30 seconds') || lowerMessage.includes('daily') || lowerMessage.includes('professional') || lowerMessage.includes('weekdays')) {
+      return {
+        id: Date.now().toString(),
+        type: 'bot',
+        content: "Good! Now, what's your expected usage volume and budget range?",
+        timestamp: new Date(),
+        suggestions: [
+          "Low volume: <100 calls/day",
+          "Medium volume: 100-1000 calls/day", 
+          "High volume: >1000 calls/day",
+          "Budget: $0.01-0.10 per call"
+        ]
+      };
+    }
+
+    if (lowerMessage.includes('volume') || lowerMessage.includes('budget') || lowerMessage.includes('calls') || lowerMessage.includes('0.0')) {
+      return {
+        id: Date.now().toString(),
+        type: 'bot',
+        content: "Almost done! What error handling and fallback behavior do you need?",
+        timestamp: new Date(),
+        suggestions: [
+          "Graceful degradation with retries",
+          "Human handoff for failures",
+          "Log all errors for debugging",
+          "Send alerts for critical issues"
+        ]
+      };
+    }
+
+    if (lowerMessage.includes('error') || lowerMessage.includes('fallback') || lowerMessage.includes('handoff') || lowerMessage.includes('ready') || lowerMessage.includes('create') || lowerMessage.includes('build') || lowerMessage.includes('deploy')) {
       const agentConfig = {
         name: "Custom AI Agent",
-        description: "Generated from chat conversation",
+        description: "Generated from comprehensive chat conversation with specific requirements",
         category: "Custom",
         aiModel: "gpt-4o",
         tools: tools,
@@ -255,7 +285,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
       return {
         id: Date.now().toString(),
         type: 'bot',
-        content: "Perfect! I've generated your agent configuration. Click the button below to review and deploy it.",
+        content: "Perfect! I've captured all your requirements. Your agent is configured for your specific use case, volume, and error handling needs. Ready to deploy!",
         timestamp: new Date(),
         agentConfig: agentConfig
       };
@@ -446,15 +476,42 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
           </Button>
         </div>
         
-        {/* Quick Actions */}
-        <div className="flex flex-wrap gap-2 mt-3">
-          <button
-            onClick={() => handleSuggestionClick("I'm ready to create my agent")}
-            disabled={tools.length === 0}
-            className="text-xs bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded px-3 py-1 transition-colors disabled:opacity-50"
-          >
-            {tools.length > 0 ? "Create Agent Now" : "Select tools first"}
-          </button>
+        {/* Quick Starters */}
+        <div className="mt-3">
+          <p className="text-xs text-gray-500 mb-2">Quick starters:</p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => handleSuggestionClick("I want to create a customer support agent")}
+              className="text-xs bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 rounded px-2 py-1 transition-colors"
+            >
+              Customer Support
+            </button>
+            <button
+              onClick={() => handleSuggestionClick("I need a data analysis agent")}
+              className="text-xs bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 rounded px-2 py-1 transition-colors"
+            >
+              Data Analysis
+            </button>
+            <button
+              onClick={() => handleSuggestionClick("I want a content writing agent")}
+              className="text-xs bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 border border-orange-500/30 rounded px-2 py-1 transition-colors"
+            >
+              Content Creation
+            </button>
+            <button
+              onClick={() => handleSuggestionClick("I need a scheduling assistant")}
+              className="text-xs bg-green-600/20 hover:bg-green-600/30 text-green-300 border border-green-500/30 rounded px-2 py-1 transition-colors"
+            >
+              Scheduling
+            </button>
+            <button
+              onClick={() => handleSuggestionClick("I'm ready to create my agent")}
+              disabled={tools.length === 0}
+              className="text-xs bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 rounded px-2 py-1 transition-colors disabled:opacity-50"
+            >
+              {tools.length > 0 ? "Create Now" : "Select tools first"}
+            </button>
+          </div>
         </div>
       </CardContent>
     </Card>

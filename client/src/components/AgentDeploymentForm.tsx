@@ -38,7 +38,14 @@ const deploymentSchema = z.object({
   systemPrompt: z.string().min(1, "System prompt is required"),
   pricing: z.number().min(0.01, "Pricing must be at least $0.01"),
   accessType: z.enum(["public", "private", "enterprise"]),
-  tags: z.array(z.string()).default([])
+  tags: z.array(z.string()).default([]),
+  // Additional fields for comprehensive agent configuration
+  responseTime: z.string().optional(),
+  usageVolume: z.string().optional(),
+  errorHandling: z.string().optional(),
+  targetAudience: z.string().optional(),
+  dataUpdateFrequency: z.string().optional(),
+  availability: z.string().optional()
 });
 
 export default function AgentDeploymentForm() {
@@ -59,7 +66,13 @@ export default function AgentDeploymentForm() {
       systemPrompt: "",
       pricing: 0.05,
       accessType: "public",
-      tags: []
+      tags: [],
+      responseTime: undefined,
+      usageVolume: undefined,
+      errorHandling: undefined,
+      targetAudience: undefined,
+      dataUpdateFrequency: undefined,
+      availability: undefined
     },
   });
 
@@ -146,7 +159,11 @@ export default function AgentDeploymentForm() {
         aiModel: data.aiModel,
         pricing: data.pricing,
         accessType: data.accessType,
-        tools: data.tags
+        tools: data.tags,
+        responseTime: data.responseTime,
+        usageVolume: data.usageVolume,
+        errorHandling: data.errorHandling,
+        availability: data.availability
       },
       n8nWorkflow: {
         nodes: data.tags.map((tool, index) => ({
@@ -381,6 +398,84 @@ export default function AgentDeploymentForm() {
                         <p className="text-xs text-gray-500">
                           Minimum $0.01 per call. Consider usage complexity when setting price.
                         </p>
+                      </div>
+                    </div>
+
+                    {/* Advanced Configuration */}
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
+                        <Settings className="w-5 h-5 text-emerald-500" />
+                        <span>Advanced Configuration</span>
+                      </h3>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="responseTime" className="text-sm font-medium text-gray-300">
+                            Expected Response Time
+                          </Label>
+                          <Select onValueChange={(value) => form.setValue("responseTime", value)}>
+                            <SelectTrigger className="bg-gray-800/50 border-gray-600 text-white">
+                              <SelectValue placeholder="Select response time" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-gray-800 border-gray-600">
+                              <SelectItem value="instant">Instant (&lt; 1 second)</SelectItem>
+                              <SelectItem value="fast">Fast (1-5 seconds)</SelectItem>
+                              <SelectItem value="standard">Standard (5-30 seconds)</SelectItem>
+                              <SelectItem value="batch">Batch processing</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="usageVolume" className="text-sm font-medium text-gray-300">
+                            Expected Usage Volume
+                          </Label>
+                          <Select onValueChange={(value) => form.setValue("usageVolume", value)}>
+                            <SelectTrigger className="bg-gray-800/50 border-gray-600 text-white">
+                              <SelectValue placeholder="Select usage volume" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-gray-800 border-gray-600">
+                              <SelectItem value="low">Low (&lt; 100 calls/day)</SelectItem>
+                              <SelectItem value="medium">Medium (100-1000 calls/day)</SelectItem>
+                              <SelectItem value="high">High (1000-10000 calls/day)</SelectItem>
+                              <SelectItem value="enterprise">Enterprise (&gt; 10000 calls/day)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="errorHandling" className="text-sm font-medium text-gray-300">
+                            Error Handling Strategy
+                          </Label>
+                          <Select onValueChange={(value) => form.setValue("errorHandling", value)}>
+                            <SelectTrigger className="bg-gray-800/50 border-gray-600 text-white">
+                              <SelectValue placeholder="Select error handling" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-gray-800 border-gray-600">
+                              <SelectItem value="retry">Auto-retry with backoff</SelectItem>
+                              <SelectItem value="fallback">Graceful fallback</SelectItem>
+                              <SelectItem value="human">Human handoff</SelectItem>
+                              <SelectItem value="queue">Queue for later processing</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="availability" className="text-sm font-medium text-gray-300">
+                            Availability Requirements
+                          </Label>
+                          <Select onValueChange={(value) => form.setValue("availability", value)}>
+                            <SelectTrigger className="bg-gray-800/50 border-gray-600 text-white">
+                              <SelectValue placeholder="Select availability" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-gray-800 border-gray-600">
+                              <SelectItem value="24x7">24/7 availability</SelectItem>
+                              <SelectItem value="business">Business hours only</SelectItem>
+                              <SelectItem value="scheduled">Scheduled operations</SelectItem>
+                              <SelectItem value="on-demand">On-demand activation</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </div>
                     </div>
 
