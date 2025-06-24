@@ -190,9 +190,9 @@ export default function Deploy() {
                       <div>
                         <h5 className="text-white font-medium mb-2">1. Make a Request</h5>
                         <code className="block bg-black/50 p-3 rounded text-green-400 text-sm">
-                          curl -X POST https://api.nomads.ai/agents/deployed/your-endpoint \<br/>
-                          &nbsp;&nbsp;-H "Content-Type: application/json" \<br/>
-                          &nbsp;&nbsp;-d '{"{"}{"message": "Your input data"{"}"}'
+                          {`curl -X POST https://api.nomads.ai/agents/deployed/your-endpoint \\
+  -H "Content-Type: application/json" \\
+  -d '{"message": "Your input data"}'`}
                         </code>
                       </div>
                       

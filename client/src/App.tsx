@@ -12,6 +12,7 @@ import ApiDocs from "@/pages/api-docs";
 import Signup from "@/pages/signup-premium";
 import SignIn from "@/pages/SignIn";
 import Dashboard from "@/pages/dashboard";
+import Deploy from "@/pages/deploy";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/signup" component={Signup} />
       <Route path="/signin" component={SignIn} />
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/deploy" component={Deploy} />
       <Route component={NotFound} />
     </Switch>
   );
