@@ -237,7 +237,8 @@ export default function AgentDeploymentForm() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                     {/* Basic Information */}
                     <div className="space-y-4">
                       <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
@@ -246,58 +247,59 @@ export default function AgentDeploymentForm() {
                       </h3>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="name" className="text-sm font-medium text-gray-300">
-                            Agent Name
-                          </Label>
-                          <Input
-                            id="name"
-                            {...form.register("name")}
-                            placeholder="e.g., Customer Support Agent"
-                            className="bg-gray-800/50 border-gray-600 text-white"
-                          />
-                          {form.formState.errors.name && (
-                            <p className="text-sm text-red-400">{form.formState.errors.name.message}</p>
+                        <FormField
+                          control={form.control}
+                          name="name"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-gray-300">Agent Name</FormLabel>
+                              <FormControl>
+                                <Input {...field} placeholder="My Awesome Agent" className="bg-gray-800/50 border-gray-600" />
+                              </FormControl>
+                              <FormMessage className="text-red-400" />
+                            </FormItem>
                           )}
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="category" className="text-sm font-medium text-gray-300">
-                            Category
-                          </Label>
-                          <Select onValueChange={(value) => form.setValue("category", value)}>
-                            <SelectTrigger className="bg-gray-800/50 border-gray-600 text-white">
-                              <SelectValue placeholder="Select category" />
-                            </SelectTrigger>
-                            <SelectContent className="bg-gray-800 border-gray-600">
-                              <SelectItem value="productivity">Productivity</SelectItem>
-                              <SelectItem value="customer-service">Customer Service</SelectItem>
-                              <SelectItem value="development">Development</SelectItem>
-                              <SelectItem value="marketing">Marketing</SelectItem>
-                              <SelectItem value="analytics">Analytics</SelectItem>
-                              <SelectItem value="automation">Automation</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          {form.formState.errors.category && (
-                            <p className="text-sm text-red-400">{form.formState.errors.category.message}</p>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="description" className="text-sm font-medium text-gray-300">
-                          Description
-                        </Label>
-                        <Textarea
-                          id="description"
-                          {...form.register("description")}
-                          placeholder="Describe what your agent does and how it helps users..."
-                          className="bg-gray-800/50 border-gray-600 text-white min-h-[100px]"
                         />
-                        {form.formState.errors.description && (
-                          <p className="text-sm text-red-400">{form.formState.errors.description.message}</p>
-                        )}
+
+                        <FormField
+                          control={form.control}
+                          name="category"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-gray-300">Category</FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger className="bg-gray-800/50 border-gray-600">
+                                    <SelectValue placeholder="Select category" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent className="bg-gray-800 border-gray-600">
+                                  <SelectItem value="business">Business Automation</SelectItem>
+                                  <SelectItem value="customer-service">Customer Service</SelectItem>
+                                  <SelectItem value="data-analysis">Data Analysis</SelectItem>
+                                  <SelectItem value="content">Content Creation</SelectItem>
+                                  <SelectItem value="productivity">Productivity</SelectItem>
+                                  <SelectItem value="communication">Communication</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage className="text-red-400" />
+                            </FormItem>
+                          )}
+                        />
                       </div>
+
+                      {/* Hidden description field - still part of form but not visible */}
+                      <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                          <FormItem className="hidden">
+                            <FormControl>
+                              <Textarea {...field} />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
                     </div>
 
                     {/* AI Configuration */}
