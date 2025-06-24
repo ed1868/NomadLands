@@ -111,21 +111,58 @@ export default function AgentDeploymentForm() {
 
   const deploymentMutation = useMutation({
     mutationFn: async (data: z.infer<typeof deploymentSchema>) => {
-      const response = await apiRequest("POST", "/api/deployments", data);
+      // Create optimized payload for LLM n8n workflow generation
+      const optimizedPayload = {
+        agent: {
+          name: data.name,
+          description: data.description,
+          category: data.category,
+          systemPrompt: data.systemPrompt,
+          aiModel: data.aiModel,
+          pricing: data.pricing,
+          accessType: data.accessType,
+          tools: data.tags
+        },
+        n8nWorkflow: {
+          nodes: data.tags.map((tool, index) => ({
+            id: `node_${index}`,
+            type: tool.toLowerCase().replace(/\s+/g, '_'),
+            name: tool,
+            parameters: {},
+            position: { x: index * 200, y: 100 }
+          })),
+          connections: {},
+          metadata: {
+            generatedFor: data.name,
+            timestamp: new Date().toISOString(),
+            description: `Workflow for ${data.name}: ${data.description}`
+          }
+        },
+        llmInstructions: {
+          objective: `Create an n8n workflow for "${data.name}" agent`,
+          description: data.description,
+          systemPrompt: data.systemPrompt,
+          requiredIntegrations: data.tags,
+          expectedBehavior: "The workflow should handle incoming requests, process them through the specified tools, and return appropriate responses",
+          outputFormat: "n8n JSON workflow format with proper node connections and error handling"
+        }
+      };
+
+      const response = await apiRequest("POST", "/api/deployments", optimizedPayload);
       return response.json();
     },
     onSuccess: (data) => {
       toast({
-        title: "Agent Deployed Successfully",
-        description: `Your agent "${data.name}" is now live!`,
+        title: "Agent Configuration Generated",
+        description: "Check the console for the optimized JSON payload.",
       });
       queryClient.invalidateQueries({ queryKey: ["/api/deployments"] });
       form.reset();
     },
     onError: (error: any) => {
       toast({
-        title: "Deployment Failed",
-        description: error.message || "Failed to deploy agent. Please try again.",
+        title: "Generation Failed",
+        description: error.message || "Failed to generate agent configuration. Please try again.",
         variant: "destructive",
       });
     },

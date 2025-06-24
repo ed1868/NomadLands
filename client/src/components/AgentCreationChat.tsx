@@ -62,10 +62,22 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
   useEffect(scrollToBottom, [messages]);
 
   const commonTools = [
-    "Web Search", "Email", "Calendar", "Database", "File Upload", 
-    "API Integration", "PDF Reader", "Spreadsheet", "Chat Bot",
-    "Image Generator", "Text Analysis", "Translation", "Weather",
-    "Stock Market", "Social Media", "Payment Processing"
+    { name: "Google Sheets", icon: "📊", color: "bg-green-500" },
+    { name: "Gmail", icon: "📧", color: "bg-red-500" },
+    { name: "Slack", icon: "💬", color: "bg-purple-500" },
+    { name: "Discord", icon: "🎮", color: "bg-indigo-500" },
+    { name: "OpenAI", icon: "🤖", color: "bg-emerald-500" },
+    { name: "Telegram", icon: "📱", color: "bg-blue-500" },
+    { name: "MySQL", icon: "🗄️", color: "bg-orange-500" },
+    { name: "PostgreSQL", icon: "🐘", color: "bg-blue-600" },
+    { name: "AWS S3", icon: "☁️", color: "bg-yellow-500" },
+    { name: "Notion", icon: "📝", color: "bg-gray-600" },
+    { name: "Google Calendar", icon: "📅", color: "bg-blue-500" },
+    { name: "Airtable", icon: "📋", color: "bg-orange-400" },
+    { name: "Stripe", icon: "💳", color: "bg-purple-600" },
+    { name: "Webhooks", icon: "🔗", color: "bg-gray-500" },
+    { name: "HTTP Request", icon: "🌐", color: "bg-green-600" },
+    { name: "File Storage", icon: "📁", color: "bg-blue-400" }
   ];
 
   const addTool = (toolName: string) => {
@@ -284,7 +296,8 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
           </label>
           <div className="flex flex-wrap gap-2 mb-3">
             {tools.map((tool) => (
-              <Badge key={tool} className="bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30">
+              <Badge key={tool} className="bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 flex items-center">
+                <span className="mr-1">{commonTools.find(t => t.name === tool)?.icon || "🔧"}</span>
                 {tool}
                 <button onClick={() => removeTool(tool)} className="ml-1">
                   <X className="w-3 h-3" />
@@ -293,14 +306,14 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
             ))}
           </div>
           <div className="flex flex-wrap gap-2 mb-3">
-            {commonTools.filter(tool => !tools.includes(tool)).slice(0, 8).map((tool) => (
+            {commonTools.filter(tool => !tools.includes(tool.name)).slice(0, 8).map((tool) => (
               <button
-                key={tool}
-                onClick={() => addTool(tool)}
-                className="text-xs bg-gray-700/30 hover:bg-gray-700/50 rounded px-2 py-1 transition-colors text-gray-300"
+                key={tool.name}
+                onClick={() => addTool(tool.name)}
+                className={`text-xs hover:opacity-80 rounded px-3 py-1.5 transition-all text-white flex items-center space-x-1 ${tool.color}`}
               >
-                <Plus className="w-3 h-3 inline mr-1" />
-                {tool}
+                <span>{tool.icon}</span>
+                <span>{tool.name}</span>
               </button>
             ))}
           </div>

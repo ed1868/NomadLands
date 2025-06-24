@@ -106,7 +106,7 @@ export default function AgentUploadMethods({ onAgentConfigGenerated }: AgentUplo
         description: `Agent based on n8n workflow: ${n8nUrl}`,
         category: "Automation",
         aiModel: "gpt-4o",
-        tools: ["Workflow Automation", "API Integration", "Data Processing"],
+        tools: ["HTTP Request", "Webhooks", "Google Sheets"],
         pricing: 0.08,
         accessType: "public",
         n8nUrl: n8nUrl,
@@ -150,7 +150,7 @@ export default function AgentUploadMethods({ onAgentConfigGenerated }: AgentUplo
         description: config.description || "Agent created from JSON configuration",
         category: config.category || "Custom",
         aiModel: config.aiModel || "gpt-4o",
-        tools: config.tools || ["Custom Tools"],
+        tools: config.tools || ["HTTP Request"],
         pricing: config.pricing || 0.05,
         accessType: config.accessType || "public",
         jsonConfig: config,
@@ -319,14 +319,21 @@ function extractToolsFromPython(files: { name: string; content: string }[]): str
     const content = file.content.toLowerCase();
     
     // Check for common imports and libraries
-    if (content.includes('requests') || content.includes('urllib')) tools.add('Web API');
-    if (content.includes('pandas') || content.includes('numpy')) tools.add('Data Analysis');
-    if (content.includes('sqlite') || content.includes('sqlalchemy')) tools.add('Database');
-    if (content.includes('smtplib') || content.includes('email')) tools.add('Email');
-    if (content.includes('selenium') || content.includes('beautifulsoup')) tools.add('Web Scraping');
-    if (content.includes('pillow') || content.includes('opencv')) tools.add('Image Processing');
-    if (content.includes('flask') || content.includes('fastapi')) tools.add('Web Server');
-    if (content.includes('schedule') || content.includes('cron')) tools.add('Task Scheduling');
+    if (content.includes('requests') || content.includes('urllib')) tools.add('HTTP Request');
+    if (content.includes('pandas') || content.includes('numpy')) tools.add('Google Sheets');
+    if (content.includes('sqlite') || content.includes('sqlalchemy')) tools.add('MySQL');
+    if (content.includes('smtplib') || content.includes('email')) tools.add('Gmail');
+    if (content.includes('selenium') || content.includes('beautifulsoup')) tools.add('HTTP Request');
+    if (content.includes('pillow') || content.includes('opencv')) tools.add('File Storage');
+    if (content.includes('flask') || content.includes('fastapi')) tools.add('Webhooks');
+    if (content.includes('schedule') || content.includes('cron')) tools.add('Google Calendar');
+    if (content.includes('openai')) tools.add('OpenAI');
+    if (content.includes('stripe')) tools.add('Stripe');
+    if (content.includes('slack')) tools.add('Slack');
+    if (content.includes('discord')) tools.add('Discord');
+    if (content.includes('telegram')) tools.add('Telegram');
+    if (content.includes('notion')) tools.add('Notion');
+    if (content.includes('airtable')) tools.add('Airtable');
   });
   
   return Array.from(tools);
