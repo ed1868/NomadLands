@@ -1909,6 +1909,85 @@ export default function Dashboard() {
             </div>
           )}
 
+          {activeTab === 'deploy' && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-2">Agent Deployment</h2>
+                  <p className="text-gray-400">Deploy and manage your AI agents in the marketplace</p>
+                </div>
+              </div>
+
+              {/* Deployment Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">Deployed Agents</p>
+                        <p className="text-2xl font-bold text-white">0</p>
+                      </div>
+                      <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                        <Zap className="w-5 h-5 text-emerald-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">Total Calls</p>
+                        <p className="text-2xl font-bold text-white">0</p>
+                      </div>
+                      <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                        <TrendingUp className="w-5 h-5 text-emerald-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">API Revenue</p>
+                        <p className="text-2xl font-bold text-white">$0.00</p>
+                      </div>
+                      <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                        <DollarSign className="w-5 h-5 text-emerald-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-400 text-sm font-medium">Success Rate</p>
+                        <p className="text-2xl font-bold text-white">--</p>
+                      </div>
+                      <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                        <CheckCircle className="w-5 h-5 text-emerald-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Deployment Form and List */}
+              <div className="space-y-8">
+                <AgentDeploymentForm />
+                <div className="mt-8">
+                  <h3 className="text-xl font-bold text-white mb-4">Your Deployed Agents</h3>
+                  <DeployedAgentsList />
+                </div>
+              </div>
+            </div>
+          )}
+
           {activeTab === 'performance' && (
             <div className="space-y-6">
               {/* Performance KPIs */}
