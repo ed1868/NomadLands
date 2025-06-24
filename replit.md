@@ -118,6 +118,19 @@ The application follows a full-stack architecture with clear separation between 
 
 ```
 Changelog:
+- June 24, 2025. N8n Workflow Generation Integration Complete
+  * Implemented comprehensive n8n workflow generator based on n8n API documentation
+  * Created N8nWorkflowGenerator class with support for:
+    - Chat triggers for user interactions
+    - Multiple AI language models (GPT-4o, Claude, Gemini)
+    - Memory management with buffer window
+    - Tool integrations (Gmail, Slack, Notion, GitHub, Trello, etc.)
+    - Structured output parsing
+    - Web search capabilities via Tavily API
+  * Added POST /api/agents/:id/generate-workflow endpoint for workflow generation
+  * Enhanced deployment modal to automatically download generated n8n workflow JSON
+  * Fixed database schema issues and TypeScript errors
+  * Updated agent creation to save to database and generate importable workflows
 - June 17, 2025. Initial setup with dark cyberpunk theme
 - June 17, 2025. Complete redesign with Alo Yoga-inspired aesthetic
 - June 18, 2025. Major transformation to Dark Forest Green Cyberpunk aesthetic

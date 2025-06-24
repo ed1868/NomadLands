@@ -5,9 +5,10 @@ import { ethers } from "ethers";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import type { Request, Response, NextFunction } from "express";
-import { signupUserSchema, loginUserSchema } from "@shared/schema";
+import { insertUserSchema } from "@shared/schema";
 import { z } from "zod";
 import { PaymentService } from "./payment-service";
+import { N8nWorkflowGenerator } from "./n8n-generator";
 import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./paypal";
 import Stripe from "stripe";
 
@@ -136,6 +137,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(agents);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch agents" });
+    }
+  });
+
+  app.post("/api/agents", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const agentData = {
+        ...req.body,
+        creatorId: req.user?.userId
+      };
+      
+      const agent = await storage.createAgent(agentData);
+      res.json(agent);
+    } catch (error) {
+      console.error("Error creating agent:", error);
+      res.status(500).json({ message: "Failed to create agent" });
+    }
+  });
+
+  // Generate n8n workflow for an agent
+  app.post("/api/agents/:id/generate-workflow", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const agentId = parseInt(req.params.id);
+      const agent = await storage.getAgent(agentId);
+      
+      if (!agent) {
+        return res.status(404).json({ message: "Agent not found" });
+      }
+
+      // Check if user owns this agent
+      if (agent.creatorId !== req.user?.userId) {
+        return res.status(403).json({ message: "Unauthorized access to agent" });
+      }
+
+      const workflow = n8nGenerator.generateWorkflow(agent);
+      res.json(workflow);
+    } catch (error) {
+      console.error("Error generating workflow:", error);
+      res.status(500).json({ message: "Failed to generate workflow" });
     }
   });
 

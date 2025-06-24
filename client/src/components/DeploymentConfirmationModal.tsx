@@ -122,6 +122,21 @@ export default function DeploymentConfirmationModal({
                   {JSON.stringify(jsonPayload, null, 2)}
                 </pre>
               </div>
+              
+              <div className="bg-blue-800/20 border border-blue-600/50 rounded-lg p-4 mt-4">
+                <h4 className="text-blue-400 font-medium mb-2">N8n Workflow Generation</h4>
+                <p className="text-sm text-gray-300">
+                  After deployment, an n8n workflow will be automatically generated and downloaded. 
+                  This workflow includes:
+                </p>
+                <ul className="text-sm text-gray-300 mt-2 ml-4 list-disc">
+                  <li>Chat trigger for user interactions</li>
+                  <li>AI language model configuration</li>
+                  <li>Memory management for context</li>
+                  <li>Tool integrations based on your selections</li>
+                  <li>Structured output formatting</li>
+                </ul>
+              </div>
             </CardContent>
           </Card>
 
@@ -135,11 +150,11 @@ export default function DeploymentConfirmationModal({
               Edit Configuration
             </Button>
             <Button
-              onClick={onConfirm}
+              onClick={handleDeploy}
               disabled={isLoading}
               className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white"
             >
-              {isLoading ? "Submitting..." : "Submit for Approval"}
+              {isLoading ? "Deploying..." : "Deploy Agent & Generate Workflow"}
             </Button>
           </div>
         </div>
