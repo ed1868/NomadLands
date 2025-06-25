@@ -489,6 +489,7 @@ export default function AgentDeploymentForm() {
                       Preview & Deploy Agent
                     </Button>
                   </form>
+                  </Form>
                 </CardContent>
               </Card>
             </TabsContent>

@@ -83,6 +83,22 @@ export const insertAgentSchema = createInsertSchema(agents).omit({
   updatedAt: true,
 });
 
+// Auth schemas for compatibility
+export const signupUserSchema = insertUserSchema.extend({
+  username: z.string().min(3),
+  password: z.string().min(6),
+  confirmPassword: z.string().min(6),
+  dateOfBirth: z.string().optional(),
+  phoneNumber: z.string().optional(),
+  subscriptionPlan: z.string().optional(),
+  paymentMethod: z.string().optional(),
+});
+
+export const loginUserSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+
 // Type exports
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;

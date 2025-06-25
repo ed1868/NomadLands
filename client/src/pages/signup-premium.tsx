@@ -13,7 +13,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { useWallet } from "@/hooks/use-wallet";
 import { apiRequest } from "@/lib/queryClient";
-import { signupUserSchema } from "@shared/schema";
+import { signupUserSchema } from "@shared/schema-simple";
 import type { z } from "zod";
 import Navigation from "@/components/navigation";
 

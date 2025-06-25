@@ -113,7 +113,6 @@ export class DatabaseStorage implements IStorage {
           category: "productivity",
           price: "15.00",
           features: ["Email categorization", "Priority scoring", "Auto-labeling", "Smart filtering"],
-          tools: ["gmail", "web-search"],
           aiModel: "gpt-4o",
           systemPrompt: "You are an email classification agent that helps users organize and prioritize their emails efficiently.",
           styling: {
@@ -127,7 +126,6 @@ export class DatabaseStorage implements IStorage {
           category: "development",
           price: "25.00",
           features: ["Cost optimization", "Resource monitoring", "Auto-scaling", "Multi-cloud support"],
-          tools: ["web-search", "github"],
           aiModel: "gpt-4o",
           systemPrompt: "You are a cloud resource management agent that helps optimize infrastructure costs and performance.",
           styling: {
