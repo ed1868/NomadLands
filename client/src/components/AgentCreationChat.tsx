@@ -181,33 +181,42 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
     // Check if user wants to create an agent
     if (lowerMessage.includes('create') && (lowerMessage.includes('agent') || lowerMessage.includes('this'))) {
       try {
-        // Call backend to actually create the agent via n8n
-        const response = await fetch("/api/chat/create-agent", {
+        // Send directly to n8n webhook
+        const webhookUrl = 'https://ainomads.app.n8n.cloud/webhook/d832bc01-555e-4a24-a8cc-31db8fc1c816/chat';
+        const response = await fetch(webhookUrl, {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem('token')}`
+            "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            message: userMessage
+            message: userMessage,
+            tools: tools,
+            timestamp: new Date().toISOString(),
+            user: 'ai-nomads-user',
+            action: 'create_agent'
           })
         });
 
-        const result = await response.json();
-        
-        if (result.success) {
+        if (response.ok) {
+          let responseText = '';
+          try {
+            const result = await response.text();
+            responseText = result ? `\n\nn8n Response: ${result}` : '';
+          } catch (e) {
+            // Response might be empty, that's fine
+          }
+          
           return {
             id: Date.now().toString(),
             type: 'bot',
-            content: `${result.message}\n\nAgent Details:\n• Name: ${result.agent.name}\n• Category: ${result.agent.category}\n• Tools: ${result.agent.tools?.join(', ') || 'None'}\n• Workflow ID: ${result.workflow.id}\n\nYour agent is now live and ready to use!`,
-            timestamp: new Date(),
-            agentConfig: result.agent
+            content: `✅ Agent creation request sent to n8n!\n\nMessage: ${userMessage}\nTools: ${tools.join(', ') || 'None'}\nStatus: Delivered to your workflow${responseText}`,
+            timestamp: new Date()
           };
         } else {
           return {
             id: Date.now().toString(),
             type: 'bot',
-            content: `I encountered an issue creating your agent: ${result.message || 'Unknown error'}. Could you please try describing your agent requirements more specifically?`,
+            content: `Failed to send to n8n webhook (status: ${response.status}). Please check your network connection and try again.`,
             timestamp: new Date()
           };
         }
