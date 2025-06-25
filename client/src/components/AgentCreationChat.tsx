@@ -225,7 +225,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
     // Auto-redirect after 10 seconds
     setTimeout(() => {
       window.location.href = '/agents';
-    }, 10000);
+    }, 5000);
   };
 
   const generateAgentResponse = async (userMessage: string): Promise<ChatMessage> => {
@@ -333,6 +333,20 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
   const handleSendMessage = async (messageText?: string) => {
     const text = messageText || currentMessage.trim();
     if (!text) return;
+
+    // Auto-detect and add tools mentioned in the message
+    const lowerText = text.toLowerCase();
+    const detectedTools: string[] = [];
+    
+    commonTools.forEach(tool => {
+      if (lowerText.includes(tool.name.toLowerCase()) && !tools.includes(tool.name)) {
+        detectedTools.push(tool.name);
+      }
+    });
+    
+    if (detectedTools.length > 0) {
+      setTools(prev => [...prev, ...detectedTools]);
+    }
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
