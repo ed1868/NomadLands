@@ -31,14 +31,35 @@ export default function SimpleLogin() {
       });
 
       console.log("Response status:", response.status);
+      console.log("Response type:", typeof response);
+      console.log("Response methods:", Object.getOwnPropertyNames(Object.getPrototypeOf(response)));
       
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Login failed");
+        let errorMessage = "Login failed";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+          console.error("Failed to parse error response:", e);
+        }
+        throw new Error(errorMessage);
       }
 
-      const data = await response.json();
-      console.log("Login response:", data);
+      let data;
+      try {
+        // Check if response has json method
+        if (typeof response.json !== 'function') {
+          console.error("Response object missing json method:", response);
+          throw new Error("Invalid response object");
+        }
+        
+        data = await response.json();
+        console.log("Login response:", data);
+      } catch (e) {
+        console.error("Failed to parse response JSON:", e);
+        console.error("Response object:", response);
+        throw new Error("Invalid response format");
+      }
 
       if (data.token && data.user) {
         // Clear any existing auth data first
@@ -51,8 +72,10 @@ export default function SimpleLogin() {
         
         console.log("Token stored:", localStorage.getItem("token"));
         
-        // Force page reload to ensure auth state is properly updated
-        window.location.href = "/dashboard";
+        // Force page redirect to dashboard
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 100);
       } else {
         throw new Error("Invalid response format");
       }

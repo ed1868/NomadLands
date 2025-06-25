@@ -30,6 +30,41 @@ function Router() {
       <Route path="/login" component={SimpleLogin} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/deploy" component={Deploy} />
+      <Route path="/test-login" component={() => <div dangerouslySetInnerHTML={{__html: `
+        <!DOCTYPE html>
+        <html>
+        <head><title>Test Login</title></head>
+        <body>
+          <h1>Test Login</h1>
+          <button onclick="testLogin()">Test Login</button>
+          <div id="result"></div>
+          <script>
+            async function testLogin() {
+              const resultDiv = document.getElementById('result');
+              try {
+                const response = await fetch('/api/auth/signin', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ username: 'test', password: 'testing' })
+                });
+                console.log('Response:', response);
+                if (!response.ok) throw new Error('Login failed');
+                const data = await response.json();
+                console.log('Login data:', data);
+                if (data.token) {
+                  localStorage.setItem('token', data.token);
+                  window.location.href = '/dashboard';
+                }
+                resultDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+              } catch (error) {
+                console.error('Login error:', error);
+                resultDiv.innerHTML = '<p style="color: red;">Error: ' + error.message + '</p>';
+              }
+            }
+          </script>
+        </body>
+        </html>
+      `}} />} />
       <Route component={NotFound} />
     </Switch>
   );
