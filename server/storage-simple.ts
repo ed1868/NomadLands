@@ -12,8 +12,10 @@ import {
 export interface IStorage {
   // User operations
   getUser(id: string): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
   getUserByWallet(walletAddress: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
+  updateLastLogin(userId: string): Promise<void>;
   
   // Agent operations
   getAllAgents(): Promise<Agent[]>;

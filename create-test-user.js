@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
-import { Pool } from 'pg';
+import pkg from 'pg';
+const { Pool } = pkg;
 
 async function createTestUser() {
   const pool = new Pool({
