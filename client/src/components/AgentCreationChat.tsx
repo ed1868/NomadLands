@@ -279,7 +279,35 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
           "Escalate complex issues to humans",
           "Provide 24/7 basic support"
         ],
-        showCreateButton: true
+        showCreateButton: true,
+        agentData: {
+          name: "Customer Support Agent",
+          description: "Handles customer inquiries and support requests",
+          tools: tools,
+          systemPrompt: "You are a helpful customer support agent."
+        }
+      };
+    }
+
+    if (lowerMessage.includes('discord') && lowerMessage.includes('gpt')) {
+      return {
+        id: Date.now().toString(),
+        type: 'bot',
+        content: "Perfect! I understand you want to create an agent that connects Discord to GPT. Let me gather some details:\n\n• What specific tasks should this agent perform in Discord?\n• Should it respond to all messages or only when mentioned?\n• Any specific channels or permissions needed?",
+        timestamp: new Date(),
+        suggestions: [
+          "Answer questions in Discord channels",
+          "Moderate conversations",
+          "Create automated responses",
+          "Generate content for Discord"
+        ],
+        showCreateButton: true,
+        agentData: {
+          name: "Discord GPT Bot",
+          description: "AI-powered Discord bot that connects to GPT for intelligent responses",
+          tools: [...tools, "Discord", "OpenAI"],
+          systemPrompt: "You are a helpful Discord bot that uses GPT to provide intelligent responses to users."
+        }
       };
     }
 

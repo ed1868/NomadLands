@@ -42,12 +42,20 @@ Key information to gather:
 - Desired behavior and response style
 - System prompt requirements
 
-Respond in a conversational, helpful manner. When you have sufficient details, set readyToCreate: true in your response.`;
+IMPORTANT: Always respond in JSON format with this structure:
+{
+  "response": "your conversational response here",
+  "suggestions": ["suggestion1", "suggestion2", "suggestion3"],
+  "readyToCreate": false,
+  "agentData": {"name": "", "description": "", "tools": [], "systemPrompt": ""}
+}
+
+When you have sufficient details, set readyToCreate: true in your JSON response.`;
 
       const messages = [
         { role: "system", content: systemPrompt },
         ...request.conversationHistory.slice(-10), // Last 10 messages for context
-        { role: "user", content: request.message }
+        { role: "user", content: `${request.message}\n\nSelected tools: ${request.tools.join(', ')}\n\nPlease respond in JSON format as specified.` }
       ];
 
       const response = await openai.chat.completions.create({
