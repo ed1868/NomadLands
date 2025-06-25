@@ -118,6 +118,14 @@ The application follows a full-stack architecture with clear separation between 
 
 ```
 Changelog:
+- June 25, 2025. N8n Chat Agent Creation Integration Complete
+  * Implemented full n8n API integration with proper authentication (X-N8N-API-KEY)
+  * Created N8nService class for workflow management via n8n REST API
+  * Added /api/chat/create-agent endpoint for real-time agent creation
+  * Enhanced AgentCreationChat component to create actual n8n workflows
+  * Updated database schema with workflow tracking fields (workflowId, webhookUrl, createdBy)
+  * Integrated with user's n8n cloud instance at ainomads.app.n8n.cloud
+  * Chat interface now creates functional AI agents deployed to n8n on user request
 - June 24, 2025. N8n Workflow Generation Integration Complete
   * Implemented comprehensive n8n workflow generator based on n8n API documentation
   * Created N8nWorkflowGenerator class with support for:

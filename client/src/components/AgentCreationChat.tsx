@@ -176,22 +176,66 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
   };
 
   const generateAgentResponse = async (userMessage: string): Promise<ChatMessage> => {
-    // Simulate AI processing
-    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
-
     const lowerMessage = userMessage.toLowerCase();
+    
+    // Check if user wants to create an agent
+    if (lowerMessage.includes('create') && (lowerMessage.includes('agent') || lowerMessage.includes('this'))) {
+      try {
+        // Call backend to actually create the agent via n8n
+        const response = await fetch("/api/chat/create-agent", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({
+            message: userMessage
+          })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          return {
+            id: Date.now().toString(),
+            type: 'bot',
+            content: `${result.message}\n\nAgent Details:\n• Name: ${result.agent.name}\n• Category: ${result.agent.category}\n• Tools: ${result.agent.tools?.join(', ') || 'None'}\n• Workflow ID: ${result.workflow.id}\n\nYour agent is now live and ready to use!`,
+            timestamp: new Date(),
+            agentConfig: result.agent
+          };
+        } else {
+          return {
+            id: Date.now().toString(),
+            type: 'bot',
+            content: `I encountered an issue creating your agent: ${result.message || 'Unknown error'}. Could you please try describing your agent requirements more specifically?`,
+            timestamp: new Date()
+          };
+        }
+      } catch (error) {
+        console.error('Failed to create agent:', error);
+        return {
+          id: Date.now().toString(),
+          type: 'bot',
+          content: "I'm sorry, I couldn't create the agent right now. There might be an issue with the n8n integration. Please try again or contact support if the problem persists.",
+          timestamp: new Date()
+        };
+      }
+    }
+    
+    // Simulate AI processing for other responses
+    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
     
     if (lowerMessage.includes('customer support') || lowerMessage.includes('help desk')) {
       return {
         id: Date.now().toString(),
         type: 'bot',
-        content: "Great! A customer support agent. What's your target response time and escalation criteria?",
+        content: "I can help you design a Customer Support Agent! This agent would handle customer inquiries, manage support tickets, and integrate with communication tools like Slack and email. Would you like me to create this agent for you?",
         timestamp: new Date(),
         suggestions: [
-          "Respond within 30 seconds",
-          "Escalate complex technical issues",
-          "Handle basic troubleshooting automatically",
-          "Track satisfaction scores"
+          "Create this agent",
+          "Add more tools",
+          "Customize the behavior",
+          "Change the AI model"
         ]
       };
     }

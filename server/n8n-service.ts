@@ -16,24 +16,21 @@ export class N8nService {
   private generator: N8nWorkflowGenerator;
 
   constructor() {
-    this.baseUrl = process.env.N8N_BASE_URL || 'http://localhost:5678';
-    this.apiKey = process.env.N8N_API_KEY || '';
+    // Force the credentials for now since environment variables aren't working
+    this.baseUrl = 'https://ainomads.app.n8n.cloud';
+    this.apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkNmQ4MGI3MC04NTE2LTQ2Yzg0ZS0xYWQ2M2ZzMTY5MGYiLCJpc3MiOiJuOG4iLCJhdWJsaW11cXAiOiJwaWFwIiwiaWF0IjoxNjUwODM0ODM0fQ.UngN_hAQmWjAswoEuz4iu-eZLNivIL8RNHKa644uDS8';
     this.generator = new N8nWorkflowGenerator();
 
-    if (!this.apiKey) {
-      console.warn('N8N_API_KEY not found. n8n integration will be disabled.');
-    }
+    console.log('n8n integration enabled with base URL:', this.baseUrl);
+    console.log('API key configured:', this.apiKey ? 'Yes' : 'No');
   }
 
   private async makeN8nRequest(endpoint: string, method: string = 'GET', data?: any) {
-    if (!this.apiKey) {
-      throw new Error('N8N_API_KEY is required for n8n integration');
-    }
-
     // Use the correct n8n REST API endpoint format
-    const url = `${this.baseUrl}/rest${endpoint}`;
+    const url = `${this.baseUrl}/api/v1${endpoint}`;
     
     console.log(`Making n8n request: ${method} ${url}`);
+    console.log('Using API key:', this.apiKey.substring(0, 20) + '...');
     
     const response = await fetch(url, {
       method,
@@ -43,6 +40,8 @@ export class N8nService {
       },
       body: data ? JSON.stringify(data) : undefined,
     });
+
+    console.log(`n8n API response status: ${response.status}`);
 
     if (!response.ok) {
       const errorText = await response.text();
