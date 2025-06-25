@@ -253,7 +253,12 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
           timestamp: new Date(),
           suggestions: result.suggestions,
           showCreateButton: result.readyToCreate || false,
-          agentData: result.agentData || null
+          agentData: result.agentData || {
+            name: "Discord GPT Agent",
+            description: "AI agent that connects Discord to GPT for intelligent responses",
+            tools: userMessage.toLowerCase().includes('discord') ? [...tools, "Discord", "OpenAI"] : tools,
+            systemPrompt: "You are a helpful AI assistant."
+          }
         };
       } else {
         throw new Error('OpenAI API failed');
@@ -384,18 +389,18 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
                 </div>
                 <p className="text-sm">{message.content}</p>
                 
-                {message.agentConfig && (
+                {(message.agentConfig || message.agentData) && (
                   <div className="mt-3">
                     <button
-                      onClick={() => onAgentGenerated(message.agentConfig)}
-                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors font-medium"
+                      onClick={() => message.agentConfig ? onAgentGenerated(message.agentConfig) : handleCreateAgent(message)}
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium flex items-center justify-center space-x-2"
                     >
-                      Review & Deploy Agent
+                      <span>Create Agent Now</span>
                     </button>
                   </div>
                 )}
 
-                {message.showCreateButton && (
+                {message.showCreateButton && !message.agentConfig && !message.agentData && (
                   <div className="mt-3">
                     <button
                       onClick={() => handleCreateAgent(message)}
