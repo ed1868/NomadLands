@@ -187,10 +187,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Generate n8n workflow for an agent (public for testing)
+  // Generate n8n workflow for an agent (no database calls)
   app.post("/api/agents/:id/generate-workflow", async (req, res) => {
     try {
-      // Create mock agent data for testing without any database dependency
+      console.log("Generating workflow for agent", req.params.id, "with body:", req.body);
+      
+      // Create complete mock agent data without any database dependency
       const mockAgent = {
         id: parseInt(req.params.id),
         name: req.body.name || "Test Email Agent",
@@ -204,7 +206,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         styling: req.body.styling || { gradientFrom: "#3b82f6", gradientTo: "#1d4ed8" }
       };
       
+      console.log("Mock agent created:", mockAgent);
       const workflow = n8nGenerator.generateWorkflow(mockAgent);
+      console.log("Workflow generated successfully");
       res.json(workflow);
     } catch (error) {
       console.error("Error generating workflow:", error);
@@ -256,12 +260,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get specific agent (public endpoint for testing)
+  // Get specific agent (no database calls)
   app.get("/api/agents/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      console.log("Fetching agent with ID:", id);
       
-      // Return mock agent data based on ID
+      // Return mock agent data based on ID without any database calls
       const mockAgents = {
         1: {
           id: 1,
@@ -293,8 +298,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!agent) {
         return res.status(404).json({ error: "Agent not found" });
       }
+      console.log("Agent found:", agent.name);
       res.json(agent);
     } catch (error) {
+      console.error("Error in agent route:", error);
       res.status(500).json({ error: "Failed to fetch agent" });
     }
   });
