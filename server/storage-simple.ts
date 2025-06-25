@@ -36,9 +36,29 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    try {
+      const result = await db.select().from(users).where(eq(users.username, username));
+      return result[0];
+    } catch (error) {
+      console.error('Error fetching user by username:', error);
+      return undefined;
+    }
+  }
+
   async getUserByWallet(walletAddress: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.walletAddress, walletAddress.toLowerCase()));
     return user;
+  }
+
+  async updateLastLogin(userId: string): Promise<void> {
+    try {
+      await db.update(users)
+        .set({ updatedAt: new Date() })
+        .where(eq(users.id, userId));
+    } catch (error) {
+      console.error('Error updating last login:', error);
+    }
   }
 
   async upsertUser(userData: UpsertUser): Promise<User> {
