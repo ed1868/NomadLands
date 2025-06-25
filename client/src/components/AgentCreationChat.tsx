@@ -146,7 +146,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
           name: message.agentData?.name || "Custom AI Agent",
           description: message.agentData?.description || "AI agent created through chat",
           category: "Custom",
-          price: 0.05,
+          price: "0.05",
           tools: tools,
           systemPrompt: message.agentData?.systemPrompt || "You are a helpful AI assistant.",
           status: "pending"
