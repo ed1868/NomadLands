@@ -22,7 +22,7 @@ import ReactFlow, {
   NodeTypes
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import BrainVisualization from "@/components/brain-visualization";
+
 import AgentDeploymentForm from "@/components/AgentDeploymentForm";
 import DeployedAgentsList from "@/components/DeployedAgentsList";
 import WorkflowVisualization from "@/components/WorkflowVisualization";
@@ -73,7 +73,7 @@ import {
   MessageSquare
 } from "lucide-react";
 import AgentCreationChat from "@/components/AgentCreationChat";
-import BrainVisualization from "@/components/BrainVisualization";
+import BrainVisualization from "@/components/brain-visualization";
 import MyAgentsSection from "@/components/MyAgentsSection";
 
 // Custom Agent Node Component with visible handles and click functionality
@@ -3528,6 +3528,15 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+
+      {/* Agent Creation and Brain Visualization */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <AgentCreationChat onAgentGenerated={handleAgentGenerated} />
+        <BrainVisualization />
+      </div>
+
+      {/* My AI Agents Section */}
+      <MyAgentsSection />
     </div>
   );
 }
