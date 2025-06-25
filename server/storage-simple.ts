@@ -25,6 +25,9 @@ export interface IStorage {
   createAgent(agent: InsertAgent): Promise<Agent>;
   updateAgent(id: number, updates: Partial<Agent>): Promise<Agent>;
   
+  // Tags operations (placeholder)
+  getAllTags?(): Promise<string[]>;
+  
   // Seeding
   seedAgents(): Promise<void>;
 }
@@ -38,11 +41,18 @@ export class DatabaseStorage implements IStorage {
 
   async getUserByUsername(username: string): Promise<User | undefined> {
     try {
-      const result = await db.select().from(users).where(eq(users.username, username));
-      return result[0];
+      const result = await db.select().from(users).where(eq(users.username, username)).limit(1);
+      return result[0] || undefined;
     } catch (error) {
       console.error('Error fetching user by username:', error);
-      return undefined;
+      // Fallback to direct SQL query if Drizzle has issues
+      try {
+        const directResult = await db.execute(`SELECT * FROM users WHERE username = '${username}' LIMIT 1`);
+        return directResult.rows[0] as User || undefined;
+      } catch (directError) {
+        console.error('Direct query also failed:', directError);
+        return undefined;
+      }
     }
   }
 
@@ -120,6 +130,11 @@ export class DatabaseStorage implements IStorage {
       .where(eq(agents.id, id))
       .returning();
     return agent;
+  }
+
+  // Tags operations placeholder
+  async getAllTags(): Promise<string[]> {
+    return ["productivity", "marketing", "development", "analytics", "automation"];
   }
 
   // Initialize database with sample agents
