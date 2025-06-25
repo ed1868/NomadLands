@@ -222,9 +222,8 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
       }
     }
     
-    // Simulate AI processing for other responses
-    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
-    
+    // This should never be reached since we're sending everything to webhook above
+    // But kept as fallback
     if (lowerMessage.includes('customer support') || lowerMessage.includes('help desk')) {
       // Send directly to n8n webhook for customer support requests
       try {
