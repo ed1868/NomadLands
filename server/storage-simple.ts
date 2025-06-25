@@ -24,6 +24,10 @@ export interface IStorage {
   getAgent(id: number): Promise<Agent | undefined>;
   createAgent(agent: InsertAgent): Promise<Agent>;
   updateAgent(id: number, updates: Partial<Agent>): Promise<Agent>;
+  getUserCreatedAgents(userId: string): Promise<Agent[]>;
+  deleteAgent(id: number): Promise<void>;
+  getUserCreatedAgents(userId: string): Promise<Agent[]>;
+  deleteAgent(id: number): Promise<void>;
   
   // Tags operations (placeholder)
   getAllTags?(): Promise<string[]>;

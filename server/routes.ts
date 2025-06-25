@@ -1112,6 +1112,118 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Chat agent creation endpoint
+  app.post("/api/chat/create-agent", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { message, userRequirements } = req.body;
+
+      if (!message) {
+        return res.status(400).json({ message: "Chat message is required" });
+      }
+
+      // Parse the chat message to extract agent requirements
+      let agentRequest: N8nAgentRequest;
+      
+      if (userRequirements) {
+        // If explicit requirements provided, use them
+        agentRequest = userRequirements;
+      } else {
+        // Parse from chat message
+        const parsed = n8nService.parseAgentRequest(message);
+        if (!parsed) {
+          return res.status(400).json({ 
+            message: "Could not understand agent requirements from message. Please be more specific." 
+          });
+        }
+        agentRequest = parsed;
+      }
+
+      // Create the workflow in n8n
+      const workflowResult = await n8nService.createAgentWorkflow(agentRequest);
+
+      // Save agent to database
+      const agentData = {
+        name: agentRequest.name,
+        description: agentRequest.description,
+        category: agentRequest.category,
+        price: "0", // Free for user-created agents
+        featured: false,
+        tags: [agentRequest.category, 'user-created', 'n8n'],
+        tools: agentRequest.tools,
+        aiModel: agentRequest.aiModel,
+        systemPrompt: agentRequest.prompt,
+        workflowId: workflowResult.workflowId,
+        webhookUrl: workflowResult.webhookUrl,
+        createdBy: req.user?.userId,
+        isActive: true
+      };
+
+      const savedAgent = await storage.createAgent(agentData);
+
+      res.json({
+        success: true,
+        agent: savedAgent,
+        workflow: {
+          id: workflowResult.workflowId,
+          webhookUrl: workflowResult.webhookUrl
+        },
+        message: `Successfully created ${agentRequest.name} and deployed to n8n!`
+      });
+
+    } catch (error) {
+      console.error("Error creating agent:", error);
+      res.status(500).json({ 
+        message: "Failed to create agent", 
+        error: error.message 
+      });
+    }
+  });
+
+  // Get user's created agents
+  app.get("/api/chat/my-agents", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const agents = await storage.getUserCreatedAgents(req.user?.userId);
+      res.json(agents);
+    } catch (error) {
+      console.error("Error fetching user agents:", error);
+      res.status(500).json({ message: "Failed to fetch user agents" });
+    }
+  });
+
+  // Delete user's agent and its n8n workflow
+  app.delete("/api/chat/agents/:id", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const agentId = parseInt(req.params.id);
+      const agent = await storage.getAgent(agentId);
+
+      if (!agent) {
+        return res.status(404).json({ message: "Agent not found" });
+      }
+
+      if (agent.createdBy !== req.user?.userId) {
+        return res.status(403).json({ message: "Not authorized to delete this agent" });
+      }
+
+      // Delete from n8n if it has a workflow
+      if (agent.workflowId) {
+        try {
+          await n8nService.deleteWorkflow(agent.workflowId);
+        } catch (error) {
+          console.warn("Failed to delete n8n workflow:", error);
+          // Continue with agent deletion even if n8n deletion fails
+        }
+      }
+
+      // Delete from database
+      await storage.deleteAgent(agentId);
+
+      res.json({ success: true, message: "Agent deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting agent:", error);
+      res.status(500).json({ message: "Failed to delete agent" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
