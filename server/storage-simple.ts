@@ -120,10 +120,7 @@ export class DatabaseStorage implements IStorage {
   async createAgent(agentData: InsertAgent): Promise<Agent> {
     const [agent] = await db
       .insert(agents)
-      .values({
-        ...agentData,
-        deploymentStatus: "pending"
-      })
+      .values(agentData)
       .returning();
     return agent;
   }
@@ -143,7 +140,7 @@ export class DatabaseStorage implements IStorage {
     return await db
       .select()
       .from(agents)
-      .where(eq(agents.creatorId, userId))
+      .where(eq(agents.createdBy, userId))
       .orderBy(agents.createdAt);
   }
 

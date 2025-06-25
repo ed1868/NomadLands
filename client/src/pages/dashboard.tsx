@@ -22,7 +22,7 @@ import ReactFlow, {
   NodeTypes
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-
+import BrainVisualization from "@/components/brain-visualization";
 import AgentDeploymentForm from "@/components/AgentDeploymentForm";
 import DeployedAgentsList from "@/components/DeployedAgentsList";
 import WorkflowVisualization from "@/components/WorkflowVisualization";
@@ -72,9 +72,6 @@ import {
   Plus,
   MessageSquare
 } from "lucide-react";
-import AgentCreationChat from "@/components/AgentCreationChat";
-import BrainVisualization from "@/components/brain-visualization";
-import MyAgentsSection from "@/components/MyAgentsSection";
 
 // Custom Agent Node Component with visible handles and click functionality
 const AgentNode = ({ data }: { data: any }) => {
@@ -421,13 +418,6 @@ export default function Dashboard() {
   const { isConnected, address, connectWallet } = useWallet();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-
-  const handleAgentGenerated = (agentConfig: any) => {
-    toast({
-      title: "Agent Created",
-      description: "Your AI agent has been created successfully!",
-    });
-  };
   
   const [activeTab, setActiveTab] = useState('wallet');
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -3528,15 +3518,6 @@ export default function Dashboard() {
           </div>
         </div>
       )}
-
-      {/* Agent Creation and Brain Visualization */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <AgentCreationChat onAgentGenerated={handleAgentGenerated} />
-        <BrainVisualization />
-      </div>
-
-      {/* My AI Agents Section */}
-      <MyAgentsSection />
     </div>
   );
 }

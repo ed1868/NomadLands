@@ -135,31 +135,6 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
     try {
       setIsLoading(true);
       
-      // First, create the agent in our database
-      const createAgentResponse = await fetch('/api/agents', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          name: message.agentData?.name || "Custom AI Agent",
-          description: message.agentData?.description || "AI agent created through chat",
-          category: "Custom",
-          price: "0.05",
-          tools: tools,
-          systemPrompt: message.agentData?.systemPrompt || "You are a helpful AI assistant.",
-          status: "pending"
-        })
-      });
-
-      if (!createAgentResponse.ok) {
-        throw new Error('Failed to create agent');
-      }
-
-      const createdAgent = await createAgentResponse.json();
-
-      // Then generate the workflow
       const workflowResponse = await fetch('/api/chat/generate-workflow', {
         method: 'POST',
         headers: {
@@ -185,11 +160,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
         action: 'create_agent_workflow',
         timestamp: new Date().toISOString(),
         user: 'ai-nomads-user',
-        agent: {
-          ...workflowData.agent,
-          id: createdAgent.id,
-          name: createdAgent.name
-        },
+        agent: workflowData.agent,
         n8nWorkflow: workflowData.n8nWorkflow
       };
 
@@ -203,10 +174,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
 
       if (webhookResult.ok) {
         // Show success popup with approval
-        showAgentApprovalPopup({
-          ...n8nWorkflowData,
-          agent: createdAgent
-        });
+        showAgentApprovalPopup(n8nWorkflowData);
       }
     } catch (error) {
       console.error('Error creating agent workflow:', error);
@@ -242,7 +210,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
             <pre class="bg-black/30 rounded p-4 mt-2 text-xs text-gray-300 overflow-x-auto">${JSON.stringify(workflowData, null, 2)}</pre>
           </div>
           <div class="flex gap-3">
-            <button onclick="window.location.reload()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded transition-colors">
+            <button onclick="window.location.href='/agents'" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded transition-colors">
               View My Agents
             </button>
             <button onclick="this.closest('.fixed').remove()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition-colors">
@@ -254,10 +222,10 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
     `;
     document.body.appendChild(modal);
 
-    // Auto-redirect after 5 seconds  
+    // Auto-redirect after 10 seconds
     setTimeout(() => {
-      window.location.reload(); // Reload dashboard to show new agent
-    }, 3000);
+      window.location.href = '/agents';
+    }, 5000);
   };
 
   const generateAgentResponse = async (userMessage: string): Promise<ChatMessage> => {
