@@ -37,6 +37,81 @@ export default function DeploymentConfirmationModal({
     });
   };
 
+  const handleDeploy = async () => {
+    try {
+      // Create the agent configuration
+      const agentConfig = {
+        name: jsonPayload?.agent?.name || "New Agent",
+        description: jsonPayload?.agent?.description || "AI Agent",
+        category: jsonPayload?.agent?.category || "productivity",
+        price: "0.00",
+        features: jsonPayload?.agent?.tools || [],
+        tools: jsonPayload?.agent?.tools || [],
+        aiModel: jsonPayload?.agent?.aiModel || "gpt-4o",
+        systemPrompt: jsonPayload?.agent?.systemPrompt || "",
+        responseTime: jsonPayload?.agent?.responseTime || "standard",
+        usageVolume: jsonPayload?.agent?.usageVolume || "medium",
+        errorHandling: jsonPayload?.agent?.errorHandling || "graceful",
+        availability: jsonPayload?.agent?.availability || "business"
+      };
+
+      const response = await fetch("/api/agents", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem('authToken') || ''}`
+        },
+        body: JSON.stringify(agentConfig),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create agent");
+      }
+
+      const createdAgent = await response.json();
+      
+      // Generate n8n workflow
+      const workflowResponse = await fetch(`/api/agents/${createdAgent.id}/generate-workflow`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem('authToken') || ''}`
+        },
+      });
+
+      if (workflowResponse.ok) {
+        const workflow = await workflowResponse.json();
+        console.log("Generated n8n workflow:", workflow);
+        
+        // Download the workflow
+        const blob = new Blob([JSON.stringify(workflow, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${createdAgent.name.replace(/\s+/g, '-')}-workflow.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        toast({
+          title: "N8n Workflow Generated",
+          description: "Your workflow has been downloaded automatically.",
+        });
+      }
+
+      console.log("Agent created successfully:", createdAgent);
+      onConfirm();
+    } catch (error) {
+      console.error("Error creating agent:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create agent. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden bg-gray-900/95 border-gray-700/50 backdrop-blur-sm">
