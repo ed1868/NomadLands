@@ -25,29 +25,112 @@ export interface AgentData {
 }
 
 export class OpenAIChatService {
-  
+  private openai: OpenAI;
+
+  constructor() {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error("OPENAI_API_KEY environment variable is required");
+    }
+    this.openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+
+  private getAgentCreationSystemPrompt(): string {
+    return `You are an AI agent creation assistant. Your goal is to help users create powerful AI agents by gathering essential information through natural conversation.
+
+CORE OBJECTIVES:
+1. Gather agent name, description, and required tools
+2. Understand the user's specific use case and workflow needs  
+3. Suggest relevant tools when appropriate
+4. Create a fine-tuned system prompt for the final agent
+
+AVAILABLE TOOLS TO SUGGEST:
+- gmail, outlook (email management)
+- slack, discord, teams (communication)
+- github, gitlab, bitbucket (code repositories)
+- salesforce, hubspot, pipedrive (CRM)
+- stripe, paypal, quickbooks (payments/finance)
+- zoom, google-meet (meetings)
+- notion, airtable, trello (productivity)
+- twitter, instagram, linkedin (social media)
+- aws, azure, gcp (cloud platforms)
+- web-search, tavily (web research)
+
+CONVERSATION STYLE:
+- Be concise and focused
+- Ask specific, actionable questions
+- Suggest tools based on the user's workflow
+- Don't overwhelm with options
+- Guide toward a clear agent definition
+
+RESPONSE FORMAT:
+Always respond in JSON with this structure:
+{
+  "message": "Your conversational response",
+  "suggestedTools": ["tool1", "tool2"] (only when relevant),
+  "readyToCreate": false (true when you have enough info),
+  "agentData": {
+    "name": "Agent Name",
+    "description": "Clear description", 
+    "category": "productivity|marketing|development|analytics|support|sales",
+    "tools": ["selected", "tools"],
+    "fineTunedPrompt": "Detailed system prompt for the agent"
+  }
+}`;
+  }
+
   async generateAgentResponse(request: AgentConversationRequest) {
     try {
-      const systemPrompt = `You are an AI assistant helping users create custom AI agents for n8n workflows. Your job is to:
+      const messages = [
+        {
+          role: "system" as const,
+          content: this.getAgentCreationSystemPrompt()
+        },
+        ...request.conversationHistory.map(msg => ({
+          role: msg.role as "user" | "assistant", 
+          content: msg.content
+        })),
+        {
+          role: "user" as const,
+          content: request.message
+        }
+      ];
 
-1. Ask intelligent follow-up questions to gather complete agent requirements
-2. Extract agent details like name, description, tools needed, behavior, use case, target audience
-3. When you have enough information, indicate readiness to create the agent
-4. Provide helpful suggestions for the user
+      const completion = await this.openai.chat.completions.create({
+        model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+        messages,
+        max_tokens: 1500,
+        temperature: 0.7,
+        response_format: { type: "json_object" }
+      });
 
-Key information to gather:
-- Agent name and description
-- Specific use case and target audience  
-- Required tools and integrations
-- Desired behavior and response style
-- System prompt requirements
-
-IMPORTANT: Always respond in JSON format with this structure:
-{
-  "response": "your conversational response here",
-  "suggestions": ["suggestion1", "suggestion2", "suggestion3"],
-  "readyToCreate": false,
-  "agentData": {"name": "", "description": "", "tools": [], "systemPrompt": ""}
+      const responseText = completion.choices[0].message.content || "{}";
+      
+      try {
+        const parsedResponse = JSON.parse(responseText);
+        
+        // Ensure the response has the expected structure
+        return {
+          message: parsedResponse.message || "I'd be happy to help you create an AI agent. What kind of tasks do you want to automate?",
+          suggestedTools: parsedResponse.suggestedTools || [],
+          readyToCreate: parsedResponse.readyToCreate || false,
+          agentData: parsedResponse.agentData || null
+        };
+      } catch (parseError) {
+        console.error("Failed to parse OpenAI JSON response:", parseError);
+        return {
+          message: "I'd be happy to help you create an AI agent. What kind of tasks do you want to automate?",
+          suggestedTools: [],
+          readyToCreate: false,
+          agentData: null
+        };
+      }
+    } catch (error) {
+      console.error("OpenAI API error:", error);
+      throw new Error("Failed to generate agent response");
+    }
+  }
 }
 
 When you have sufficient details, set readyToCreate: true in your JSON response.`;
