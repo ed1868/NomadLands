@@ -198,22 +198,74 @@ export default function MyAgents() {
                     Created: {new Date(agent.createdAt).toLocaleDateString()}
                   </div>
 
-                  <div className="flex gap-2">
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      className="flex-1 text-xs bg-gray-700/50 hover:bg-gray-700"
-                    >
-                      View Details
-                    </Button>
-                    {agent.status === 'approved' && (
+                  {/* Stats Grid */}
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <p className="text-xs text-gray-500">Runs:</p>
+                      <p className="text-sm font-semibold text-white">{agent.runs || 0}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Success Rate:</p>
+                      <p className="text-sm font-semibold text-emerald-400">{agent.successRate || "0.00"}%</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Revenue:</p>
+                      <p className="text-sm font-semibold text-green-400">${agent.revenue || "0.00"}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Uploaded:</p>
+                      <p className="text-xs text-gray-400">{new Date(agent.createdAt).toLocaleDateString()}</p>
+                    </div>
+                  </div>
+
+                  {/* Quick Actions */}
+                  <div className="mb-3">
+                    <p className="text-xs text-gray-500 mb-2">Quick Actions:</p>
+                    <div className="grid grid-cols-2 gap-2">
                       <Button 
                         size="sm" 
-                        className="flex-1 text-xs bg-emerald-600 hover:bg-emerald-700"
+                        variant="outline" 
+                        className="text-xs bg-gray-800/50 hover:bg-gray-700 border-gray-600"
                       >
-                        Deploy
+                        👁 View
                       </Button>
-                    )}
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="text-xs bg-gray-800/50 hover:bg-gray-700 border-gray-600"
+                      >
+                        🔗 Flow
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="text-xs bg-gray-800/50 hover:bg-gray-700 border-gray-600"
+                        disabled={agent.status !== 'approved'}
+                      >
+                        ▶ Run
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="text-xs bg-gray-800/50 hover:bg-gray-700 border-gray-600"
+                      >
+                        ✏ Edit
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="text-xs bg-gray-800/50 hover:bg-gray-700 border-gray-600"
+                      >
+                        📊 Stats
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="text-xs bg-gray-800/50 hover:bg-gray-700 border-gray-600"
+                      >
+                        📋 Logs
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

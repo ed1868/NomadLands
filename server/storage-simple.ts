@@ -120,7 +120,13 @@ export class DatabaseStorage implements IStorage {
   async createAgent(agentData: InsertAgent): Promise<Agent> {
     const [agent] = await db
       .insert(agents)
-      .values(agentData)
+      .values({
+        ...agentData,
+        status: "pending",
+        runs: 0,
+        successRate: "0.00",
+        revenue: "0.00"
+      })
       .returning();
     return agent;
   }

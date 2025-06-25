@@ -135,6 +135,31 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
     try {
       setIsLoading(true);
       
+      // First, create the agent in our database
+      const createAgentResponse = await fetch('/api/agents', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          name: message.agentData?.name || "Custom AI Agent",
+          description: message.agentData?.description || "AI agent created through chat",
+          category: "Custom",
+          price: 0.05,
+          tools: tools,
+          systemPrompt: message.agentData?.systemPrompt || "You are a helpful AI assistant.",
+          status: "pending"
+        })
+      });
+
+      if (!createAgentResponse.ok) {
+        throw new Error('Failed to create agent');
+      }
+
+      const createdAgent = await createAgentResponse.json();
+
+      // Then generate the workflow
       const workflowResponse = await fetch('/api/chat/generate-workflow', {
         method: 'POST',
         headers: {
@@ -160,7 +185,11 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
         action: 'create_agent_workflow',
         timestamp: new Date().toISOString(),
         user: 'ai-nomads-user',
-        agent: workflowData.agent,
+        agent: {
+          ...workflowData.agent,
+          id: createdAgent.id,
+          name: createdAgent.name
+        },
         n8nWorkflow: workflowData.n8nWorkflow
       };
 
@@ -174,7 +203,10 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
 
       if (webhookResult.ok) {
         // Show success popup with approval
-        showAgentApprovalPopup(n8nWorkflowData);
+        showAgentApprovalPopup({
+          ...n8nWorkflowData,
+          agent: createdAgent
+        });
       }
     } catch (error) {
       console.error('Error creating agent workflow:', error);
