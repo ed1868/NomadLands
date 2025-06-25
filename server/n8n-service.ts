@@ -16,13 +16,13 @@ export class N8nService {
   private generator: N8nWorkflowGenerator;
 
   constructor() {
-    // Force the credentials for now since environment variables aren't working
     this.baseUrl = 'https://ainomads.app.n8n.cloud';
-    this.apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkNmQ4MGI3MC04NTE2LTQ2Yzg0ZS0xYWQ2M2ZzMTY5MGYiLCJpc3MiOiJuOG4iLCJhdWJsaW11cXAiOiJwaWFwIiwiaWF0IjoxNjUwODM0ODM0fQ.UngN_hAQmWjAswoEuz4iu-eZLNivIL8RNHKa644uDS8';
+    // Using Basic Auth credentials instead of API key
+    this.apiKey = Buffer.from('nomadmaster:WelcomeEduardo2028!').toString('base64');
     this.generator = new N8nWorkflowGenerator();
 
     console.log('n8n integration enabled with base URL:', this.baseUrl);
-    console.log('API key configured:', this.apiKey ? 'Yes' : 'No');
+    console.log('Basic Auth configured for user: nomadmaster');
   }
 
   private async makeN8nRequest(endpoint: string, method: string = 'GET', data?: any) {
@@ -30,12 +30,12 @@ export class N8nService {
     const url = `${this.baseUrl}/api/v1${endpoint}`;
     
     console.log(`Making n8n request: ${method} ${url}`);
-    console.log('Using API key:', this.apiKey.substring(0, 20) + '...');
+    console.log('Using Basic Auth for user: nomadmaster');
     
     const response = await fetch(url, {
       method,
       headers: {
-        'X-N8N-API-KEY': this.apiKey,
+        'Authorization': `Basic ${this.apiKey}`,
         'Content-Type': 'application/json',
       },
       body: data ? JSON.stringify(data) : undefined,
