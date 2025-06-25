@@ -378,27 +378,27 @@ export class DatabaseStorage implements IStorage {
       .orderBy(transactions.createdAt);
   }
 
-  // Initialize database with Elite Ops agents
+  // Initialize database with sample agents
   async seedAgents(): Promise<void> {
-    const existingAgents = await this.getAllAgents();
-    if (existingAgents.length > 0) return;
+    try {
+      const existingAgents = await this.getAllAgents();
+      if (existingAgents.length > 0) return;
 
-    const seedAgents = [
-      // Elite Ops & Productivity Agents
-      {
-        name: "Jira Project Manager Agent",
-        description: "The command center for all things Jira—automates ticket creation, updates, and status flows like a pro. Think of it as your personal agile overlord.",
-        category: "Productivity",
-        price: 149,
-        priceInWei: ethers.parseEther("0.065").toString(),
-        contractAddress: "0x742d35Cc6635C0532925a3b8D359e16FA0000001",
-        tokenId: 1001,
-        icon: "Database",
-        features: ["Ticket Automation", "Status Flows", "Sprint Management", "Agile Overlord", "Team Coordination"],
-        gradientFrom: "gray-900",
-        gradientTo: "emerald-800",
-        featured: true
-      },
+      const seedAgents = [
+        {
+          name: "Email Classification Agent",
+          description: "Automatically categorizes and prioritizes incoming emails using AI-powered natural language processing.",
+          category: "productivity",
+          price: "15.00",
+          features: ["Email categorization", "Priority scoring", "Auto-labeling", "Smart filtering"],
+          tools: ["gmail", "web-search"],
+          aiModel: "gpt-4o",
+          systemPrompt: "You are an email classification agent that helps users organize and prioritize their emails efficiently.",
+          styling: {
+            gradientFrom: "#3b82f6",
+            gradientTo: "#1d4ed8"
+          }
+        },
       {
         name: "GMAIL Data Classification Agent",
         description: "Scans, tags, and classifies emails with surgical precision. Built to filter signal from noise and feed downstream systems with clean, structured intel.",
@@ -574,22 +574,27 @@ export class DatabaseStorage implements IStorage {
         name: "Nomad Video Agent",
         description: "From raw scripts to ready-to-publish clips—this agent handles video like a Hollywood post-house. Think auto-editing, captions, and smart exports.",
         category: "Creative",
-        price: 259,
-        priceInWei: ethers.parseEther("0.08").toString(),
-        contractAddress: "0x742d35Cc6635C0532925a3b8D359e16FA0000014",
-        tokenId: 1014,
-        icon: "Database",
-        features: ["Hollywood-Level", "Auto-Editing", "Smart Captions", "Export Intelligence", "Post-House Quality"],
-        gradientFrom: "red-900",
-        gradientTo: "orange-800",
-        featured: true
-      }
-    ];
+        },
+        {
+          name: "Cloud Resource Manager", 
+          description: "Monitors and optimizes cloud infrastructure costs across AWS, Azure, and Google Cloud platforms.",
+          category: "development",
+          price: "25.00",
+          features: ["Cost optimization", "Resource monitoring", "Auto-scaling", "Multi-cloud support"],
+          tools: ["web-search", "github"],
+          aiModel: "gpt-4o",
+          systemPrompt: "You are a cloud resource management agent that helps optimize infrastructure costs and performance.",
+          styling: {
+            gradientFrom: "#10b981",
+            gradientTo: "#059669"
+          }
+        }
+      ];
 
-    await db.insert(agents).values(seedAgents);
-    
-    // Seed tags after agents
-    await this.seedTags();
+      await db.insert(agents).values(seedAgents);
+    } catch (error) {
+      console.error("Error seeding agents:", error);
+    }
   }
 
   async seedTags(): Promise<void> {

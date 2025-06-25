@@ -1,11 +1,11 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { storage } from "./storage-simple";
 import { ethers } from "ethers";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import type { Request, Response, NextFunction } from "express";
-import { insertUserSchema } from "@shared/schema";
+import { insertUserSchema, type InsertUser } from "@shared/schema-simple";
 import { z } from "zod";
 import { PaymentService } from "./payment-service";
 import { N8nWorkflowGenerator } from "./n8n-generator";
