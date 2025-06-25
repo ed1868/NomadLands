@@ -167,147 +167,320 @@ export default function WorkflowVisualization({ agent, onClose }: WorkflowVisual
     try {
       // Generate realistic n8n workflow based on agent
       const mockWorkflow = {
-        name: `${agent.name} Workflow`,
+        name: "n8n Builder Workflow",
         nodes: [
-          {
-            parameters: {},
-            type: "@n8n/n8n-nodes-langchain.chatTrigger",
-            typeVersion: 1.1,
-            position: [50, 100],
-            id: "chat-trigger-1",
-            name: "Chat Trigger",
-          },
-          {
-            parameters: {
-              sessionIdTemplate: "{{ $json.sessionId }}",
-              maxTokensToSample: 4000,
-              temperature: 0.7
-            },
-            type: "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-            typeVersion: 1,
-            position: [250, 50],
-            id: "memory-buffer-2",
-            name: "Memory Buffer",
-          },
-          {
-            parameters: {
-              model: "gpt-4o",
-              options: {
-                temperature: 0.7,
-                maxTokens: 2000
-              }
-            },
-            type: "@n8n/n8n-nodes-langchain.lmOpenAi",
-            typeVersion: 1,
-            position: [450, 100],
-            id: "gpt4o-model-3",
-            name: "OpenAI GPT-4o",
-          },
-          {
-            parameters: {
-              authentication: "serviceAccount",
-              resource: "message",
-              operation: "send"
-            },
-            type: "@n8n/n8n-nodes-langchain.toolGmail",
-            typeVersion: 1,
-            position: [250, 200],
-            id: "gmail-tool-4",
-            name: "Gmail Tool",
-          },
-          {
-            parameters: {
-              authentication: "accessToken",
-              resource: "message",
-              operation: "post"
-            },
-            type: "@n8n/n8n-nodes-langchain.toolSlack",
-            typeVersion: 1,
-            position: [450, 250],
-            id: "slack-tool-5",
-            name: "Slack Tool",
-          },
           {
             parameters: {
               options: {}
             },
-            type: "@n8n/n8n-nodes-langchain.outputParserStructured",
+            type: "@n8n/n8n-nodes-langchain.chatTrigger",
+            typeVersion: 1.1,
+            position: [-500, 20],
+            id: "864f0d4f-2652-4100-91d2-2aad9eb556d5",
+            name: "When chat message received",
+            webhookId: "d832bc01-555e-4a24-a8cc-31db8fc1c816"
+          },
+          {
+            parameters: {
+              model: {
+                "__rl": true,
+                "value": "claude-opus-4-20250514",
+                "mode": "list",
+                "cachedResultName": "Claude Opus 4"
+              },
+              options: {
+                maxTokensToSample: 8000,
+                thinking: true,
+                thinkingBudget: 1024
+              }
+            },
+            type: "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+            typeVersion: 1.3,
+            position: [180, 700],
+            id: "997d9c78-8cb1-4dc5-bd26-c6be8df389aa",
+            name: "Claude Opus 4",
+            credentials: {
+              anthropicApi: {
+                id: "FzhOcn5sLnl6NF7Q",
+                name: "Anthropic account"
+              }
+            }
+          },
+          {
+            parameters: {
+              operation: "text",
+              options: {}
+            },
+            type: "n8n-nodes-base.extractFromFile",
             typeVersion: 1,
-            position: [650, 150],
-            id: "output-parser-6",
-            name: "Output Parser",
+            position: [-60, 480],
+            id: "814b37f2-0939-4032-ae28-b59d4eeb5e59",
+            name: "Extract from File"
+          },
+          {
+            parameters: {
+              promptType: "define",
+              text: "=User request: {{ $('workwork').item.json.query }}",
+              options: {
+                systemMessage: "You are an expert AI automation developer specializing in building workflows for n8n. Your job is to translate a human's natural language request into a fully functional n8n workflow JSON."
+              }
+            },
+            type: "@n8n/n8n-nodes-langchain.agent",
+            typeVersion: 2,
+            position: [160, 480],
+            id: "39e4aec5-1017-4cf8-853b-4d0dbbe400e7",
+            name: "n8n Builder",
+            alwaysOutputData: false
+          },
+          {
+            parameters: {
+              options: {
+                systemMessage: "Your job is to take the incoming query and pass that to the Developer Tool tool EXACTLY AS YOU RECEIVED IT. Don't change any of the wording."
+              }
+            },
+            type: "@n8n/n8n-nodes-langchain.agent",
+            typeVersion: 2,
+            position: [-248, 20],
+            id: "0fb217cd-e41a-49fd-8460-4b982e34ccb3",
+            name: "n8n Developer"
+          },
+          {
+            parameters: {
+              description: "Call this tool once you have a finished workflow design to build the workflow.",
+              workflowId: {
+                "__rl": true,
+                "value": "8rF4sA4hWpSwcSQt",
+                "mode": "id"
+              }
+            },
+            type: "@n8n/n8n-nodes-langchain.toolWorkflow",
+            typeVersion: 2.2,
+            position: [-40, 240],
+            id: "2d817ebd-7abc-4005-8da0-91cb61075baa",
+            name: "Developer Tool"
+          },
+          {
+            parameters: {},
+            type: "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+            typeVersion: 1.3,
+            position: [-400, 260],
+            id: "a3bd651b-7f56-45df-b068-de9aed9e85f0",
+            name: "Simple Memory"
+          },
+          {
+            parameters: {
+              model: {
+                "__rl": true,
+                "mode": "list",
+                "value": "gpt-4.1-mini"
+              },
+              options: {}
+            },
+            type: "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            typeVersion: 1.2,
+            position: [-520, 260],
+            id: "db914a33-6a19-4752-b96d-292b5d9c1a3a",
+            name: "OpenAI Chat Model",
+            credentials: {
+              openAiApi: {
+                id: "HIkseAGipFDil7rW",
+                name: "OpenAi account"
+              }
+            }
+          },
+          {
+            parameters: {
+              operation: "download",
+              fileId: {
+                "__rl": true,
+                "value": "1ezGwMWhvOk6BZbLNZ0_eQYeqEMCiTekDSmVxY7rksdg",
+                "mode": "list",
+                "cachedResultName": "n8n Documentation"
+              },
+              options: {
+                googleFileConversion: {
+                  conversion: {
+                    docsToFormat: "text/plain"
+                  }
+                }
+              }
+            },
+            type: "n8n-nodes-base.googleDrive",
+            typeVersion: 3,
+            position: [-280, 480],
+            id: "817c73bb-7843-4a4a-83eb-12dbe6059867",
+            name: "Get n8n Docs",
+            credentials: {
+              googleDriveOAuth2Api: {
+                id: "4uymesgeGGNsFprZ",
+                name: "Google Drive account"
+              }
+            }
+          },
+          {
+            parameters: {
+              inputSource: "passthrough"
+            },
+            type: "n8n-nodes-base.executeWorkflowTrigger",
+            typeVersion: 1.1,
+            position: [-500, 520],
+            id: "a49024d8-ddf5-4382-b1ad-936927ad243f",
+            name: "workwork"
+          },
+          {
+            parameters: {
+              assignments: {
+                assignments: [
+                  {
+                    id: "ab073780-d17b-4855-997e-b3a30a26a329",
+                    name: "id",
+                    value: "=https://romadeveloper.app.n8n.cloud/workflow/{{ $json.id }}",
+                    type: "string"
+                  }
+                ]
+              },
+              options: {}
+            },
+            type: "n8n-nodes-base.set",
+            typeVersion: 3.4,
+            position: [760, 480],
+            id: "21c07fb5-9232-4864-9002-fb68026f627d",
+            name: "Edit Fields"
+          },
+          {
+            parameters: {
+              operation: "create",
+              workflowObject: "={{ $json.output[1].text }}",
+              requestOptions: {}
+            },
+            type: "n8n-nodes-base.n8n",
+            typeVersion: 1,
+            position: [520, 480],
+            id: "22983a76-e290-4477-91ac-0ec0e9ecf95f",
+            name: "Create a workflow",
+            credentials: {
+              n8nApi: {
+                id: "CnnhSIcXICxz6vyY",
+                name: "n8n account"
+              }
+            }
           }
         ],
         connections: {
-          "Chat Trigger": {
+          "When chat message received": {
             main: [
               [
                 {
-                  node: "Memory Buffer",
+                  node: "n8n Developer",
                   type: "main",
-                  index: 0,
-                },
-                {
-                  node: "OpenAI GPT-4o",
-                  type: "main",
-                  index: 0,
+                  index: 0
                 }
-              ],
-            ],
+              ]
+            ]
           },
-          "Memory Buffer": {
-            main: [
+          "Claude Opus 4": {
+            ai_languageModel: [
               [
                 {
-                  node: "OpenAI GPT-4o",
-                  type: "main",
-                  index: 0,
+                  node: "n8n Builder",
+                  type: "ai_languageModel",
+                  index: 0
                 }
-              ],
-            ],
+              ]
+            ]
           },
-          "OpenAI GPT-4o": {
+          "Extract from File": {
             main: [
               [
                 {
-                  node: "Gmail Tool",
+                  node: "n8n Builder",
                   type: "main",
-                  index: 0,
-                },
-                {
-                  node: "Slack Tool",
-                  type: "main",
-                  index: 0,
+                  index: 0
                 }
-              ],
-            ],
+              ]
+            ]
           },
-          "Gmail Tool": {
+          "n8n Builder": {
             main: [
               [
                 {
-                  node: "Output Parser",
+                  node: "Create a workflow",
                   type: "main",
-                  index: 0,
+                  index: 0
                 }
-              ],
-            ],
+              ]
+            ]
           },
-          "Slack Tool": {
+          "Developer Tool": {
+            ai_tool: [
+              [
+                {
+                  node: "n8n Developer",
+                  type: "ai_tool",
+                  index: 0
+                }
+              ]
+            ]
+          },
+          "Simple Memory": {
+            ai_memory: [
+              [
+                {
+                  node: "n8n Developer",
+                  type: "ai_memory",
+                  index: 0
+                }
+              ]
+            ]
+          },
+          "OpenAI Chat Model": {
+            ai_languageModel: [
+              [
+                {
+                  node: "n8n Developer",
+                  type: "ai_languageModel",
+                  index: 0
+                }
+              ]
+            ]
+          },
+          "Get n8n Docs": {
             main: [
               [
                 {
-                  node: "Output Parser",
+                  node: "Extract from File",
                   type: "main",
-                  index: 0,
+                  index: 0
                 }
-              ],
-            ],
+              ]
+            ]
+          },
+          "workwork": {
+            main: [
+              [
+                {
+                  node: "Get n8n Docs",
+                  type: "main",
+                  index: 0
+                }
+              ]
+            ]
+          },
+          "Create a workflow": {
+            main: [
+              [
+                {
+                  node: "Edit Fields",
+                  type: "main",
+                  index: 0
+                }
+              ]
+            ]
           }
         },
         meta: {
           templateCredsSetupCompleted: true,
-          instanceId: "1234567890abcdef",
+          instanceId: "9397da5cd2a0f7613d20df414cb2c5a92e1627b6bbedf1b322b0a046e1b57940",
         },
       };
       

@@ -1857,7 +1857,7 @@ export default function Dashboard() {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Demo Preview */}
                     <div className="bg-gray-800/40 rounded-lg p-4 border border-blue-500/20">
-                      <h4 className="text-white font-semibold mb-3 text-sm">Sample Email Automation Workflow</h4>
+                      <h4 className="text-white font-semibold mb-3 text-sm">n8n Builder Workflow Demo</h4>
                       <div className="space-y-3">
                         <div className="flex items-center space-x-3">
                           <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
