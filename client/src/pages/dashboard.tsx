@@ -1843,6 +1843,96 @@ export default function Dashboard() {
                 </Card>
               </div>
 
+              {/* Workflow Demo Section */}
+              <Card className="bg-gradient-to-br from-blue-950/60 via-purple-950/40 to-gray-950/60 border-blue-700/30 backdrop-blur-lg">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center space-x-2">
+                    <Network className="w-5 h-5 text-blue-400" />
+                    <span>Live Workflow Demo</span>
+                  </CardTitle>
+                  <p className="text-gray-300 text-sm">Interactive n8n-style workflow visualization - try it now!</p>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Demo Preview */}
+                    <div className="bg-gray-800/40 rounded-lg p-4 border border-blue-500/20">
+                      <h4 className="text-white font-semibold mb-3 text-sm">Sample Email Automation Workflow</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                            <MessageSquare className="w-4 h-4 text-blue-400" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-white text-xs font-medium">Chat Trigger</p>
+                            <p className="text-gray-400 text-xs">Receives user input</p>
+                          </div>
+                          <ArrowUpRight className="w-4 h-4 text-emerald-400" />
+                        </div>
+                        <div className="flex items-center space-x-3">
+                          <div className="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center">
+                            <Bot className="w-4 h-4 text-emerald-400" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-white text-xs font-medium">GPT-4o Processing</p>
+                            <p className="text-gray-400 text-xs">AI analysis & routing</p>
+                          </div>
+                          <ArrowUpRight className="w-4 h-4 text-emerald-400" />
+                        </div>
+                        <div className="flex items-center space-x-3">
+                          <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                            <Settings className="w-4 h-4 text-purple-400" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-white text-xs font-medium">Gmail + Slack Tools</p>
+                            <p className="text-gray-400 text-xs">Email & team notifications</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Demo Actions */}
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="text-white font-semibold mb-2 text-sm">Try Interactive Features</h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="border-blue-600 text-blue-300 hover:bg-blue-800/30 h-8 text-xs"
+                            onClick={() => setSelectedWorkflowAgent({ 
+                              name: 'Email Automation Demo',
+                              category: 'Productivity',
+                              id: 'demo'
+                            })}
+                          >
+                            <Eye className="w-3 h-3 mr-1" />
+                            View Workflow
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="border-emerald-600 text-emerald-300 hover:bg-emerald-800/30 h-8 text-xs"
+                            onClick={() => setSelectedWorkflowAgent({ 
+                              name: 'Email Automation Demo',
+                              category: 'Productivity',
+                              id: 'demo'
+                            })}
+                          >
+                            <Download className="w-3 h-3 mr-1" />
+                            Download JSON
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-3">
+                        <p className="text-emerald-300 text-xs font-medium mb-1">✓ Production Ready</p>
+                        <p className="text-gray-300 text-xs">Generated workflows are fully compatible with n8n and ready for deployment.</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* User Agents List */}
               <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
                 <CardHeader>

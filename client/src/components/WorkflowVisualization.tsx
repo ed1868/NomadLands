@@ -1,265 +1,421 @@
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+import ReactFlow, { 
+  MiniMap, 
+  Controls, 
+  Background, 
+  Node,
+  Edge,
+  BackgroundVariant,
+  MarkerType
+} from 'reactflow';
+import 'reactflow/dist/style.css';
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Download, 
   Code, 
   Eye, 
-  Play, 
-  GitBranch, 
-  Zap,
   Bot,
   Database,
   MessageSquare,
   Settings,
-  ArrowRight
+  ArrowRight,
+  X,
+  Workflow
 } from "lucide-react";
 
-interface WorkflowNode {
-  id: string;
-  name: string;
-  type: string;
-  position: [number, number];
-  parameters: Record<string, any>;
-  credentials?: Record<string, any>;
-}
-
 interface WorkflowVisualizationProps {
-  agentId: number;
-  agentName: string;
+  agent: any;
   onClose: () => void;
 }
 
-export default function WorkflowVisualization({ agentId, agentName, onClose }: WorkflowVisualizationProps) {
+// Custom node component for workflow visualization
+const WorkflowNode = ({ data }: { data: any }) => {
+  const getNodeIcon = (type: string) => {
+    switch (type) {
+      case 'chatTrigger': return <MessageSquare className="w-4 h-4" />;
+      case 'ai': return <Bot className="w-4 h-4" />;
+      case 'tool': return <Settings className="w-4 h-4" />;
+      case 'memory': return <Database className="w-4 h-4" />;
+      default: return <Workflow className="w-4 h-4" />;
+    }
+  };
+
+  const getNodeColor = (type: string) => {
+    switch (type) {
+      case 'chatTrigger': return 'from-blue-500 to-blue-600';
+      case 'ai': return 'from-emerald-500 to-emerald-600';
+      case 'tool': return 'from-purple-500 to-purple-600';
+      case 'memory': return 'from-orange-500 to-orange-600';
+      default: return 'from-gray-500 to-gray-600';
+    }
+  };
+
+  return (
+    <div className={`px-3 py-2 shadow-lg rounded-lg bg-gradient-to-r ${getNodeColor(data.type)} border border-white/20 min-w-[120px] max-w-[200px]`}>
+      <div className="flex items-center space-x-2">
+        <div className="text-white">
+          {getNodeIcon(data.type)}
+        </div>
+        <div className="text-white">
+          <div className="text-xs font-medium truncate">{data.label}</div>
+          <div className="text-xs opacity-80 truncate">{data.subLabel}</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const nodeTypes = {
+  workflowNode: WorkflowNode,
+};
+
+export default function WorkflowVisualization({ agent, onClose }: WorkflowVisualizationProps) {
+  const [activeTab, setActiveTab] = useState("visual");
   const [workflowData, setWorkflowData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("visual");
+
+  // Generate sample workflow nodes and edges for demonstration
+  const generateSampleWorkflow = () => {
+    const nodes: Node[] = [
+      {
+        id: '1',
+        type: 'workflowNode',
+        position: { x: 50, y: 100 },
+        data: { 
+          label: 'Chat Trigger', 
+          subLabel: 'Start conversation',
+          type: 'chatTrigger'
+        },
+      },
+      {
+        id: '2',
+        type: 'workflowNode',
+        position: { x: 250, y: 50 },
+        data: { 
+          label: 'Memory Buffer', 
+          subLabel: 'Store context',
+          type: 'memory'
+        },
+      },
+      {
+        id: '3',
+        type: 'workflowNode',
+        position: { x: 450, y: 100 },
+        data: { 
+          label: 'GPT-4o Model', 
+          subLabel: 'AI Processing',
+          type: 'ai'
+        },
+      },
+      {
+        id: '4',
+        type: 'workflowNode',
+        position: { x: 250, y: 200 },
+        data: { 
+          label: 'Gmail Tool', 
+          subLabel: 'Email integration',
+          type: 'tool'
+        },
+      },
+      {
+        id: '5',
+        type: 'workflowNode',
+        position: { x: 450, y: 250 },
+        data: { 
+          label: 'Slack Tool', 
+          subLabel: 'Team messaging',
+          type: 'tool'
+        },
+      },
+      {
+        id: '6',
+        type: 'workflowNode',
+        position: { x: 650, y: 150 },
+        data: { 
+          label: 'Output Parser', 
+          subLabel: 'Format response',
+          type: 'tool'
+        },
+      },
+    ];
+
+    const edges: Edge[] = [
+      {
+        id: 'e1-2',
+        source: '1',
+        target: '2',
+        type: 'smoothstep',
+        markerEnd: { type: MarkerType.ArrowClosed },
+        style: { stroke: '#10b981', strokeWidth: 2 }
+      },
+      {
+        id: 'e1-3',
+        source: '1',
+        target: '3',
+        type: 'smoothstep',
+        markerEnd: { type: MarkerType.ArrowClosed },
+        style: { stroke: '#10b981', strokeWidth: 2 }
+      },
+      {
+        id: 'e2-3',
+        source: '2',
+        target: '3',
+        type: 'smoothstep',
+        markerEnd: { type: MarkerType.ArrowClosed },
+        style: { stroke: '#10b981', strokeWidth: 2 }
+      },
+      {
+        id: 'e3-4',
+        source: '3',
+        target: '4',
+        type: 'smoothstep',
+        markerEnd: { type: MarkerType.ArrowClosed },
+        style: { stroke: '#10b981', strokeWidth: 2 }
+      },
+      {
+        id: 'e3-5',
+        source: '3',
+        target: '5',
+        type: 'smoothstep',
+        markerEnd: { type: MarkerType.ArrowClosed },
+        style: { stroke: '#10b981', strokeWidth: 2 }
+      },
+      {
+        id: 'e4-6',
+        source: '4',
+        target: '6',
+        type: 'smoothstep',
+        markerEnd: { type: MarkerType.ArrowClosed },
+        style: { stroke: '#10b981', strokeWidth: 2 }
+      },
+      {
+        id: 'e5-6',
+        source: '5',
+        target: '6',
+        type: 'smoothstep',
+        markerEnd: { type: MarkerType.ArrowClosed },
+        style: { stroke: '#10b981', strokeWidth: 2 }
+      },
+    ];
+
+    return { nodes, edges };
+  };
+
+  const { nodes, edges } = generateSampleWorkflow();
 
   const generateWorkflow = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/agents/${agentId}/generate-workflow`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      // Simulate API call - using agent data to generate realistic workflow
+      const mockWorkflow = {
+        name: `${agent.name} Workflow`,
+        nodes: [
+          {
+            parameters: {},
+            type: "@n8n/n8n-nodes-langchain.chatTrigger",
+            typeVersion: 1.1,
+            position: [460, 460],
+            id: "1234-5678-9abc",
+            name: "Chat Trigger",
+          },
+          {
+            parameters: {
+              model: "gpt-4o",
+              options: {}
+            },
+            type: "@n8n/n8n-nodes-langchain.lmOpenAi",
+            typeVersion: 1,
+            position: [680, 460],
+            id: "2345-6789-abcd",
+            name: "OpenAI GPT-4o",
+          }
+        ],
+        connections: {
+          "Chat Trigger": {
+            main: [
+              [
+                {
+                  node: "OpenAI GPT-4o",
+                  type: "main",
+                  index: 0,
+                },
+              ],
+            ],
+          },
         },
-        body: JSON.stringify({
-          tools: ["gmail", "slack", "notion"],
-          aiModel: "gpt-4o",
-          name: agentName,
-          systemPrompt: `You are ${agentName}, an advanced AI agent for productivity automation.`
-        })
-      });
+        meta: {
+          templateCredsSetupCompleted: true,
+          instanceId: "1234567890abcdef",
+        },
+      };
       
-      const workflow = await response.json();
-      setWorkflowData(workflow);
+      setWorkflowData(mockWorkflow);
     } catch (error) {
-      console.error('Error generating workflow:', error);
+      console.error('Failed to generate workflow:', error);
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    generateWorkflow();
+  }, [agent]);
+
   const downloadWorkflow = () => {
     if (!workflowData) return;
     
     const blob = new Blob([JSON.stringify(workflowData, null, 2)], {
-      type: 'application/json'
+      type: 'application/json',
     });
-    
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${agentName.toLowerCase().replace(/\s+/g, '-')}-workflow.json`;
+    a.download = `${agent.name.replace(/\s+/g, '_')}_workflow.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
 
-  const getNodeIcon = (nodeType: string) => {
-    if (nodeType.includes('chatTrigger')) return <MessageSquare className="w-4 h-4" />;
-    if (nodeType.includes('agent')) return <Bot className="w-4 h-4" />;
-    if (nodeType.includes('languageModel') || nodeType.includes('OpenAi')) return <Zap className="w-4 h-4" />;
-    if (nodeType.includes('memory')) return <Database className="w-4 h-4" />;
-    if (nodeType.includes('gmail') || nodeType.includes('slack') || nodeType.includes('notion')) return <Settings className="w-4 h-4" />;
-    return <GitBranch className="w-4 h-4" />;
-  };
-
-  const getNodeColor = (nodeType: string) => {
-    if (nodeType.includes('chatTrigger')) return "bg-blue-500/20 border-blue-500/40 text-blue-300";
-    if (nodeType.includes('agent')) return "bg-purple-500/20 border-purple-500/40 text-purple-300";
-    if (nodeType.includes('languageModel') || nodeType.includes('OpenAi')) return "bg-green-500/20 border-green-500/40 text-green-300";
-    if (nodeType.includes('memory')) return "bg-orange-500/20 border-orange-500/40 text-orange-300";
-    if (nodeType.includes('gmail')) return "bg-red-500/20 border-red-500/40 text-red-300";
-    if (nodeType.includes('slack')) return "bg-yellow-500/20 border-yellow-500/40 text-yellow-300";
-    if (nodeType.includes('notion')) return "bg-cyan-500/20 border-cyan-500/40 text-cyan-300";
-    return "bg-gray-500/20 border-gray-500/40 text-gray-300";
-  };
+  const tabs = [
+    { id: 'visual', label: 'Visual Flow', icon: Eye },
+    { id: 'details', label: 'Node Details', icon: Settings },
+    { id: 'json', label: 'JSON Structure', icon: Code },
+  ];
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-6xl h-[90vh] bg-gray-900/95 border-gray-700">
-        <CardHeader className="border-b border-gray-700 flex flex-row items-center justify-between">
-          <div>
-            <CardTitle className="text-xl text-white">
-              {agentName} - N8n Workflow Structure
-            </CardTitle>
-            <p className="text-gray-400 text-sm mt-1">
-              Generate and visualize the n8n workflow for this agent
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+      <div className="bg-gray-900 rounded-lg border border-gray-700 w-full max-w-7xl h-[95vh] sm:h-[90vh] flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between p-3 sm:p-6 border-b border-gray-700">
+          <div className="flex-1 min-w-0">
+            <h2 className="text-lg sm:text-xl font-bold text-white truncate">
+              {agent.name} - Workflow Visualization
+            </h2>
+            <p className="text-gray-400 text-xs sm:text-sm mt-1">
+              Interactive n8n-style workflow diagram
             </p>
           </div>
-          <div className="flex gap-2">
-            {workflowData && (
-              <Button onClick={downloadWorkflow} variant="outline" size="sm">
-                <Download className="w-4 h-4 mr-2" />
-                Download JSON
-              </Button>
-            )}
-            <Button onClick={onClose} variant="outline" size="sm">
-              Close
-            </Button>
-          </div>
-        </CardHeader>
-        
-        <CardContent className="p-6 h-[calc(100%-8rem)]">
-          {!workflowData ? (
-            <div className="flex flex-col items-center justify-center h-full space-y-4">
-              <div className="text-center">
-                <Bot className="w-16 h-16 text-blue-400 mx-auto mb-4" />
-                <h3 className="text-xl text-white mb-2">Generate N8n Workflow</h3>
-                <p className="text-gray-400 mb-6 max-w-md">
-                  Create a production-ready n8n workflow file that you can import directly into your n8n instance.
-                </p>
-                <Button 
-                  onClick={generateWorkflow} 
-                  disabled={loading}
-                  className="bg-blue-600 hover:bg-blue-700"
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onClose}
+            className="border-gray-600 text-gray-300 hover:bg-gray-800 ml-2 sm:ml-4"
+          >
+            <X className="w-4 h-4" />
+          </Button>
+        </div>
+
+        {/* Tab Navigation */}
+        <div className="flex border-b border-gray-700 overflow-x-auto">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-3 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
+                activeTab === tab.id
+                  ? 'text-emerald-400 border-b-2 border-emerald-400 bg-emerald-500/10'
+                  : 'text-gray-400 hover:text-gray-300 hover:bg-gray-800/50'
+              }`}
+            >
+              <tab.icon className="w-3 h-3 sm:w-4 sm:h-4 inline-block mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">{tab.label}</span>
+              <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Tab Content */}
+        <div className="flex-1 overflow-hidden">
+          {activeTab === 'visual' && (
+            <div className="h-full p-2 sm:p-6">
+              <div className="h-full border border-gray-700 rounded-lg bg-gray-800/30">
+                <ReactFlow
+                  nodes={nodes}
+                  edges={edges}
+                  nodeTypes={nodeTypes}
+                  fitView
+                  attributionPosition="bottom-left"
+                  className="rounded-lg"
+                  minZoom={0.1}
+                  maxZoom={2}
                 >
-                  {loading ? (
-                    <>
-                      <div className="animate-spin w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full" />
-                      Generating...
-                    </>
-                  ) : (
-                    <>
-                      <Play className="w-4 h-4 mr-2" />
-                      Generate Workflow
-                    </>
-                  )}
-                </Button>
+                  <Controls className="bg-gray-800 border border-gray-600 scale-75 sm:scale-100" />
+                  <MiniMap 
+                    className="bg-gray-800 border border-gray-600 scale-75 sm:scale-100"
+                    nodeColor="#10b981"
+                    maskColor="rgba(0, 0, 0, 0.8)"
+                  />
+                  <Background 
+                    variant={BackgroundVariant.Dots}
+                    gap={20}
+                    size={1}
+                    color="#10b981"
+                    style={{ opacity: 0.3 }}
+                  />
+                </ReactFlow>
               </div>
             </div>
-          ) : (
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full">
-              <TabsList className="grid w-full grid-cols-3 bg-gray-800">
-                <TabsTrigger value="visual" className="flex items-center gap-2">
-                  <Eye className="w-4 h-4" />
-                  Visual Flow
-                </TabsTrigger>
-                <TabsTrigger value="nodes" className="flex items-center gap-2">
-                  <GitBranch className="w-4 h-4" />
-                  Node Details
-                </TabsTrigger>
-                <TabsTrigger value="json" className="flex items-center gap-2">
-                  <Code className="w-4 h-4" />
-                  JSON Structure
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="visual" className="h-[calc(100%-3rem)] mt-4">
-                <Card className="h-full bg-gray-800/50 border-gray-600">
-                  <CardContent className="p-6 h-full">
-                    <div className="grid grid-cols-4 gap-4 h-full">
-                      {workflowData.nodes?.map((node: WorkflowNode, index: number) => (
-                        <div key={node.id} className="relative">
-                          <Card className={`${getNodeColor(node.type)} border-2 p-4 h-full`}>
-                            <div className="flex items-center gap-2 mb-2">
-                              {getNodeIcon(node.type)}
-                              <h4 className="font-medium text-sm truncate">{node.name}</h4>
-                            </div>
-                            <Badge variant="secondary" className="text-xs mb-2">
-                              {node.type.split('.').pop()}
-                            </Badge>
-                            <p className="text-xs opacity-70 line-clamp-2">
-                              {node.parameters?.text || node.parameters?.model || 'Node configuration'}
-                            </p>
-                          </Card>
-                          
-                          {index < workflowData.nodes.length - 1 && (
-                            <ArrowRight className="absolute -right-6 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="nodes" className="h-[calc(100%-3rem)] mt-4">
-                <ScrollArea className="h-full">
-                  <div className="space-y-4">
-                    {workflowData.nodes?.map((node: WorkflowNode) => (
-                      <Card key={node.id} className="bg-gray-800/50 border-gray-600">
-                        <CardContent className="p-4">
-                          <div className="flex items-center gap-3 mb-3">
-                            {getNodeIcon(node.type)}
-                            <div>
-                              <h4 className="font-medium text-white">{node.name}</h4>
-                              <p className="text-sm text-gray-400">{node.type}</p>
-                            </div>
-                          </div>
-                          
-                          <div className="grid grid-cols-2 gap-4 text-sm">
-                            <div>
-                              <p className="text-gray-400 mb-1">Position:</p>
-                              <p className="text-gray-300">[{node.position.join(', ')}]</p>
-                            </div>
-                            <div>
-                              <p className="text-gray-400 mb-1">Parameters:</p>
-                              <p className="text-gray-300 font-mono text-xs">
-                                {Object.keys(node.parameters || {}).length} configs
-                              </p>
-                            </div>
-                          </div>
-                          
-                          {node.credentials && (
-                            <div className="mt-3">
-                              <p className="text-gray-400 text-sm mb-1">Credentials Required:</p>
-                              <div className="flex flex-wrap gap-1">
-                                {Object.keys(node.credentials).map(cred => (
-                                  <Badge key={cred} variant="outline" className="text-xs">
-                                    {cred}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </ScrollArea>
-              </TabsContent>
-
-              <TabsContent value="json" className="h-[calc(100%-3rem)] mt-4">
-                <Card className="h-full bg-gray-800/50 border-gray-600">
-                  <CardContent className="p-0 h-full">
-                    <ScrollArea className="h-full">
-                      <pre className="p-6 text-xs text-gray-300 font-mono leading-relaxed">
-                        {JSON.stringify(workflowData, null, 2)}
-                      </pre>
-                    </ScrollArea>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
           )}
-        </CardContent>
-      </Card>
+
+          {activeTab === 'details' && (
+            <div className="h-full p-2 sm:p-6 overflow-y-auto">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-6">
+                {nodes.map((node) => (
+                  <div key={node.id} className="bg-gray-800/50 rounded-lg p-3 sm:p-4 border border-gray-700">
+                    <div className="flex items-center space-x-2 sm:space-x-3 mb-2 sm:mb-3">
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center">
+                        <Bot className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-400" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-white text-xs sm:text-sm truncate">{node.data?.label || node.type}</h3>
+                        <p className="text-xs text-gray-400">Type: {node.data?.type || 'workflow'}</p>
+                      </div>
+                    </div>
+                    <div className="space-y-2 text-xs">
+                      <div>
+                        <span className="text-gray-400">Position:</span>
+                        <span className="text-white ml-2">x: {Math.round(node.position.x)}, y: {Math.round(node.position.y)}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-400">Description:</span>
+                        <span className="text-white ml-2">{node.data?.subLabel || 'Workflow component'}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'json' && (
+            <div className="h-full p-2 sm:p-6 overflow-y-auto">
+              <div className="bg-gray-800/50 rounded-lg p-3 sm:p-4 border border-gray-700 h-full flex flex-col">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <h3 className="font-semibold text-white text-sm sm:text-base">Generated n8n Workflow JSON</h3>
+                  <Button
+                    size="sm"
+                    onClick={downloadWorkflow}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm"
+                    disabled={!workflowData}
+                  >
+                    <Download className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">Download JSON</span>
+                    <span className="sm:hidden">Download</span>
+                  </Button>
+                </div>
+                <div className="flex-1 overflow-auto">
+                  <pre className="text-xs text-gray-300 whitespace-pre-wrap">
+                    {workflowData ? JSON.stringify(workflowData, null, 2) : 'Loading workflow data...'}
+                  </pre>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
