@@ -175,6 +175,159 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
     handleSendMessage(suggestion);
   };
 
+  const handleCreateAgent = async (message: ChatMessage) => {
+    try {
+      const webhookUrl = 'https://ainomads.app.n8n.cloud/webhook/d832bc01-555e-4a24-a8cc-31db8fc1c816/chat';
+      
+      // Generate comprehensive n8n workflow structure
+      const n8nWorkflowData = {
+        action: 'create_agent_workflow',
+        timestamp: new Date().toISOString(),
+        user: 'ai-nomads-user',
+        agent: {
+          name: extractAgentName(message.content) || 'AI Assistant',
+          description: message.content,
+          category: extractCategory(message.content),
+          tools: tools.length > 0 ? tools : getDefaultTools(message.content),
+          aiModel: 'gpt-4o',
+          systemPrompt: generateSystemPrompt(message.content, tools)
+        },
+        n8nWorkflow: {
+          name: `${extractAgentName(message.content) || 'AI Assistant'} Workflow`,
+          nodes: [
+            {
+              id: 'chat-trigger',
+              name: 'Chat Trigger',
+              type: '@n8n/n8n-nodes-langchain.chatTrigger',
+              position: [300, 300],
+              parameters: {
+                public: true,
+                mode: 'chat'
+              }
+            },
+            {
+              id: 'ai-agent',
+              name: 'AI Agent',
+              type: '@n8n/n8n-nodes-langchain.agent',
+              position: [600, 300],
+              parameters: {
+                agent: 'conversationalAgent',
+                systemMessage: generateSystemPrompt(message.content, tools),
+                maxIterations: 10,
+                tools: generateN8nTools(tools)
+              }
+            },
+            {
+              id: 'memory',
+              name: 'Memory',
+              type: '@n8n/n8n-nodes-langchain.memoryBufferWindow',
+              position: [600, 500],
+              parameters: {
+                sessionIdType: 'fromInput',
+                k: 10
+              }
+            }
+          ],
+          connections: {
+            'Chat Trigger': {
+              main: [[{node: 'AI Agent', type: 'main', index: 0}]]
+            },
+            'Memory': {
+              ai_memory: [[{node: 'AI Agent', type: 'ai_memory', index: 0}]]
+            }
+          }
+        }
+      };
+
+      const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(n8nWorkflowData)
+      });
+
+      if (response.ok) {
+        const botResponse: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          type: 'bot',
+          content: `🎉 Agent workflow created successfully!\n\nWorkflow Details:\n• Name: ${n8nWorkflowData.agent.name}\n• Tools: ${n8nWorkflowData.agent.tools.join(', ')}\n• AI Model: ${n8nWorkflowData.agent.aiModel}\n• Nodes: Chat Trigger → AI Agent → Memory\n\nYour n8n workflow is now ready!`,
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, botResponse]);
+      }
+    } catch (error) {
+      console.error('Error creating agent workflow:', error);
+    }
+  };
+
+  const extractAgentName = (content: string): string => {
+    const lowerContent = content.toLowerCase();
+    if (lowerContent.includes('customer support')) return 'Customer Support Agent';
+    if (lowerContent.includes('data analysis')) return 'Data Analysis Agent';
+    if (lowerContent.includes('content') || lowerContent.includes('writing')) return 'Content Creation Agent';
+    if (lowerContent.includes('schedule') || lowerContent.includes('calendar')) return 'Scheduling Assistant';
+    return 'AI Assistant';
+  };
+
+  const extractCategory = (content: string): string => {
+    const lowerContent = content.toLowerCase();
+    if (lowerContent.includes('customer') || lowerContent.includes('support')) return 'customer-support';
+    if (lowerContent.includes('data') || lowerContent.includes('analysis')) return 'data-analysis';
+    if (lowerContent.includes('content') || lowerContent.includes('writing')) return 'content-creation';
+    if (lowerContent.includes('schedule') || lowerContent.includes('calendar')) return 'productivity';
+    return 'general';
+  };
+
+  const getDefaultTools = (content: string): string[] => {
+    const lowerContent = content.toLowerCase();
+    if (lowerContent.includes('customer') || lowerContent.includes('support')) {
+      return ['Slack', 'Gmail', 'Zendesk'];
+    }
+    if (lowerContent.includes('data') || lowerContent.includes('analysis')) {
+      return ['Google Sheets', 'PostgreSQL', 'OpenAI'];
+    }
+    if (lowerContent.includes('content') || lowerContent.includes('writing')) {
+      return ['OpenAI', 'Google Docs', 'Notion'];
+    }
+    if (lowerContent.includes('schedule') || lowerContent.includes('calendar')) {
+      return ['Google Calendar', 'Gmail', 'Slack'];
+    }
+    return ['OpenAI', 'Gmail'];
+  };
+
+  const generateSystemPrompt = (content: string, tools: string[]): string => {
+    const lowerContent = content.toLowerCase();
+    let basePrompt = `You are an AI assistant created to help users with their tasks. `;
+    
+    if (lowerContent.includes('customer') || lowerContent.includes('support')) {
+      basePrompt += `You specialize in customer support and help resolve customer inquiries professionally and efficiently. You have access to support tools and can escalate issues when needed.`;
+    } else if (lowerContent.includes('data') || lowerContent.includes('analysis')) {
+      basePrompt += `You specialize in data analysis and can help users understand their data, create reports, and generate insights from various data sources.`;
+    } else if (lowerContent.includes('content') || lowerContent.includes('writing')) {
+      basePrompt += `You specialize in content creation and can help write, edit, and optimize various types of content including articles, emails, and marketing materials.`;
+    } else if (lowerContent.includes('schedule') || lowerContent.includes('calendar')) {
+      basePrompt += `You specialize in scheduling and productivity, helping users manage their time, schedule meetings, and organize their workflow efficiently.`;
+    }
+
+    if (tools.length > 0) {
+      basePrompt += `\n\nAvailable tools: ${tools.join(', ')}. Use these tools when appropriate to help users accomplish their goals.`;
+    }
+
+    return basePrompt;
+  };
+
+  const generateN8nTools = (tools: string[]): any[] => {
+    return tools.map(tool => {
+      const toolName = tool.toLowerCase().replace(/\s+/g, '-');
+      return {
+        name: toolName,
+        description: `Integration with ${tool}`,
+        type: 'custom'
+      };
+    });
+  };
+
   const generateAgentResponse = async (userMessage: string): Promise<ChatMessage> => {
     const lowerMessage = userMessage.toLowerCase();
     
@@ -210,7 +363,8 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
             id: Date.now().toString(),
             type: 'bot',
             content: `✅ Agent creation request sent to n8n!\n\nMessage: ${userMessage}\nTools: ${tools.join(', ') || 'None'}\nStatus: Delivered to your workflow${responseText}`,
-            timestamp: new Date()
+            timestamp: new Date(),
+            showCreateButton: true
           };
         } else {
           return {
@@ -464,6 +618,17 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
                       className="w-full bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors font-medium"
                     >
                       Review & Deploy Agent
+                    </button>
+                  </div>
+                )}
+
+                {message.showCreateButton && (
+                  <div className="mt-3">
+                    <button
+                      onClick={() => handleCreateAgent(message)}
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium flex items-center justify-center space-x-2"
+                    >
+                      <span>🚀 Create Agent Now</span>
                     </button>
                   </div>
                 )}
