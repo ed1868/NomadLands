@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Eye, EyeOff, LogIn } from "lucide-react";
 import { useLocation } from "wouter";
 
 export default function SimpleLogin() {
@@ -13,6 +14,7 @@ export default function SimpleLogin() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,66 +97,131 @@ export default function SimpleLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-center text-white">Sign In</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <Label htmlFor="username" className="text-white">Username</Label>
-              <Input
-                id="username"
-                type="text"
-                value={formData.username}
-                onChange={(e) => setFormData({...formData, username: e.target.value})}
-                className="mt-1"
-                required
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="password" className="text-white">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={formData.password}
-                onChange={(e) => setFormData({...formData, password: e.target.value})}
-                className="mt-1"
-                required
-              />
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex items-center justify-center p-4">
+      {/* Background Pattern */}
+      <div className="fixed inset-0 opacity-10">
+        <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.2)_50%,transparent_75%,transparent_100%)] bg-[length:250px_250px]"></div>
+      </div>
 
-            {error && (
-              <div className="text-red-500 text-sm">{error}</div>
-            )}
-
-            <Button 
-              type="submit" 
-              className="w-full" 
-              disabled={loading}
-            >
-              {loading ? "Signing in..." : "Sign In"}
-            </Button>
-          </form>
-
-          <div className="mt-4 space-y-2">
-            <Button 
-              type="button" 
-              variant="outline" 
-              className="w-full"
-              onClick={handleTestLogin}
-            >
-              Fill Test Credentials
-            </Button>
-            <div className="text-sm text-gray-400 text-center">
-              <p>Test credentials:</p>
-              <p>Username: test | Password: testing</p>
+      {/* Main Content */}
+      <div className="relative z-10 w-full max-w-md">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/30 mb-4">
+            <div className="w-8 h-8 rounded-full bg-emerald-500/40 flex items-center justify-center">
+              <div className="w-4 h-4 rounded-full bg-emerald-400"></div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+          <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
+          <p className="text-gray-400">Sign in to your AI Nomads account</p>
+        </div>
+
+        {/* Login Card */}
+        <Card className="bg-black/50 border-gray-800">
+          <CardHeader>
+            <CardTitle className="text-center text-white flex items-center justify-center gap-2">
+              <LogIn className="h-5 w-5" />
+              Sign In
+            </CardTitle>
+            <p className="text-center text-gray-400 text-sm">Enter your credentials to access your command center</p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="username" className="text-gray-300">Username</Label>
+                <Input
+                  id="username"
+                  type="text"
+                  value={formData.username}
+                  onChange={(e) => setFormData({...formData, username: e.target.value})}
+                  placeholder="Enter your username"
+                  className="bg-gray-900/50 border-gray-700 text-white placeholder:text-gray-500"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-gray-300">Password</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={formData.password}
+                    onChange={(e) => setFormData({...formData, password: e.target.value})}
+                    placeholder="Enter your password"
+                    className="bg-gray-900/50 border-gray-700 text-white placeholder:text-gray-500 pr-10"
+                    required
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-1 top-1 h-8 w-8 text-gray-400 hover:text-white"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              {error && (
+                <div className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded p-2">
+                  {error}
+                </div>
+              )}
+
+              <Button 
+                type="submit" 
+                disabled={loading}
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+              >
+                {loading ? "Signing in..." : "Sign In"}
+              </Button>
+            </form>
+
+            {/* Test Login Button */}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-gray-700" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-black/50 px-2 text-gray-400">Quick Test</span>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleTestLogin}
+              disabled={loading}
+              className="w-full border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white"
+            >
+              Login as Test User
+            </Button>
+
+            {/* Test Credentials Info */}
+            <div className="text-center text-sm text-gray-500 space-y-1">
+              <p>Demo Credentials:</p>
+              <p>Username: test</p>
+              <p>Password: testing</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Footer */}
+        <div className="text-center mt-6">
+          <p className="text-gray-500 text-sm">
+            New to AI Nomads?{" "}
+            <a href="/signup" className="text-emerald-400 hover:text-emerald-300 transition-colors">
+              Create an account
+            </a>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
