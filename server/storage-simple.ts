@@ -26,8 +26,6 @@ export interface IStorage {
   updateAgent(id: number, updates: Partial<Agent>): Promise<Agent>;
   getUserCreatedAgents(userId: string): Promise<Agent[]>;
   deleteAgent(id: number): Promise<void>;
-  getUserCreatedAgents(userId: string): Promise<Agent[]>;
-  deleteAgent(id: number): Promise<void>;
   
   // Tags operations (placeholder)
   getAllTags?(): Promise<string[]>;
@@ -134,6 +132,20 @@ export class DatabaseStorage implements IStorage {
       .where(eq(agents.id, id))
       .returning();
     return agent;
+  }
+
+  async getUserCreatedAgents(userId: string): Promise<Agent[]> {
+    if (!userId) return [];
+    
+    return await db
+      .select()
+      .from(agents)
+      .where(eq(agents.createdBy, userId))
+      .orderBy(agents.createdAt);
+  }
+
+  async deleteAgent(id: number): Promise<void> {
+    await db.delete(agents).where(eq(agents.id, id));
   }
 
   // Tags operations placeholder

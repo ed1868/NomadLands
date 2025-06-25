@@ -9,6 +9,7 @@ import { insertUserSchema, type InsertUser } from "@shared/schema-simple";
 import { z } from "zod";
 import { PaymentService } from "./payment-service";
 import { N8nWorkflowGenerator } from "./n8n-generator";
+import { n8nService, N8nAgentRequest } from "./n8n-service";
 import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./paypal";
 import Stripe from "stripe";
 
