@@ -431,6 +431,115 @@ export default function Dashboard() {
   const [agentModalOpen, setAgentModalOpen] = useState(false);
   const [agentModalType, setAgentModalType] = useState<'stats' | 'logs' | 'edit' | null>(null);
   const [agentModalData, setAgentModalData] = useState<any>(null);
+
+  // n8n API Integration Functions
+  const handleRunAgent = async (agent: any) => {
+    try {
+      const response = await fetch(`/api/n8n/workflows/${agent.workflowId}/execute`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('n8n_api_key') || 'demo_key'}`
+        },
+        body: JSON.stringify({
+          input: { message: "Test execution from AI Nomads dashboard" }
+        })
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        toast({
+          title: "Agent Executed",
+          description: `${agent.name} executed successfully! Execution ID: ${result.executionId}`,
+        });
+      } else {
+        toast({
+          title: "Demo Mode",
+          description: `Simulated execution of ${agent.name}. Configure n8n API for live execution.`,
+        });
+      }
+    } catch (error) {
+      console.error('Error executing agent:', error);
+      toast({
+        title: "Demo Mode",
+        description: `Simulated execution of ${agent.name}. Configure n8n API for live execution.`,
+      });
+    }
+  };
+
+  const handleEditAgent = (agent: any) => {
+    setAgentModalType('edit');
+    setAgentModalData(agent);
+    setAgentModalOpen(true);
+  };
+
+  const handleViewStats = async (agent: any) => {
+    try {
+      const response = await fetch(`/api/n8n/workflows/${agent.workflowId}/stats`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('n8n_api_key') || 'demo_key'}`
+        }
+      });
+      
+      const stats = response.ok ? await response.json() : {
+        totalExecutions: agent.runs,
+        successRate: agent.success,
+        averageExecutionTime: '2.3s',
+        lastExecution: '2 hours ago',
+        errorRate: (100 - agent.success).toFixed(1),
+        weeklyTrend: '+12%'
+      };
+      
+      setAgentModalType('stats');
+      setAgentModalData({ agent, stats });
+      setAgentModalOpen(true);
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    }
+  };
+
+  const handleViewLogs = async (agent: any) => {
+    try {
+      const response = await fetch(`/api/n8n/workflows/${agent.workflowId}/executions`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('n8n_api_key') || 'demo_key'}`
+        }
+      });
+      
+      const logs = response.ok ? await response.json() : [
+        {
+          id: 'exec_001',
+          startTime: new Date(Date.now() - 1000 * 60 * 10).toISOString(),
+          endTime: new Date(Date.now() - 1000 * 60 * 9).toISOString(),
+          status: 'success',
+          input: { message: 'Process email batch' },
+          output: { processed: 45, classified: 43, errors: 2 }
+        },
+        {
+          id: 'exec_002',
+          startTime: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
+          endTime: new Date(Date.now() - 1000 * 60 * 29).toISOString(),
+          status: 'error',
+          input: { message: 'Process email batch' },
+          error: 'API rate limit exceeded'
+        },
+        {
+          id: 'exec_003',
+          startTime: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
+          endTime: new Date(Date.now() - 1000 * 60 * 59).toISOString(),
+          status: 'success',
+          input: { message: 'Process email batch' },
+          output: { processed: 52, classified: 52, errors: 0 }
+        }
+      ];
+      
+      setAgentModalType('logs');
+      setAgentModalData({ agent, logs });
+      setAgentModalOpen(true);
+    } catch (error) {
+      console.error('Error fetching logs:', error);
+    }
+  };
   const [departmentCount, setDepartmentCount] = useState<{[key: string]: number}>({
     'Executive Director': 0,
     'Department Manager': 0,
@@ -1987,67 +2096,64 @@ export default function Dashboard() {
                             <p className="text-emerald-400 font-medium">${agent.revenue.toLocaleString()}</p>
                           </div>
                           <div className="col-span-2 lg:col-span-1">
-                            <span className="text-gray-400">Actions:</span>
-                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 mt-1">
+                            <span className="text-gray-400 text-sm font-medium mb-3 block">Quick Actions:</span>
+                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
+                              {/* Primary Actions */}
                               <Button 
                                 variant="outline" 
                                 size="sm" 
-                                className="border-emerald-600 text-emerald-300 hover:bg-emerald-800 h-7 px-1 sm:px-2 text-xs"
+                                className="border-emerald-600/50 text-emerald-300 hover:bg-emerald-900/50 hover:border-emerald-500 h-8 px-3 text-xs transition-all duration-200 flex items-center justify-center gap-2"
                                 onClick={() => setSelectedWorkflowAgent(agent)}
                               >
-                                <Eye className="w-3 h-3 mr-1" />
-                                <span className="hidden sm:inline">View</span>
-                                <span className="sm:hidden">👁</span>
+                                <Eye className="w-3.5 h-3.5" />
+                                <span>View</span>
                               </Button>
                               <Button 
                                 variant="outline" 
                                 size="sm" 
-                                className="border-blue-600 text-blue-300 hover:bg-blue-800 h-7 px-1 sm:px-2 text-xs"
+                                className="border-blue-600/50 text-blue-300 hover:bg-blue-900/50 hover:border-blue-500 h-8 px-3 text-xs transition-all duration-200 flex items-center justify-center gap-2"
                                 onClick={() => setSelectedWorkflowAgent(agent)}
                               >
-                                <Network className="w-3 h-3 mr-1" />
-                                <span className="hidden sm:inline">Flow</span>
-                                <span className="sm:hidden">🔗</span>
+                                <Network className="w-3.5 h-3.5" />
+                                <span>Flow</span>
                               </Button>
                               <Button 
                                 variant="outline" 
                                 size="sm" 
-                                className="border-green-600 text-green-300 hover:bg-green-800 h-7 px-1 sm:px-2 text-xs"
+                                className="border-green-600/50 text-green-300 hover:bg-green-900/50 hover:border-green-500 h-8 px-3 text-xs transition-all duration-200 flex items-center justify-center gap-2"
                                 onClick={() => handleRunAgent(agent)}
                               >
-                                <Play className="w-3 h-3 mr-1" />
-                                <span className="hidden sm:inline">Run</span>
-                                <span className="sm:hidden">▶</span>
+                                <Play className="w-3.5 h-3.5" />
+                                <span>Run</span>
                               </Button>
+                              
+                              {/* Secondary Actions */}
                               <Button 
                                 variant="outline" 
                                 size="sm" 
-                                className="border-orange-600 text-orange-300 hover:bg-orange-800 h-7 px-1 sm:px-2 text-xs"
+                                className="border-orange-600/50 text-orange-300 hover:bg-orange-900/50 hover:border-orange-500 h-8 px-3 text-xs transition-all duration-200 flex items-center justify-center gap-2"
                                 onClick={() => handleEditAgent(agent)}
                               >
-                                <Edit className="w-3 h-3 mr-1" />
-                                <span className="hidden sm:inline">Edit</span>
-                                <span className="sm:hidden">✏</span>
+                                <Edit className="w-3.5 h-3.5" />
+                                <span>Edit</span>
                               </Button>
                               <Button 
                                 variant="outline" 
                                 size="sm" 
-                                className="border-purple-600 text-purple-300 hover:bg-purple-800 h-7 px-1 sm:px-2 text-xs"
+                                className="border-purple-600/50 text-purple-300 hover:bg-purple-900/50 hover:border-purple-500 h-8 px-3 text-xs transition-all duration-200 flex items-center justify-center gap-2"
                                 onClick={() => handleViewStats(agent)}
                               >
-                                <BarChart3 className="w-3 h-3 mr-1" />
-                                <span className="hidden sm:inline">Stats</span>
-                                <span className="sm:hidden">📊</span>
+                                <BarChart3 className="w-3.5 h-3.5" />
+                                <span>Stats</span>
                               </Button>
                               <Button 
                                 variant="outline" 
                                 size="sm" 
-                                className="border-yellow-600 text-yellow-300 hover:bg-yellow-800 h-7 px-1 sm:px-2 text-xs"
+                                className="border-yellow-600/50 text-yellow-300 hover:bg-yellow-900/50 hover:border-yellow-500 h-8 px-3 text-xs transition-all duration-200 flex items-center justify-center gap-2"
                                 onClick={() => handleViewLogs(agent)}
                               >
-                                <FileText className="w-3 h-3 mr-1" />
-                                <span className="hidden sm:inline">Logs</span>
-                                <span className="sm:hidden">📄</span>
+                                <FileText className="w-3.5 h-3.5" />
+                                <span>Logs</span>
                               </Button>
                             </div>
                           </div>
