@@ -177,66 +177,35 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
 
   const handleCreateAgent = async (message: ChatMessage) => {
     try {
+      // Use OpenAI to generate the complete workflow structure
+      const response = await fetch('/api/chat/generate-workflow', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          agentData: message.agentData,
+          tools: tools,
+          conversationHistory: messages.map(m => ({ role: m.type === 'user' ? 'user' : 'assistant', content: m.content }))
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate workflow');
+      }
+
+      const workflowData = await response.json();
+      
       const webhookUrl = 'https://ainomads.app.n8n.cloud/webhook/d832bc01-555e-4a24-a8cc-31db8fc1c816/chat';
       
-      // Generate comprehensive n8n workflow structure
+      // Send comprehensive n8n workflow structure to webhook
       const n8nWorkflowData = {
         action: 'create_agent_workflow',
         timestamp: new Date().toISOString(),
         user: 'ai-nomads-user',
-        agent: {
-          name: extractAgentName(message.content) || 'AI Assistant',
-          description: message.content,
-          category: extractCategory(message.content),
-          tools: tools.length > 0 ? tools : getDefaultTools(message.content),
-          aiModel: 'gpt-4o',
-          systemPrompt: generateSystemPrompt(message.content, tools)
-        },
-        n8nWorkflow: {
-          name: `${extractAgentName(message.content) || 'AI Assistant'} Workflow`,
-          nodes: [
-            {
-              id: 'chat-trigger',
-              name: 'Chat Trigger',
-              type: '@n8n/n8n-nodes-langchain.chatTrigger',
-              position: [300, 300],
-              parameters: {
-                public: true,
-                mode: 'chat'
-              }
-            },
-            {
-              id: 'ai-agent',
-              name: 'AI Agent',
-              type: '@n8n/n8n-nodes-langchain.agent',
-              position: [600, 300],
-              parameters: {
-                agent: 'conversationalAgent',
-                systemMessage: generateSystemPrompt(message.content, tools),
-                maxIterations: 10,
-                tools: generateN8nTools(tools)
-              }
-            },
-            {
-              id: 'memory',
-              name: 'Memory',
-              type: '@n8n/n8n-nodes-langchain.memoryBufferWindow',
-              position: [600, 500],
-              parameters: {
-                sessionIdType: 'fromInput',
-                k: 10
-              }
-            }
-          ],
-          connections: {
-            'Chat Trigger': {
-              main: [[{node: 'AI Agent', type: 'main', index: 0}]]
-            },
-            'Memory': {
-              ai_memory: [[{node: 'AI Agent', type: 'ai_memory', index: 0}]]
-            }
-          }
-        }
+        agent: workflowData.agent,
+        n8nWorkflow: workflowData.n8nWorkflow
       };
 
       const response = await fetch(webhookUrl, {
@@ -247,11 +216,11 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
         body: JSON.stringify(n8nWorkflowData)
       });
 
-      if (response.ok) {
+      if (webhookResponse.ok) {
         const botResponse: ChatMessage = {
           id: (Date.now() + 1).toString(),
           type: 'bot',
-          content: `🎉 Agent workflow created successfully!\n\nWorkflow Details:\n• Name: ${n8nWorkflowData.agent.name}\n• Tools: ${n8nWorkflowData.agent.tools.join(', ')}\n• AI Model: ${n8nWorkflowData.agent.aiModel}\n• Nodes: Chat Trigger → AI Agent → Memory\n\nYour n8n workflow is now ready!`,
+          content: `🎉 Agent workflow created successfully!\n\nWorkflow Details:\n• Name: ${n8nWorkflowData.agent.name}\n• Description: ${n8nWorkflowData.agent.description}\n• Tools: ${n8nWorkflowData.agent.tools?.join(', ') || 'None'}\n• AI Model: ${n8nWorkflowData.agent.aiModel}\n• System Prompt: ${n8nWorkflowData.agent.systemPrompt?.substring(0, 100)}...\n\nYour n8n workflow is now ready!`,
           timestamp: new Date()
         };
         setMessages(prev => [...prev, botResponse]);
@@ -329,61 +298,74 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
   };
 
   const generateAgentResponse = async (userMessage: string): Promise<ChatMessage> => {
-    const lowerMessage = userMessage.toLowerCase();
-    
-    // Check if user wants to create an agent
-    if (lowerMessage.includes('create') && (lowerMessage.includes('agent') || lowerMessage.includes('this'))) {
-      try {
-        // Send directly to n8n webhook
-        const webhookUrl = 'https://ainomads.app.n8n.cloud/webhook/d832bc01-555e-4a24-a8cc-31db8fc1c816/chat';
-        const response = await fetch(webhookUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            message: userMessage,
-            tools: tools,
-            timestamp: new Date().toISOString(),
-            user: 'ai-nomads-user',
-            action: 'create_agent'
-          })
-        });
+    try {
+      // Use OpenAI to generate intelligent responses and gather agent requirements
+      const response = await fetch('/api/chat/openai', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          tools: tools,
+          conversationHistory: messages.map(m => ({ role: m.type === 'user' ? 'user' : 'assistant', content: m.content }))
+        })
+      });
 
-        if (response.ok) {
-          let responseText = '';
-          try {
-            const result = await response.text();
-            responseText = result ? `\n\nn8n Response: ${result}` : '';
-          } catch (e) {
-            // Response might be empty, that's fine
-          }
-          
-          return {
-            id: Date.now().toString(),
-            type: 'bot',
-            content: `✅ Agent creation request sent to n8n!\n\nMessage: ${userMessage}\nTools: ${tools.join(', ') || 'None'}\nStatus: Delivered to your workflow${responseText}`,
-            timestamp: new Date(),
-            showCreateButton: true
-          };
-        } else {
-          return {
-            id: Date.now().toString(),
-            type: 'bot',
-            content: `Failed to send to n8n webhook (status: ${response.status}). Please check your network connection and try again.`,
-            timestamp: new Date()
-          };
-        }
-      } catch (error) {
-        console.error('Failed to create agent:', error);
+      if (response.ok) {
+        const result = await response.json();
+        
         return {
           id: Date.now().toString(),
           type: 'bot',
-          content: "I'm sorry, I couldn't create the agent right now. There might be an issue with the n8n integration. Please try again or contact support if the problem persists.",
-          timestamp: new Date()
+          content: result.response,
+          timestamp: new Date(),
+          suggestions: result.suggestions,
+          showCreateButton: result.readyToCreate || false,
+          agentData: result.agentData || null
         };
+      } else {
+        throw new Error('OpenAI API failed');
       }
+    } catch (error) {
+      console.error('Error with OpenAI response:', error);
+      // Fallback to simple responses
+      return generateFallbackResponse(userMessage);
     }
+  };
+
+  const generateFallbackResponse = (userMessage: string): ChatMessage => {
+    const lowerMessage = userMessage.toLowerCase();
+    
+    if (lowerMessage.includes('customer support') || lowerMessage.includes('help desk')) {
+      return {
+        id: Date.now().toString(),
+        type: 'bot',
+        content: "I can help you design a Customer Support Agent! To create the best agent, I need to know more. What specific customer support tasks should it handle?",
+        timestamp: new Date(),
+        suggestions: [
+          "Handle ticket routing and responses",
+          "Integrate with Slack and email",
+          "Escalate complex issues to humans",
+          "Provide 24/7 basic support"
+        ]
+      };
+    }
+
+    return {
+      id: Date.now().toString(),
+      type: 'bot',
+      content: "I'm here to help you create an AI agent. Please tell me what kind of agent you'd like to build and what it should do.",
+      timestamp: new Date(),
+      suggestions: [
+        "Create a customer support agent",
+        "Build a data analysis agent", 
+        "Make a content creation agent",
+        "Design a scheduling assistant"
+      ]
+    };
+  };
     
     // This should never be reached since we're sending everything to webhook above
     // But kept as fallback

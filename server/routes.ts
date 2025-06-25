@@ -1114,6 +1114,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Chat agent creation endpoint
+  // OpenAI-powered chat endpoints
+  app.post("/api/chat/openai", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { openaiChatService } = await import('./openai-chat');
+      const result = await openaiChatService.generateAgentResponse(req.body);
+      res.json(result);
+    } catch (error) {
+      console.error('OpenAI chat error:', error);
+      res.status(500).json({ message: 'Failed to generate response' });
+    }
+  });
+
+  app.post("/api/chat/generate-workflow", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { openaiChatService } = await import('./openai-chat');
+      const result = await openaiChatService.generateWorkflow(
+        req.body.agentData, 
+        req.body.tools, 
+        req.body.conversationHistory
+      );
+      res.json(result);
+    } catch (error) {
+      console.error('Workflow generation error:', error);
+      res.status(500).json({ message: 'Failed to generate workflow' });
+    }
+  });
+
   app.post("/api/chat/create-agent", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
       const { message, userRequirements } = req.body;
