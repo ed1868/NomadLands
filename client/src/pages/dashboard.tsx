@@ -1948,60 +1948,62 @@ export default function Dashboard() {
                 <CardContent>
                   <div className="space-y-4">
                     {mockUserAgents.map((agent) => (
-                      <div key={agent.id} className="p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
-                        <div className="flex items-center justify-between mb-3">
+                      <div key={agent.id} className="p-3 sm:p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 space-y-2 sm:space-y-0">
                           <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
-                              <Bot className="w-5 h-5 text-emerald-500" />
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                              <Bot className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
                             </div>
-                            <div>
-                              <h4 className="text-white font-semibold">{agent.name}</h4>
-                              <p className="text-gray-400 text-sm">{agent.category} • Uploaded {agent.uploaded}</p>
+                            <div className="flex-1 min-w-0">
+                              <h4 className="text-white font-semibold text-sm sm:text-base truncate">{agent.name}</h4>
+                              <p className="text-gray-400 text-xs sm:text-sm truncate">{agent.category} • Uploaded {agent.uploaded}</p>
                             </div>
                           </div>
                           <Badge 
-                            className={
+                            className={`${
                               agent.status === 'Active' 
                                 ? "bg-emerald-600 text-white"
                                 : "bg-gray-600 text-white"
-                            }
+                            } text-xs shrink-0`}
                           >
                             {agent.status}
                           </Badge>
                         </div>
-                        <div className="grid grid-cols-4 gap-4 text-sm">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 text-xs sm:text-sm">
                           <div>
                             <span className="text-gray-400">Runs:</span>
-                            <p className="text-white">{agent.runs.toLocaleString()}</p>
+                            <p className="text-white font-medium">{agent.runs.toLocaleString()}</p>
                           </div>
                           <div>
                             <span className="text-gray-400">Success Rate:</span>
-                            <p className="text-emerald-400">{agent.success}%</p>
+                            <p className="text-emerald-400 font-medium">{agent.success}%</p>
                           </div>
                           <div>
                             <span className="text-gray-400">Revenue:</span>
-                            <p className="text-emerald-400">${agent.revenue.toLocaleString()}</p>
+                            <p className="text-emerald-400 font-medium">${agent.revenue.toLocaleString()}</p>
                           </div>
-                          <div>
+                          <div className="col-span-2 lg:col-span-1">
                             <span className="text-gray-400">Actions:</span>
-                            <div className="flex space-x-2">
+                            <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-2 mt-1">
                               <Button 
                                 variant="outline" 
                                 size="sm" 
-                                className="border-emerald-600 text-emerald-300 hover:bg-emerald-800 h-7 px-3"
+                                className="border-emerald-600 text-emerald-300 hover:bg-emerald-800 h-7 px-2 sm:px-3 text-xs"
                                 onClick={() => setSelectedWorkflowAgent(agent)}
                               >
                                 <Eye className="w-3 h-3 mr-1" />
-                                View Agent
+                                <span className="hidden sm:inline">View Agent</span>
+                                <span className="sm:hidden">View</span>
                               </Button>
                               <Button 
                                 variant="outline" 
                                 size="sm" 
-                                className="border-blue-600 text-blue-300 hover:bg-blue-800 h-7 px-3"
+                                className="border-blue-600 text-blue-300 hover:bg-blue-800 h-7 px-2 sm:px-3 text-xs"
                                 onClick={() => setSelectedWorkflowAgent(agent)}
                               >
                                 <Network className="w-3 h-3 mr-1" />
-                                Workflow
+                                <span className="hidden sm:inline">Workflow</span>
+                                <span className="sm:hidden">Flow</span>
                               </Button>
                             </div>
                           </div>

@@ -6,7 +6,9 @@ import ReactFlow, {
   Node,
   Edge,
   BackgroundVariant,
-  MarkerType
+  MarkerType,
+  Handle,
+  Position
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { Card, CardContent } from "@/components/ui/card";
@@ -30,7 +32,7 @@ interface WorkflowVisualizationProps {
   onClose: () => void;
 }
 
-// Custom node component for workflow visualization
+// Custom node component for workflow visualization with proper handles
 const WorkflowNode = ({ data }: { data: any }) => {
   const getNodeIcon = (type: string) => {
     switch (type) {
@@ -53,7 +55,17 @@ const WorkflowNode = ({ data }: { data: any }) => {
   };
 
   return (
-    <div className={`px-3 py-2 shadow-lg rounded-lg bg-gradient-to-r ${getNodeColor(data.type)} border border-white/20 min-w-[120px] max-w-[200px]`}>
+    <div className={`relative px-3 py-2 shadow-lg rounded-lg bg-gradient-to-r ${getNodeColor(data.type)} border border-white/20 min-w-[120px] max-w-[200px]`}>
+      {/* Input Handle */}
+      {data.type !== 'chatTrigger' && (
+        <Handle
+          type="target"
+          position={Position.Left}
+          className="w-3 h-3 bg-emerald-500 border-2 border-emerald-300 shadow-lg shadow-emerald-500/50"
+          style={{ background: '#10b981', left: -6 }}
+        />
+      )}
+      
       <div className="flex items-center space-x-2">
         <div className="text-white">
           {getNodeIcon(data.type)}
@@ -63,6 +75,14 @@ const WorkflowNode = ({ data }: { data: any }) => {
           <div className="text-xs opacity-80 truncate">{data.subLabel}</div>
         </div>
       </div>
+
+      {/* Output Handle */}
+      <Handle
+        type="source"
+        position={Position.Right}
+        className="w-3 h-3 bg-emerald-500 border-2 border-emerald-300 shadow-lg shadow-emerald-500/50"
+        style={{ background: '#10b981', right: -6 }}
+      />
     </div>
   );
 };
@@ -76,139 +96,69 @@ export default function WorkflowVisualization({ agent, onClose }: WorkflowVisual
   const [workflowData, setWorkflowData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
-  // Generate sample workflow nodes and edges for demonstration
-  const generateSampleWorkflow = () => {
-    const nodes: Node[] = [
-      {
-        id: '1',
-        type: 'workflowNode',
-        position: { x: 50, y: 100 },
-        data: { 
-          label: 'Chat Trigger', 
-          subLabel: 'Start conversation',
-          type: 'chatTrigger'
-        },
-      },
-      {
-        id: '2',
-        type: 'workflowNode',
-        position: { x: 250, y: 50 },
-        data: { 
-          label: 'Memory Buffer', 
-          subLabel: 'Store context',
-          type: 'memory'
-        },
-      },
-      {
-        id: '3',
-        type: 'workflowNode',
-        position: { x: 450, y: 100 },
-        data: { 
-          label: 'GPT-4o Model', 
-          subLabel: 'AI Processing',
-          type: 'ai'
-        },
-      },
-      {
-        id: '4',
-        type: 'workflowNode',
-        position: { x: 250, y: 200 },
-        data: { 
-          label: 'Gmail Tool', 
-          subLabel: 'Email integration',
-          type: 'tool'
-        },
-      },
-      {
-        id: '5',
-        type: 'workflowNode',
-        position: { x: 450, y: 250 },
-        data: { 
-          label: 'Slack Tool', 
-          subLabel: 'Team messaging',
-          type: 'tool'
-        },
-      },
-      {
-        id: '6',
-        type: 'workflowNode',
-        position: { x: 650, y: 150 },
-        data: { 
-          label: 'Output Parser', 
-          subLabel: 'Format response',
-          type: 'tool'
-        },
-      },
-    ];
+  // Convert n8n workflow JSON to ReactFlow nodes and edges
+  const convertWorkflowToReactFlow = (workflow: any) => {
+    if (!workflow || !workflow.nodes) return { nodes: [], edges: [] };
 
-    const edges: Edge[] = [
-      {
-        id: 'e1-2',
-        source: '1',
-        target: '2',
-        type: 'smoothstep',
-        markerEnd: { type: MarkerType.ArrowClosed },
-        style: { stroke: '#10b981', strokeWidth: 2 }
-      },
-      {
-        id: 'e1-3',
-        source: '1',
-        target: '3',
-        type: 'smoothstep',
-        markerEnd: { type: MarkerType.ArrowClosed },
-        style: { stroke: '#10b981', strokeWidth: 2 }
-      },
-      {
-        id: 'e2-3',
-        source: '2',
-        target: '3',
-        type: 'smoothstep',
-        markerEnd: { type: MarkerType.ArrowClosed },
-        style: { stroke: '#10b981', strokeWidth: 2 }
-      },
-      {
-        id: 'e3-4',
-        source: '3',
-        target: '4',
-        type: 'smoothstep',
-        markerEnd: { type: MarkerType.ArrowClosed },
-        style: { stroke: '#10b981', strokeWidth: 2 }
-      },
-      {
-        id: 'e3-5',
-        source: '3',
-        target: '5',
-        type: 'smoothstep',
-        markerEnd: { type: MarkerType.ArrowClosed },
-        style: { stroke: '#10b981', strokeWidth: 2 }
-      },
-      {
-        id: 'e4-6',
-        source: '4',
-        target: '6',
-        type: 'smoothstep',
-        markerEnd: { type: MarkerType.ArrowClosed },
-        style: { stroke: '#10b981', strokeWidth: 2 }
-      },
-      {
-        id: 'e5-6',
-        source: '5',
-        target: '6',
-        type: 'smoothstep',
-        markerEnd: { type: MarkerType.ArrowClosed },
-        style: { stroke: '#10b981', strokeWidth: 2 }
-      },
-    ];
+    const nodes: Node[] = workflow.nodes.map((node: any) => {
+      const getNodeType = (n8nType: string) => {
+        if (n8nType.includes('chatTrigger')) return 'chatTrigger';
+        if (n8nType.includes('lmOpenAi') || n8nType.includes('ai')) return 'ai';
+        if (n8nType.includes('memory') || n8nType.includes('buffer')) return 'memory';
+        return 'tool';
+      };
+
+      return {
+        id: node.id,
+        type: 'workflowNode',
+        position: { x: node.position[0], y: node.position[1] },
+        data: {
+          label: node.name,
+          subLabel: node.type.split('.').pop() || 'Node',
+          type: getNodeType(node.type),
+          parameters: node.parameters
+        },
+      };
+    });
+
+    const edges: Edge[] = [];
+    if (workflow.connections) {
+      Object.entries(workflow.connections).forEach(([sourceNodeName, connections]: [string, any]) => {
+        const sourceNode = workflow.nodes.find((n: any) => n.name === sourceNodeName);
+        if (!sourceNode) return;
+
+        connections.main?.[0]?.forEach((connection: any, index: number) => {
+          const targetNode = workflow.nodes.find((n: any) => n.name === connection.node);
+          if (targetNode) {
+            edges.push({
+              id: `${sourceNode.id}-${targetNode.id}-${index}`,
+              source: sourceNode.id,
+              target: targetNode.id,
+              type: 'smoothstep',
+              markerEnd: { type: MarkerType.ArrowClosed },
+              style: { stroke: '#10b981', strokeWidth: 2 }
+            });
+          }
+        });
+      });
+    }
 
     return { nodes, edges };
   };
 
-  const { nodes, edges } = generateSampleWorkflow();
+  const [reactFlowData, setReactFlowData] = useState<{ nodes: Node[], edges: Edge[] }>({ nodes: [], edges: [] });
+
+  useEffect(() => {
+    if (workflowData) {
+      const { nodes, edges } = convertWorkflowToReactFlow(workflowData);
+      setReactFlowData({ nodes, edges });
+    }
+  }, [workflowData]);
 
   const generateWorkflow = async () => {
     setLoading(true);
     try {
-      // Simulate API call - using agent data to generate realistic workflow
+      // Generate realistic n8n workflow based on agent
       const mockWorkflow = {
         name: `${agent.name} Workflow`,
         nodes: [
@@ -216,20 +166,69 @@ export default function WorkflowVisualization({ agent, onClose }: WorkflowVisual
             parameters: {},
             type: "@n8n/n8n-nodes-langchain.chatTrigger",
             typeVersion: 1.1,
-            position: [460, 460],
-            id: "1234-5678-9abc",
+            position: [50, 100],
+            id: "chat-trigger-1",
             name: "Chat Trigger",
           },
           {
             parameters: {
+              sessionIdTemplate: "{{ $json.sessionId }}",
+              maxTokensToSample: 4000,
+              temperature: 0.7
+            },
+            type: "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+            typeVersion: 1,
+            position: [250, 50],
+            id: "memory-buffer-2",
+            name: "Memory Buffer",
+          },
+          {
+            parameters: {
               model: "gpt-4o",
-              options: {}
+              options: {
+                temperature: 0.7,
+                maxTokens: 2000
+              }
             },
             type: "@n8n/n8n-nodes-langchain.lmOpenAi",
             typeVersion: 1,
-            position: [680, 460],
-            id: "2345-6789-abcd",
+            position: [450, 100],
+            id: "gpt4o-model-3",
             name: "OpenAI GPT-4o",
+          },
+          {
+            parameters: {
+              authentication: "serviceAccount",
+              resource: "message",
+              operation: "send"
+            },
+            type: "@n8n/n8n-nodes-langchain.toolGmail",
+            typeVersion: 1,
+            position: [250, 200],
+            id: "gmail-tool-4",
+            name: "Gmail Tool",
+          },
+          {
+            parameters: {
+              authentication: "accessToken",
+              resource: "message",
+              operation: "post"
+            },
+            type: "@n8n/n8n-nodes-langchain.toolSlack",
+            typeVersion: 1,
+            position: [450, 250],
+            id: "slack-tool-5",
+            name: "Slack Tool",
+          },
+          {
+            parameters: {
+              options: {}
+            },
+            type: "@n8n/n8n-nodes-langchain.outputParserStructured",
+            typeVersion: 1,
+            position: [650, 150],
+            id: "output-parser-6",
+            name: "Output Parser",
           }
         ],
         connections: {
@@ -237,13 +236,67 @@ export default function WorkflowVisualization({ agent, onClose }: WorkflowVisual
             main: [
               [
                 {
-                  node: "OpenAI GPT-4o",
+                  node: "Memory Buffer",
                   type: "main",
                   index: 0,
                 },
+                {
+                  node: "OpenAI GPT-4o",
+                  type: "main",
+                  index: 0,
+                }
               ],
             ],
           },
+          "Memory Buffer": {
+            main: [
+              [
+                {
+                  node: "OpenAI GPT-4o",
+                  type: "main",
+                  index: 0,
+                }
+              ],
+            ],
+          },
+          "OpenAI GPT-4o": {
+            main: [
+              [
+                {
+                  node: "Gmail Tool",
+                  type: "main",
+                  index: 0,
+                },
+                {
+                  node: "Slack Tool",
+                  type: "main",
+                  index: 0,
+                }
+              ],
+            ],
+          },
+          "Gmail Tool": {
+            main: [
+              [
+                {
+                  node: "Output Parser",
+                  type: "main",
+                  index: 0,
+                }
+              ],
+            ],
+          },
+          "Slack Tool": {
+            main: [
+              [
+                {
+                  node: "Output Parser",
+                  type: "main",
+                  index: 0,
+                }
+              ],
+            ],
+          }
         },
         meta: {
           templateCredsSetupCompleted: true,
@@ -333,8 +386,8 @@ export default function WorkflowVisualization({ agent, onClose }: WorkflowVisual
             <div className="h-full p-2 sm:p-6">
               <div className="h-full border border-gray-700 rounded-lg bg-gray-800/30">
                 <ReactFlow
-                  nodes={nodes}
-                  edges={edges}
+                  nodes={reactFlowData.nodes}
+                  edges={reactFlowData.edges}
                   nodeTypes={nodeTypes}
                   fitView
                   attributionPosition="bottom-left"
@@ -363,7 +416,7 @@ export default function WorkflowVisualization({ agent, onClose }: WorkflowVisual
           {activeTab === 'details' && (
             <div className="h-full p-2 sm:p-6 overflow-y-auto">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-6">
-                {nodes.map((node) => (
+                {reactFlowData.nodes.map((node) => (
                   <div key={node.id} className="bg-gray-800/50 rounded-lg p-3 sm:p-4 border border-gray-700">
                     <div className="flex items-center space-x-2 sm:space-x-3 mb-2 sm:mb-3">
                       <div className="w-6 h-6 sm:w-8 sm:h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center">
