@@ -133,6 +133,8 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
 
   const handleCreateAgent = async (message: ChatMessage) => {
     try {
+      setIsLoading(true);
+      
       const workflowResponse = await fetch('/api/chat/generate-workflow', {
         method: 'POST',
         headers: {
@@ -171,17 +173,59 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
       });
 
       if (webhookResult.ok) {
-        const botResponse: ChatMessage = {
-          id: (Date.now() + 1).toString(),
-          type: 'bot',
-          content: `Agent workflow created successfully!\n\nWorkflow Details:\n• Name: ${n8nWorkflowData.agent.name}\n• Description: ${n8nWorkflowData.agent.description}\n• Tools: ${n8nWorkflowData.agent.tools?.join(', ') || 'None'}\n• AI Model: ${n8nWorkflowData.agent.aiModel}\n• System Prompt: ${n8nWorkflowData.agent.systemPrompt?.substring(0, 100)}...\n\nYour n8n workflow is now ready!`,
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, botResponse]);
+        // Show success popup with approval
+        showAgentApprovalPopup(n8nWorkflowData);
       }
     } catch (error) {
       console.error('Error creating agent workflow:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create agent. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const showAgentApprovalPopup = (workflowData: any) => {
+    // Create and show a modal with agent details and JSON
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+    modal.innerHTML = `
+      <div class="bg-gray-900 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+        <h2 class="text-xl font-bold text-white mb-4">Agent Created Successfully!</h2>
+        <div class="space-y-4">
+          <div>
+            <h3 class="text-lg font-semibold text-emerald-400">Agent Details:</h3>
+            <div class="bg-black/30 rounded p-4 mt-2">
+              <p class="text-gray-300"><strong>Name:</strong> ${workflowData.agent.name}</p>
+              <p class="text-gray-300"><strong>Description:</strong> ${workflowData.agent.description}</p>
+              <p class="text-gray-300"><strong>Tools:</strong> ${workflowData.agent.tools?.join(', ') || 'None'}</p>
+              <p class="text-gray-300"><strong>Status:</strong> <span class="text-yellow-400">Pending Review</span></p>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-emerald-400">Webhook Data Sent:</h3>
+            <pre class="bg-black/30 rounded p-4 mt-2 text-xs text-gray-300 overflow-x-auto">${JSON.stringify(workflowData, null, 2)}</pre>
+          </div>
+          <div class="flex gap-3">
+            <button onclick="window.location.href='/agents'" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded transition-colors">
+              View My Agents
+            </button>
+            <button onclick="this.closest('.fixed').remove()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition-colors">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    // Auto-redirect after 10 seconds
+    setTimeout(() => {
+      window.location.href = '/agents';
+    }, 10000);
   };
 
   const generateAgentResponse = async (userMessage: string): Promise<ChatMessage> => {
