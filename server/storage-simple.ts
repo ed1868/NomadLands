@@ -166,8 +166,12 @@ export class DatabaseStorage implements IStorage {
           category: "productivity",
           price: "15.00",
           features: ["Email categorization", "Priority scoring", "Auto-labeling", "Smart filtering"],
+          tools: ["email", "classification", "automation"],
           aiModel: "gpt-4o",
           systemPrompt: "You are an email classification agent that helps users organize and prioritize their emails efficiently.",
+          tags: ["email", "productivity", "automation"],
+          createdBy: "system",
+          isActive: true,
           styling: {
             gradientFrom: "#3b82f6",
             gradientTo: "#1d4ed8"
@@ -179,8 +183,12 @@ export class DatabaseStorage implements IStorage {
           category: "development",
           price: "25.00",
           features: ["Cost optimization", "Resource monitoring", "Auto-scaling", "Multi-cloud support"],
+          tools: ["aws", "azure", "gcp", "monitoring"],
           aiModel: "gpt-4o",
           systemPrompt: "You are a cloud resource management agent that helps optimize infrastructure costs and performance.",
+          tags: ["cloud", "development", "optimization"],
+          createdBy: "system",
+          isActive: true,
           styling: {
             gradientFrom: "#10b981",
             gradientTo: "#059669"
