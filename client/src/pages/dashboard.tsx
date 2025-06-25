@@ -68,7 +68,8 @@ import {
   ChevronRight,
   Menu,
   Globe,
-  Plus
+  Plus,
+  MessageSquare
 } from "lucide-react";
 
 // Custom Agent Node Component with visible handles and click functionality
