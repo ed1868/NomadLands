@@ -20,21 +20,7 @@ export default function Login() {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: typeof loginData) => {
-      const response = await fetch("/api/auth/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
-        credentials: "include"
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Login failed");
-      }
-      
-      return response.json();
+      return await apiRequest("POST", "/api/auth/signin", credentials);
     },
     onSuccess: (data) => {
       console.log("Login successful:", data);
@@ -81,14 +67,12 @@ export default function Login() {
   };
 
   const handleTestLogin = () => {
-    setLoginData({
+    const testCredentials = {
       username: "test",
       password: "testing",
-    });
-    loginMutation.mutate({
-      username: "test",
-      password: "testing",
-    });
+    };
+    setLoginData(testCredentials);
+    loginMutation.mutate(testCredentials);
   };
 
   return (

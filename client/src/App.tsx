@@ -26,6 +26,7 @@ function Router() {
       <Route path="/api-docs" component={ApiDocs} />
       <Route path="/signup" component={Signup} />
       <Route path="/signin" component={SignIn} />
+      <Route path="/login" component={SignIn} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/deploy" component={Deploy} />
       <Route component={NotFound} />
