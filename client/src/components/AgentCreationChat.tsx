@@ -20,13 +20,15 @@ import {
   X
 } from "lucide-react";
 
-interface ChatMessage {
+export interface ChatMessage {
   id: string;
   type: 'user' | 'bot' | 'system';
   content: string;
   timestamp: Date;
   suggestions?: string[];
   agentConfig?: any;
+  showCreateButton?: boolean;
+  agentData?: any;
 }
 
 interface AgentCreationChatProps {
