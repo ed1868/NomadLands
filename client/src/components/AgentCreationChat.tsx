@@ -242,7 +242,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
             <pre class="bg-black/30 rounded p-4 mt-2 text-xs text-gray-300 overflow-x-auto">${JSON.stringify(workflowData, null, 2)}</pre>
           </div>
           <div class="flex gap-3">
-            <button onclick="window.location.href='/agents'" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded transition-colors">
+            <button onclick="window.location.reload()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded transition-colors">
               View My Agents
             </button>
             <button onclick="this.closest('.fixed').remove()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition-colors">
@@ -254,10 +254,10 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
     `;
     document.body.appendChild(modal);
 
-    // Auto-redirect after 10 seconds
+    // Auto-redirect after 5 seconds  
     setTimeout(() => {
-      window.location.href = '/agents';
-    }, 5000);
+      window.location.reload(); // Reload dashboard to show new agent
+    }, 3000);
   };
 
   const generateAgentResponse = async (userMessage: string): Promise<ChatMessage> => {
