@@ -54,13 +54,37 @@ const WorkflowNode = ({ data }: { data: any }) => {
     }
   };
 
+  // Sticky Note component
+  if (data.type === 'stickyNote') {
+    return (
+      <div 
+        className="relative bg-yellow-100 border-2 border-yellow-300 rounded-lg shadow-lg cursor-pointer hover:scale-105 transition-transform duration-200"
+        style={{ 
+          width: data.parameters?.width || 300, 
+          height: data.parameters?.height || 150,
+          backgroundColor: data.parameters?.color === 4 ? '#fef3c7' : 
+                          data.parameters?.color === 6 ? '#e0f2fe' : 
+                          data.parameters?.color === 5 ? '#f3e8ff' : 
+                          data.parameters?.color === 2 ? '#f0f9ff' : '#fef3c7'
+        }}
+        onClick={() => data.onNodeClick?.(data)}
+      >
+        <div className="p-3 h-full overflow-y-auto">
+          <div className="text-gray-800 text-sm leading-relaxed whitespace-pre-wrap">
+            {data.parameters?.content || data.label}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div 
       className={`relative px-3 py-2 shadow-lg rounded-lg bg-gradient-to-r ${getNodeColor(data.type)} border border-white/20 min-w-[120px] max-w-[200px] cursor-pointer hover:scale-105 transition-transform duration-200`}
       onClick={() => data.onNodeClick?.(data)}
     >
       {/* Input Handle */}
-      {data.type !== 'chatTrigger' && (
+      {data.type !== 'chatTrigger' && data.type !== 'stickyNote' && (
         <Handle
           type="target"
           position={Position.Left}
@@ -80,12 +104,14 @@ const WorkflowNode = ({ data }: { data: any }) => {
       </div>
 
       {/* Output Handle */}
-      <Handle
-        type="source"
-        position={Position.Right}
-        className="w-3 h-3 bg-emerald-500 border-2 border-emerald-300 shadow-lg shadow-emerald-500/50"
-        style={{ background: '#10b981', right: -6 }}
-      />
+      {data.type !== 'stickyNote' && (
+        <Handle
+          type="source"
+          position={Position.Right}
+          className="w-3 h-3 bg-emerald-500 border-2 border-emerald-300 shadow-lg shadow-emerald-500/50"
+          style={{ background: '#10b981', right: -6 }}
+        />
+      )}
     </div>
   );
 };
@@ -364,6 +390,59 @@ export default function WorkflowVisualization({ agent, onClose }: WorkflowVisual
                 name: "n8n account"
               }
             }
+          },
+          // Sticky Notes for documentation
+          {
+            parameters: {
+              content: "# n8n Developer Agent\n\nThis workflow creates AI agents that can build other n8n workflows automatically.",
+              height: 280,
+              width: 660,
+              color: 4
+            },
+            type: "n8n-nodes-base.stickyNote",
+            typeVersion: 1,
+            position: [-576, -100],
+            id: "sticky-note-header",
+            name: "Header Info"
+          },
+          {
+            parameters: {
+              content: "## Brain\n\nAI processing with OpenAI and Claude models for intelligent workflow generation.",
+              height: 200,
+              width: 320,
+              color: 6
+            },
+            type: "n8n-nodes-base.stickyNote",
+            typeVersion: 1,
+            position: [-560, 200],
+            id: "sticky-note-brain",
+            name: "Brain Section"
+          },
+          {
+            parameters: {
+              content: "## Tool\n\nDeveloper tools for workflow creation and file processing.",
+              height: 200,
+              width: 320,
+              color: 5
+            },
+            type: "n8n-nodes-base.stickyNote",
+            typeVersion: 1,
+            position: [-200, 200],
+            id: "sticky-note-tool",
+            name: "Tool Section"
+          },
+          {
+            parameters: {
+              content: "# Workflow Builder\n\nCore workflow generation system with Claude Opus 4 and n8n API integration.",
+              height: 440,
+              width: 1540,
+              color: 2
+            },
+            type: "n8n-nodes-base.stickyNote",
+            typeVersion: 1,
+            position: [-560, 420],
+            id: "sticky-note-builder",
+            name: "Workflow Builder Section"
           }
         ],
         connections: {
