@@ -11,7 +11,7 @@ interface Agent {
   name: string;
   description: string;
   category: string;
-  status: 'pending' | 'approved' | 'rejected' | 'active';
+  deploymentStatus: 'pending' | 'approved' | 'rejected' | 'deployed';
   tools: string[];
   createdAt: string;
   runs?: number;
@@ -31,16 +31,16 @@ export default function MyAgentsSection() {
   const filteredAgents = agents.filter((agent: Agent) => {
     const matchesSearch = agent.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          agent.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "all" || agent.status === statusFilter;
+    const matchesStatus = statusFilter === "all" || agent.deploymentStatus === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
+  const getStatusIcon = (deploymentStatus: string) => {
+    switch (deploymentStatus) {
       case 'pending':
         return <Clock className="w-4 h-4 text-yellow-500" />;
       case 'approved':
-      case 'active':
+      case 'deployed':
         return <CheckCircle className="w-4 h-4 text-green-500" />;
       case 'rejected':
         return <XCircle className="w-4 h-4 text-red-500" />;
@@ -49,12 +49,12 @@ export default function MyAgentsSection() {
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
+  const getStatusColor = (deploymentStatus: string) => {
+    switch (deploymentStatus) {
       case 'pending':
         return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
       case 'approved':
-      case 'active':
+      case 'deployed':
         return 'bg-green-500/20 text-green-300 border-green-500/30';
       case 'rejected':
         return 'bg-red-500/20 text-red-300 border-red-500/30';
@@ -175,9 +175,9 @@ export default function MyAgentsSection() {
                     </Badge>
                   </div>
                   <div className="flex items-center space-x-2">
-                    {getStatusIcon(agent.status)}
-                    <Badge className={`text-xs ${getStatusColor(agent.status)}`}>
-                      {agent.status === 'approved' ? 'Active' : agent.status.charAt(0).toUpperCase() + agent.status.slice(1)}
+                    {getStatusIcon(agent.deploymentStatus)}
+                    <Badge className={`text-xs ${getStatusColor(agent.deploymentStatus)}`}>
+                      {agent.deploymentStatus === 'approved' ? 'Active' : agent.deploymentStatus?.charAt(0).toUpperCase() + agent.deploymentStatus?.slice(1)}
                     </Badge>
                   </div>
                 </div>
@@ -238,7 +238,7 @@ export default function MyAgentsSection() {
                     size="sm" 
                     variant="outline" 
                     className="text-xs bg-gray-700/50 hover:bg-gray-700"
-                    disabled={agent.status !== 'approved' && agent.status !== 'active'}
+                    disabled={agent.deploymentStatus !== 'approved' && agent.deploymentStatus !== 'deployed'}
                   >
                     Run
                   </Button>

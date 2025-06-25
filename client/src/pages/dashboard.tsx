@@ -72,6 +72,9 @@ import {
   Plus,
   MessageSquare
 } from "lucide-react";
+import AgentCreationChat from "@/components/AgentCreationChat";
+import BrainVisualization from "@/components/BrainVisualization";
+import MyAgentsSection from "@/components/MyAgentsSection";
 
 // Custom Agent Node Component with visible handles and click functionality
 const AgentNode = ({ data }: { data: any }) => {
@@ -418,6 +421,13 @@ export default function Dashboard() {
   const { isConnected, address, connectWallet } = useWallet();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  const handleAgentGenerated = (agentConfig: any) => {
+    toast({
+      title: "Agent Created",
+      description: "Your AI agent has been created successfully!",
+    });
+  };
   
   const [activeTab, setActiveTab] = useState('wallet');
   const [nodes, setNodes, onNodesChange] = useNodesState([]);

@@ -122,10 +122,7 @@ export class DatabaseStorage implements IStorage {
       .insert(agents)
       .values({
         ...agentData,
-        status: "pending",
-        runs: 0,
-        successRate: "0.00",
-        revenue: "0.00"
+        deploymentStatus: "pending"
       })
       .returning();
     return agent;
@@ -146,7 +143,7 @@ export class DatabaseStorage implements IStorage {
     return await db
       .select()
       .from(agents)
-      .where(eq(agents.createdBy, userId))
+      .where(eq(agents.creatorId, userId))
       .orderBy(agents.createdAt);
   }
 

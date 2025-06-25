@@ -175,11 +175,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/agents", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
+      const userId = req.user?.userId;
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
       const agentData = {
-        ...req.body,
-        creatorId: req.user?.userId
+        name: req.body.name,
+        description: req.body.description,
+        category: req.body.category || "Custom",
+        price: req.body.price || "0.05",
+        creatorId: userId,
+        status: "pending",
+        tools: req.body.tools || [],
+        systemPrompt: req.body.systemPrompt
       };
-      
+
       const agent = await storage.createAgent(agentData);
       res.json(agent);
     } catch (error) {
@@ -1208,9 +1219,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get user's created agents
-  app.get("/api/chat/my-agents", authenticateToken, async (req: AuthenticatedRequest, res) => {
+  app.get("/api/agents/my", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
-      const agents = await storage.getUserCreatedAgents(req.user?.userId);
+      const userId = req.user?.userId;
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      
+      const agents = await storage.getUserCreatedAgents(userId);
       res.json(agents);
     } catch (error) {
       console.error("Error fetching user agents:", error);
