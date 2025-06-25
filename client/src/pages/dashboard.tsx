@@ -36,6 +36,7 @@ import {
   Activity, 
   Settings, 
   Edit3, 
+  Edit,
   Save,
   X,
   Eye,
