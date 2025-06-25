@@ -157,12 +157,10 @@ export class DatabaseStorage implements IStorage {
   async seedAgents(): Promise<void> {
     try {
       const existingAgents = await this.getAllAgents();
-      if (existingAgents.length > 2) return;
+      if (existingAgents.length >= 10) return;
 
-      // Clear existing agents if only 2 exist
-      if (existingAgents.length === 2) {
-        await db.delete(agents);
-      }
+      // Clear existing agents to start fresh
+      await db.delete(agents);
 
       const seedAgents = [
         {
