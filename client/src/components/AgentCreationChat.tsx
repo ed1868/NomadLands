@@ -56,33 +56,63 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
   const commonTools = [
     { 
       name: "Google Sheets", 
-      logo: "https://upload.wikimedia.org/wikipedia/commons/3/30/Google_Sheets_logo.svg",
+      logo: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/googlesheets.svg",
       borderColor: "border-green-400",
       textColor: "text-green-300"
     },
     { 
       name: "Gmail", 
-      logo: "https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg",
+      logo: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/gmail.svg",
       borderColor: "border-red-400",
       textColor: "text-red-300"
     },
     { 
       name: "Slack", 
-      logo: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Slack_icon_2019.svg",
+      logo: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/slack.svg",
       borderColor: "border-purple-400",
       textColor: "text-purple-300"
     },
     { 
       name: "Discord", 
-      logo: "https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a69f118df70ad7828d4_icon_clyde_blurple_RGB.svg",
+      logo: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/discord.svg",
       borderColor: "border-indigo-400",
       textColor: "text-indigo-300"
     },
     { 
       name: "OpenAI", 
-      logo: "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
+      logo: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/openai.svg",
       borderColor: "border-emerald-400",
       textColor: "text-emerald-300"
+    },
+    { 
+      name: "Stripe", 
+      logo: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/stripe.svg",
+      borderColor: "border-blue-400",
+      textColor: "text-blue-300"
+    },
+    { 
+      name: "PayPal", 
+      logo: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/paypal.svg",
+      borderColor: "border-yellow-400",
+      textColor: "text-yellow-300"
+    },
+    { 
+      name: "Notion", 
+      logo: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/notion.svg",
+      borderColor: "border-gray-400",
+      textColor: "text-gray-300"
+    },
+    { 
+      name: "Airtable", 
+      logo: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/airtable.svg",
+      borderColor: "border-orange-400",
+      textColor: "text-orange-300"
+    },
+    { 
+      name: "Zapier", 
+      logo: "https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/zapier.svg",
+      borderColor: "border-orange-400",
+      textColor: "text-orange-300"
     }
   ];
 
@@ -351,7 +381,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
                   <img 
                     src={toolData?.logo} 
                     alt={tool} 
-                    className="w-4 h-4 object-contain"
+                    className="w-4 h-4 object-contain filter invert"
                     onError={(e) => {
                       e.currentTarget.style.display = 'none';
                     }}
@@ -374,7 +404,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
                 <img 
                   src={tool.logo} 
                   alt={tool.name} 
-                  className="w-4 h-4 object-contain group-hover:scale-110 transition-transform"
+                  className="w-4 h-4 object-contain group-hover:scale-110 transition-transform filter invert"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
