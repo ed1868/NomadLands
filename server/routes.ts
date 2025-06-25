@@ -207,8 +207,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
       
       console.log("Mock agent created:", mockAgent);
-      const workflow = n8nGenerator.generateWorkflow(mockAgent);
-      console.log("Workflow generated successfully");
+      
+      // Generate n8n workflow
+      const generator = new N8nWorkflowGenerator();
+      const workflow = generator.generateWorkflow(mockAgent);
+      
+      console.log("Workflow generated successfully, size:", JSON.stringify(workflow).length);
       res.json(workflow);
     } catch (error) {
       console.error("Error generating workflow:", error);
