@@ -19,23 +19,46 @@ export default function Login() {
   });
 
   const loginMutation = useMutation({
-    mutationFn: async (data: typeof loginData) => {
-      return await apiRequest("POST", "/api/auth/signin", data);
-    },
-    onSuccess: (data) => {
-      // Store token in localStorage
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      
-      toast({
-        title: "Login Successful",
-        description: `Welcome back, ${data.user.username}!`,
+    mutationFn: async (credentials: typeof loginData) => {
+      const response = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+        credentials: "include"
       });
       
-      // Redirect to dashboard
-      setLocation("/dashboard");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Login failed");
+      }
+      
+      return response.json();
+    },
+    onSuccess: (data) => {
+      console.log("Login successful:", data);
+      if (data.token && data.user) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        
+        toast({
+          title: "Login Successful",
+          description: `Welcome back, ${data.user.username}!`,
+        });
+        
+        // Redirect to dashboard
+        window.location.href = "/dashboard";
+      } else {
+        toast({
+          title: "Login Failed",
+          description: "Invalid login response",
+          variant: "destructive",
+        });
+      }
     },
     onError: (error: any) => {
+      console.error("Login error:", error);
       toast({
         title: "Login Failed",
         description: error.message || "Invalid credentials",
