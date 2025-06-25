@@ -25,6 +25,7 @@ import 'reactflow/dist/style.css';
 import BrainVisualization from "@/components/brain-visualization";
 import AgentDeploymentForm from "@/components/AgentDeploymentForm";
 import DeployedAgentsList from "@/components/DeployedAgentsList";
+import WorkflowVisualization from "@/components/WorkflowVisualization";
 import { 
   User, 
   Wallet, 
@@ -424,6 +425,7 @@ export default function Dashboard() {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState<any>(null);
   const [isAgentDetailsOpen, setIsAgentDetailsOpen] = useState(false);
+  const [selectedWorkflowAgent, setSelectedWorkflowAgent] = useState<any>(null);
   const [departmentCount, setDepartmentCount] = useState<{[key: string]: number}>({
     'Executive Director': 0,
     'Department Manager': 0,
@@ -1892,11 +1894,23 @@ export default function Dashboard() {
                           <div>
                             <span className="text-gray-400">Actions:</span>
                             <div className="flex space-x-2">
-                              <Button variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-800 h-7 px-2">
-                                <Eye className="w-3 h-3" />
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="border-emerald-600 text-emerald-300 hover:bg-emerald-800 h-7 px-3"
+                                onClick={() => setSelectedWorkflowAgent(agent)}
+                              >
+                                <Eye className="w-3 h-3 mr-1" />
+                                View Agent
                               </Button>
-                              <Button variant="outline" size="sm" className="border-gray-600 text-gray-300 hover:bg-gray-800 h-7 px-2">
-                                <Settings className="w-3 h-3" />
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="border-blue-600 text-blue-300 hover:bg-blue-800 h-7 px-3"
+                                onClick={() => setSelectedWorkflowAgent(agent)}
+                              >
+                                <Network className="w-3 h-3 mr-1" />
+                                Workflow
                               </Button>
                             </div>
                           </div>
@@ -2999,6 +3013,14 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Workflow Visualization Modal */}
+      {selectedWorkflowAgent && (
+        <WorkflowVisualization
+          agent={selectedWorkflowAgent}
+          onClose={() => setSelectedWorkflowAgent(null)}
+        />
       )}
     </div>
   );
