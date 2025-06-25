@@ -41,9 +41,18 @@ export default function SimpleLogin() {
       console.log("Login response:", data);
 
       if (data.token && data.user) {
+        // Clear any existing auth data first
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        
+        // Set new auth data
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
-        setLocation("/dashboard");
+        
+        console.log("Token stored:", localStorage.getItem("token"));
+        
+        // Force page reload to ensure auth state is properly updated
+        window.location.href = "/dashboard";
       } else {
         throw new Error("Invalid response format");
       }

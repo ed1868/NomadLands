@@ -23,15 +23,17 @@ export default function Navigation() {
     try {
       // Call logout endpoint
       await fetch("/api/logout");
-      // Clear local storage
+      // Clear all auth data from local storage
       localStorage.removeItem('token');
-      // Redirect to main landing page
-      window.location.href = "/";
+      localStorage.removeItem('user');
+      // Redirect to login page
+      window.location.href = "/login";
     } catch (error) {
       console.error("Logout error:", error);
       // Still redirect even if API call fails
       localStorage.removeItem('token');
-      window.location.href = "/";
+      localStorage.removeItem('user');
+      window.location.href = "/login";
     }
   };
 
