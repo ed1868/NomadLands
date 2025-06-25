@@ -300,7 +300,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
   const generateAgentResponse = async (userMessage: string): Promise<ChatMessage> => {
     try {
       // Use OpenAI to generate intelligent responses and gather agent requirements
-      const response = await fetch('/api/chat/openai', {
+      const openaiResponse = await fetch('/api/chat/openai', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -313,8 +313,8 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
         })
       });
 
-      if (response.ok) {
-        const result = await response.json();
+      if (openaiResponse.ok) {
+        const result = await openaiResponse.json();
         
         return {
           id: Date.now().toString(),
@@ -458,7 +458,8 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
         type: 'bot',
         content: "Perfect! I've captured all your requirements. Your agent is configured for your specific use case, volume, and error handling needs. Ready to deploy!",
         timestamp: new Date(),
-        agentConfig: agentConfig
+        agentConfig: agentConfig,
+        showCreateButton: true
       };
     }
 
