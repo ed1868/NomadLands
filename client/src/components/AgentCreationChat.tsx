@@ -247,10 +247,18 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
         });
 
         if (response.ok) {
+          let responseText = '';
+          try {
+            const result = await response.text();
+            responseText = result ? `\n\n📤 n8n Response: ${result}` : '';
+          } catch (e) {
+            // Response might be empty, that's fine
+          }
+          
           return {
             id: Date.now().toString(),
             type: 'bot',
-            content: `Great! I've sent your customer support agent request to n8n:\n\n• Type: Customer Support Agent\n• Message: ${message}\n• Tools: ${tools.join(', ') || 'None'}\n• Status: Processing in n8n workflow\n\nYour workflow should handle this request now.`,
+            content: `✅ Successfully sent to n8n webhook!\n\n• Type: Customer Support Agent\n• Message: ${message}\n• Tools: ${tools.join(', ') || 'None'}\n• Webhook: Active${responseText}`,
             timestamp: new Date()
           };
         }
