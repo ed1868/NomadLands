@@ -194,7 +194,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
     modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
     modal.innerHTML = `
       <div class="bg-gray-900 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
-        <h2 class="text-xl font-bold text-white mb-4">Agent Created Successfully!</h2>
+        <h2 class="text-xl font-bold text-white mb-4">🎉 Agent Created Successfully!</h2>
         <div class="space-y-4">
           <div>
             <h3 class="text-lg font-semibold text-emerald-400">Agent Details:</h3>
@@ -209,11 +209,8 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
             <h3 class="text-lg font-semibold text-emerald-400">Webhook Data Sent:</h3>
             <pre class="bg-black/30 rounded p-4 mt-2 text-xs text-gray-300 overflow-x-auto">${JSON.stringify(workflowData, null, 2)}</pre>
           </div>
-          <div class="flex gap-3">
-            <button onclick="window.location.href='/agents'" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded transition-colors">
-              View My Agents
-            </button>
-            <button onclick="this.closest('.fixed').remove()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition-colors">
+          <div class="text-center">
+            <button onclick="this.closest('.fixed').remove()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg transition-colors font-medium">
               Close
             </button>
           </div>
@@ -221,11 +218,6 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
       </div>
     `;
     document.body.appendChild(modal);
-
-    // Auto-redirect after 10 seconds
-    setTimeout(() => {
-      window.location.href = '/agents';
-    }, 5000);
   };
 
   const generateAgentResponse = async (userMessage: string): Promise<ChatMessage> => {
