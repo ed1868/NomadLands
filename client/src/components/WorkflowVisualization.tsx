@@ -55,7 +55,10 @@ const WorkflowNode = ({ data }: { data: any }) => {
   };
 
   return (
-    <div className={`relative px-3 py-2 shadow-lg rounded-lg bg-gradient-to-r ${getNodeColor(data.type)} border border-white/20 min-w-[120px] max-w-[200px]`}>
+    <div 
+      className={`relative px-3 py-2 shadow-lg rounded-lg bg-gradient-to-r ${getNodeColor(data.type)} border border-white/20 min-w-[120px] max-w-[200px] cursor-pointer hover:scale-105 transition-transform duration-200`}
+      onClick={() => data.onNodeClick?.(data)}
+    >
       {/* Input Handle */}
       {data.type !== 'chatTrigger' && (
         <Handle
@@ -95,6 +98,7 @@ export default function WorkflowVisualization({ agent, onClose }: WorkflowVisual
   const [activeTab, setActiveTab] = useState("visual");
   const [workflowData, setWorkflowData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [selectedNode, setSelectedNode] = useState<any>(null);
 
   // Convert n8n workflow JSON to ReactFlow nodes and edges
   const convertWorkflowToReactFlow = (workflow: any) => {
@@ -116,7 +120,10 @@ export default function WorkflowVisualization({ agent, onClose }: WorkflowVisual
           label: node.name,
           subLabel: node.type.split('.').pop() || 'Node',
           type: getNodeType(node.type),
-          parameters: node.parameters
+          parameters: node.parameters,
+          fullType: node.type,
+          nodeId: node.id,
+          onNodeClick: (nodeData: any) => setSelectedNode({ ...nodeData, originalNode: node })
         },
       };
     });
@@ -380,8 +387,126 @@ export default function WorkflowVisualization({ agent, onClose }: WorkflowVisual
           ))}
         </div>
 
+        {/* Node Details Sidebar */}
+        {selectedNode && (
+          <div className="absolute right-0 top-0 w-80 h-full bg-gray-800/95 border-l border-gray-700 z-50 overflow-y-auto">
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-lg font-bold text-white">Node Details</h4>
+                <Button
+                  onClick={() => setSelectedNode(null)}
+                  variant="outline"
+                  size="sm"
+                  className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                {/* Node Info */}
+                <div className="bg-gray-700/50 rounded-lg p-3">
+                  <h5 className="text-white font-semibold mb-2">Basic Information</h5>
+                  <div className="space-y-2 text-sm">
+                    <div>
+                      <span className="text-gray-400">Name:</span>
+                      <span className="text-white ml-2">{selectedNode.label}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-400">Type:</span>
+                      <span className="text-white ml-2">{selectedNode.fullType}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-400">ID:</span>
+                      <span className="text-white ml-2 font-mono text-xs">{selectedNode.nodeId}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-400">Category:</span>
+                      <span className="text-white ml-2 capitalize">{selectedNode.type}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Parameters */}
+                {selectedNode.parameters && Object.keys(selectedNode.parameters).length > 0 && (
+                  <div className="bg-gray-700/50 rounded-lg p-3">
+                    <h5 className="text-white font-semibold mb-2">Parameters</h5>
+                    <div className="space-y-2 text-sm">
+                      {Object.entries(selectedNode.parameters).map(([key, value]) => (
+                        <div key={key}>
+                          <span className="text-gray-400">{key}:</span>
+                          <div className="text-white ml-2 mt-1">
+                            {typeof value === 'object' ? (
+                              <pre className="bg-gray-800 p-2 rounded text-xs overflow-x-auto">
+                                {JSON.stringify(value, null, 2)}
+                              </pre>
+                            ) : (
+                              <span className="break-words">{String(value)}</span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Connections */}
+                <div className="bg-gray-700/50 rounded-lg p-3">
+                  <h5 className="text-white font-semibold mb-2">Connections</h5>
+                  <div className="space-y-2 text-sm">
+                    {workflowData && workflowData.connections && (
+                      <>
+                        {/* Outgoing connections */}
+                        {workflowData.connections[selectedNode.label]?.main?.[0] && (
+                          <div>
+                            <span className="text-gray-400">Outputs to:</span>
+                            <div className="ml-2 mt-1">
+                              {workflowData.connections[selectedNode.label].main[0].map((conn: any, idx: number) => (
+                                <div key={idx} className="text-emerald-400 text-xs">
+                                  → {conn.node}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Incoming connections */}
+                        {Object.entries(workflowData.connections).map(([sourceName, connections]: [string, any]) => {
+                          const hasConnectionToThisNode = connections.main?.[0]?.some((conn: any) => conn.node === selectedNode.label);
+                          if (hasConnectionToThisNode) {
+                            return (
+                              <div key={sourceName}>
+                                <span className="text-gray-400">Input from:</span>
+                                <div className="text-blue-400 text-xs ml-2">
+                                  ← {sourceName}
+                                </div>
+                              </div>
+                            );
+                          }
+                          return null;
+                        })}
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Node Description */}
+                <div className="bg-gray-700/50 rounded-lg p-3">
+                  <h5 className="text-white font-semibold mb-2">Description</h5>
+                  <p className="text-gray-300 text-sm">
+                    {selectedNode.type === 'chatTrigger' && "Triggers the workflow when a chat message is received."}
+                    {selectedNode.type === 'ai' && "Processes input using AI language models to generate intelligent responses."}
+                    {selectedNode.type === 'memory' && "Stores and retrieves conversation context for maintaining chat history."}
+                    {selectedNode.type === 'tool' && "Integrates with external services and APIs to perform specific actions."}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Tab Content */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden relative">
           {activeTab === 'visual' && (
             <div className="h-full p-2 sm:p-6">
               <div className="h-full border border-gray-700 rounded-lg bg-gray-800/30">
@@ -394,6 +519,12 @@ export default function WorkflowVisualization({ agent, onClose }: WorkflowVisual
                   className="rounded-lg"
                   minZoom={0.1}
                   maxZoom={2}
+                  onNodeClick={(event, node) => {
+                    if (node.data.onNodeClick) {
+                      node.data.onNodeClick(node.data);
+                    }
+                  }}
+                  style={{ marginRight: selectedNode ? '320px' : '0' }}
                 >
                   <Controls className="bg-gray-800 border border-gray-600 scale-75 sm:scale-100" />
                   <MiniMap 
