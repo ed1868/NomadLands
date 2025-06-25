@@ -178,7 +178,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
   const handleCreateAgent = async (message: ChatMessage) => {
     try {
       // Use OpenAI to generate the complete workflow structure
-      const response = await fetch('/api/chat/generate-workflow', {
+      const workflowResponse = await fetch('/api/chat/generate-workflow', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -191,11 +191,11 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
         })
       });
 
-      if (!response.ok) {
+      if (!workflowResponse.ok) {
         throw new Error('Failed to generate workflow');
       }
 
-      const workflowData = await response.json();
+      const workflowData = await workflowResponse.json();
       
       const webhookUrl = 'https://ainomads.app.n8n.cloud/webhook/d832bc01-555e-4a24-a8cc-31db8fc1c816/chat';
       
@@ -208,7 +208,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
         n8nWorkflow: workflowData.n8nWorkflow
       };
 
-      const response = await fetch(webhookUrl, {
+      const webhookResult = await fetch(webhookUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -216,7 +216,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
         body: JSON.stringify(n8nWorkflowData)
       });
 
-      if (webhookResponse.ok) {
+      if (webhookResult.ok) {
         const botResponse: ChatMessage = {
           id: (Date.now() + 1).toString(),
           type: 'bot',
@@ -366,63 +366,6 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
       ]
     };
   };
-    
-    // This should never be reached since we're sending everything to webhook above
-    // But kept as fallback
-    if (lowerMessage.includes('customer support') || lowerMessage.includes('help desk')) {
-      // Send directly to n8n webhook for customer support requests
-      try {
-        const webhookUrl = 'https://ainomads.app.n8n.cloud/webhook/d832bc01-555e-4a24-a8cc-31db8fc1c816/chat';
-        
-        const webhookData = {
-          message: message,
-          tools: tools,
-          timestamp: new Date().toISOString(),
-          user: 'ai-nomads-user',
-          agent_type: 'customer_support'
-        };
-
-        const response = await fetch(webhookUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(webhookData)
-        });
-
-        if (response.ok) {
-          let responseText = '';
-          try {
-            const result = await response.text();
-            responseText = result ? `\n\n📤 n8n Response: ${result}` : '';
-          } catch (e) {
-            // Response might be empty, that's fine
-          }
-          
-          return {
-            id: Date.now().toString(),
-            type: 'bot',
-            content: `✅ Successfully sent to n8n webhook!\n\n• Type: Customer Support Agent\n• Message: ${message}\n• Tools: ${tools.join(', ') || 'None'}\n• Webhook: Active${responseText}`,
-            timestamp: new Date()
-          };
-        }
-      } catch (error) {
-        console.error('Failed to send to webhook:', error);
-      }
-      
-      return {
-        id: Date.now().toString(),
-        type: 'bot',
-        content: "I can help you design a Customer Support Agent! This agent would handle customer inquiries, manage support tickets, and integrate with communication tools like Slack and email. Would you like me to create this agent for you?",
-        timestamp: new Date(),
-        suggestions: [
-          "Create this agent",
-          "Add more tools",
-          "Customize the behavior",
-          "Change the AI model"
-        ]
-      };
-    }
 
     if (lowerMessage.includes('data') || lowerMessage.includes('analysis')) {
       return {
