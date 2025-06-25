@@ -131,45 +131,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get all agents (public endpoint for testing)
+  // Get all agents
   app.get("/api/agents", async (req, res) => {
     try {
-      // Return mock data for testing since database schema needs adjustment
-      const mockAgents = [
-        {
-          id: 1,
-          name: "Email Classification Agent",
-          description: "Automatically categorizes and prioritizes incoming emails using AI-powered natural language processing.",
-          category: "productivity",
-          price: "15.00",
-          features: ["Email categorization", "Priority scoring", "Auto-labeling", "Smart filtering"],
-          tools: ["gmail", "web-search"],
-          aiModel: "gpt-4o",
-          systemPrompt: "You are an email classification agent that helps users organize and prioritize their emails efficiently.",
-          styling: {
-            gradientFrom: "#3b82f6",
-            gradientTo: "#1d4ed8"
-          }
-        },
-        {
-          id: 2,
-          name: "Cloud Resource Manager", 
-          description: "Monitors and optimizes cloud infrastructure costs across AWS, Azure, and Google Cloud platforms.",
-          category: "development",
-          price: "25.00",
-          features: ["Cost optimization", "Resource monitoring", "Auto-scaling", "Multi-cloud support"],
-          tools: ["web-search", "github"],
-          aiModel: "gpt-4o",
-          systemPrompt: "You are a cloud resource management agent that helps optimize infrastructure costs and performance.",
-          styling: {
-            gradientFrom: "#10b981",
-            gradientTo: "#059669"
-          }
-        }
-      ];
-      res.json(mockAgents);
+      const agents = await storage.getAllAgents();
+      console.log(`Fetched ${agents.length} agents from database`);
+      res.json(agents);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch agents" });
+      console.error("Error fetching agents:", error);
+      res.status(500).json({ message: "Failed to fetch agents" });
+    }
+  });
+
+  // Force reseed agents endpoint (for debugging)
+  app.post("/api/agents/reseed", async (req, res) => {
+    try {
+      // Clear all existing agents
+      const existingAgents = await storage.getAllAgents();
+      for (const agent of existingAgents) {
+        await storage.deleteAgent(agent.id);
+      }
+      
+      // Force reseed
+      await storage.seedAgents();
+      
+      const newAgents = await storage.getAllAgents();
+      console.log(`Reseeded ${newAgents.length} agents`);
+      res.json({ message: `Successfully reseeded ${newAgents.length} agents`, agents: newAgents });
+    } catch (error) {
+      console.error("Error reseeding agents:", error);
+      res.status(500).json({ message: "Failed to reseed agents" });
     }
   });
 
