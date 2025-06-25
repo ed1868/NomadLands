@@ -427,6 +427,9 @@ export default function Dashboard() {
   const [selectedAgent, setSelectedAgent] = useState<any>(null);
   const [isAgentDetailsOpen, setIsAgentDetailsOpen] = useState(false);
   const [selectedWorkflowAgent, setSelectedWorkflowAgent] = useState<any>(null);
+  const [agentModalOpen, setAgentModalOpen] = useState(false);
+  const [agentModalType, setAgentModalType] = useState<'stats' | 'logs' | 'edit' | null>(null);
+  const [agentModalData, setAgentModalData] = useState<any>(null);
   const [departmentCount, setDepartmentCount] = useState<{[key: string]: number}>({
     'Executive Director': 0,
     'Department Manager': 0,
@@ -1984,26 +1987,66 @@ export default function Dashboard() {
                           </div>
                           <div className="col-span-2 lg:col-span-1">
                             <span className="text-gray-400">Actions:</span>
-                            <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-2 mt-1">
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 mt-1">
                               <Button 
                                 variant="outline" 
                                 size="sm" 
-                                className="border-emerald-600 text-emerald-300 hover:bg-emerald-800 h-7 px-2 sm:px-3 text-xs"
+                                className="border-emerald-600 text-emerald-300 hover:bg-emerald-800 h-7 px-1 sm:px-2 text-xs"
                                 onClick={() => setSelectedWorkflowAgent(agent)}
                               >
                                 <Eye className="w-3 h-3 mr-1" />
-                                <span className="hidden sm:inline">View Agent</span>
-                                <span className="sm:hidden">View</span>
+                                <span className="hidden sm:inline">View</span>
+                                <span className="sm:hidden">👁</span>
                               </Button>
                               <Button 
                                 variant="outline" 
                                 size="sm" 
-                                className="border-blue-600 text-blue-300 hover:bg-blue-800 h-7 px-2 sm:px-3 text-xs"
+                                className="border-blue-600 text-blue-300 hover:bg-blue-800 h-7 px-1 sm:px-2 text-xs"
                                 onClick={() => setSelectedWorkflowAgent(agent)}
                               >
                                 <Network className="w-3 h-3 mr-1" />
-                                <span className="hidden sm:inline">Workflow</span>
-                                <span className="sm:hidden">Flow</span>
+                                <span className="hidden sm:inline">Flow</span>
+                                <span className="sm:hidden">🔗</span>
+                              </Button>
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="border-green-600 text-green-300 hover:bg-green-800 h-7 px-1 sm:px-2 text-xs"
+                                onClick={() => handleRunAgent(agent)}
+                              >
+                                <Play className="w-3 h-3 mr-1" />
+                                <span className="hidden sm:inline">Run</span>
+                                <span className="sm:hidden">▶</span>
+                              </Button>
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="border-orange-600 text-orange-300 hover:bg-orange-800 h-7 px-1 sm:px-2 text-xs"
+                                onClick={() => handleEditAgent(agent)}
+                              >
+                                <Edit className="w-3 h-3 mr-1" />
+                                <span className="hidden sm:inline">Edit</span>
+                                <span className="sm:hidden">✏</span>
+                              </Button>
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="border-purple-600 text-purple-300 hover:bg-purple-800 h-7 px-1 sm:px-2 text-xs"
+                                onClick={() => handleViewStats(agent)}
+                              >
+                                <BarChart3 className="w-3 h-3 mr-1" />
+                                <span className="hidden sm:inline">Stats</span>
+                                <span className="sm:hidden">📊</span>
+                              </Button>
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="border-yellow-600 text-yellow-300 hover:bg-yellow-800 h-7 px-1 sm:px-2 text-xs"
+                                onClick={() => handleViewLogs(agent)}
+                              >
+                                <FileText className="w-3 h-3 mr-1" />
+                                <span className="hidden sm:inline">Logs</span>
+                                <span className="sm:hidden">📄</span>
                               </Button>
                             </div>
                           </div>
@@ -3114,6 +3157,259 @@ export default function Dashboard() {
           agent={selectedWorkflowAgent}
           onClose={() => setSelectedWorkflowAgent(null)}
         />
+      )}
+
+      {/* Agent Management Modal */}
+      {agentModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-gray-900 rounded-lg border border-gray-700 w-full max-w-4xl max-h-[90vh] flex flex-col">
+            <div className="flex items-center justify-between p-6 border-b border-gray-700">
+              <h2 className="text-xl font-bold text-white">
+                {agentModalType === 'stats' && 'Agent Statistics'}
+                {agentModalType === 'logs' && 'Execution Logs'}
+                {agentModalType === 'edit' && 'Edit Agent'}
+              </h2>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setAgentModalOpen(false)}
+                className="border-gray-600 text-gray-300 hover:bg-gray-800"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-6">
+              {agentModalType === 'stats' && agentModalData && (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <Card className="bg-gray-800/50 border-gray-700">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-gray-400 text-sm">Total Executions</p>
+                            <p className="text-2xl font-bold text-white">{agentModalData.stats.totalExecutions}</p>
+                          </div>
+                          <Activity className="w-8 h-8 text-blue-400" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card className="bg-gray-800/50 border-gray-700">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-gray-400 text-sm">Success Rate</p>
+                            <p className="text-2xl font-bold text-emerald-400">{agentModalData.stats.successRate}%</p>
+                          </div>
+                          <CheckCircle className="w-8 h-8 text-emerald-400" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card className="bg-gray-800/50 border-gray-700">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="text-gray-400 text-sm">Avg. Execution Time</p>
+                            <p className="text-2xl font-bold text-white">{agentModalData.stats.averageExecutionTime}</p>
+                          </div>
+                          <Clock className="w-8 h-8 text-purple-400" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Card className="bg-gray-800/50 border-gray-700">
+                      <CardHeader>
+                        <CardTitle className="text-white">Recent Activity</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Last Execution:</span>
+                            <span className="text-white">{agentModalData.stats.lastExecution}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Error Rate:</span>
+                            <span className="text-red-400">{agentModalData.stats.errorRate}%</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Weekly Trend:</span>
+                            <span className="text-emerald-400">{agentModalData.stats.weeklyTrend}</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="bg-gray-800/50 border-gray-700">
+                      <CardHeader>
+                        <CardTitle className="text-white">Quick Actions</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <Button 
+                            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+                            onClick={() => handleRunAgent(agentModalData.agent)}
+                          >
+                            <Play className="w-4 h-4 mr-2" />
+                            Execute Agent
+                          </Button>
+                          <Button 
+                            variant="outline"
+                            className="w-full border-gray-600 text-gray-300 hover:bg-gray-800"
+                            onClick={() => window.open(`${agentModalData.agent.n8nUrl}/workflow/${agentModalData.agent.workflowId}`, '_blank')}
+                          >
+                            <Edit className="w-4 h-4 mr-2" />
+                            Edit in n8n
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              )}
+              
+              {agentModalType === 'logs' && agentModalData && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-white">Recent Executions</h3>
+                    <Button
+                      size="sm"
+                      onClick={() => handleViewLogs(agentModalData.agent)}
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                    >
+                      Refresh
+                    </Button>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    {agentModalData.logs.map((log: any) => (
+                      <Card key={log.id} className="bg-gray-800/50 border-gray-700">
+                        <CardContent className="p-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center space-x-3">
+                              <div className={`w-3 h-3 rounded-full ${
+                                log.status === 'success' ? 'bg-emerald-500' : 'bg-red-500'
+                              }`} />
+                              <span className="text-white font-medium">Execution {log.id}</span>
+                            </div>
+                            <span className="text-gray-400 text-sm">
+                              {new Date(log.startTime).toLocaleString()}
+                            </span>
+                          </div>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                              <span className="text-gray-400">Duration:</span>
+                              <span className="text-white ml-2">
+                                {((new Date(log.endTime).getTime() - new Date(log.startTime).getTime()) / 1000).toFixed(1)}s
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-gray-400">Status:</span>
+                              <span className={`ml-2 capitalize ${
+                                log.status === 'success' ? 'text-emerald-400' : 'text-red-400'
+                              }`}>
+                                {log.status}
+                              </span>
+                            </div>
+                          </div>
+                          
+                          {log.error && (
+                            <div className="mt-3 p-2 bg-red-900/20 border border-red-700/50 rounded">
+                              <span className="text-red-400 text-sm">{log.error}</span>
+                            </div>
+                          )}
+                          
+                          {log.output && (
+                            <div className="mt-3 p-2 bg-emerald-900/20 border border-emerald-700/50 rounded">
+                              <pre className="text-emerald-400 text-xs overflow-x-auto">
+                                {JSON.stringify(log.output, null, 2)}
+                              </pre>
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {agentModalType === 'edit' && agentModalData && (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Card className="bg-gray-800/50 border-gray-700">
+                      <CardHeader>
+                        <CardTitle className="text-white">Agent Information</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div>
+                          <label className="text-gray-400 text-sm">Name</label>
+                          <input 
+                            type="text" 
+                            value={agentModalData.name}
+                            className="w-full mt-1 px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white"
+                            readOnly
+                          />
+                        </div>
+                        <div>
+                          <label className="text-gray-400 text-sm">Category</label>
+                          <input 
+                            type="text" 
+                            value={agentModalData.category}
+                            className="w-full mt-1 px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white"
+                            readOnly
+                          />
+                        </div>
+                        <div>
+                          <label className="text-gray-400 text-sm">Status</label>
+                          <select className="w-full mt-1 px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white">
+                            <option value="Active">Active</option>
+                            <option value="Paused">Paused</option>
+                            <option value="Disabled">Disabled</option>
+                          </select>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="bg-gray-800/50 border-gray-700">
+                      <CardHeader>
+                        <CardTitle className="text-white">n8n Integration</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div>
+                          <label className="text-gray-400 text-sm">Workflow ID</label>
+                          <input 
+                            type="text" 
+                            value={agentModalData.workflowId}
+                            className="w-full mt-1 px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white font-mono text-sm"
+                            readOnly
+                          />
+                        </div>
+                        <div>
+                          <label className="text-gray-400 text-sm">n8n Instance URL</label>
+                          <input 
+                            type="text" 
+                            value={agentModalData.n8nUrl}
+                            className="w-full mt-1 px-3 py-2 bg-gray-800 border border-gray-600 rounded text-white"
+                            readOnly
+                          />
+                        </div>
+                        <Button 
+                          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                          onClick={() => window.open(`${agentModalData.n8nUrl}/workflow/${agentModalData.workflowId}`, '_blank')}
+                        >
+                          <Edit className="w-4 h-4 mr-2" />
+                          Open in n8n Editor
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
