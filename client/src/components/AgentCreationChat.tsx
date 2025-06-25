@@ -226,6 +226,38 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
     await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
     
     if (lowerMessage.includes('customer support') || lowerMessage.includes('help desk')) {
+      // Send directly to n8n webhook for customer support requests
+      try {
+        const webhookUrl = 'https://ainomads.app.n8n.cloud/webhook/d832bc01-555e-4a24-a8cc-31db8fc1c816/chat';
+        
+        const webhookData = {
+          message: message,
+          tools: tools,
+          timestamp: new Date().toISOString(),
+          user: 'ai-nomads-user',
+          agent_type: 'customer_support'
+        };
+
+        const response = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(webhookData)
+        });
+
+        if (response.ok) {
+          return {
+            id: Date.now().toString(),
+            type: 'bot',
+            content: `Great! I've sent your customer support agent request to n8n:\n\n• Type: Customer Support Agent\n• Message: ${message}\n• Tools: ${tools.join(', ') || 'None'}\n• Status: Processing in n8n workflow\n\nYour workflow should handle this request now.`,
+            timestamp: new Date()
+          };
+        }
+      } catch (error) {
+        console.error('Failed to send to webhook:', error);
+      }
+      
       return {
         id: Date.now().toString(),
         type: 'bot',
