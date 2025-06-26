@@ -1,11 +1,5 @@
 import OpenAI from "openai";
 
-if (!process.env.OPENAI_API_KEY) {
-  throw new Error('OPENAI_API_KEY environment variable is required');
-}
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
 export interface AgentConversationRequest {
   message: string;
   tools: string[];
@@ -131,150 +125,43 @@ Always respond in JSON with this structure:
       throw new Error("Failed to generate agent response");
     }
   }
-}
-
-When you have sufficient details, set readyToCreate: true in your JSON response.`;
-
-      const messages = [
-        { role: "system", content: systemPrompt },
-        ...request.conversationHistory.slice(-10), // Last 10 messages for context
-        { role: "user", content: `${request.message}\n\nSelected tools: ${request.tools.join(', ')}\n\nPlease respond in JSON format as specified.` }
-      ];
-
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-        messages: messages as any,
-        response_format: { type: "json_object" },
-        temperature: 0.7,
-        max_tokens: 1000
-      });
-
-      const result = JSON.parse(response.choices[0].message.content || "{}");
-      
-      return {
-        response: result.response || "I'm here to help you create your AI agent. Could you tell me more about what you'd like it to do?",
-        suggestions: result.suggestions || [],
-        readyToCreate: result.readyToCreate || false,
-        agentData: result.agentData || null
-      };
-      
-    } catch (error) {
-      console.error('OpenAI API error:', error);
-      throw new Error('Failed to generate response');
-    }
-  }
 
   async generateWorkflow(agentData: AgentData, tools: string[], conversationHistory: Array<{ role: string; content: string }>) {
     try {
-      const systemPrompt = `You are an expert at creating n8n workflows for AI agents. Generate a comprehensive n8n workflow structure based on the agent requirements.
+      const systemPrompt = `You are an AI workflow generator for n8n. Create a comprehensive n8n workflow based on the provided agent data and conversation context.
 
-Create a detailed JSON structure with:
-1. Agent details (name, description, category, tools, systemPrompt)
-2. Complete n8n workflow with proper nodes and connections
-3. Optimized system prompts for the specific use case
-4. Proper tool configurations for n8n
+Generate a workflow with proper nodes and connections for the agent:
+- Agent: ${agentData.name}
+- Description: ${agentData.description}
+- Tools: ${tools.join(', ')}
+- Conversation: ${conversationHistory.map(m => m.content).join(' ')}
 
-The workflow should include Chat Trigger, AI Agent, Memory, and any tool-specific nodes.`;
+Respond with a structure including agent details and n8nWorkflow configuration.`;
 
-      const messages = [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: `Create an n8n workflow for this agent:
-Agent Data: ${JSON.stringify(agentData, null, 2)}
-Selected Tools: ${tools.join(', ')}
-Conversation Context: ${conversationHistory.slice(-5).map(m => `${m.role}: ${m.content}`).join('\n')}
-
-Respond with a complete JSON structure including agent details and n8nWorkflow.` }
-      ];
-
-      const response = await openai.chat.completions.create({
+      const completion = await this.openai.chat.completions.create({
         model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-        messages: messages as any,
-        response_format: { type: "json_object" },
-        temperature: 0.3,
-        max_tokens: 2000
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: `Create an n8n workflow for: ${agentData.name} - ${agentData.description}` }
+        ],
+        max_tokens: 2000,
+        temperature: 0.3
       });
 
-      const result = JSON.parse(response.choices[0].message.content || "{}");
-      
       return {
-        agent: result.agent || {
-          name: agentData.name || 'AI Assistant',
-          description: agentData.description || 'A helpful AI assistant',
-          category: agentData.category || 'general',
-          tools: tools,
-          aiModel: 'gpt-4o',
-          systemPrompt: agentData.systemPrompt || 'You are a helpful AI assistant.'
+        agent: agentData,
+        n8nWorkflow: {
+          name: agentData.name || "AI Agent Workflow",
+          nodes: [],
+          connections: {},
+          meta: { templateCredsSetupCompleted: true }
         },
-        n8nWorkflow: result.n8nWorkflow || this.getDefaultWorkflow(agentData, tools)
+        fineTunedPrompt: `You are ${agentData.name}. ${agentData.description}. Use the following tools when appropriate: ${tools.join(', ')}.`
       };
-      
     } catch (error) {
-      console.error('OpenAI workflow generation error:', error);
-      // Return default structure if OpenAI fails
-      return {
-        agent: {
-          name: agentData.name || 'AI Assistant',
-          description: agentData.description || 'A helpful AI assistant',
-          category: agentData.category || 'general',
-          tools: tools,
-          aiModel: 'gpt-4o',
-          systemPrompt: agentData.systemPrompt || 'You are a helpful AI assistant.'
-        },
-        n8nWorkflow: this.getDefaultWorkflow(agentData, tools)
-      };
+      console.error("Error generating workflow:", error);
+      throw new Error("Failed to generate workflow");
     }
-  }
-
-  private getDefaultWorkflow(agentData: AgentData, tools: string[]) {
-    return {
-      name: `${agentData.name || 'AI Assistant'} Workflow`,
-      nodes: [
-        {
-          id: 'chat-trigger',
-          name: 'Chat Trigger',
-          type: '@n8n/n8n-nodes-langchain.chatTrigger',
-          position: [300, 300],
-          parameters: {
-            public: true,
-            mode: 'chat'
-          }
-        },
-        {
-          id: 'ai-agent',
-          name: 'AI Agent',
-          type: '@n8n/n8n-nodes-langchain.agent',
-          position: [600, 300],
-          parameters: {
-            agent: 'conversationalAgent',
-            systemMessage: agentData.systemPrompt || 'You are a helpful AI assistant.',
-            maxIterations: 10,
-            tools: tools.map(tool => ({
-              name: tool.toLowerCase().replace(/\s+/g, '-'),
-              description: `Integration with ${tool}`,
-              type: 'custom'
-            }))
-          }
-        },
-        {
-          id: 'memory',
-          name: 'Memory',
-          type: '@n8n/n8n-nodes-langchain.memoryBufferWindow',
-          position: [600, 500],
-          parameters: {
-            sessionIdType: 'fromInput',
-            k: 10
-          }
-        }
-      ],
-      connections: {
-        'Chat Trigger': {
-          main: [[{node: 'AI Agent', type: 'main', index: 0}]]
-        },
-        'Memory': {
-          ai_memory: [[{node: 'AI Agent', type: 'ai_memory', index: 0}]]
-        }
-      }
-    };
   }
 }
 

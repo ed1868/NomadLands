@@ -76,7 +76,7 @@ export default function AgentCreationChat() {
     try {
       // Detect tools mentioned in the message
       const detectedTools = detectToolsInMessage(userMessage);
-      const allTools = [...new Set([...tools, ...detectedTools])];
+      const allTools = Array.from(new Set([...tools, ...detectedTools]));
       setTools(allTools);
 
       const response = await apiRequest("POST", "/api/chat/openai", {
@@ -213,7 +213,7 @@ export default function AgentCreationChat() {
             <div className="border-t border-gray-800 p-4">
               <p className="text-sm text-gray-300 mb-2">Suggested tools:</p>
               <div className="flex flex-wrap gap-2">
-                {suggestedTools.map((tool) => (
+                {suggestedTools.map((tool: string) => (
                   <button
                     key={tool}
                     onClick={() => {
@@ -226,7 +226,7 @@ export default function AgentCreationChat() {
                   >
                     + {tool}
                   </button>
-                ))}
+                )))
               </div>
             </div>
           )}
