@@ -294,7 +294,7 @@ export default function Navigation() {
               {/* Sign In link for mobile */}
               {!user && (
                 <a
-                  href="/signin"
+                  href="/login"
                   className="text-emerald-400 hover:text-emerald-300 transition-colors text-left font-medium tracking-wide"
                   onClick={() => setIsMenuOpen(false)}
                 >
