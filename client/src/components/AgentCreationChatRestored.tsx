@@ -155,16 +155,16 @@ export default function AgentCreationChatRestored() {
 
   const getToolIcon = (tool: string) => {
     const iconMap = {
+      'Google Sheets': FileText,
       'Gmail': Mail,
       'Slack': MessageSquare,
-      'Notion': FileText,
-      'GitHub': Code,
-      'Trello': BarChart3,
       'Discord': Users,
-      'Google Drive': Cloud,
-      'Calendly': Calendar,
-      'HubSpot': DollarSign,
-      'Salesforce': BarChart3
+      'OpenAI': Zap,
+      'Stripe': DollarSign,
+      'PayPal': DollarSign,
+      'Notion': FileText,
+      'Airtable': BarChart3,
+      'Zapier': Zap
     };
     const IconComponent = iconMap[tool as keyof typeof iconMap] || Zap;
     return <IconComponent className="w-4 h-4" />;
@@ -313,35 +313,27 @@ export default function AgentCreationChatRestored() {
             </div>
           )}
 
-          {/* Suggested Tools */}
-          {suggestedTools.length > 0 && (
-            <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border border-blue-500/40 rounded-lg p-4 shadow-lg">
-              <h3 className="text-blue-300 font-medium mb-3 flex items-center">
-                <Zap className="w-4 h-4 mr-2 text-yellow-400" />
-                Popular Tool Integrations
-              </h3>
-              <div className="flex flex-wrap gap-3">
-                {suggestedTools.map((tool, index) => (
-                  <button
-                    key={tool}
-                    onClick={() => addTool(tool)}
-                    className="group px-4 py-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-300 text-sm rounded-lg border border-blue-500/30 hover:border-blue-400/60 hover:from-blue-500/30 hover:to-purple-500/30 transition-all duration-300 transform hover:scale-105 hover:shadow-lg animate-pulse flex items-center gap-2"
-                    style={{
-                      animationDelay: `${index * 0.1}s`,
-                      animationDuration: '2s',
-                      animationIterationCount: '3'
-                    }}
-                  >
-                    {getToolIcon(tool)}
-                    <span className="font-medium">+ {tool}</span>
-                  </button>
-                ))}
-              </div>
-              <p className="text-xs text-gray-400 mt-3 italic">
-                💡 Click any tool above to add it to your agent
-              </p>
+          {/* Tools & Integrations */}
+          <div className="border-t border-gray-800 pt-4">
+            <h3 className="text-white text-sm font-medium mb-3">Tools & Integrations</h3>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {["Google Sheets", "Gmail", "Slack", "Discord", "OpenAI", "Stripe", "PayPal", "Notion", "Airtable", "Zapier"].map((tool) => (
+                <button
+                  key={tool}
+                  onClick={() => addTool(tool)}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm border transition-all duration-200 ${
+                    tools.includes(tool)
+                      ? 'bg-emerald-600/20 text-emerald-300 border-emerald-500/50'
+                      : 'bg-gray-800/50 text-gray-300 border-gray-600/50 hover:border-gray-500'
+                  }`}
+                >
+                  {getToolIcon(tool)}
+                  {tool}
+                  {tools.includes(tool) ? ' ✓' : ' +'}
+                </button>
+              ))}
             </div>
-          )}
+          </div>
 
           {/* Create Agent Button */}
           {showCreateButton && (
