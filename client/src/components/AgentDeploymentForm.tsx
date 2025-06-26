@@ -14,7 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import AgentCreationChat from "./AgentCreationChatNew";
+import AgentCreationChat from "./AgentCreationChatRestored";
 import AgentUploadMethods from "./AgentUploadMethods";
 import DeploymentConfirmationModal from "./DeploymentConfirmationModal";
 import { 

@@ -311,13 +311,13 @@ export default function AgentCreationChat() {
               <div className="bg-emerald-900/20 border border-emerald-700/30 rounded-lg p-4">
                 <h3 className="text-emerald-300 font-medium mb-2">Agent Details</h3>
                 <div className="space-y-2 text-sm text-gray-300">
-                  {createdAgent && (
+                  {agentData && (
                     <>
-                      <p><span className="text-gray-400">Name:</span> {createdAgent.name}</p>
-                      <p><span className="text-gray-400">Description:</span> {createdAgent.description}</p>
-                      <p><span className="text-gray-400">Category:</span> {createdAgent.category}</p>
-                      {createdAgent.tools && createdAgent.tools.length > 0 && (
-                        <p><span className="text-gray-400">Tools:</span> {createdAgent.tools.join(', ')}</p>
+                      <p><span className="text-gray-400">Name:</span> {agentData.name}</p>
+                      <p><span className="text-gray-400">Description:</span> {agentData.description}</p>
+                      <p><span className="text-gray-400">Category:</span> {agentData.category}</p>
+                      {tools && tools.length > 0 && (
+                        <p><span className="text-gray-400">Tools:</span> {tools.join(', ')}</p>
                       )}
                     </>
                   )}
@@ -327,10 +327,33 @@ export default function AgentCreationChat() {
               <div className="bg-blue-900/20 border border-blue-700/30 rounded-lg p-4">
                 <h3 className="text-blue-300 font-medium mb-2">Deployment Status</h3>
                 <div className="space-y-2 text-sm text-gray-300">
-                  <p><span className="text-gray-400">Workflow ID:</span> {createdAgent?.workflowId || 'Generated'}</p>
-                  <p><span className="text-gray-400">Webhook URL:</span> {createdAgent?.webhookUrl || 'Active'}</p>
-                  <p><span className="text-gray-400">Status:</span> <span className="text-emerald-400">Active</span></p>
+                  <p><span className="text-gray-400">Status:</span> <span className="text-emerald-400">Successfully Created</span></p>
+                  <p><span className="text-gray-400">Webhook:</span> Sent to n8n</p>
                 </div>
+              </div>
+              
+              <div className="flex justify-end space-x-3 mt-6">
+                <Button
+                  onClick={() => {
+                    // Reset chat state
+                    setMessages([]);
+                    setAgentData(null);
+                    setTools([]);
+                    setSuggestedTools([]);
+                    setShowCreateButton(false);
+                    setShowSuccessPopup(false);
+                  }}
+                  variant="outline"
+                  className="border-emerald-600 text-emerald-400 hover:bg-emerald-600/10"
+                >
+                  Create Another Agent
+                </Button>
+                <Button
+                  onClick={() => setShowSuccessPopup(false)}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                >
+                  Close
+                </Button>
               </div>
             </div>
           </div>
