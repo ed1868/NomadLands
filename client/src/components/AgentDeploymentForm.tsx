@@ -14,7 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import AgentCreationChat from "./AgentCreationChatRestored";
+import AgentCreationChat from "./AgentCreationChat";
 import AgentUploadMethods from "./AgentUploadMethods";
 import DeploymentConfirmationModal from "./DeploymentConfirmationModal";
 import { 
@@ -222,7 +222,7 @@ export default function AgentDeploymentForm() {
             </TabsList>
 
             <TabsContent value="chat" className="mt-6">
-              <AgentCreationChat />
+              <AgentCreationChat onAgentGenerated={handleChatAgentGenerated} />
             </TabsContent>
 
             <TabsContent value="upload" className="mt-6">

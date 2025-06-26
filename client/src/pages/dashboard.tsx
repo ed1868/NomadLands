@@ -26,7 +26,6 @@ import BrainVisualization from "@/components/brain-visualization";
 import AgentDeploymentForm from "@/components/AgentDeploymentForm";
 import DeployedAgentsList from "@/components/DeployedAgentsList";
 import WorkflowVisualization from "@/components/WorkflowVisualization";
-import AgentCreationChatRestored from "@/components/AgentCreationChatRestored";
 import { 
   User, 
   Wallet, 
@@ -2237,11 +2236,6 @@ export default function Dashboard() {
 
               {/* Deployment Form and List */}
               <div className="space-y-8">
-                {/* AI Agent Creation Chat */}
-                <div className="mb-8">
-                  <AgentCreationChatRestored />
-                </div>
-
                 <AgentDeploymentForm />
                 <div className="mt-8">
                   <h3 className="text-xl font-bold text-white mb-4">Your Deployed Agents</h3>

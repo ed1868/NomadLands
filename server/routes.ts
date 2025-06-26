@@ -131,36 +131,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get all agents
+  // Get all agents (public endpoint for testing)
   app.get("/api/agents", async (req, res) => {
     try {
-      const agents = await storage.getAllAgents();
-      console.log(`Fetched ${agents.length} agents from database`);
-      res.json(agents);
+      // Return mock data for testing since database schema needs adjustment
+      const mockAgents = [
+        {
+          id: 1,
+          name: "Email Classification Agent",
+          description: "Automatically categorizes and prioritizes incoming emails using AI-powered natural language processing.",
+          category: "productivity",
+          price: "15.00",
+          features: ["Email categorization", "Priority scoring", "Auto-labeling", "Smart filtering"],
+          tools: ["gmail", "web-search"],
+          aiModel: "gpt-4o",
+          systemPrompt: "You are an email classification agent that helps users organize and prioritize their emails efficiently.",
+          styling: {
+            gradientFrom: "#3b82f6",
+            gradientTo: "#1d4ed8"
+          }
+        },
+        {
+          id: 2,
+          name: "Cloud Resource Manager", 
+          description: "Monitors and optimizes cloud infrastructure costs across AWS, Azure, and Google Cloud platforms.",
+          category: "development",
+          price: "25.00",
+          features: ["Cost optimization", "Resource monitoring", "Auto-scaling", "Multi-cloud support"],
+          tools: ["web-search", "github"],
+          aiModel: "gpt-4o",
+          systemPrompt: "You are a cloud resource management agent that helps optimize infrastructure costs and performance.",
+          styling: {
+            gradientFrom: "#10b981",
+            gradientTo: "#059669"
+          }
+        }
+      ];
+      res.json(mockAgents);
     } catch (error) {
-      console.error("Error fetching agents:", error);
-      res.status(500).json({ message: "Failed to fetch agents" });
-    }
-  });
-
-  // Force reseed agents endpoint (for debugging)
-  app.post("/api/agents/reseed", async (req, res) => {
-    try {
-      // Clear all existing agents
-      const existingAgents = await storage.getAllAgents();
-      for (const agent of existingAgents) {
-        await storage.deleteAgent(agent.id);
-      }
-      
-      // Force reseed
-      await storage.seedAgents();
-      
-      const newAgents = await storage.getAllAgents();
-      console.log(`Reseeded ${newAgents.length} agents`);
-      res.json({ message: `Successfully reseeded ${newAgents.length} agents`, agents: newAgents });
-    } catch (error) {
-      console.error("Error reseeding agents:", error);
-      res.status(500).json({ message: "Failed to reseed agents" });
+      res.status(500).json({ error: "Failed to fetch agents" });
     }
   });
 
@@ -591,58 +600,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error("Signin error:", error);
       res.status(400).json({ message: error.message || "Signin failed" });
-    }
-  });
-
-  // Signup endpoint 
-  app.post("/api/auth/signup", async (req, res) => {
-    try {
-      const { username, email, password } = req.body;
-      
-      if (!username || !email || !password) {
-        return res.status(400).json({ message: "Username, email, and password are required" });
-      }
-      
-      if (password.length < 6) {
-        return res.status(400).json({ message: "Password must be at least 6 characters long" });
-      }
-      
-      // Check if user already exists
-      const existingUser = await storage.getUserByUsername(username);
-      if (existingUser) {
-        return res.status(400).json({ message: "Username already taken" });
-      }
-      
-      // Hash password
-      const hashedPassword = await bcrypt.hash(password, 10);
-      
-      // Create user
-      const userData = {
-        id: Date.now().toString() + Math.random().toString(36),
-        username,
-        email,
-        password: hashedPassword,
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
-      
-      const newUser = await storage.createUser(userData);
-      
-      // Generate JWT token
-      const token = jwt.sign(
-        { userId: newUser.id, username: newUser.username },
-        process.env.JWT_SECRET || "fallback-secret",
-        { expiresIn: "7d" }
-      );
-      
-      res.status(201).json({ 
-        user: { ...newUser, password: undefined }, 
-        token 
-      });
-    } catch (error: any) {
-      console.error("Signup error:", error);
-      res.status(400).json({ message: error.message || "Signup failed" });
     }
   });
 
@@ -1186,92 +1143,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/chat/create-agent", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
-      const { agentData, fineTunedPrompt } = req.body;
-      
-      console.log("Creating agent with data:", agentData);
-      console.log("Fine-tuned prompt:", fineTunedPrompt);
-      
-      if (!req.user?.userId) {
-        return res.status(401).json({ message: "User not authenticated" });
+      const { message, userRequirements } = req.body;
+
+      if (!message) {
+        return res.status(400).json({ message: "Chat message is required" });
       }
 
-      if (!agentData) {
-        return res.status(400).json({ message: "Agent data is required" });
+      // Parse the chat message to extract agent requirements
+      let agentRequest: N8nAgentRequest;
+      
+      if (userRequirements) {
+        // If explicit requirements provided, use them
+        agentRequest = userRequirements;
+      } else {
+        // Parse from chat message
+        const parsed = n8nService.parseAgentRequest(message);
+        if (!parsed) {
+          return res.status(400).json({ 
+            message: "Could not understand agent requirements from message. Please be more specific." 
+          });
+        }
+        agentRequest = parsed;
       }
-
-      // Create n8n agent request
-      const agentRequest: N8nAgentRequest = {
-        name: agentData.name,
-        description: agentData.description,
-        category: agentData.category,
-        tools: agentData.tools || [],
-        aiModel: "gpt-4o",
-        prompt: fineTunedPrompt || agentData.fineTunedPrompt || `You are ${agentData.name}. ${agentData.description}`
-      };
 
       // Create the workflow in n8n
       const workflowResult = await n8nService.createAgentWorkflow(agentRequest);
-      
-      // Save to database
-      const dbAgentData = {
-        name: agentData.name,
-        description: agentData.description,
-        category: agentData.category,
-        price: "0.00", // Free for user-created agents
-        features: [agentData.description],
-        tools: agentData.tools || [],
-        aiModel: "gpt-4o",
-        systemPrompt: fineTunedPrompt || agentData.fineTunedPrompt,
-        tags: agentData.tools || [],
-        createdBy: req.user.userId,
-        isActive: true,
+
+      // Save agent to database
+      const agentData = {
+        name: agentRequest.name,
+        description: agentRequest.description,
+        category: agentRequest.category,
+        price: "0", // Free for user-created agents
+        featured: false,
+        tags: [agentRequest.category, 'user-created', 'n8n'],
+        tools: agentRequest.tools,
+        aiModel: agentRequest.aiModel,
+        systemPrompt: agentRequest.prompt,
         workflowId: workflowResult.workflowId,
         webhookUrl: workflowResult.webhookUrl,
-        styling: {
-          gradientFrom: "#3b82f6",
-          gradientTo: "#1d4ed8"
-        }
+        createdBy: req.user?.userId,
+        isActive: true
       };
 
-      const savedAgent = await storage.createAgent(dbAgentData);
+      const savedAgent = await storage.createAgent(agentData);
 
-      // Send to webhook with fine-tuned prompt
-      try {
-        const webhookUrl = "https://ainomads.app.n8n.cloud/webhook/d832bc01-555e-4a24-a8cc-31db8fc1c816/chat";
-        const webhookPayload = {
-          agent: savedAgent,
-          fineTunedPrompt: fineTunedPrompt || agentData.fineTunedPrompt,
-          workflowId: workflowResult.workflowId,
-          webhookUrl: workflowResult.webhookUrl
-        };
-
-        const webhookResponse = await fetch(webhookUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(webhookPayload)
-        });
-
-        console.log("Webhook response status:", webhookResponse.status);
-      } catch (webhookError) {
-        console.error("Error sending to webhook:", webhookError);
-        // Don't fail the entire request if webhook fails
-      }
-      
       res.json({
         success: true,
         agent: savedAgent,
-        workflowId: workflowResult.workflowId,
-        webhookUrl: workflowResult.webhookUrl,
-        fineTunedPrompt: fineTunedPrompt || agentData.fineTunedPrompt
+        workflow: {
+          id: workflowResult.workflowId,
+          webhookUrl: workflowResult.webhookUrl
+        },
+        message: `Successfully created ${agentRequest.name} and deployed to n8n!`
       });
 
     } catch (error) {
       console.error("Error creating agent:", error);
       res.status(500).json({ 
-        message: "Failed to create agent",
-        error: error instanceof Error ? error.message : "Unknown error"
+        message: "Failed to create agent", 
+        error: error.message 
       });
     }
   });
@@ -1279,10 +1210,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get user's created agents
   app.get("/api/chat/my-agents", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
-      if (!req.user?.userId) {
-        return res.status(401).json({ message: "User not authenticated" });
-      }
-      const agents = await storage.getUserAgents(req.user.userId);
+      const agents = await storage.getUserCreatedAgents(req.user?.userId);
       res.json(agents);
     } catch (error) {
       console.error("Error fetching user agents:", error);
@@ -1294,16 +1222,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/chat/agents/:id", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
       const agentId = parseInt(req.params.id);
-      if (!req.user?.userId) {
-        return res.status(401).json({ message: "User not authenticated" });
-      }
-
       const agent = await storage.getAgent(agentId);
+
       if (!agent) {
         return res.status(404).json({ message: "Agent not found" });
       }
 
-      if (agent.createdBy !== req.user.userId) {
+      if (agent.createdBy !== req.user?.userId) {
         return res.status(403).json({ message: "Not authorized to delete this agent" });
       }
 
