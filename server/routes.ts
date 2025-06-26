@@ -1134,68 +1134,95 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/chat/create-agent", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
-      const { message, userRequirements } = req.body;
-
-      if (!message) {
-        return res.status(400).json({ message: "Chat message is required" });
-      }
-
-      // Parse the chat message to extract agent requirements
-      let agentRequest: N8nAgentRequest;
+      const { agentData, fineTunedPrompt } = req.body;
       
-      if (userRequirements) {
-        // If explicit requirements provided, use them
-        agentRequest = userRequirements;
-      } else {
-        // Parse from chat message
-        const parsed = n8nService.parseAgentRequest(message);
-        if (!parsed) {
-          return res.status(400).json({ 
-            message: "Could not understand agent requirements from message. Please be more specific." 
-          });
-        }
-        agentRequest = parsed;
+      console.log("Creating agent with data:", agentData);
+      console.log("Fine-tuned prompt:", fineTunedPrompt);
+      
+      if (!req.user?.userId) {
+        return res.status(401).json({ message: "User not authenticated" });
       }
+
+      if (!agentData) {
+        return res.status(400).json({ message: "Agent data is required" });
+      }
+
+      // Create n8n agent request
+      const agentRequest: N8nAgentRequest = {
+        name: agentData.name,
+        description: agentData.description,
+        category: agentData.category,
+        tools: agentData.tools || [],
+        aiModel: "gpt-4o",
+        prompt: fineTunedPrompt || agentData.fineTunedPrompt || `You are ${agentData.name}. ${agentData.description}`
+      };
 
       // Create the workflow in n8n
       const workflowResult = await n8nService.createAgentWorkflow(agentRequest);
-
-      // Save agent to database
-      const agentData = {
-        name: agentRequest.name,
-        description: agentRequest.description,
-        category: agentRequest.category,
-        price: "0", // Free for user-created agents
-        featured: false,
-        tags: [agentRequest.category, 'user-created', 'n8n'],
-        tools: agentRequest.tools,
-        aiModel: agentRequest.aiModel,
-        systemPrompt: agentRequest.prompt,
+      
+      // Save to database
+      const dbAgentData = {
+        name: agentData.name,
+        description: agentData.description,
+        category: agentData.category,
+        price: "0.00", // Free for user-created agents
+        features: [agentData.description],
+        tools: agentData.tools || [],
+        aiModel: "gpt-4o",
+        systemPrompt: fineTunedPrompt || agentData.fineTunedPrompt,
+        tags: agentData.tools || [],
+        createdBy: req.user.userId,
+        isActive: true,
         workflowId: workflowResult.workflowId,
         webhookUrl: workflowResult.webhookUrl,
-        createdBy: req.user?.userId,
-        isActive: true
+        styling: {
+          gradientFrom: "#3b82f6",
+          gradientTo: "#1d4ed8"
+        }
       };
 
-      const savedAgent = await storage.createAgent(agentData);
+      const savedAgent = await storage.createAgent(dbAgentData);
 
+      // Send to webhook with fine-tuned prompt
+      try {
+        const webhookUrl = "https://ainomads.app.n8n.cloud/webhook/d832bc01-555e-4a24-a8cc-31db8fc1c816/chat";
+        const webhookPayload = {
+          agent: savedAgent,
+          fineTunedPrompt: fineTunedPrompt || agentData.fineTunedPrompt,
+          workflowId: workflowResult.workflowId,
+          webhookUrl: workflowResult.webhookUrl
+        };
+
+        const webhookResponse = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(webhookPayload)
+        });
+
+        console.log("Webhook response status:", webhookResponse.status);
+      } catch (webhookError) {
+        console.error("Error sending to webhook:", webhookError);
+        // Don't fail the entire request if webhook fails
+      }
+      
       res.json({
         success: true,
         agent: savedAgent,
-        workflow: {
-          id: workflowResult.workflowId,
-          webhookUrl: workflowResult.webhookUrl
-        },
-        message: `Successfully created ${agentRequest.name} and deployed to n8n!`
+        workflowId: workflowResult.workflowId,
+        webhookUrl: workflowResult.webhookUrl,
+        fineTunedPrompt: fineTunedPrompt || agentData.fineTunedPrompt
       });
 
     } catch (error) {
       console.error("Error creating agent:", error);
       res.status(500).json({ 
-        message: "Failed to create agent", 
-        error: error.message 
+        message: "Failed to create agent",
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
+  });
   });
 
   // Get user's created agents
