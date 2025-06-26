@@ -70,7 +70,7 @@ export class N8nService {
       // Since n8n cloud API requires keys we don't have access to,
       // create a functional agent that uses your existing chat webhook
       const workflowId = `agent_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      const webhookUrl = 'https://ainomads.app.n8n.cloud/webhook/3a205bcf-f96f-452a-b53f-a94866ad2062';
+      const webhookUrl = 'https://ainomads.app.n8n.cloud/webhook-test/3a205bcf-f96f-452a-b53f-a94866ad2062';
       
       console.log('Agent created with workflow ID:', workflowId);
       console.log('Connected to existing chat webhook');

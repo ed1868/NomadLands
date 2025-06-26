@@ -154,7 +154,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
 
       const workflowData = await workflowResponse.json();
       
-      const webhookUrl = 'https://ainomads.app.n8n.cloud/webhook/3a205bcf-f96f-452a-b53f-a94866ad2062';
+      const webhookUrl = 'https://ainomads.app.n8n.cloud/webhook-test/3a205bcf-f96f-452a-b53f-a94866ad2062';
       
       const n8nWorkflowData = {
         action: 'create_agent_workflow',
@@ -172,10 +172,20 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
         body: JSON.stringify(n8nWorkflowData)
       });
 
-      if (webhookResult.ok) {
-        // Show success popup with approval
-        showAgentApprovalPopup(n8nWorkflowData);
+      console.log('Webhook response status:', webhookResult.status);
+      console.log('Webhook response ok:', webhookResult.ok);
+      
+      if (!webhookResult.ok) {
+        const errorText = await webhookResult.text();
+        console.error('Webhook error response:', errorText);
+        throw new Error(`Webhook failed: ${webhookResult.status} - ${errorText}`);
       }
+
+      const webhookResponseData = await webhookResult.json();
+      console.log('Webhook success response:', webhookResponseData);
+      
+      // Show success popup with approval
+      showAgentApprovalPopup(n8nWorkflowData);
     } catch (error) {
       console.error('Error creating agent workflow:', error);
       toast({
