@@ -46,7 +46,7 @@ export default function AgentCreationChatRestored() {
     scrollToBottom();
   }, [messages]);
 
-  // Initialize with welcome message
+  // Initialize with welcome message and tool suggestions
   useEffect(() => {
     if (messages.length === 0) {
       const welcomeMessage: Message = {
@@ -56,6 +56,12 @@ export default function AgentCreationChatRestored() {
         timestamp: new Date()
       };
       setMessages([welcomeMessage]);
+      
+      // Show initial tool suggestions
+      setSuggestedTools([
+        "Gmail", "Slack", "Notion", "GitHub", "Trello", "Discord", 
+        "Google Drive", "Calendly", "HubSpot", "Salesforce"
+      ]);
     }
   }, []);
 
@@ -223,6 +229,40 @@ export default function AgentCreationChatRestored() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          {/* Quick Tool Selection Header */}
+          {suggestedTools.length > 0 && (
+            <div className="bg-gradient-to-r from-emerald-900/30 via-blue-900/30 to-purple-900/30 border-2 border-emerald-500/50 rounded-xl p-4 shadow-2xl">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-emerald-300 font-bold text-lg flex items-center">
+                  <Zap className="w-5 h-5 mr-2 text-yellow-400 animate-pulse" />
+                  Quick Start: Choose Your Tools
+                </h3>
+                <span className="text-xs text-gray-400 bg-gray-800/50 px-2 py-1 rounded">
+                  Click to add
+                </span>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                {suggestedTools.slice(0, 10).map((tool, index) => (
+                  <button
+                    key={tool}
+                    onClick={() => addTool(tool)}
+                    className="group px-3 py-2 bg-gradient-to-r from-emerald-600/20 to-blue-600/20 text-emerald-300 text-sm rounded-lg border border-emerald-500/30 hover:border-emerald-400/60 hover:from-emerald-500/30 hover:to-blue-500/30 transition-all duration-300 transform hover:scale-105 hover:shadow-lg animate-bounce"
+                    style={{
+                      animationDelay: `${index * 0.15}s`,
+                      animationDuration: '1.5s',
+                      animationIterationCount: '2'
+                    }}
+                  >
+                    <span className="font-medium">+ {tool}</span>
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-emerald-400 mt-3 text-center font-medium">
+                ⚡ Start building your agent by selecting the tools it needs
+              </p>
+            </div>
+          )}
+
           {/* Messages */}
           <div className="h-96 overflow-y-auto bg-gray-800/50 rounded-lg p-4 space-y-4">
             {messages.map((message) => (
@@ -292,19 +332,30 @@ export default function AgentCreationChatRestored() {
 
           {/* Suggested Tools */}
           {suggestedTools.length > 0 && (
-            <div className="bg-blue-900/20 border border-blue-800/50 rounded-lg p-4">
-              <h3 className="text-blue-300 font-medium mb-2">Suggested Tools</h3>
-              <div className="flex flex-wrap gap-2">
-                {suggestedTools.map((tool) => (
+            <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border border-blue-500/40 rounded-lg p-4 shadow-lg">
+              <h3 className="text-blue-300 font-medium mb-3 flex items-center">
+                <Zap className="w-4 h-4 mr-2 text-yellow-400" />
+                Popular Tool Integrations
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {suggestedTools.map((tool, index) => (
                   <button
                     key={tool}
                     onClick={() => addTool(tool)}
-                    className="px-3 py-1 bg-blue-900/30 text-blue-300 text-sm rounded border border-blue-800/50 hover:bg-blue-800/40 transition-colors"
+                    className="group px-4 py-2 bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-300 text-sm rounded-lg border border-blue-500/30 hover:border-blue-400/60 hover:from-blue-500/30 hover:to-purple-500/30 transition-all duration-300 transform hover:scale-105 hover:shadow-lg animate-pulse"
+                    style={{
+                      animationDelay: `${index * 0.1}s`,
+                      animationDuration: '2s',
+                      animationIterationCount: '3'
+                    }}
                   >
-                    + {tool}
+                    <span className="font-medium">+ {tool}</span>
                   </button>
                 ))}
               </div>
+              <p className="text-xs text-gray-400 mt-3 italic">
+                💡 Click any tool above to add it to your agent
+              </p>
             </div>
           )}
 
