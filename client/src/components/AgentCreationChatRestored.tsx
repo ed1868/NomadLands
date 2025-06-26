@@ -238,26 +238,26 @@ export default function AgentCreationChatRestored() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <Card className="bg-gray-900/80 border-gray-700 backdrop-blur">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center space-x-2">
-            <Bot className="h-5 w-5 text-emerald-400" />
+      <Card className="bg-black/40 border-2 border-gray-700/60 backdrop-blur-xl shadow-2xl">
+        <CardHeader className="border-b border-gray-700/50">
+          <CardTitle className="text-white flex items-center space-x-2 font-bold">
+            <Bot className="h-6 w-6 text-emerald-400 drop-shadow-lg" />
             <span>AI Agent Creation Chat</span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 p-6">
           {/* Messages */}
-          <div className="h-96 overflow-y-auto bg-gray-800/50 rounded-lg p-4 space-y-4">
+          <div className="h-96 overflow-y-auto bg-black/30 border border-gray-700/50 rounded-lg p-4 space-y-4 backdrop-blur-sm">
             {messages.map((message) => (
               <div
                 key={message.id}
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                  className={`max-w-xs lg:max-w-md px-4 py-3 rounded-lg border backdrop-blur-sm ${
                     message.role === 'user'
-                      ? 'bg-emerald-600 text-white'
-                      : 'bg-gray-700 text-gray-100'
+                      ? 'bg-emerald-600/80 text-white border-emerald-400/50 shadow-lg shadow-emerald-500/20'
+                      : 'bg-gray-800/70 text-gray-100 border-gray-600/50 shadow-lg'
                   }`}
                 >
                   <p className="text-sm">{message.content}</p>
@@ -314,17 +314,17 @@ export default function AgentCreationChatRestored() {
           )}
 
           {/* Tools & Integrations */}
-          <div className="border-t border-gray-800 pt-4">
-            <h3 className="text-white text-sm font-medium mb-3">Tools & Integrations</h3>
-            <div className="flex flex-wrap gap-2 mb-4">
+          <div className="border-t border-gray-700/50 pt-4">
+            <h3 className="text-white text-sm font-bold mb-4 tracking-wide">Tools & Integrations</h3>
+            <div className="flex flex-wrap gap-3 mb-4">
               {["Google Sheets", "Gmail", "Slack", "Discord", "OpenAI", "Stripe", "PayPal", "Notion", "Airtable", "Zapier"].map((tool) => (
                 <button
                   key={tool}
                   onClick={() => addTool(tool)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm border transition-all duration-200 ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm border-2 transition-all duration-300 backdrop-blur-sm font-medium ${
                     tools.includes(tool)
-                      ? 'bg-emerald-600/20 text-emerald-300 border-emerald-500/50'
-                      : 'bg-gray-800/50 text-gray-300 border-gray-600/50 hover:border-gray-500'
+                      ? 'bg-emerald-900/30 text-emerald-300 border-emerald-400/60 shadow-lg shadow-emerald-500/20 hover:bg-emerald-800/40'
+                      : 'bg-black/20 text-gray-300 border-gray-600/60 hover:border-gray-400/80 hover:bg-gray-800/30 hover:text-white'
                   }`}
                 >
                   {getToolIcon(tool)}
@@ -337,20 +337,20 @@ export default function AgentCreationChatRestored() {
 
           {/* Create Agent Button */}
           {showCreateButton && (
-            <div className="border-t border-gray-800 pt-4">
+            <div className="border-t border-gray-700/50 pt-4">
               <Button
                 onClick={createAgent}
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-medium py-3 rounded-lg transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="w-full bg-gradient-to-r from-emerald-600/80 to-emerald-700/80 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold py-4 rounded-xl border-2 border-emerald-400/60 hover:border-emerald-300/80 backdrop-blur-sm transition-all duration-300 transform hover:scale-[1.02] shadow-lg shadow-emerald-500/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                    <Loader2 className="animate-spin h-5 w-5 mr-2" />
                     Creating Agent...
                   </>
                 ) : (
                   <>
-                    <Zap className="h-4 w-4 mr-2" />
+                    <Zap className="h-5 w-5 mr-2" />
                     Create Agent {tools.length > 0 && `(${tools.length} tools)`}
                   </>
                 )}
@@ -375,22 +375,22 @@ export default function AgentCreationChatRestored() {
           )}
 
           {/* Message Input */}
-          <div className="border-t border-gray-800 pt-4">
-            <div className="flex space-x-2">
+          <div className="border-t border-gray-700/50 pt-4">
+            <div className="flex space-x-3">
               <Input
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Describe what you want your agent to do..."
-                className="flex-1 bg-gray-800/50 border-gray-700 text-white placeholder-gray-400 focus:border-emerald-500"
+                className="flex-1 bg-black/20 border-2 border-gray-600/60 text-white placeholder-gray-400 focus:border-emerald-400/80 hover:border-gray-500/80 backdrop-blur-sm rounded-xl px-4 py-3 font-medium"
                 disabled={isLoading}
               />
               <Button
                 onClick={sendMessage}
                 disabled={isLoading || !inputMessage.trim()}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-4"
+                className="bg-emerald-600/80 hover:bg-emerald-600 text-white px-6 py-3 border-2 border-emerald-400/60 hover:border-emerald-300/80 backdrop-blur-sm rounded-xl transition-all duration-300 shadow-lg shadow-emerald-500/20"
               >
-                <Send className="h-4 w-4" />
+                <Send className="h-5 w-5" />
               </Button>
             </div>
           </div>
