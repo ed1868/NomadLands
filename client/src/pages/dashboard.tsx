@@ -26,6 +26,7 @@ import BrainVisualization from "@/components/brain-visualization";
 import AgentDeploymentForm from "@/components/AgentDeploymentForm";
 import DeployedAgentsList from "@/components/DeployedAgentsList";
 import WorkflowVisualization from "@/components/WorkflowVisualization";
+import AgentCreationChatRestored from "@/components/AgentCreationChatRestored";
 import { 
   User, 
   Wallet, 
