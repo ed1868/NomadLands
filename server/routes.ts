@@ -1223,12 +1223,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
-  });
 
   // Get user's created agents
   app.get("/api/chat/my-agents", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
-      const agents = await storage.getUserCreatedAgents(req.user?.userId);
+      if (!req.user?.userId) {
+        return res.status(401).json({ message: "User not authenticated" });
+      }
+      const agents = await storage.getUserAgents(req.user.userId);
       res.json(agents);
     } catch (error) {
       console.error("Error fetching user agents:", error);
@@ -1240,13 +1242,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.delete("/api/chat/agents/:id", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
       const agentId = parseInt(req.params.id);
-      const agent = await storage.getAgent(agentId);
+      if (!req.user?.userId) {
+        return res.status(401).json({ message: "User not authenticated" });
+      }
 
+      const agent = await storage.getAgent(agentId);
       if (!agent) {
         return res.status(404).json({ message: "Agent not found" });
       }
 
-      if (agent.createdBy !== req.user?.userId) {
+      if (agent.createdBy !== req.user.userId) {
         return res.status(403).json({ message: "Not authorized to delete this agent" });
       }
 

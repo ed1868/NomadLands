@@ -94,7 +94,7 @@ export default function AgentCreationChat() {
 
       // Handle suggested tools
       if (response.suggestedTools && response.suggestedTools.length > 0) {
-        setSuggestedTools(response.suggestedTools.filter(tool => !allTools.includes(tool)));
+        setSuggestedTools(response.suggestedTools.filter((tool: string) => !allTools.includes(tool)));
       }
 
       // Check if agent is ready to create
@@ -226,7 +226,7 @@ export default function AgentCreationChat() {
                   >
                     + {tool}
                   </button>
-                )))
+                ))}
               </div>
             </div>
           )}
@@ -308,6 +308,37 @@ export default function AgentCreationChat() {
             </div>
             
             <div className="space-y-4">
+              <div className="bg-emerald-900/20 border border-emerald-700/30 rounded-lg p-4">
+                <h3 className="text-emerald-300 font-medium mb-2">Agent Details</h3>
+                <div className="space-y-2 text-sm text-gray-300">
+                  {createdAgent && (
+                    <>
+                      <p><span className="text-gray-400">Name:</span> {createdAgent.name}</p>
+                      <p><span className="text-gray-400">Description:</span> {createdAgent.description}</p>
+                      <p><span className="text-gray-400">Category:</span> {createdAgent.category}</p>
+                      {createdAgent.tools && createdAgent.tools.length > 0 && (
+                        <p><span className="text-gray-400">Tools:</span> {createdAgent.tools.join(', ')}</p>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+              
+              <div className="bg-blue-900/20 border border-blue-700/30 rounded-lg p-4">
+                <h3 className="text-blue-300 font-medium mb-2">Deployment Status</h3>
+                <div className="space-y-2 text-sm text-gray-300">
+                  <p><span className="text-gray-400">Workflow ID:</span> {createdAgent?.workflowId || 'Generated'}</p>
+                  <p><span className="text-gray-400">Webhook URL:</span> {createdAgent?.webhookUrl || 'Active'}</p>
+                  <p><span className="text-gray-400">Status:</span> <span className="text-emerald-400">Active</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
               <div>
                 <h3 className="text-lg font-semibold text-emerald-400">Agent Details:</h3>
                 <div className="bg-black/30 rounded p-4 mt-2">
