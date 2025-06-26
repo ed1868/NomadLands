@@ -154,7 +154,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
 
       const workflowData = await workflowResponse.json();
       
-      const webhookUrl = 'https://ainomads.app.n8n.cloud/webhook/d832bc01-555e-4a24-a8cc-31db8fc1c816/chat';
+      const webhookUrl = 'https://ainomads.app.n8n.cloud/webhook/3a205bcf-f96f-452a-b53f-a94866ad2062';
       
       const n8nWorkflowData = {
         action: 'create_agent_workflow',

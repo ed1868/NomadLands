@@ -204,7 +204,7 @@ export default function WorkflowVisualization({ agent, onClose }: WorkflowVisual
             position: [-500, 20],
             id: "864f0d4f-2652-4100-91d2-2aad9eb556d5",
             name: "When chat message received",
-            webhookId: "d832bc01-555e-4a24-a8cc-31db8fc1c816"
+            webhookId: "3a205bcf-f96f-452a-b53f-a94866ad2062"
           },
           {
             parameters: {

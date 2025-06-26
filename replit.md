@@ -125,6 +125,7 @@ Changelog:
   * Updated agent creation popup to display generated optimized prompt
   * Chat history is now processed to create better prompts for AI agent creation
   * Improved agent creation with comprehensive context understanding
+  * Updated webhook URL to new n8n endpoint: 3a205bcf-f96f-452a-b53f-a94866ad2062
 - June 25, 2025. N8n Chat Agent Creation Integration Complete
   * Implemented full n8n API integration with proper authentication (X-N8N-API-KEY)
   * Created N8nService class for workflow management via n8n REST API
