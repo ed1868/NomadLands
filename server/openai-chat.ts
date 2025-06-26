@@ -26,6 +26,57 @@ export interface AgentData {
 
 export class OpenAIChatService {
   
+  async generateOptimizedPrompt(chatHistory: Array<{ role: string; content: string }>, agentData: AgentData): Promise<string> {
+    try {
+      // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content: `You are a Prompt Manager AI that analyzes chat conversations to create optimized prompts for AI agent creation. 
+
+Your task is to:
+1. Analyze the entire conversation history to understand the user's complete vision for their AI agent
+2. Extract key requirements, behaviors, and capabilities mentioned throughout the conversation
+3. Create a comprehensive, well-structured prompt that an AI agent creation system can use
+4. Focus on the agent's purpose, personality, capabilities, and expected interactions
+5. Include specific instructions for how the agent should behave in different scenarios
+
+Return ONLY the optimized prompt text - no explanations or meta-commentary.
+
+The prompt should be detailed enough for an AI system to understand exactly what kind of agent to create and how it should behave.`
+          },
+          {
+            role: "user", 
+            content: `Based on this conversation history, create an optimized prompt for creating an AI agent:
+
+CONVERSATION HISTORY:
+${chatHistory.map(msg => `${msg.role.toUpperCase()}: ${msg.content}`).join('\n')}
+
+EXTRACTED AGENT DATA:
+- Name: ${agentData.name || 'Not specified'}
+- Description: ${agentData.description || 'Not specified'}
+- Category: ${agentData.category || 'Not specified'}
+- Tools: ${agentData.tools?.join(', ') || 'Not specified'}
+- Target Audience: ${agentData.targetAudience || 'Not specified'}
+- Use Case: ${agentData.useCase || 'Not specified'}
+- Response Style: ${agentData.responseStyle || 'Not specified'}
+
+Create a comprehensive prompt that captures the user's complete vision for this AI agent.`
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 1500
+      });
+
+      return response.choices[0].message.content || "Failed to generate optimized prompt";
+    } catch (error) {
+      console.error("Error generating optimized prompt:", error);
+      return "Error generating optimized prompt";
+    }
+  }
+  
   async generateAgentResponse(request: AgentConversationRequest) {
     try {
       const systemPrompt = `You are an AI assistant helping users create custom AI agents for n8n workflows. Your job is to:
