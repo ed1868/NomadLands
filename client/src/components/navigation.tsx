@@ -213,7 +213,7 @@ export default function Navigation() {
             ) : (
               <div className="flex items-center space-x-3">
                 <a
-                  href="/signin"
+                  href="/auth"
                   className="text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
                 >
                   Sign In

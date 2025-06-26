@@ -594,6 +594,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Signup endpoint 
+  app.post("/api/auth/signup", async (req, res) => {
+    try {
+      const { username, email, password } = req.body;
+      
+      if (!username || !email || !password) {
+        return res.status(400).json({ message: "Username, email, and password are required" });
+      }
+      
+      if (password.length < 6) {
+        return res.status(400).json({ message: "Password must be at least 6 characters long" });
+      }
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByUsername(username);
+      if (existingUser) {
+        return res.status(400).json({ message: "Username already taken" });
+      }
+      
+      // Hash password
+      const hashedPassword = await bcrypt.hash(password, 10);
+      
+      // Create user
+      const userData = {
+        id: Date.now().toString() + Math.random().toString(36),
+        username,
+        email,
+        password: hashedPassword,
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      const newUser = await storage.createUser(userData);
+      
+      // Generate JWT token
+      const token = jwt.sign(
+        { userId: newUser.id, username: newUser.username },
+        process.env.JWT_SECRET || "fallback-secret",
+        { expiresIn: "7d" }
+      );
+      
+      res.status(201).json({ 
+        user: { ...newUser, password: undefined }, 
+        token 
+      });
+    } catch (error: any) {
+      console.error("Signup error:", error);
+      res.status(400).json({ message: error.message || "Signup failed" });
+    }
+  });
+
   // Logout endpoint
   app.get("/api/logout", (req, res) => {
     // Since we're using JWT tokens, logout is handled on the client side
