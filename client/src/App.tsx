@@ -12,7 +12,6 @@ import ApiDocs from "@/pages/api-docs";
 import Auth from "@/pages/Auth";
 import Dashboard from "@/pages/dashboard";
 import Deploy from "@/pages/deploy";
-
 import NotFound from "@/pages/not-found";
 
 function Router() {
