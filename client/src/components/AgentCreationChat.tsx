@@ -164,27 +164,44 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
         n8nWorkflow: workflowData.n8nWorkflow
       };
 
-      const webhookResult = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(n8nWorkflowData)
-      });
+      try {
+        const webhookResult = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(n8nWorkflowData)
+        });
 
-      console.log('Webhook response status:', webhookResult.status);
-      console.log('Webhook response ok:', webhookResult.ok);
-      
-      if (!webhookResult.ok) {
-        const errorText = await webhookResult.text();
-        console.error('Webhook error response:', errorText);
-        throw new Error(`Webhook failed: ${webhookResult.status} - ${errorText}`);
+        console.log('Webhook response status:', webhookResult.status);
+        console.log('Webhook response ok:', webhookResult.ok);
+        
+        if (webhookResult.ok) {
+          const webhookResponseData = await webhookResult.json();
+          console.log('Webhook success response:', webhookResponseData);
+        } else {
+          const errorText = await webhookResult.text();
+          console.warn('Webhook not ready (n8n workflow needs to be executed):', errorText);
+          
+          // Show user-friendly message about n8n setup
+          toast({
+            title: "Webhook Setup Required",
+            description: "Please activate your n8n workflow first, then try again.",
+            variant: "default"
+          });
+        }
+      } catch (webhookError) {
+        console.warn('Webhook error (n8n not ready):', webhookError);
+        
+        // Show user-friendly message about n8n setup
+        toast({
+          title: "Webhook Setup Required", 
+          description: "Please activate your n8n workflow, then try again.",
+          variant: "default"
+        });
       }
-
-      const webhookResponseData = await webhookResult.json();
-      console.log('Webhook success response:', webhookResponseData);
       
-      // Show success popup with approval
+      // Always show success popup since agent was created successfully
       showAgentApprovalPopup(n8nWorkflowData);
     } catch (error) {
       console.error('Error creating agent workflow:', error);
