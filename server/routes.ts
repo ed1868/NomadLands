@@ -1307,7 +1307,16 @@ This agent should be ready for production deployment in n8n with proper monitori
           recreationPrompt: optimizedAgentPrompt
         };
 
-        const webhookResponse = await fetch('https://ainomads.app.n8n.cloud/webhook/2408e72d-67a7-4931-a33a-7974962bf9f7', {
+        const singleWebhookUrl = 'https://ainomads.app.n8n.cloud/webhook/2408e72d-67a7-4931-a33a-7974962bf9f7';
+        
+        console.log('🚀 SINGLE AGENT WEBHOOK CALL INITIATED');
+        console.log('📡 Webhook URL:', singleWebhookUrl);
+        console.log('📦 Payload Size:', JSON.stringify(webhookData).length, 'bytes');
+        console.log('👤 User:', req.user?.username);
+        console.log('🤖 Agent:', agentRequest.name);
+        console.log('⏰ Timestamp:', new Date().toISOString());
+
+        const webhookResponse = await fetch(singleWebhookUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1315,7 +1324,20 @@ This agent should be ready for production deployment in n8n with proper monitori
           body: JSON.stringify(webhookData)
         });
 
-        console.log(`Webhook sent: ${webhookResponse.status} - Agent created: ${agentRequest.name}`);
+        console.log('✅ SINGLE AGENT WEBHOOK RESPONSE RECEIVED');
+        console.log('📊 Status:', webhookResponse.status);
+        console.log('📝 Status Text:', webhookResponse.statusText);
+        console.log('🔗 Response URL:', webhookResponse.url);
+        
+        // Try to read response body
+        try {
+          const responseText = await webhookResponse.text();
+          console.log('📄 Response Body:', responseText || '(empty)');
+        } catch (bodyError) {
+          console.log('⚠️ Could not read response body:', bodyError.message);
+        }
+
+        console.log(`✨ Single agent webhook complete: ${agentRequest.name} (Status: ${webhookResponse.status})`);
       } catch (webhookError) {
         console.error("Failed to send webhook notification:", webhookError);
         // Continue without failing the agent creation
@@ -1487,6 +1509,8 @@ This agent should be production-ready with proper authentication, rate limiting,
 
       // Send webhook notification to n8n
       try {
+        const webhookUrl = 'https://ainomads.app.n8n.cloud/webhook/2408e72d-67a7-4931-a33a-7974962bf9f7';
+        
         const webhookData = {
           event: "agent_created",
           timestamp: new Date().toISOString(),
@@ -1518,7 +1542,14 @@ This agent should be production-ready with proper authentication, rate limiting,
           recreationPrompt: optimizedAgentPrompt
         };
 
-        const webhookResponse = await fetch('https://ainomads.app.n8n.cloud/webhook/2408e72d-67a7-4931-a33a-7974962bf9f7', {
+        console.log('🚀 DUAL AGENT WEBHOOK CALL INITIATED');
+        console.log('📡 Webhook URL:', webhookUrl);
+        console.log('📦 Payload Size:', JSON.stringify(webhookData).length, 'bytes');
+        console.log('👤 User:', req.user?.username);
+        console.log('🤖 Agent:', agentRequest.name);
+        console.log('⏰ Timestamp:', new Date().toISOString());
+
+        const webhookResponse = await fetch(webhookUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1526,7 +1557,20 @@ This agent should be production-ready with proper authentication, rate limiting,
           body: JSON.stringify(webhookData)
         });
 
-        console.log(`Webhook sent: ${webhookResponse.status} - Agent created: ${agentRequest.name}`);
+        console.log('✅ DUAL AGENT WEBHOOK RESPONSE RECEIVED');
+        console.log('📊 Status:', webhookResponse.status);
+        console.log('📝 Status Text:', webhookResponse.statusText);
+        console.log('🔗 Response URL:', webhookResponse.url);
+        
+        // Try to read response body
+        try {
+          const responseText = await webhookResponse.text();
+          console.log('📄 Response Body:', responseText || '(empty)');
+        } catch (bodyError) {
+          console.log('⚠️ Could not read response body:', bodyError.message);
+        }
+
+        console.log(`✨ Dual agent webhook complete: ${agentRequest.name} (Status: ${webhookResponse.status})`);
       } catch (webhookError) {
         console.error("Failed to send webhook notification:", webhookError);
         // Continue without failing the agent creation

@@ -1,7 +1,7 @@
 # general Agent
 
 ## Overview
-An AI agent that my gmail
+An AI agent specialized in general tasks
 
 **Category**: general  
 **AI Model**: gpt-4o  
@@ -40,4 +40,4 @@ python agent.py
 You are a helpful AI assistant.
 ```
 
-Generated on: 2025-06-29T21:06:35.912Z
+Generated on: 2025-06-29T21:35:29.330Z
