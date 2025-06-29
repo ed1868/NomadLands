@@ -266,6 +266,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get user's created agents - MUST be before /api/agents/:id
+  app.get("/api/agents/my", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = req.user!.userId;
+      console.log("Fetching agents for user:", userId);
+      
+      const agents = await storage.getAllAgents();
+      const userAgents = agents.filter(agent => agent.createdBy === userId);
+      
+      // Format agents with status for the My Agents page
+      const formattedAgents = userAgents.map(agent => ({
+        id: agent.id,
+        name: agent.name,
+        description: agent.description,
+        category: agent.category,
+        status: agent.isActive ? 'approved' : 'pending',
+        tools: agent.tools || [],
+        createdAt: agent.createdAt,
+        updatedAt: agent.updatedAt
+      }));
+      
+      console.log("Found user agents:", formattedAgents.length);
+      res.json(formattedAgents);
+    } catch (error) {
+      console.error("Error fetching user agents:", error);
+      res.status(500).json({ message: "Failed to fetch user agents" });
+    }
+  });
+
   // Get specific agent (no database calls)
   app.get("/api/agents/:id", async (req, res) => {
     try {
@@ -1553,11 +1582,13 @@ This agent should be production-ready with proper authentication, rate limiting,
     }
   });
 
-  // Get user's created agents
+  // Legacy endpoint - redirect to new one
   app.get("/api/chat/my-agents", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
-      const agents = await storage.getUserCreatedAgents(req.user?.userId);
-      res.json(agents);
+      const userId = req.user!.userId;
+      const agents = await storage.getAllAgents();
+      const userAgents = agents.filter(agent => agent.createdBy === userId);
+      res.json(userAgents);
     } catch (error) {
       console.error("Error fetching user agents:", error);
       res.status(500).json({ message: "Failed to fetch user agents" });

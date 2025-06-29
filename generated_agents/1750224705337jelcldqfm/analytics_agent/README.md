@@ -1,11 +1,11 @@
-# general Agent
+# analytics Agent
 
 ## Overview
-An AI agent that my gmail
+An AI agent specialized in analytics tasks
 
-**Category**: general  
+**Category**: analytics  
 **AI Model**: gpt-4o  
-**Tools**: None
+**Tools**: google-sheets, database, chart-generator
 
 ## Structure
 This agent is provided in two implementations:
@@ -40,4 +40,4 @@ python agent.py
 You are a helpful AI assistant.
 ```
 
-Generated on: 2025-06-29T21:06:35.912Z
+Generated on: 2025-06-29T21:12:24.125Z
