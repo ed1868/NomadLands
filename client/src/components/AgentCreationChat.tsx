@@ -135,6 +135,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
     try {
       setIsLoading(true);
       
+      // First generate the workflow data for n8n
       const workflowResponse = await fetch('/api/chat/generate-workflow', {
         method: 'POST',
         headers: {
@@ -153,6 +154,39 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
       }
 
       const workflowData = await workflowResponse.json();
+
+      // Create dual agent implementation (n8n + Python using Claude)
+      const dualAgentResponse = await fetch('/api/chat/create-dual-agent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          agentData: workflowData.agent,
+          conversationHistory: messages.map(m => ({ role: m.type === 'user' ? 'user' : 'assistant', content: m.content })),
+          optimizedPrompt: message.optimizedPrompt
+        })
+      });
+
+      if (dualAgentResponse.ok) {
+        const dualAgentData = await dualAgentResponse.json();
+        console.log('Dual agent created successfully:', dualAgentData);
+        
+        // Show enhanced success popup with both implementations
+        showAgentApprovalPopup({
+          action: 'create_dual_agent_workflow',
+          timestamp: new Date().toISOString(),
+          user: 'ai-nomads-user',
+          agent: dualAgentData.agent,
+          implementations: dualAgentData.implementations,
+          n8nWorkflow: workflowData.n8nWorkflow,
+          message: dualAgentData.message
+        });
+        return; // Exit early for successful dual agent creation
+      } else {
+        console.warn('Dual agent creation failed, falling back to n8n only');
+      }
       
       const webhookUrl = 'https://ainomads.app.n8n.cloud/webhook-test/3a205bcf-f96f-452a-b53f-a94866ad2062';
       
