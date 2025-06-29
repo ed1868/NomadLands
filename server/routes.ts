@@ -898,7 +898,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log("Fetching deployments for user:", userId);
       
       // Get user's created agents as "deployments"
-      const agents = await storage.getAgents();
+      const agents = await storage.getAllAgents();
       console.log("Total agents found:", agents.length);
       
       const userAgents = agents.filter(agent => agent.createdBy === userId);
