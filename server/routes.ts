@@ -1189,6 +1189,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const savedAgent = await storage.createAgent(agentData);
 
+      // Generate optimized prompt for recreating the agent
+      const generateSingleAgentPrompt = (agentRequest: any, originalMessage: string, systemPrompt: string) => {
+        return `Create an AI agent with the following specifications:
+
+**Agent Name:** ${agentRequest.name}
+**Description:** ${agentRequest.description}
+**Category:** ${agentRequest.category}
+**AI Model:** ${agentRequest.aiModel}
+
+**System Prompt:**
+${systemPrompt}
+
+**Tools & Integrations:**
+${agentRequest.tools.map((tool: string) => `- ${tool}`).join('\n')}
+
+**Original User Request:**
+${originalMessage}
+
+**Implementation Notes:**
+- Generate n8n workflow for immediate deployment
+- Include proper error handling and logging
+- Configure webhook endpoints for API access
+- Add appropriate authentication and rate limiting
+- Provide deployment documentation
+
+This agent should be ready for production deployment in n8n with proper monitoring and alerting capabilities.`;
+      };
+
+      const optimizedAgentPrompt = generateSingleAgentPrompt(
+        agentRequest, 
+        message,
+        agentRequest.prompt || `You are ${agentRequest.name}, ${agentRequest.description}`
+      );
+
       // Send webhook notification to n8n
       try {
         const webhookData = {
@@ -1214,7 +1248,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }
           },
           message: message,
-          fromChat: true
+          fromChat: true,
+          recreationPrompt: optimizedAgentPrompt
         };
 
         const webhookResponse = await fetch('https://ainomads.app.n8n.cloud/webhook/2408e72d-67a7-4931-a33a-7974962bf9f7', {
@@ -1356,6 +1391,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const savedAgent = await storage.createAgent(dbAgentData);
 
+      // Generate optimized prompt for recreating the agent
+      const generateOptimizedPrompt = (agentRequest: any, conversationHistory: any[], systemPrompt: string) => {
+        const userMessages = conversationHistory
+          .filter((msg: any) => msg.role === 'user')
+          .map((msg: any) => msg.content)
+          .join(' ');
+
+        return `Create an AI agent with the following specifications:
+
+**Agent Name:** ${agentRequest.name}
+**Description:** ${agentRequest.description}
+**Category:** ${agentRequest.category}
+**AI Model:** ${agentRequest.aiModel}
+
+**System Prompt:**
+${systemPrompt}
+
+**Tools & Integrations:**
+${agentRequest.tools.map((tool: string) => `- ${tool}`).join('\n')}
+
+**User Requirements (from conversation):**
+${userMessages.substring(0, 500)}...
+
+**Implementation Notes:**
+- Generate both n8n workflow and Python implementation
+- Include comprehensive error handling and logging
+- Provide complete documentation and setup instructions
+- Add unit tests for the Python implementation
+- Configure with environment variables for API keys
+
+This agent should be production-ready with proper authentication, rate limiting, and monitoring capabilities.`;
+      };
+
+      const optimizedAgentPrompt = generateOptimizedPrompt(
+        agentRequest, 
+        conversationHistory, 
+        agentData.systemPrompt || `You are ${agentRequest.name}, ${agentRequest.description}`
+      );
+
       // Send webhook notification to n8n
       try {
         const webhookData = {
@@ -1385,7 +1459,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }
           },
           conversationHistory: conversationHistory.length,
-          optimizedPrompt: optimizedPrompt ? true : false
+          optimizedPrompt: optimizedPrompt ? true : false,
+          recreationPrompt: optimizedAgentPrompt
         };
 
         const webhookResponse = await fetch('https://ainomads.app.n8n.cloud/webhook/2408e72d-67a7-4931-a33a-7974962bf9f7', {
