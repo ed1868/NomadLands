@@ -48,8 +48,8 @@ export default function AgentCard({ agent }: AgentCardProps) {
   const [isDeploying, setIsDeploying] = useState(false);
   const [showModal, setShowModal] = useState(false);
   
-  const IconComponent = iconMap[agent.icon as keyof typeof iconMap] || Mail;
-  const gradientClass = gradientClasses[agent.gradientFrom as keyof typeof gradientClasses] || "velvet-gradient";
+  const IconComponent = iconMap[(agent as any).icon as keyof typeof iconMap] || Mail;
+  const gradientClass = gradientClasses[(agent as any).gradientFrom as keyof typeof gradientClasses] || "velvet-gradient";
   const agentImage = agentImages[agent.name as keyof typeof agentImages] || agentPlaceholderImage;
 
   const handleDeploy = async () => {
@@ -108,7 +108,7 @@ export default function AgentCard({ agent }: AgentCardProps) {
               </div>
               <div className="text-right">
                 <div className="text-xs text-gray-500 font-extralight">
-                  {(parseFloat(agent.priceInWei) / 1e18).toFixed(3)} ETH
+                  {((agent as any).priceInWei ? (parseFloat((agent as any).priceInWei) / 1e18).toFixed(3) : '0.035')} ETH
                 </div>
               </div>
             </div>
@@ -127,7 +127,7 @@ export default function AgentCard({ agent }: AgentCardProps) {
               Capabilities
             </h4>
             <div className="space-y-2">
-              {agent.features.slice(0, 3).map((feature, index) => (
+              {(agent.features || []).slice(0, 3).map((feature, index) => (
                 <div 
                   key={index} 
                   className="flex items-center text-xs text-gray-400 font-extralight"
@@ -136,9 +136,9 @@ export default function AgentCard({ agent }: AgentCardProps) {
                   <span className="truncate">{feature}</span>
                 </div>
               ))}
-              {agent.features.length > 3 && (
+              {(agent.features || []).length > 3 && (
                 <div className="text-xs text-gray-500 font-extralight mt-2">
-                  +{agent.features.length - 3} more capabilities
+                  +{(agent.features || []).length - 3} more capabilities
                 </div>
               )}
             </div>
@@ -208,7 +208,7 @@ export default function AgentCard({ agent }: AgentCardProps) {
               <div className="mb-8">
                 <h3 className="text-lg font-light text-gray-300 mb-4">Capabilities</h3>
                 <div className="flex flex-wrap gap-2">
-                  {agent.features.map((feature, index) => (
+                  {(agent.features || []).map((feature, index) => (
                     <Badge 
                       key={index}
                       variant="secondary"
