@@ -1431,15 +1431,28 @@ This agent should be ready for production deployment in n8n with proper monitori
         optimizedPrompt: optimizedPrompt
       };
 
-      // Generate Python agent with Claude
-      const pythonAgent = await claudeAgentGenerator.generatePythonAgent(claudeRequest);
-
-      // Save both implementations to file system
-      const savedPaths = await claudeAgentGenerator.saveAgentFiles(
-        claudeRequest,
-        pythonAgent,
-        workflowResult
-      );
+      // Generate Python agent with Claude (with fallback)
+      let pythonAgent = null;
+      let savedPaths = null;
+      
+      try {
+        pythonAgent = await claudeAgentGenerator.generatePythonAgent(claudeRequest);
+        
+        // Save both implementations to file system
+        savedPaths = await claudeAgentGenerator.saveAgentFiles(
+          claudeRequest,
+          pythonAgent,
+          workflowResult
+        );
+      } catch (claudeError) {
+        console.log('⚠️ Claude generation failed, continuing with n8n-only:', claudeError.message);
+        
+        // Create basic Python placeholder files for consistency
+        savedPaths = {
+          pythonPath: `generated_agents/${userId}/${agentRequest.name.toLowerCase().replace(/\s+/g, '_')}_agent/python_agent`,
+          n8nPath: `generated_agents/${userId}/${agentRequest.name.toLowerCase().replace(/\s+/g, '_')}_agent/n8n`
+        };
+      }
 
       // Save agent to database
       const dbAgentData = {
@@ -1468,8 +1481,8 @@ This agent should be ready for production deployment in n8n with proper monitori
         deploymentStatus: "deployed",
         deployedAt: new Date(),
         agentType: "dual", // Mark as dual implementation
-        pythonPath: savedPaths.pythonPath,
-        n8nPath: savedPaths.n8nPath
+        pythonPath: savedPaths?.pythonPath || null,
+        n8nPath: savedPaths?.n8nPath || null
       };
 
       const savedAgent = await storage.createAgent(dbAgentData);
@@ -1592,16 +1605,20 @@ This agent should be production-ready with proper authentication, rate limiting,
           n8n: {
             workflowId: workflowResult.workflowId,
             webhookUrl: workflowResult.webhookUrl,
-            path: savedPaths.n8nPath
+            path: savedPaths?.n8nPath || `generated_agents/${userId}/${agentRequest.name.toLowerCase().replace(/\s+/g, '_')}_agent/n8n`
           },
           python: {
-            path: savedPaths.pythonPath,
-            files: {
+            path: savedPaths?.pythonPath || `generated_agents/${userId}/${agentRequest.name.toLowerCase().replace(/\s+/g, '_')}_agent/python_agent`,
+            files: pythonAgent ? {
               agent: 'agent.py',
               requirements: 'requirements.txt',
               config: 'config.yaml',
               readme: 'README.md',
               tests: 'test_agent.py'
+            } : {
+              status: 'claude_api_failed',
+              reason: 'Anthropic API credits exhausted',
+              fallback: 'n8n_only_mode'
             }
           }
         },
