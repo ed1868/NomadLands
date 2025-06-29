@@ -1,7 +1,7 @@
 # general Agent
 
 ## Overview
-An AI agent that my emails
+An AI agent specialized in general tasks
 
 **Category**: general  
 **AI Model**: gpt-4o  
@@ -37,7 +37,7 @@ python agent.py
 
 ## System Prompt
 ```
-You are a helpful AI assistant.
+You are general Agent, An AI agent specialized in general tasks
 ```
 
-Generated on: 2025-06-29T22:32:52.571Z
+Generated on: 2025-06-29T22:44:31.332Z
