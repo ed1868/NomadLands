@@ -10,6 +10,7 @@ import { z } from "zod";
 import { PaymentService } from "./payment-service";
 import { N8nWorkflowGenerator } from "./n8n-generator";
 import { n8nService, N8nAgentRequest } from "./n8n-service";
+import { claudeAgentGenerator, type AgentGenerationRequest } from "./claude-agent-generator";
 import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./paypal";
 import Stripe from "stripe";
 
@@ -1204,6 +1205,162 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: "Failed to create agent", 
         error: error.message 
       });
+    }
+  });
+
+  // Enhanced agent creation with both n8n and Python implementations
+  app.post("/api/chat/create-dual-agent", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { 
+        agentData, 
+        conversationHistory,
+        optimizedPrompt 
+      } = req.body;
+
+      if (!agentData || !conversationHistory) {
+        return res.status(400).json({ message: "Agent data and conversation history are required" });
+      }
+
+      const userId = req.user?.userId;
+      if (!userId) {
+        return res.status(401).json({ message: "User ID required" });
+      }
+
+      // Parse agent request for n8n
+      let agentRequest: N8nAgentRequest;
+      const messageContent = conversationHistory
+        .filter((msg: any) => msg.role === 'user')
+        .map((msg: any) => msg.content)
+        .join(' ');
+
+      try {
+        agentRequest = n8nService.parseAgentRequest(messageContent);
+        
+        if (!agentRequest) {
+          agentRequest = {
+            name: agentData.name || "Custom Agent",
+            description: agentData.description || "AI Assistant created from conversation",
+            category: agentData.category || "general",
+            tools: agentData.tools || [],
+            aiModel: agentData.aiModel || "gpt-4"
+          };
+        }
+      } catch (parseError) {
+        agentRequest = {
+          name: agentData.name || "Custom Agent",
+          description: agentData.description || "AI Assistant created from conversation",
+          category: agentData.category || "general", 
+          tools: agentData.tools || [],
+          aiModel: agentData.aiModel || "gpt-4"
+        };
+      }
+
+      // Create n8n workflow
+      const workflowResult = await n8nService.createAgentWorkflow(agentRequest);
+      
+      // Prepare Claude agent generation request
+      const claudeRequest: AgentGenerationRequest = {
+        userId: userId,
+        agentName: agentRequest.name,
+        agentDescription: agentRequest.description,
+        tools: agentRequest.tools,
+        category: agentRequest.category,
+        aiModel: agentRequest.aiModel,
+        systemPrompt: agentData.systemPrompt || `You are ${agentRequest.name}, ${agentRequest.description}`,
+        conversationHistory: conversationHistory,
+        optimizedPrompt: optimizedPrompt
+      };
+
+      // Generate Python agent with Claude
+      const pythonAgent = await claudeAgentGenerator.generatePythonAgent(claudeRequest);
+
+      // Save both implementations to file system
+      const savedPaths = await claudeAgentGenerator.saveAgentFiles(
+        claudeRequest,
+        pythonAgent,
+        workflowResult
+      );
+
+      // Save agent to database
+      const dbAgentData = {
+        name: agentRequest.name,
+        description: agentRequest.description,
+        category: agentRequest.category,
+        tools: agentRequest.tools,
+        aiModel: agentRequest.aiModel,
+        systemPrompt: agentData.systemPrompt || `You are ${agentRequest.name}, ${agentRequest.description}`,
+        features: agentData.features || [],
+        price: agentData.price || "0",
+        styling: agentData.styling || {},
+        createdBy: userId,
+        workflowId: workflowResult.workflowId,
+        webhookUrl: workflowResult.webhookUrl,
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        responseTime: null,
+        usageVolume: null,
+        performanceScore: null,
+        lastUsed: null,
+        totalExecutions: null,
+        errorRate: null,
+        avgResponseTime: null,
+        deploymentStatus: "deployed",
+        deployedAt: new Date(),
+        agentType: "dual", // Mark as dual implementation
+        pythonPath: savedPaths.pythonPath,
+        n8nPath: savedPaths.n8nPath
+      };
+
+      const savedAgent = await storage.createAgent(dbAgentData);
+
+      res.json({
+        success: true,
+        agent: savedAgent,
+        implementations: {
+          n8n: {
+            workflowId: workflowResult.workflowId,
+            webhookUrl: workflowResult.webhookUrl,
+            path: savedPaths.n8nPath
+          },
+          python: {
+            path: savedPaths.pythonPath,
+            files: {
+              agent: 'agent.py',
+              requirements: 'requirements.txt',
+              config: 'config.yaml',
+              readme: 'README.md',
+              tests: 'test_agent.py'
+            }
+          }
+        },
+        message: `Successfully created ${agentRequest.name} with both n8n and Python implementations!`
+      });
+
+    } catch (error) {
+      console.error("Error creating dual agent:", error);
+      res.status(500).json({ 
+        message: "Failed to create dual agent", 
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  // List user's agent files
+  app.get("/api/chat/user-agents/:userId", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const userId = req.params.userId;
+      
+      // Verify user can only access their own agents
+      if (userId !== req.user?.userId) {
+        return res.status(403).json({ message: "Not authorized to access these agents" });
+      }
+
+      const agentList = await claudeAgentGenerator.listUserAgents(userId);
+      res.json({ agents: agentList });
+    } catch (error) {
+      console.error("Error listing user agents:", error);
+      res.status(500).json({ message: "Failed to list user agents" });
     }
   });
 
