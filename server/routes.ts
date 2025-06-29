@@ -1366,6 +1366,10 @@ This agent should be ready for production deployment in n8n with proper monitori
 
   // Enhanced agent creation with both n8n and Python implementations
   app.post("/api/chat/create-dual-agent", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    console.log('🎯 DUAL AGENT ENDPOINT HIT');
+    console.log('📥 Request body keys:', Object.keys(req.body));
+    console.log('👤 User:', req.user?.username);
+    
     try {
       const { 
         agentData, 
@@ -1553,6 +1557,7 @@ This agent should be production-ready with proper authentication, rate limiting,
         console.log('📋 FULL WEBHOOK PAYLOAD:');
         console.log(JSON.stringify(webhookData, null, 2));
 
+        console.log('🔄 Sending webhook request...');
         const webhookResponse = await fetch(webhookUrl, {
           method: 'POST',
           headers: {
