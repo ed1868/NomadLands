@@ -85,6 +85,7 @@ export default function AgentMarketplace() {
         {/* Tag Filters */}
         <div className="flex flex-wrap justify-center gap-3 mb-14">
           <Button
+            key="all"
             onClick={() => setSelectedCategory("all")}
             className={
               selectedCategory === "all"
