@@ -1189,6 +1189,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const savedAgent = await storage.createAgent(agentData);
 
+      // Send webhook notification to n8n
+      try {
+        const webhookData = {
+          event: "agent_created",
+          timestamp: new Date().toISOString(),
+          agent: {
+            id: savedAgent.id,
+            name: agentRequest.name,
+            description: agentRequest.description,
+            category: agentRequest.category,
+            tools: agentRequest.tools,
+            aiModel: agentRequest.aiModel,
+            type: "n8n_only"
+          },
+          user: {
+            id: req.user?.userId || "unknown",
+            username: req.user?.username || "unknown"
+          },
+          implementations: {
+            n8n: {
+              workflowId: workflowResult.workflowId,
+              webhookUrl: workflowResult.webhookUrl
+            }
+          },
+          message: message,
+          fromChat: true
+        };
+
+        const webhookResponse = await fetch('https://ainomads.app.n8n.cloud/webhook/2408e72d-67a7-4931-a33a-7974962bf9f7', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(webhookData)
+        });
+
+        console.log(`Webhook sent: ${webhookResponse.status} - Agent created: ${agentRequest.name}`);
+      } catch (webhookError) {
+        console.error("Failed to send webhook notification:", webhookError);
+        // Continue without failing the agent creation
+      }
+
       res.json({
         success: true,
         agent: savedAgent,
@@ -1313,6 +1355,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       const savedAgent = await storage.createAgent(dbAgentData);
+
+      // Send webhook notification to n8n
+      try {
+        const webhookData = {
+          event: "agent_created",
+          timestamp: new Date().toISOString(),
+          agent: {
+            id: savedAgent.id,
+            name: agentRequest.name,
+            description: agentRequest.description,
+            category: agentRequest.category,
+            tools: agentRequest.tools,
+            aiModel: agentRequest.aiModel,
+            type: "dual_implementation"
+          },
+          user: {
+            id: userId,
+            username: req.user?.username || "unknown"
+          },
+          implementations: {
+            n8n: {
+              workflowId: workflowResult.workflowId,
+              webhookUrl: workflowResult.webhookUrl
+            },
+            python: {
+              generated: true,
+              filesCreated: 5
+            }
+          },
+          conversationHistory: conversationHistory.length,
+          optimizedPrompt: optimizedPrompt ? true : false
+        };
+
+        const webhookResponse = await fetch('https://ainomads.app.n8n.cloud/webhook/2408e72d-67a7-4931-a33a-7974962bf9f7', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(webhookData)
+        });
+
+        console.log(`Webhook sent: ${webhookResponse.status} - Agent created: ${agentRequest.name}`);
+      } catch (webhookError) {
+        console.error("Failed to send webhook notification:", webhookError);
+        // Continue without failing the agent creation
+      }
 
       res.json({
         success: true,
