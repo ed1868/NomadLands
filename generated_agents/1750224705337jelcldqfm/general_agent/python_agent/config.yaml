@@ -1,0 +1,53 @@
+# General Agent Configuration
+agent:
+  name: "general Agent"
+  description: "An AI agent that processes Gmail emails and provides intelligent email management"
+  version: "1.0.0"
+  category: "general"
+
+# AI Model Configuration
+ai:
+  model: "gpt-4o"
+  temperature: 0.3
+  max_tokens: 2000
+  
+# Gmail Configuration
+gmail:
+  # Path to your Google OAuth credentials file
+  credentials_path: "credentials.json"
+  # Gmail search query for emails to process
+  default_query: "is:unread"
+  # Maximum emails to process per run
+  max_emails: 10
+  
+# Processing Configuration
+processing:
+  # Enable automatic email categorization
+  auto_categorize: true
+  # Enable priority detection
+  priority_detection: true
+  # Enable sentiment analysis
+  sentiment_analysis: true
+  # Generate email summaries
+  generate_summaries: true
+  
+# Output Configuration
+output:
+  # Save processed emails to JSON file
+  save_to_file: true
+  # Generate text reports
+  generate_reports: true
+  # Print reports to console
+  console_output: true
+  
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+# Environment Variables Required
+environment:
+  required:
+    - "OPENAI_API_KEY"
+  optional:
+    - "GMAIL_CREDENTIALS_PATH"
