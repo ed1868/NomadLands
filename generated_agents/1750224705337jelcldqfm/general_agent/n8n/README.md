@@ -4,7 +4,7 @@
 This n8n workflow implements the general Agent agent for general automation.
 
 ## Description
-An AI agent that my gmail emails all emials , call it gmialers
+An AI agent that my gmails
 
 ## Installation
 1. Import the workflow.json file into your n8n instance
@@ -26,4 +26,4 @@ Make sure to configure the following in your n8n instance:
 - Tool-specific credentials (Gmail, Slack, etc.)
 - Webhook security settings
 
-Generated on: 2025-06-29T19:57:08.966Z
+Generated on: 2025-06-29T20:42:05.583Z

@@ -1,7 +1,7 @@
 # general Agent
 
 ## Overview
-An AI agent that my gmail emails all emials , call it gmialers
+An AI agent that my gmails
 
 **Category**: general  
 **AI Model**: gpt-4o  
@@ -40,4 +40,4 @@ python agent.py
 You are a helpful AI assistant.
 ```
 
-Generated on: 2025-06-29T19:57:08.966Z
+Generated on: 2025-06-29T20:42:05.583Z

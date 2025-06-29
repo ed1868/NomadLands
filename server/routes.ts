@@ -895,11 +895,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/deployments", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
       const userId = req.user!.userId;
-      const deployments = await storage.getUserAgentDeployments(userId);
+      console.log("Fetching deployments for user:", userId);
+      
+      // Get user's created agents as "deployments"
+      const agents = await storage.getAgents();
+      console.log("Total agents found:", agents.length);
+      
+      const userAgents = agents.filter(agent => agent.createdBy === userId);
+      console.log("User agents found:", userAgents.length);
+      
+      // Transform agents into deployment format
+      const deployments = userAgents.map(agent => ({
+        id: agent.id,
+        name: agent.name,
+        description: agent.description,
+        status: agent.isActive ? 'active' : 'inactive',
+        createdAt: agent.createdAt,
+        endpoint: agent.webhookUrl || `${process.env.BASE_URL || 'http://localhost:5000'}/api/agents/${agent.id}/execute`,
+        agentId: agent.id,
+        workflowId: agent.workflowId,
+        category: agent.category,
+        tools: agent.tools,
+        aiModel: agent.aiModel,
+        deploymentStatus: agent.deploymentStatus || 'deployed'
+      }));
+      
+      console.log("Deployments prepared:", deployments.length);
       res.json(deployments);
     } catch (error: any) {
       console.error("Error fetching deployments:", error);
-      res.status(500).json({ message: "Failed to fetch deployments" });
+      console.error("Error stack:", error.stack);
+      res.status(500).json({ message: "Failed to fetch deployments", error: error.message });
     }
   });
 
