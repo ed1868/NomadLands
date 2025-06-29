@@ -22,6 +22,7 @@ export interface ChatMessage {
   agentConfig?: any;
   showCreateButton?: boolean;
   agentData?: any;
+  optimizedPrompt?: string;
 }
 
 interface AgentCreationChatProps {
@@ -164,8 +165,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
         },
         body: JSON.stringify({
           agentData: workflowData.agent,
-          conversationHistory: messages.map(m => ({ role: m.type === 'user' ? 'user' : 'assistant', content: m.content })),
-          optimizedPrompt: message.optimizedPrompt
+          conversationHistory: messages.map(m => ({ role: m.type === 'user' ? 'user' : 'assistant', content: m.content }))
         })
       });
 
@@ -439,80 +439,114 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
   };
 
   return (
-    <Card className="bg-gray-900/40 border-gray-700/50 backdrop-blur-sm">
-      <CardContent className="p-6">
-        <div className="flex items-center space-x-2 mb-6">
-          <MessageCircle className="w-5 h-5 text-emerald-500" />
-          <h3 className="text-lg font-semibold text-white">AI Agent Creation Assistant</h3>
-          <Badge className="bg-emerald-500/20 text-emerald-300 text-xs">BETA</Badge>
+    <div className="w-full max-w-4xl mx-auto bg-gray-900/40 border border-gray-700/50 backdrop-blur-sm rounded-xl overflow-hidden">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-emerald-900/30 to-blue-900/30 px-4 sm:px-6 py-4 border-b border-gray-700/50">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-emerald-500/20 rounded-lg flex items-center justify-center">
+              <Bot className="w-5 h-5 text-emerald-400" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-white">AI Agent Creator</h3>
+              <p className="text-xs text-gray-400">Build your custom automation assistant</p>
+            </div>
+          </div>
+          <Badge className="bg-emerald-500/20 text-emerald-300 text-xs border border-emerald-500/30">
+            BETA
+          </Badge>
         </div>
+      </div>
 
+      <div className="flex flex-col h-[600px] sm:h-[700px]">
         {/* Chat Messages */}
-        <div className="h-96 overflow-y-auto mb-4 space-y-4 bg-black/20 rounded-lg p-4">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
           {messages.map((message) => (
             <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[80%] ${message.type === 'user' ? 'bg-emerald-600/20 text-emerald-100' : 'bg-gray-700/50 text-gray-200'} rounded-lg p-3`}>
+              <div className={`max-w-[85%] sm:max-w-[75%] ${
+                message.type === 'user' 
+                  ? 'bg-emerald-600/20 border border-emerald-500/30' 
+                  : 'bg-gray-800/50 border border-gray-600/50'
+              } rounded-2xl p-4 backdrop-blur-sm`}>
                 <div className="flex items-center space-x-2 mb-2">
-                  {message.type === 'user' ? (
-                    <User className="w-4 h-4" />
-                  ) : (
-                    <Bot className="w-4 h-4 text-emerald-400" />
-                  )}
-                  <span className="text-xs text-gray-400">
-                    {message.timestamp.toLocaleTimeString()}
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                    message.type === 'user' 
+                      ? 'bg-emerald-500/20' 
+                      : 'bg-blue-500/20'
+                  }`}>
+                    {message.type === 'user' ? (
+                      <User className="w-3 h-3 text-emerald-400" />
+                    ) : (
+                      <Bot className="w-3 h-3 text-blue-400" />
+                    )}
+                  </div>
+                  <span className="text-xs text-gray-400 font-medium">
+                    {message.type === 'user' ? 'You' : 'AI Assistant'}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
-                <p className="text-sm">{message.content}</p>
+                <p className="text-sm text-gray-200 leading-relaxed">{message.content}</p>
                 
+                {/* Action Buttons */}
                 {(message.agentConfig || message.agentData) && (
-                  <div className="mt-3">
+                  <div className="mt-4">
                     <button
                       onClick={() => message.agentConfig ? onAgentGenerated(message.agentConfig) : handleCreateAgent(message)}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium flex items-center justify-center space-x-2"
+                      className="w-full bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-500 hover:to-blue-500 text-white px-4 py-3 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
                     >
-                      <span>Create Agent Now</span>
+                      🚀 Create Agent Now
                     </button>
                   </div>
                 )}
 
                 {message.showCreateButton && !message.agentConfig && !message.agentData && (
-                  <div className="mt-3">
+                  <div className="mt-4">
                     <button
                       onClick={() => handleCreateAgent(message)}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium flex items-center justify-center space-x-2"
+                      className="w-full bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-500 hover:to-blue-500 text-white px-4 py-3 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
                     >
-                      <span>Create Agent Now</span>
+                      🚀 Create Agent Now
                     </button>
                   </div>
                 )}
                 
+                {/* Suggestions */}
                 {message.suggestions && (
-                  <div className="mt-3 space-y-1">
-                    {message.suggestions.map((suggestion, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleSuggestionClick(suggestion)}
-                        className="block w-full text-left text-xs bg-gray-600/30 hover:bg-gray-600/50 rounded px-2 py-1 transition-colors"
-                      >
-                        {suggestion}
-                      </button>
-                    ))}
+                  <div className="mt-4 space-y-2">
+                    <p className="text-xs text-gray-400 font-medium">Try these:</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {message.suggestions.map((suggestion, index) => (
+                        <button
+                          key={index}
+                          onClick={() => handleSuggestionClick(suggestion)}
+                          className="text-left text-sm bg-gray-700/30 hover:bg-gray-600/40 border border-gray-600/50 hover:border-gray-500/50 rounded-lg px-3 py-2 transition-all duration-200 text-gray-300 hover:text-white"
+                        >
+                          {suggestion}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
             </div>
           ))}
           
+          {/* Loading Animation */}
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-gray-700/50 rounded-lg p-3">
-                <div className="flex items-center space-x-2">
-                  <Bot className="w-4 h-4 text-emerald-400" />
+              <div className="bg-gray-800/50 border border-gray-600/50 rounded-2xl p-4 backdrop-blur-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="w-6 h-6 bg-blue-500/20 rounded-full flex items-center justify-center">
+                    <Bot className="w-3 h-3 text-blue-400" />
+                  </div>
                   <div className="flex space-x-1">
                     <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"></div>
                     <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
                     <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
                   </div>
+                  <span className="text-xs text-gray-400">AI is thinking...</span>
                 </div>
               </div>
             </div>
@@ -520,97 +554,126 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Tools Selection */}
-        <div className="mb-4">
-          <label className="text-sm font-medium text-gray-300 mb-2 block">
-            Tools & Integrations
-          </label>
-          <div className="flex flex-wrap gap-2 mb-3">
-            {tools.map((tool) => {
-              const toolData = commonTools.find(t => t.name === tool);
-              return (
-                <div key={tool} className={`bg-black/40 backdrop-blur-sm border ${toolData?.borderColor || 'border-gray-400'} hover:bg-black/60 rounded-lg px-3 py-2 transition-all flex items-center space-x-2`}>
-                  <img 
-                    src={toolData?.logo} 
-                    alt={tool} 
-                    className="w-4 h-4 object-contain filter invert"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
-                  <span className={`text-sm font-medium ${toolData?.textColor || 'text-gray-300'}`}>{tool}</span>
-                  <button onClick={() => removeTool(tool)} className="ml-1 hover:bg-red-500/20 rounded p-0.5">
-                    <X className="w-3 h-3 text-red-400" />
-                  </button>
-                </div>
-              );
-            })}
+        {/* Tools Section - Collapsible on Mobile */}
+        {tools.length > 0 && (
+          <div className="border-t border-gray-700/50 px-4 sm:px-6 py-3 bg-gray-900/20">
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-sm font-medium text-gray-300">
+                Selected Tools ({tools.length})
+              </label>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {tools.map((tool) => {
+                const toolData = commonTools.find(t => t.name === tool);
+                return (
+                  <div key={tool} className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg px-3 py-1.5 flex items-center space-x-2">
+                    <img 
+                      src={toolData?.logo} 
+                      alt={tool} 
+                      className="w-4 h-4 object-contain filter invert"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                    <span className="text-sm font-medium text-emerald-300">{tool}</span>
+                    <button 
+                      onClick={() => removeTool(tool)} 
+                      className="hover:bg-red-500/20 rounded p-0.5 transition-colors"
+                    >
+                      <X className="w-3 h-3 text-red-400" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-          <div className="flex flex-wrap gap-2 mb-3">
-            {commonTools.filter(tool => !tools.includes(tool.name)).map((tool) => (
+        )}
+
+        {/* Available Tools */}
+        <div className="border-t border-gray-700/50 px-4 sm:px-6 py-3 bg-gray-900/10">
+          <label className="text-sm font-medium text-gray-300 mb-3 block">
+            Add Tools & Integrations
+          </label>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+            {commonTools.filter(tool => !tools.includes(tool.name)).slice(0, 12).map((tool) => (
               <button
                 key={tool.name}
                 onClick={() => addTool(tool.name)}
-                className={`bg-black/30 backdrop-blur-sm border ${tool.borderColor} hover:bg-black/50 hover:scale-105 rounded-lg px-3 py-2 transition-all duration-200 flex items-center space-x-2 group`}
+                className="bg-gray-800/30 hover:bg-gray-700/40 border border-gray-600/30 hover:border-gray-500/50 rounded-lg p-2 transition-all duration-200 flex flex-col items-center space-y-1 group"
               >
                 <img 
                   src={tool.logo} 
                   alt={tool.name} 
-                  className="w-4 h-4 object-contain group-hover:scale-110 transition-transform filter invert"
+                  className="w-5 h-5 object-contain group-hover:scale-110 transition-transform filter invert"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
                 />
-                <span className={`text-sm font-medium ${tool.textColor}`}>{tool.name}</span>
-                <Plus className={`w-3 h-3 ${tool.textColor} opacity-60 group-hover:opacity-100`} />
+                <span className="text-xs font-medium text-gray-400 group-hover:text-white text-center leading-tight">
+                  {tool.name}
+                </span>
               </button>
             ))}
           </div>
         </div>
 
-        {/* Message Input */}
-        <div className="flex space-x-2">
-          <Input
-            placeholder="Describe what you want your agent to do..."
-            value={currentMessage}
-            onChange={(e) => setCurrentMessage(e.target.value)}
-            className="flex-1 bg-gray-800/50 border-gray-600"
-            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-          />
-          <Button 
-            onClick={() => handleSendMessage()}
-            disabled={!currentMessage.trim() || isLoading}
-            className="bg-emerald-600 hover:bg-emerald-700"
-          >
-            <Send className="w-4 h-4" />
-          </Button>
-        </div>
-        
-        {/* Quick Starters */}
-        <div className="mt-3">
-          <p className="text-xs text-gray-500 mb-2">Quick starters:</p>
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => handleSuggestionClick("I want to create a customer support agent")}
-              className="text-xs bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 rounded px-2 py-1 transition-colors"
+        {/* Input Area */}
+        <div className="border-t border-gray-700/50 px-4 sm:px-6 py-4 bg-gray-900/20">
+          <div className="flex space-x-3">
+            <div className="flex-1">
+              <Input
+                placeholder="Describe your agent idea... (e.g., 'Create a customer support agent that handles refunds')"
+                value={currentMessage}
+                onChange={(e) => setCurrentMessage(e.target.value)}
+                className="bg-gray-800/50 border-gray-600/50 focus:border-emerald-500/50 text-white placeholder-gray-400 rounded-xl h-12"
+                onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
+              />
+            </div>
+            <Button 
+              onClick={() => handleSendMessage()}
+              disabled={!currentMessage.trim() || isLoading}
+              className="bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-500 hover:to-blue-500 disabled:from-gray-600 disabled:to-gray-600 rounded-xl h-12 px-6 shadow-lg hover:shadow-xl transition-all duration-200"
             >
-              Customer Support
-            </button>
-            <button
-              onClick={() => handleSuggestionClick("I need a data analysis agent")}
-              className="text-xs bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 rounded px-2 py-1 transition-colors"
-            >
-              Data Analysis
-            </button>
-            <button
-              onClick={() => handleSuggestionClick("I want a content writing agent")}
-              className="text-xs bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 border border-orange-500/30 rounded px-2 py-1 transition-colors"
-            >
-              Content Creation
-            </button>
+              {isLoading ? (
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <Send className="w-4 h-4" />
+              )}
+            </Button>
+          </div>
+          
+          {/* Quick Starters */}
+          <div className="mt-3">
+            <p className="text-xs text-gray-500 mb-2">Quick starters:</p>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => handleSuggestionClick("I want to create a customer support agent")}
+                className="text-xs bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 rounded-lg px-3 py-1.5 transition-all duration-200 hover:scale-105"
+              >
+                📞 Customer Support
+              </button>
+              <button
+                onClick={() => handleSuggestionClick("I need a data analysis agent")}
+                className="text-xs bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 rounded-lg px-3 py-1.5 transition-all duration-200 hover:scale-105"
+              >
+                📊 Data Analysis
+              </button>
+              <button
+                onClick={() => handleSuggestionClick("I want a content writing agent")}
+                className="text-xs bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 border border-orange-500/30 rounded-lg px-3 py-1.5 transition-all duration-200 hover:scale-105"
+              >
+                ✍️ Content Creation
+              </button>
+              <button
+                onClick={() => handleSuggestionClick("I need a scheduling assistant agent")}
+                className="text-xs bg-green-600/20 hover:bg-green-600/30 text-green-300 border border-green-500/30 rounded-lg px-3 py-1.5 transition-all duration-200 hover:scale-105"
+              >
+                📅 Scheduling
+              </button>
+            </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
