@@ -1315,6 +1315,8 @@ This agent should be ready for production deployment in n8n with proper monitori
         console.log('👤 User:', req.user?.username);
         console.log('🤖 Agent:', agentRequest.name);
         console.log('⏰ Timestamp:', new Date().toISOString());
+        console.log('📋 FULL WEBHOOK PAYLOAD:');
+        console.log(JSON.stringify(webhookData, null, 2));
 
         const webhookResponse = await fetch(singleWebhookUrl, {
           method: 'POST',
@@ -1548,6 +1550,8 @@ This agent should be production-ready with proper authentication, rate limiting,
         console.log('👤 User:', req.user?.username);
         console.log('🤖 Agent:', agentRequest.name);
         console.log('⏰ Timestamp:', new Date().toISOString());
+        console.log('📋 FULL WEBHOOK PAYLOAD:');
+        console.log(JSON.stringify(webhookData, null, 2));
 
         const webhookResponse = await fetch(webhookUrl, {
           method: 'POST',
