@@ -319,9 +319,9 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
                   <Button
                     onClick={() => handleCreateAgent(message)}
                     disabled={isLoading}
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm"
+                    className="bg-gradient-to-r from-emerald-600/20 to-blue-600/20 hover:from-emerald-600/30 hover:to-blue-600/30 border border-emerald-500/30 hover:border-emerald-400/50 text-emerald-300 hover:text-white px-4 py-2 rounded-lg text-sm transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
                   >
-                    Create Agent
+                    🚀 Create Agent
                   </Button>
                 </div>
               )}
@@ -333,7 +333,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
                     <button
                       key={index}
                       onClick={() => handleSuggestionClick(suggestion)}
-                      className="block w-full text-left text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg px-3 py-2 text-gray-300 transition-colors"
+                      className="block w-full text-left text-sm bg-gray-700/30 hover:bg-gray-600/40 border border-gray-600/50 hover:border-gray-500/50 rounded-lg px-3 py-2 text-gray-300 hover:text-white transition-all duration-200"
                     >
                       {suggestion}
                     </button>
@@ -398,12 +398,12 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
             <button
               key={tool.name}
               onClick={() => addTool(tool.name)}
-              className="bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg p-3 flex flex-col items-center gap-2 transition-colors group"
+              className="bg-gray-800/30 hover:bg-gray-700/40 border border-gray-600/30 hover:border-gray-500/50 rounded-lg p-3 flex flex-col items-center gap-2 transition-all duration-200 group"
             >
               <img 
                 src={tool.logo} 
                 alt={tool.name} 
-                className="w-5 h-5 filter invert opacity-70 group-hover:opacity-100"
+                className="w-5 h-5 filter invert opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-transform"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                 }}
@@ -411,6 +411,37 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
               <span className="text-xs text-gray-400 group-hover:text-white">{tool.name}</span>
             </button>
           ))}
+        </div>
+        
+        {/* Quick starter buttons */}
+        <div className="mt-4 pt-3 border-t border-gray-700/30">
+          <p className="text-xs text-gray-500 mb-2">Quick starters:</p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => handleSuggestionClick("I want to create a customer support agent")}
+              className="text-xs bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 rounded-lg px-3 py-1.5 transition-all duration-200 hover:scale-105"
+            >
+              📞 Customer Support
+            </button>
+            <button
+              onClick={() => handleSuggestionClick("I need a data analysis agent")}
+              className="text-xs bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 rounded-lg px-3 py-1.5 transition-all duration-200 hover:scale-105"
+            >
+              📊 Data Analysis
+            </button>
+            <button
+              onClick={() => handleSuggestionClick("I want a content writing agent")}
+              className="text-xs bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 border border-orange-500/30 rounded-lg px-3 py-1.5 transition-all duration-200 hover:scale-105"
+            >
+              ✍️ Content Creation
+            </button>
+            <button
+              onClick={() => handleSuggestionClick("I need a scheduling assistant agent")}
+              className="text-xs bg-green-600/20 hover:bg-green-600/30 text-green-300 border border-green-500/30 rounded-lg px-3 py-1.5 transition-all duration-200 hover:scale-105"
+            >
+              📅 Scheduling
+            </button>
+          </div>
         </div>
       </div>
 
@@ -427,7 +458,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
           <Button 
             onClick={() => handleSendMessage()}
             disabled={!currentMessage.trim() || isLoading}
-            className="bg-emerald-600 hover:bg-emerald-700 px-4"
+            className="bg-gradient-to-r from-emerald-600/20 to-blue-600/20 hover:from-emerald-600/30 hover:to-blue-600/30 border border-emerald-500/30 hover:border-emerald-400/50 text-emerald-300 hover:text-white px-4 transition-all duration-200 hover:scale-105"
           >
             <Send className="w-4 h-4" />
           </Button>
