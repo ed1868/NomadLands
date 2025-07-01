@@ -137,6 +137,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
   };
 
   const handleSuggestionClick = (suggestion: string) => {
+    autoDetectTools(suggestion);
     setCurrentMessage(suggestion);
     handleSendMessage(suggestion);
   };
@@ -262,9 +263,47 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
     }
   };
 
+  const autoDetectTools = (text: string) => {
+    const toolMappings = {
+      'gmail': 'Gmail',
+      'email': 'Gmail',
+      'sheets': 'Google Sheets',
+      'spreadsheet': 'Google Sheets',
+      'slack': 'Slack',
+      'discord': 'Discord',
+      'notion': 'Notion',
+      'stripe': 'Stripe',
+      'payment': 'Stripe',
+      'paypal': 'PayPal',
+      'github': 'GitHub',
+      'git': 'GitHub',
+      'trello': 'Trello',
+      'airtable': 'Airtable',
+      'openai': 'OpenAI',
+      'ai': 'OpenAI',
+      'zapier': 'Zapier'
+    };
+
+    const lowercaseText = text.toLowerCase();
+    const detectedTools: string[] = [];
+
+    Object.entries(toolMappings).forEach(([keyword, tool]) => {
+      if (lowercaseText.includes(keyword) && !tools.includes(tool)) {
+        detectedTools.push(tool);
+      }
+    });
+
+    if (detectedTools.length > 0) {
+      setTools(prev => [...prev, ...detectedTools]);
+    }
+  };
+
   const handleSendMessage = async (messageText?: string) => {
     const text = messageText || currentMessage.trim();
     if (!text) return;
+
+    // Auto-detect tools from the message
+    autoDetectTools(text);
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),

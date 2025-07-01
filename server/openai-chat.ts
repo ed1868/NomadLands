@@ -101,7 +101,25 @@ IMPORTANT: Always respond in JSON format with this structure:
   "agentData": {"name": "", "description": "", "tools": [], "systemPrompt": ""}
 }
 
-When you have sufficient details, set readyToCreate: true in your JSON response.`;
+READINESS CRITERIA: Set readyToCreate: true when you have:
+- A clear agent name
+- Basic description or purpose
+- At least one use case mentioned
+- Don't be too strict - if the user has provided a name and purpose, that's often enough to start
+
+TOOL DETECTION: Automatically detect and include tools mentioned in conversation:
+- Gmail/email → "Gmail"
+- Sheets/spreadsheet → "Google Sheets"  
+- Slack → "Slack"
+- Discord → "Discord"
+- Notion → "Notion"
+- Stripe/payment → "Stripe"
+- PayPal → "PayPal"
+- GitHub/git → "GitHub"
+- Trello → "Trello"
+- Airtable → "Airtable"
+- OpenAI/AI → "OpenAI"
+- Zapier → "Zapier"`;
 
       const messages = [
         { role: "system", content: systemPrompt },
