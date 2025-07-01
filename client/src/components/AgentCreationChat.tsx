@@ -394,23 +394,37 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
       <div className="px-6 py-4 bg-gray-900/30 border-t border-gray-800">
         <p className="text-sm text-gray-400 mb-3">Add integrations:</p>
         <div className="grid grid-cols-4 gap-3">
-          {commonTools.filter(tool => !tools.includes(tool.name)).slice(0, 8).map((tool) => (
-            <button
-              key={tool.name}
-              onClick={() => addTool(tool.name)}
-              className="bg-gray-800/30 hover:bg-gray-700/40 border border-gray-600/30 hover:border-gray-500/50 rounded-lg p-3 flex flex-col items-center gap-2 transition-all duration-200 group"
-            >
-              <img 
-                src={tool.logo} 
-                alt={tool.name} 
-                className="w-5 h-5 filter invert opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-transform"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                }}
-              />
-              <span className="text-xs text-gray-400 group-hover:text-white">{tool.name}</span>
-            </button>
-          ))}
+          {commonTools.filter(tool => !tools.includes(tool.name)).slice(0, 8).map((tool, index) => {
+            const colors = [
+              { bg: 'bg-emerald-500/20', border: 'border-emerald-400/30', text: 'text-emerald-300', hoverBg: 'hover:bg-emerald-500/30', hoverBorder: 'hover:border-emerald-400/50' },
+              { bg: 'bg-blue-500/20', border: 'border-blue-400/30', text: 'text-blue-300', hoverBg: 'hover:bg-blue-500/30', hoverBorder: 'hover:border-blue-400/50' },
+              { bg: 'bg-purple-500/20', border: 'border-purple-400/30', text: 'text-purple-300', hoverBg: 'hover:bg-purple-500/30', hoverBorder: 'hover:border-purple-400/50' },
+              { bg: 'bg-orange-500/20', border: 'border-orange-400/30', text: 'text-orange-300', hoverBg: 'hover:bg-orange-500/30', hoverBorder: 'hover:border-orange-400/50' },
+              { bg: 'bg-red-500/20', border: 'border-red-400/30', text: 'text-red-300', hoverBg: 'hover:bg-red-500/30', hoverBorder: 'hover:border-red-400/50' },
+              { bg: 'bg-yellow-500/20', border: 'border-yellow-400/30', text: 'text-yellow-300', hoverBg: 'hover:bg-yellow-500/30', hoverBorder: 'hover:border-yellow-400/50' },
+              { bg: 'bg-pink-500/20', border: 'border-pink-400/30', text: 'text-pink-300', hoverBg: 'hover:bg-pink-500/30', hoverBorder: 'hover:border-pink-400/50' },
+              { bg: 'bg-indigo-500/20', border: 'border-indigo-400/30', text: 'text-indigo-300', hoverBg: 'hover:bg-indigo-500/30', hoverBorder: 'hover:border-indigo-400/50' }
+            ];
+            const colorScheme = colors[index % colors.length];
+            
+            return (
+              <button
+                key={tool.name}
+                onClick={() => addTool(tool.name)}
+                className={`${colorScheme.bg} ${colorScheme.hoverBg} border ${colorScheme.border} ${colorScheme.hoverBorder} rounded-lg p-3 flex flex-col items-center gap-2 transition-all duration-200 group hover:scale-105 shadow-lg hover:shadow-xl`}
+              >
+                <img 
+                  src={tool.logo} 
+                  alt={tool.name} 
+                  className="w-5 h-5 filter invert opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-transform"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+                <span className={`text-xs ${colorScheme.text} group-hover:text-white transition-colors`}>{tool.name}</span>
+              </button>
+            );
+          })}
         </div>
         
         {/* Quick starter buttons */}
