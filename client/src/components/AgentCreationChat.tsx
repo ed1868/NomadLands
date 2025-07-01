@@ -248,7 +248,7 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
         timestamp: new Date(),
         suggestions: data.suggestions,
         agentConfig: data.agentConfig,
-        showCreateButton: data.showCreateButton,
+        showCreateButton: data.readyToCreate,
         agentData: data.agentData
       };
     } catch (error) {
