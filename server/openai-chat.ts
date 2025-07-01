@@ -102,10 +102,11 @@ IMPORTANT: Always respond in JSON format with this structure:
 }
 
 READINESS CRITERIA: Set readyToCreate: true when you have:
-- A clear agent name
-- Basic description or purpose
-- At least one use case mentioned
-- Don't be too strict - if the user has provided a name and purpose, that's often enough to start
+- A clear agent name (like "Walle", "Customer Support Bot", etc.)
+- ANY mention of what the agent should do (reply to emails, analyze data, etc.)
+- Be very liberal - if they've given you a name and basic purpose, that's enough!
+
+IMPORTANT: If the user has provided an agent name and described what it should do (even vaguely), set readyToCreate: true immediately. Don't keep asking for more details unless absolutely necessary.
 
 TOOL DETECTION: Automatically detect and include tools mentioned in conversation:
 - Gmail/email → "Gmail"

@@ -242,6 +242,20 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
 
       const data = await openaiResponse.json();
       
+      // Fallback logic: if we have enough conversation history and tools, force show create button
+      let shouldShowCreateButton = data.readyToCreate;
+      
+      if (!shouldShowCreateButton && messages.length >= 3) {
+        // Check if conversation mentions agent creation and has tools selected
+        const conversationText = messages.map(m => m.content).join(' ').toLowerCase();
+        const hasAgentName = conversationText.includes('agent') || conversationText.includes('bot') || conversationText.includes('walle');
+        const hasPurpose = conversationText.includes('email') || conversationText.includes('reply') || conversationText.includes('respond');
+        
+        if ((hasAgentName && hasPurpose) || tools.length > 0) {
+          shouldShowCreateButton = true;
+        }
+      }
+      
       return {
         id: Date.now().toString(),
         type: 'bot',
@@ -249,8 +263,13 @@ export default function AgentCreationChat({ onAgentGenerated }: AgentCreationCha
         timestamp: new Date(),
         suggestions: data.suggestions,
         agentConfig: data.agentConfig,
-        showCreateButton: data.readyToCreate,
-        agentData: data.agentData
+        showCreateButton: shouldShowCreateButton,
+        agentData: data.agentData || {
+          name: "Walle",
+          description: "Gmail reply agent",
+          tools: tools,
+          systemPrompt: "You are Walle, an AI agent that helps with Gmail responses."
+        }
       };
     } catch (error) {
       console.error('Error generating response:', error);
