@@ -4,7 +4,7 @@
 This n8n workflow implements the general Agent agent for general automation.
 
 ## Description
-An AI agent specialized in general tasks
+An AI agent that automated replies
 
 ## Installation
 1. Import the workflow.json file into your n8n instance
@@ -26,4 +26,4 @@ Make sure to configure the following in your n8n instance:
 - Tool-specific credentials (Gmail, Slack, etc.)
 - Webhook security settings
 
-Generated on: 2025-06-29T22:44:31.332Z
+Generated on: 2025-07-01T17:21:52.746Z

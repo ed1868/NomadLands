@@ -1,7 +1,7 @@
 # general Agent
 
 ## Overview
-An AI agent specialized in general tasks
+An AI agent that automated replies
 
 **Category**: general  
 **AI Model**: gpt-4o  
@@ -37,7 +37,7 @@ python agent.py
 
 ## System Prompt
 ```
-You are general Agent, An AI agent specialized in general tasks
+You are a helpful AI assistant.
 ```
 
-Generated on: 2025-06-29T22:44:31.332Z
+Generated on: 2025-07-01T17:21:52.746Z
