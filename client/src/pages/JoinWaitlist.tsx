@@ -403,7 +403,7 @@ export default function JoinWaitlist() {
             <div className="overflow-hidden rounded-xl">
               <div className="flex transition-transform duration-300 ease-in-out">
                 
-                {/* Example 1: Email Management Agent */}
+                {/* Example 1: Sales Email Agent */}
                 <div className="w-full flex-shrink-0">
                   <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl p-8 border border-gray-700">
                     <div className="grid md:grid-cols-2 gap-8 items-center">
@@ -413,40 +413,40 @@ export default function JoinWaitlist() {
                             <Bot className="w-5 h-5 text-emerald-400" />
                           </div>
                           <div>
-                            <h4 className="text-lg font-semibold text-white">Email Management Agent</h4>
-                            <p className="text-sm text-emerald-400">Single Agent • $150 price point</p>
+                            <h4 className="text-lg font-semibold text-white">Sales Email Automation Agent</h4>
+                            <p className="text-sm text-emerald-400">Single Agent • $280 price point</p>
                           </div>
                         </div>
                         <p className="text-gray-300 mb-4">
-                          This agent automatically sorts emails by priority, drafts responses for common inquiries, 
-                          and schedules follow-ups. Built by Sarah K., earning $2,400/month from 16 clients.
+                          This agent automatically responds to sales inquiries, qualifies leads, books meetings, and 
+                          follows up with prospects. Built by Marcus T., earning $4,200/month from 15 clients.
                         </p>
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                            <span className="text-sm text-gray-300">Processes 500+ emails daily</span>
+                            <span className="text-sm text-gray-300">Converts 23% of email leads to meetings</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                            <span className="text-sm text-gray-300">95% accuracy in categorization</span>
+                            <span className="text-sm text-gray-300">Books 40+ sales meetings per week</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                            <span className="text-sm text-gray-300">Saves 3 hours per day per user</span>
+                            <span className="text-sm text-gray-300">Generates $180K pipeline monthly</span>
                           </div>
                         </div>
                       </div>
                       <div className="bg-gray-800/50 rounded-lg p-6 border border-gray-600">
                         <div className="text-center text-gray-400 mb-4">
                           <Play className="w-8 h-8 mx-auto mb-2" />
-                          <p className="text-sm">Agent Demo Screenshot</p>
+                          <p className="text-sm">Sales Agent Dashboard</p>
                         </div>
                         <div className="bg-gray-900 rounded p-4 text-xs font-mono text-green-400">
-                          <div>📧 Incoming: 47 emails</div>
-                          <div>🔥 High Priority: 3 flagged</div>
-                          <div>📝 Auto-drafted: 12 responses</div>
-                          <div>⏰ Scheduled: 8 follow-ups</div>
-                          <div className="text-emerald-400 mt-2">✅ Processing complete in 2.3s</div>
+                          <div>💰 Lead Qualified: 12 high-value prospects</div>
+                          <div>📅 Meetings Booked: 8 this week</div>
+                          <div>📧 Follow-ups Sent: 24 personalized</div>
+                          <div>🎯 Pipeline Added: $47K today</div>
+                          <div className="text-emerald-400 mt-2">✅ 34% email-to-meeting conversion</div>
                         </div>
                       </div>
                     </div>
@@ -518,64 +518,129 @@ export default function JoinWaitlist() {
                   </div>
                 </div>
 
-                {/* Example 3: Enterprise Development Company Fleet */}
+                {/* Example 3: Social Media Creator Fleet */}
                 <div className="w-full flex-shrink-0">
                   <div className="bg-gradient-to-br from-purple-900/20 to-purple-800/10 rounded-xl p-8 border border-purple-500/20">
                     <div className="grid md:grid-cols-2 gap-8 items-center">
                       <div>
                         <div className="flex items-center gap-3 mb-4">
                           <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                            <Rocket className="w-5 h-5 text-purple-400" />
+                            <Sparkles className="w-5 h-5 text-purple-400" />
                           </div>
                           <div>
-                            <h4 className="text-lg font-semibold text-white">Software Company Fleet</h4>
-                            <p className="text-sm text-purple-400">52 Agents • $85,000 enterprise license</p>
+                            <h4 className="text-lg font-semibold text-white">Social Media Creator Fleet</h4>
+                            <p className="text-sm text-purple-400">10 Agents • $3,500 monthly license</p>
                           </div>
                         </div>
                         <p className="text-gray-300 mb-4">
-                          A complete software development company with 52 agents handling everything from requirements 
-                          to deployment. Built by Dev Team Alpha, licensed to Fortune 500 for $340K/year.
+                          Replaces an entire 10-person social media team with automated video creation, image generation, 
+                          posting, and engagement. Built by CreatorPro, earning $21K/month from 6 influencers.
                         </p>
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             <CheckCircle2 className="w-4 h-4 text-purple-400" />
-                            <span className="text-sm text-gray-300">Frontend Development Fleet (18 agents)</span>
+                            <span className="text-sm text-gray-300">Auto-generates 50+ videos weekly per account</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle2 className="w-4 h-4 text-purple-400" />
-                            <span className="text-sm text-gray-300">Backend & DevOps Fleet (20 agents)</span>
+                            <span className="text-sm text-gray-300">Creates custom images and graphics daily</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle2 className="w-4 h-4 text-purple-400" />
-                            <span className="text-sm text-gray-300">QA & Testing Fleet (14 agents)</span>
+                            <span className="text-sm text-gray-300">Responds to 1000+ comments/DMs automatically</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-gray-800/50 rounded-lg p-6 border border-gray-600">
+                        <div className="text-center text-gray-400 mb-4">
+                          <Sparkles className="w-8 h-8 mx-auto mb-2" />
+                          <p className="text-sm">Creator Fleet Dashboard</p>
+                        </div>
+                        <div className="space-y-3 text-xs">
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-300">Videos Created</span>
+                            <span className="text-pink-400">12 today</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-300">Images Generated</span>
+                            <span className="text-blue-400">47 unique</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-300">Posts Scheduled</span>
+                            <span className="text-purple-400">156 this week</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-300">Engagements</span>
+                            <span className="text-green-400">2.3K replies sent</span>
+                          </div>
+                          <div className="bg-gradient-to-r from-pink-900/50 to-purple-900/50 rounded p-2 mt-3">
+                            <div className="text-pink-400 font-semibold">Replacing 10 People</div>
+                            <div className="text-gray-300">Video Editor, Graphic Designer, Community Manager, Content Writer, Scheduler, Analytics Expert, Photographer, Copywriter, Engagement Specialist, Strategy Planner</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Example 4: Enterprise Development Company Fleet */}
+                <div className="w-full flex-shrink-0">
+                  <div className="bg-gradient-to-br from-orange-900/20 to-red-800/10 rounded-xl p-8 border border-orange-500/20">
+                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                      <div>
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center">
+                            <Rocket className="w-5 h-5 text-orange-400" />
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-semibold text-white">Software Development Company Fleet</h4>
+                            <p className="text-sm text-orange-400">85 Agents • $150,000 enterprise license</p>
+                          </div>
+                        </div>
+                        <p className="text-gray-300 mb-4">
+                          A complete software development company with 85 agents handling everything from requirements 
+                          to deployment, testing, and customer support. Built by TechBuilder Pro, earning $900K/year from 6 Fortune 500 clients.
+                        </p>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-orange-400" />
+                            <span className="text-sm text-gray-300">Frontend & Backend Development (35 agents)</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-orange-400" />
+                            <span className="text-sm text-gray-300">DevOps, Testing & QA (25 agents)</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-orange-400" />
+                            <span className="text-sm text-gray-300">Project Management & Support (25 agents)</span>
                           </div>
                         </div>
                       </div>
                       <div className="bg-gray-800/50 rounded-lg p-6 border border-gray-600">
                         <div className="text-center text-gray-400 mb-4">
                           <Rocket className="w-8 h-8 mx-auto mb-2" />
-                          <p className="text-sm">Development Pipeline</p>
+                          <p className="text-sm">Development Company Dashboard</p>
                         </div>
                         <div className="space-y-3 text-xs">
                           <div className="flex justify-between items-center">
-                            <span className="text-gray-300">Code Reviews</span>
-                            <span className="text-green-400">47 completed</span>
+                            <span className="text-gray-300">Features Shipped</span>
+                            <span className="text-green-400">127 this month</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-gray-300">Tests Written</span>
-                            <span className="text-blue-400">156 automated</span>
+                            <span className="text-gray-300">Tests Automated</span>
+                            <span className="text-blue-400">1,847 passed</span>
                           </div>
                           <div className="flex justify-between items-center">
                             <span className="text-gray-300">Deployments</span>
-                            <span className="text-purple-400">12 successful</span>
+                            <span className="text-purple-400">43 successful</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-gray-300">Bug Reports</span>
-                            <span className="text-yellow-400">3 auto-fixed</span>
+                            <span className="text-gray-300">Issues Resolved</span>
+                            <span className="text-yellow-400">189 auto-fixed</span>
                           </div>
-                          <div className="bg-gray-700 rounded p-2 mt-3">
-                            <div className="text-emerald-400 font-semibold">24/7 Active Development</div>
-                            <div className="text-gray-300">Never sleeps, always shipping</div>
+                          <div className="bg-gradient-to-r from-orange-900/50 to-red-900/50 rounded p-2 mt-3">
+                            <div className="text-orange-400 font-semibold">Entire Dev Company</div>
+                            <div className="text-gray-300">Developers, DevOps Engineers, QA Testers, Project Managers, Architects, UX/UI Designers, Technical Writers, Support Staff</div>
                           </div>
                         </div>
                       </div>
@@ -588,6 +653,7 @@ export default function JoinWaitlist() {
             {/* Carousel Navigation */}
             <div className="flex justify-center gap-2 mt-8">
               <button className="w-3 h-3 rounded-full bg-emerald-500"></button>
+              <button className="w-3 h-3 rounded-full bg-gray-600"></button>
               <button className="w-3 h-3 rounded-full bg-gray-600"></button>
               <button className="w-3 h-3 rounded-full bg-gray-600"></button>
             </div>
