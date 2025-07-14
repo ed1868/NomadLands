@@ -104,7 +104,22 @@ export default function JoinWaitlist() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showRushPayment, setShowRushPayment] = useState(false);
   const [waitlistPosition, setWaitlistPosition] = useState<number | null>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
   const { toast } = useToast();
+
+  const totalSlides = 4;
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % totalSlides);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
+  };
+
+  const goToSlide = (slideIndex: number) => {
+    setCurrentSlide(slideIndex);
+  };
 
   const handleJoinWaitlist = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -399,9 +414,28 @@ export default function JoinWaitlist() {
           </div>
 
           <div className="relative">
+            {/* Previous Arrow */}
+            <button 
+              onClick={prevSlide}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+
+            {/* Next Arrow */}
+            <button 
+              onClick={nextSlide}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+
             {/* Carousel Container */}
             <div className="overflow-hidden rounded-xl">
-              <div className="flex transition-transform duration-300 ease-in-out">
+              <div 
+                className="flex transition-transform duration-300 ease-in-out"
+                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              >
                 
                 {/* Example 1: Sales Email Agent */}
                 <div className="w-full flex-shrink-0">
@@ -652,10 +686,15 @@ export default function JoinWaitlist() {
 
             {/* Carousel Navigation */}
             <div className="flex justify-center gap-2 mt-8">
-              <button className="w-3 h-3 rounded-full bg-emerald-500"></button>
-              <button className="w-3 h-3 rounded-full bg-gray-600"></button>
-              <button className="w-3 h-3 rounded-full bg-gray-600"></button>
-              <button className="w-3 h-3 rounded-full bg-gray-600"></button>
+              {Array.from({ length: totalSlides }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`w-3 h-3 rounded-full transition-colors ${
+                    currentSlide === index ? 'bg-emerald-500' : 'bg-gray-600 hover:bg-gray-500'
+                  }`}
+                />
+              ))}
             </div>
           </div>
         </div>
