@@ -927,9 +927,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Get current waitlist count for position
+      // Get current waitlist count for position (starting at 150)
       const waitlistCount = await storage.getWaitlistCount();
-      const position = waitlistCount + 1;
+      const position = waitlistCount + 150;
 
       // Create waitlist user
       const waitlistUser = await storage.createWaitlistUser({
