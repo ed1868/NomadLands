@@ -1285,8 +1285,61 @@ export default function JoinWaitlist() {
             </div>
           </div>
 
+          {/* Agent Access Models */}
+          <div className="mt-12 sm:mt-16">
+            <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 rounded-xl p-6 sm:p-8 border border-blue-500/20">
+              <h4 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 text-center">
+                Flexible Agent Access for Everyone
+              </h4>
+              <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                      <Bot className="w-4 h-4 text-blue-400" />
+                    </div>
+                    <div>
+                      <h5 className="text-lg font-semibold text-blue-400 mb-2">
+                        Per-Use Agent Rental
+                      </h5>
+                      <p className="text-gray-300 text-sm">
+                        Creators can rent individual agents for specific tasks without long-term commitment. 
+                        Perfect for testing new automation workflows or handling one-time projects. 
+                        Pay only for what you use and get immediate value.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                      <Trophy className="w-4 h-4 text-purple-400" />
+                    </div>
+                    <div>
+                      <h5 className="text-lg font-semibold text-purple-400 mb-2">
+                        Enterprise Agent Hiring
+                      </h5>
+                      <p className="text-gray-300 text-sm">
+                        Enterprises can hire proven creator agents based on their success rates and user feedback. 
+                        When an agent shows high performance and community love, companies can scale it 
+                        across their organization with confidence.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-6 pt-6 border-t border-gray-700">
+                <div className="text-center">
+                  <p className="text-gray-400 text-sm">
+                    <span className="text-emerald-400 font-semibold">Success-based matching:</span> 
+                    High-performing agents with proven track records get priority access to enterprise opportunities
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Use Cases & Monetization */}
-          <div className="mt-16">
+          <div className="mt-12 sm:mt-16">
             <h4 className="text-lg sm:text-xl font-semibold text-white mb-6 sm:mb-8 text-center px-2">
               Start with Single Agents, Scale to Complete Company Fleets
             </h4>
