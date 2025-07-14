@@ -234,30 +234,30 @@ export default function JoinWaitlist() {
             </div>
 
             <h1 className="text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
-              Deploy AI Agent
+              Create AI Agents
               <br />
               <span className="bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
-                Fleets & Earn
+                Build Entire Fleets
               </span>
             </h1>
 
             <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Build powerful AI Agent Fleets for any use case. Create agents that handle email, sales, development, customer support, and more. 
+              Start with single AI agents for email, sales, development, or customer support. Then scale up to complete Agent Fleets that can mimic entire companies and departments. 
               Deploy once, earn forever in the creator economy.
             </p>
 
             <div className="flex items-center justify-center gap-8 mb-12">
               <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 px-4 py-2">
                 <Bot className="w-4 h-4 mr-2" />
-                Agent Fleets
+                Single Agents
               </Badge>
               <Badge variant="outline" className="border-blue-500/30 text-blue-400 px-4 py-2">
                 <Users className="w-4 h-4 mr-2" />
-                Creator Economy
+                Company Fleets
               </Badge>
               <Badge variant="outline" className="border-purple-500/30 text-purple-400 px-4 py-2">
                 <Zap className="w-4 h-4 mr-2" />
-                Enterprise Ready
+                Creator Economy
               </Badge>
             </div>
           </div>
@@ -394,8 +394,8 @@ export default function JoinWaitlist() {
       <div className="py-20 bg-gray-900/50">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-white mb-4">Where Creators & Enterprises Build AI Agent Fleets</h3>
-            <p className="text-gray-400 text-lg">Deploy specialized agents for any use case and monetize your automation expertise</p>
+            <h3 className="text-3xl font-bold text-white mb-4">From Single Agents to Complete Company Automation</h3>
+            <p className="text-gray-400 text-lg">Create individual AI agents or build entire Fleets that can mimic whole companies and departments</p>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -423,60 +423,60 @@ export default function JoinWaitlist() {
 
           {/* Use Cases & Monetization */}
           <div className="mt-16">
-            <h4 className="text-xl font-semibold text-white mb-8 text-center">How Creators & Enterprises Use AI Agent Fleets</h4>
+            <h4 className="text-xl font-semibold text-white mb-8 text-center">Start with Single Agents, Scale to Complete Company Fleets</h4>
             
             <div className="grid md:grid-cols-2 gap-8 mb-12">
-              {/* Creator Economy */}
+              {/* Single Agents */}
               <div className="bg-gradient-to-br from-emerald-900/20 to-emerald-800/10 rounded-xl p-6 border border-emerald-500/20">
-                <h5 className="text-lg font-semibold text-emerald-400 mb-4">For Creators & Freelancers</h5>
+                <h5 className="text-lg font-semibold text-emerald-400 mb-4">Individual AI Agents</h5>
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
                     <Bot className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <div className="text-sm font-medium text-white">Build Email Management Agents</div>
-                      <div className="text-xs text-gray-400">Create agents that sort, respond, and prioritize emails. Sell to busy professionals.</div>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Rocket className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <div className="text-sm font-medium text-white">Social Media Automation Fleets</div>
-                      <div className="text-xs text-gray-400">Deploy agents for content scheduling, engagement, and analytics. License to businesses.</div>
+                      <div className="text-sm font-medium text-white">Email Management Agent</div>
+                      <div className="text-xs text-gray-400">Single agent that sorts, responds, and prioritizes emails. Perfect starter project.</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <Sparkles className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <div className="text-sm font-medium text-white">Customer Support Agents</div>
-                      <div className="text-xs text-gray-400">Train agents on company knowledge. Earn recurring revenue from multiple clients.</div>
+                      <div className="text-sm font-medium text-white">Customer Support Agent</div>
+                      <div className="text-xs text-gray-400">One specialized agent trained on company knowledge for instant support.</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Zap className="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <div className="text-sm font-medium text-white">Sales Lead Qualifier</div>
+                      <div className="text-xs text-gray-400">Individual agent that scores and qualifies incoming leads automatically.</div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Enterprise */}
+              {/* Company Fleets */}
               <div className="bg-gradient-to-br from-blue-900/20 to-blue-800/10 rounded-xl p-6 border border-blue-500/20">
-                <h5 className="text-lg font-semibold text-blue-400 mb-4">For Enterprises & Teams</h5>
+                <h5 className="text-lg font-semibold text-blue-400 mb-4">Complete Company Fleets</h5>
                 <div className="space-y-3">
-                  <div className="flex items-start gap-3">
-                    <Zap className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <div className="text-sm font-medium text-white">Development Agent Fleets</div>
-                      <div className="text-xs text-gray-400">Deploy code review, testing, and deployment agents across development teams.</div>
-                    </div>
-                  </div>
                   <div className="flex items-start gap-3">
                     <Users className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <div className="text-sm font-medium text-white">Sales & Lead Generation</div>
-                      <div className="text-xs text-gray-400">Automate lead qualification, follow-ups, and CRM management at enterprise scale.</div>
+                      <div className="text-sm font-medium text-white">Entire Sales Department Fleet</div>
+                      <div className="text-xs text-gray-400">30+ agents handling lead gen, qualification, follow-ups, CRM, and closing - like a whole sales team.</div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Rocket className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <div className="text-sm font-medium text-white">Development Company Fleet</div>
+                      <div className="text-xs text-gray-400">50+ agents for code review, testing, deployment, project management - mimics a software company.</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <Shield className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <div className="text-sm font-medium text-white">Data Processing Fleets</div>
-                      <div className="text-xs text-gray-400">Handle analytics, reporting, and data transformation across multiple departments.</div>
+                      <div className="text-sm font-medium text-white">Marketing Agency Fleet</div>
+                      <div className="text-xs text-gray-400">40+ agents for content, social media, ads, analytics, SEO - operates like a full agency.</div>
                     </div>
                   </div>
                 </div>
@@ -485,28 +485,28 @@ export default function JoinWaitlist() {
 
             {/* Revenue Model */}
             <div className="bg-gradient-to-r from-purple-900/20 to-pink-900/20 rounded-xl p-6 border border-purple-500/20">
-              <h5 className="text-lg font-semibold text-purple-400 mb-4 text-center">Multiple Ways to Monetize Your Agent Expertise</h5>
+              <h5 className="text-lg font-semibold text-purple-400 mb-4 text-center">Scale Your Revenue: From $50 Agents to $50K Company Fleets</h5>
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="text-center">
                   <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Sparkles className="w-6 h-6 text-purple-400" />
+                    <Bot className="w-6 h-6 text-purple-400" />
                   </div>
-                  <div className="text-sm font-medium text-white mb-1">One-Time Sales</div>
-                  <div className="text-xs text-gray-400">Sell specialized agents for $50-$500+ each</div>
+                  <div className="text-sm font-medium text-white mb-1">Single Agent Sales</div>
+                  <div className="text-xs text-gray-400">Sell individual agents for $50-$500 each</div>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Clock className="w-6 h-6 text-purple-400" />
+                    <Users className="w-6 h-6 text-purple-400" />
                   </div>
-                  <div className="text-sm font-medium text-white mb-1">Subscription Fleets</div>
-                  <div className="text-xs text-gray-400">Monthly recurring revenue from agent maintenance</div>
+                  <div className="text-sm font-medium text-white mb-1">Department Fleets</div>
+                  <div className="text-xs text-gray-400">License 10-30 agent fleets for $5K-$15K</div>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
                     <Trophy className="w-6 h-6 text-purple-400" />
                   </div>
-                  <div className="text-sm font-medium text-white mb-1">Enterprise Licensing</div>
-                  <div className="text-xs text-gray-400">License Fleet templates to Fortune 500 companies</div>
+                  <div className="text-sm font-medium text-white mb-1">Company-Wide Fleets</div>
+                  <div className="text-xs text-gray-400">50+ agent fleets mimicking entire companies for $25K-$100K+</div>
                 </div>
               </div>
             </div>
