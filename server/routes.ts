@@ -5,7 +5,7 @@ import { ethers } from "ethers";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import type { Request, Response, NextFunction } from "express";
-import { insertUserSchema, type InsertUser } from "@shared/schema-simple";
+import { insertUserSchema, type InsertUser, insertContributorApplicationSchema } from "@shared/schema-simple";
 import { z } from "zod";
 import { PaymentService } from "./payment-service";
 import { N8nWorkflowGenerator } from "./n8n-generator";
@@ -1031,6 +1031,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error("Error confirming rush payment:", error);
       res.status(500).json({ message: "Failed to confirm rush payment" });
+    }
+  });
+
+  // CONTRIBUTOR APPLICATION ROUTES
+  
+  // Submit contributor application
+  app.post("/api/contributors/apply", async (req, res) => {
+    try {
+      const validatedData = insertContributorApplicationSchema.parse(req.body);
+      
+      // Create contributor application
+      const application = await storage.createContributorApplication(validatedData);
+      
+      // Send notification email to ruizeduardo21@gmail.com
+      await emailService.sendContributorNotification(application);
+      
+      res.json({ 
+        message: "Application submitted successfully! We'll review your application and get back to you soon.",
+        applicationId: application.id
+      });
+    } catch (error: any) {
+      console.error("Error submitting contributor application:", error);
+      res.status(500).json({ message: "Failed to submit application" });
     }
   });
 

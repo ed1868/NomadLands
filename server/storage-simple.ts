@@ -4,12 +4,15 @@ import {
   users,
   agents,
   waitlistUsers,
+  contributorApplications,
   type User,
   type UpsertUser,
   type Agent,
   type InsertAgent,
   type WaitlistUser,
   type InsertWaitlistUser,
+  type ContributorApplication,
+  type InsertContributorApplication,
 } from "@shared/schema-simple";
 
 export interface IStorage {
@@ -39,6 +42,10 @@ export interface IStorage {
   updateWaitlistUserRush(email: string, paymentIntentId: string, amount: number): Promise<WaitlistUser>;
   getWaitlistCount(): Promise<number>;
   getWaitlistStats(): Promise<{ totalUsers: number; engineerUsers: number; rushUsers: number; }>;
+  
+  // Contributor applications
+  createContributorApplication(application: InsertContributorApplication): Promise<ContributorApplication>;
+  getContributorApplications(): Promise<ContributorApplication[]>;
   
   // Seeding
   seedAgents(): Promise<void>;
@@ -275,6 +282,21 @@ export class DatabaseStorage implements IStorage {
     } catch (error) {
       console.error('Error getting waitlist stats:', error);
       return { totalUsers: 0, engineerUsers: 0, rushUsers: 0 };
+    }
+  }
+
+  async createContributorApplication(application: InsertContributorApplication): Promise<ContributorApplication> {
+    const [newApplication] = await db.insert(contributorApplications).values(application).returning();
+    return newApplication;
+  }
+
+  async getContributorApplications(): Promise<ContributorApplication[]> {
+    try {
+      const applications = await db.select().from(contributorApplications);
+      return applications;
+    } catch (error) {
+      console.error('Error fetching contributor applications:', error);
+      return [];
     }
   }
 }

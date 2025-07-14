@@ -35,6 +35,70 @@ export class EmailService {
     }
   }
 
+  async sendContributorNotification(application: any) {
+    const subject = '🚀 New Developer Contributor Application - AI Nomads';
+    
+    const htmlContent = `
+      <div style="font-family: 'Courier New', monospace; background: #000000; color: #00ffff; padding: 40px; margin: 0;">
+        <div style="max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #00ffff; text-align: center; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px;">
+            [SYSTEM] NEW CONTRIBUTOR APPLICATION
+          </h2>
+          
+          <div style="background: linear-gradient(135deg, #001122 0%, #000011 100%); 
+                      border: 2px solid #00ffff; padding: 24px; margin: 24px 0;
+                      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));">
+            
+            <h3 style="color: #00ffff; margin: 0 0 20px 0; font-size: 16px; text-transform: uppercase;">
+              >> DEVELOPER PROFILE DATA <<
+            </h3>
+            
+            <div style="margin-bottom: 16px;">
+              <span style="color: #66ccff;">[EMAIL]</span> 
+              <strong style="color: #ffffff;">${application.email}</strong>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+              <span style="color: #66ccff;">[GITHUB]</span> 
+              <strong style="color: #ffffff;">@${application.githubUsername}</strong>
+              <br><span style="color: #00ffff; margin-left: 60px;">→ https://github.com/${application.githubUsername}</span>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+              <span style="color: #66ccff;">[MOTIVATION]</span>
+              <br><span style="color: #ffffff; margin-left: 60px; line-height: 1.6;">${application.motivation}</span>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+              <span style="color: #66ccff;">[TIMESTAMP]</span> 
+              <strong style="color: #ffffff;">${new Date(application.createdAt).toISOString()}</strong>
+            </div>
+          </div>
+          
+          <div style="text-align: center; padding-top: 24px;">
+            <div style="height: 2px; background: linear-gradient(90deg, transparent, #00ffff, transparent); margin: 24px 0;"></div>
+            <p style="color: #66ccff; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;">
+              >>> AI NOMADS RECRUITMENT MATRIX <<<
+            </p>
+          </div>
+        </div>
+      </div>
+    `;
+
+    try {
+      await this.transporter.sendMail({
+        from: `"AI Nomads System" <${process.env.EMAIL_USER}>`,
+        to: 'ruizeduardo21@gmail.com',
+        subject,
+        html: htmlContent
+      });
+      return true;
+    } catch (error) {
+      console.error('Contributor notification email failed:', error);
+      return false;
+    }
+  }
+
   private generateWaitlistEmail(email: string, position: number, isRushUser: boolean): string {
     const rushSection = !isRushUser ? `
       <div style="background: linear-gradient(135deg, #001133 0%, #000022 100%); 

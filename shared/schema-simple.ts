@@ -80,6 +80,16 @@ export const waitlistUsers = pgTable("waitlist_users", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Contributor applications table
+export const contributorApplications = pgTable("contributor_applications", {
+  id: serial("id").primaryKey(),
+  email: varchar("email", { length: 255 }).notNull(),
+  githubUsername: varchar("github_username", { length: 255 }).notNull(),
+  motivation: text("motivation").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   agents: many(agents),
@@ -105,6 +115,12 @@ export const insertAgentSchema = createInsertSchema(agents).omit({
 });
 
 export const insertWaitlistUserSchema = createInsertSchema(waitlistUsers).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertContributorApplicationSchema = createInsertSchema(contributorApplications).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
@@ -136,3 +152,6 @@ export type InsertAgent = z.infer<typeof insertAgentSchema>;
 
 export type WaitlistUser = typeof waitlistUsers.$inferSelect;
 export type InsertWaitlistUser = z.infer<typeof insertWaitlistUserSchema>;
+
+export type ContributorApplication = typeof contributorApplications.$inferSelect;
+export type InsertContributorApplication = z.infer<typeof insertContributorApplicationSchema>;

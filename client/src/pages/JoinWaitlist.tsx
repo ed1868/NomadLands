@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
@@ -109,6 +110,13 @@ export default function JoinWaitlist() {
   const [showRushPayment, setShowRushPayment] = useState(false);
   const [waitlistPosition, setWaitlistPosition] = useState<number | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  
+  // Contributor application state
+  const [contributorEmail, setContributorEmail] = useState("");
+  const [githubUsername, setGithubUsername] = useState("");
+  const [motivation, setMotivation] = useState("");
+  const [isSubmittingApplication, setIsSubmittingApplication] = useState(false);
+  
   const { toast } = useToast();
 
   const totalSlides = 4;
@@ -169,6 +177,47 @@ export default function JoinWaitlist() {
   const handleRushPaymentSuccess = () => {
     setShowRushPayment(false);
     setWaitlistPosition(null);
+  };
+
+  const handleContributorApplication = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!contributorEmail.includes('@') || !githubUsername || !motivation.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmittingApplication(true);
+
+    try {
+      await apiRequest("POST", "/api/contributors/apply", {
+        email: contributorEmail,
+        githubUsername: githubUsername.replace('@', ''),
+        motivation: motivation.trim()
+      });
+
+      toast({
+        title: "Application Submitted! 🚀",
+        description: "Thanks for your interest! We'll review your application and get back to you soon.",
+      });
+
+      // Clear form
+      setContributorEmail("");
+      setGithubUsername("");
+      setMotivation("");
+    } catch (error: any) {
+      toast({
+        title: "Submission Failed",
+        description: error.message || "Failed to submit application. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmittingApplication(false);
+    }
   };
 
   if (waitlistPosition && !showRushPayment) {
@@ -353,54 +402,54 @@ export default function JoinWaitlist() {
             <div className="space-y-6">
               <h3 className="text-2xl font-bold text-white mb-6">MVP Release Timeline</h3>
               
-              <div className="space-y-4">
-                <div className="flex items-start gap-4 p-4 bg-emerald-900/20 rounded-lg border border-emerald-500/30">
-                  <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
+              <div className="space-y-8">
+                <div className="flex items-start gap-4 p-6 bg-emerald-900/30 rounded-lg border border-emerald-500/50 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+                  <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center mt-1 flex-shrink-0 shadow-[0_0_15px_rgba(16,185,129,0.8)]">
                     <CheckCircle2 className="w-4 h-4 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-emerald-400">NOW - Beta Testing</h4>
-                    <p className="text-gray-300 text-sm">Beta testers are already using the platform and creating amazing agents</p>
+                    <h4 className="font-semibold text-emerald-400 text-lg">NOW - Beta Testing</h4>
+                    <p className="text-gray-300 text-sm mt-2">Beta testers are already using the platform and creating amazing agents</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-4 bg-blue-900/20 rounded-lg border border-blue-500/30">
+                <div className="flex items-start gap-4 p-6 bg-blue-900/20 rounded-lg border border-blue-500/30">
                   <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
                     <Calendar className="w-4 h-4 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-blue-400">Aug 5 - MVP Release</h4>
-                    <p className="text-gray-300 text-sm">Full access for all beta users and engineers</p>
+                    <h4 className="font-semibold text-blue-400 text-lg">Aug 5 - MVP Release</h4>
+                    <p className="text-gray-300 text-sm mt-2">Full access for all beta users and engineers</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-4 bg-purple-900/20 rounded-lg border border-purple-500/30">
+                <div className="flex items-start gap-4 p-6 bg-purple-900/20 rounded-lg border border-purple-500/30">
                   <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
                     <Rocket className="w-4 h-4 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-purple-400">Sept 5 - First Wave</h4>
-                    <p className="text-gray-300 text-sm">Early access for priority waitlist members</p>
+                    <h4 className="font-semibold text-purple-400 text-lg">Sept 5 - First Wave</h4>
+                    <p className="text-gray-300 text-sm mt-2">Early access for priority waitlist members</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-4 bg-yellow-900/20 rounded-lg border border-yellow-500/30">
+                <div className="flex items-start gap-4 p-6 bg-yellow-900/20 rounded-lg border border-yellow-500/30">
                   <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
                     <Users className="w-4 h-4 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-yellow-400">Oct 5 - Free Wave</h4>
-                    <p className="text-gray-300 text-sm">Free access for first wave of users</p>
+                    <h4 className="font-semibold text-yellow-400 text-lg">Oct 5 - Free Wave</h4>
+                    <p className="text-gray-300 text-sm mt-2">Free access for first wave of users</p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-4 bg-emerald-900/20 rounded-lg border border-emerald-500/30">
+                <div className="flex items-start gap-4 p-6 bg-emerald-900/20 rounded-lg border border-emerald-500/30">
                   <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
                     <Trophy className="w-4 h-4 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-emerald-400">Nov 5 - Grand Release</h4>
-                    <p className="text-gray-300 text-sm">Full public launch for everyone</p>
+                    <h4 className="font-semibold text-emerald-400 text-lg">Dec 5 - Grand Release</h4>
+                    <p className="text-gray-300 text-sm mt-2">Full public launch for everyone</p>
                   </div>
                 </div>
               </div>
@@ -1051,6 +1100,102 @@ export default function JoinWaitlist() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Developer Contributor Section */}
+      <div className="py-20 bg-gradient-to-b from-black to-gray-900">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h3 className="text-4xl font-bold text-white mb-4">Want to Contribute?</h3>
+            <p className="text-gray-400 text-lg">Join our team of developers building the future of AI agent platforms</p>
+          </div>
+
+          <Card className="bg-gray-900/50 border-gray-700">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl text-white">Developer Application</CardTitle>
+              <CardDescription className="text-gray-400">
+                Help us build the most advanced AI agent platform. Submit your application and we'll be in touch.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleContributorApplication} className="space-y-6">
+                <div>
+                  <label htmlFor="contributor-email" className="block text-sm font-medium text-gray-300 mb-2">
+                    Email Address
+                  </label>
+                  <Input
+                    id="contributor-email"
+                    type="email"
+                    placeholder="your@email.com"
+                    value={contributorEmail}
+                    onChange={(e) => setContributorEmail(e.target.value)}
+                    className="bg-gray-800 border-gray-600 text-white placeholder:text-gray-400"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="github" className="block text-sm font-medium text-gray-300 mb-2">
+                    GitHub Username
+                  </label>
+                  <Input
+                    id="github"
+                    type="text"
+                    placeholder="github-username"
+                    value={githubUsername}
+                    onChange={(e) => setGithubUsername(e.target.value)}
+                    className="bg-gray-800 border-gray-600 text-white placeholder:text-gray-400"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="motivation" className="block text-sm font-medium text-gray-300 mb-2">
+                    Why do you want to contribute to AI Nomads?
+                  </label>
+                  <Textarea
+                    id="motivation"
+                    placeholder="Tell us about your experience, what interests you about AI agents, and how you'd like to contribute..."
+                    value={motivation}
+                    onChange={(e) => setMotivation(e.target.value)}
+                    className="bg-gray-800 border-gray-600 text-white placeholder:text-gray-400 min-h-[120px]"
+                    required
+                  />
+                </div>
+
+                <Button 
+                  type="submit" 
+                  disabled={isSubmittingApplication}
+                  className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800"
+                >
+                  {isSubmittingApplication ? "Submitting..." : "Submit Application"}
+                </Button>
+              </form>
+
+              <div className="mt-6 p-4 bg-gray-800/50 rounded-lg">
+                <h4 className="font-semibold text-emerald-400 mb-2">What we're looking for:</h4>
+                <div className="space-y-1 text-sm text-gray-300">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                    <span>Full-stack developers (React, Node.js, TypeScript)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                    <span>AI/ML engineers with LLM experience</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                    <span>DevOps specialists (Docker, Kubernetes, cloud platforms)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                    <span>Product designers with enterprise software experience</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
