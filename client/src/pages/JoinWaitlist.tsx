@@ -274,46 +274,46 @@ export default function JoinWaitlist() {
         <div className="relative min-h-screen flex items-center justify-center">
           <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900" />
           <div className="absolute inset-0">
-            <div className="absolute top-20 left-20 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-20 right-20 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+            <div className="absolute top-10 left-10 sm:top-20 sm:left-20 w-48 h-48 sm:w-72 sm:h-72 bg-emerald-500/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-10 right-10 sm:bottom-20 sm:right-20 w-64 h-64 sm:w-96 sm:h-96 bg-blue-500/10 rounded-full blur-3xl" />
           </div>
 
-          <div className="relative z-10 max-w-2xl mx-auto px-6 text-center">
-            <div className="mb-8">
-              <div className="w-24 h-24 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Trophy className="w-12 h-12 text-white" />
+          <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 text-center">
+            <div className="mb-6 sm:mb-8">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                <Trophy className="w-8 h-8 sm:w-12 sm:h-12 text-white" />
               </div>
 
-              <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
                 Welcome to AI Nomads!
               </h1>
 
-              <p className="text-xl text-gray-300 mb-6">
+              <p className="text-lg sm:text-xl text-gray-300 mb-4 sm:mb-6 px-2">
                 You're now in the queue to build and deploy AI Agent Fleets.
                 Position #{waitlistPosition}.
               </p>
 
-              <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-6 mb-8">
-                <h3 className="text-lg font-semibold text-emerald-400 mb-3">
+              <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
+                <h3 className="text-base sm:text-lg font-semibold text-emerald-400 mb-2 sm:mb-3 text-center">
                   What happens next?
                 </h3>
-                <div className="space-y-3 text-left">
-                  <div className="flex items-center gap-3">
-                    <Bot className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                    <span className="text-gray-300">
+                <div className="space-y-2 sm:space-y-3 text-left">
+                  <div className="flex items-start gap-3">
+                    <Bot className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm sm:text-base text-gray-300">
                       Early access to build custom Agent Fleets for any use case
                     </span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Users className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                    <span className="text-gray-300">
+                  <div className="flex items-start gap-3">
+                    <Users className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm sm:text-base text-gray-300">
                       Join the creator economy and monetize your automation
                       expertise
                     </span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Rocket className="w-5 h-5 text-emerald-400 flex-shrink-0" />
-                    <span className="text-gray-300">
+                  <div className="flex items-start gap-3">
+                    <Rocket className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm sm:text-base text-gray-300">
                       Deploy agents for enterprises and earn recurring revenue
                     </span>
                   </div>
@@ -322,7 +322,7 @@ export default function JoinWaitlist() {
 
               <Button
                 onClick={() => window.location.reload()}
-                className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 px-8"
+                className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 px-6 sm:px-8 w-full sm:w-auto"
               >
                 Join Another Email
               </Button>
@@ -346,19 +346,19 @@ export default function JoinWaitlist() {
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl" />
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-8 sm:mb-12">
             {/* Real AI Nomads Logo */}
-            <div className="mb-8">
+            <div className="mb-6 sm:mb-8">
               <img
                 src={logoImage}
                 alt="AI Nomads"
-                className="w-32 h-32 mx-auto mb-4 object-contain"
+                className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-3 sm:mb-4 object-contain"
               />
-              <h2 className="text-2xl font-bold text-emerald-400">AI NOMADS</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-emerald-400">AI NOMADS</h2>
             </div>
 
-            <h1 className="text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent leading-tight">
               Create AI Agents
               <br />
               <span className="bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
@@ -366,31 +366,31 @@ export default function JoinWaitlist() {
               </span>
             </h1>
 
-            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-gray-300 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed px-2">
               Start with single AI agents for email, sales, development, or
               customer support. Then scale up to complete Agent Fleets that can
               mimic entire companies and departments. Deploy once, earn forever
               in the creator economy.
             </p>
 
-            <div className="flex items-center justify-center gap-8 mb-12">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-8 mb-8 sm:mb-12">
               <Badge
                 variant="outline"
-                className="border-emerald-500/30 text-emerald-400 px-4 py-2"
+                className="border-emerald-500/30 text-emerald-400 px-3 sm:px-4 py-2 w-full sm:w-auto"
               >
                 <Bot className="w-4 h-4 mr-2" />
                 Single Agents
               </Badge>
               <Badge
                 variant="outline"
-                className="border-blue-500/30 text-blue-400 px-4 py-2"
+                className="border-blue-500/30 text-blue-400 px-3 sm:px-4 py-2 w-full sm:w-auto"
               >
                 <Users className="w-4 h-4 mr-2" />
                 Company Fleets
               </Badge>
               <Badge
                 variant="outline"
-                className="border-purple-500/30 text-purple-400 px-4 py-2"
+                className="border-purple-500/30 text-purple-400 px-3 sm:px-4 py-2 w-full sm:w-auto"
               >
                 <Zap className="w-4 h-4 mr-2" />
                 Creator Economy
@@ -398,14 +398,14 @@ export default function JoinWaitlist() {
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
             {/* Waitlist Form */}
-            <Card className="bg-gray-900/50 border-gray-700">
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl text-white">
+            <Card className="bg-gray-900/50 border-gray-700 order-2 lg:order-1">
+              <CardHeader className="text-center pb-4">
+                <CardTitle className="text-xl sm:text-2xl text-white">
                   Join the Waitlist
                 </CardTitle>
-                <CardDescription className="text-gray-400">
+                <CardDescription className="text-gray-400 text-sm sm:text-base">
                   Be among the first to access legendary AI agents
                 </CardDescription>
               </CardHeader>
@@ -477,78 +477,78 @@ export default function JoinWaitlist() {
             </Card>
 
             {/* MVP Timeline */}
-            <div className="space-y-6">
-              <h3 className="text-2xl font-bold text-white mb-6">
+            <div className="space-y-4 sm:space-y-6 order-1 lg:order-2">
+              <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 text-center lg:text-left">
                 MVP Release Timeline
               </h3>
 
-              <div className="space-y-8">
-                <div className="flex items-start gap-4 p-6 bg-emerald-900/30 rounded-lg border border-emerald-500/50 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
-                  <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center mt-1 flex-shrink-0 shadow-[0_0_15px_rgba(16,185,129,0.8)]">
-                    <CheckCircle2 className="w-4 h-4 text-white" />
+              <div className="space-y-4 sm:space-y-8">
+                <div className="flex items-start gap-3 sm:gap-4 p-4 sm:p-6 bg-emerald-900/30 rounded-lg border border-emerald-500/50 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 bg-emerald-500 rounded-full flex items-center justify-center mt-1 flex-shrink-0 shadow-[0_0_15px_rgba(16,185,129,0.8)]">
+                    <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-emerald-400 text-lg">
+                    <h4 className="font-semibold text-emerald-400 text-base sm:text-lg">
                       NOW - Beta Testing
                     </h4>
-                    <p className="text-gray-300 text-sm mt-2">
+                    <p className="text-gray-300 text-xs sm:text-sm mt-1 sm:mt-2">
                       Beta testers are already using the platform and creating
                       amazing agents
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-6 bg-blue-900/20 rounded-lg border border-blue-500/30">
-                  <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
-                    <Calendar className="w-4 h-4 text-white" />
+                <div className="flex items-start gap-3 sm:gap-4 p-4 sm:p-6 bg-blue-900/20 rounded-lg border border-blue-500/30">
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-500 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
+                    <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-blue-400 text-lg">
+                    <h4 className="font-semibold text-blue-400 text-base sm:text-lg">
                       Aug 5 - MVP Release
                     </h4>
-                    <p className="text-gray-300 text-sm mt-2">
+                    <p className="text-gray-300 text-xs sm:text-sm mt-1 sm:mt-2">
                       Full access for all beta users and engineers
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-6 bg-purple-900/20 rounded-lg border border-purple-500/30">
-                  <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
-                    <Rocket className="w-4 h-4 text-white" />
+                <div className="flex items-start gap-3 sm:gap-4 p-4 sm:p-6 bg-purple-900/20 rounded-lg border border-purple-500/30">
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 bg-purple-500 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
+                    <Rocket className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-purple-400 text-lg">
+                    <h4 className="font-semibold text-purple-400 text-base sm:text-lg">
                       Sept 5 - First Wave
                     </h4>
-                    <p className="text-gray-300 text-sm mt-2">
+                    <p className="text-gray-300 text-xs sm:text-sm mt-1 sm:mt-2">
                       Early access for priority waitlist members
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-6 bg-yellow-900/20 rounded-lg border border-yellow-500/30">
-                  <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
-                    <Users className="w-4 h-4 text-white" />
+                <div className="flex items-start gap-3 sm:gap-4 p-4 sm:p-6 bg-yellow-900/20 rounded-lg border border-yellow-500/30">
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 bg-yellow-500 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
+                    <Users className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-yellow-400 text-lg">
+                    <h4 className="font-semibold text-yellow-400 text-base sm:text-lg">
                       Oct 5 - Free Wave
                     </h4>
-                    <p className="text-gray-300 text-sm mt-2">
+                    <p className="text-gray-300 text-xs sm:text-sm mt-1 sm:mt-2">
                       Free access for first wave of users
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-6 bg-emerald-900/20 rounded-lg border border-emerald-500/30">
-                  <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
-                    <Trophy className="w-4 h-4 text-white" />
+                <div className="flex items-start gap-3 sm:gap-4 p-4 sm:p-6 bg-emerald-900/20 rounded-lg border border-emerald-500/30">
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 bg-emerald-500 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
+                    <Trophy className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                   </div>
-                  <div className="pb-5">
-                    <h4 className="font-semibold text-emerald-400 text-lg">
+                  <div className="pb-3 sm:pb-5">
+                    <h4 className="font-semibold text-emerald-400 text-base sm:text-lg">
                       Dec 5 - Grand Release
                     </h4>
-                    <p className="text-gray-300 text-sm mt-2">
+                    <p className="text-gray-300 text-xs sm:text-sm mt-1 sm:mt-2">
                       Full public launch for everyone
                     </p>
                   </div>
@@ -559,17 +559,17 @@ export default function JoinWaitlist() {
         </div>
 
         {/* Extra spacing at bottom of timeline */}
-        <div className="pb-32"></div>
+        <div className="pb-16 sm:pb-32"></div>
       </div>
 
       {/* Platform Screenshots Carousel */}
-      <div className="mt-5 py-20 bg-gradient-to-b from-gray-900 to-black">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-white mb-4">
+      <div className="mt-5 py-12 sm:py-20 bg-gradient-to-b from-gray-900 to-black">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-8 sm:mb-12">
+            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3 sm:mb-4 px-2">
               See the Platform in Action
             </h3>
-            <p className="text-gray-400 text-lg">
+            <p className="text-gray-400 text-base sm:text-lg px-2">
               Every agent created gets both n8n workflows AND Python code for
               enterprise deployment
             </p>
@@ -579,17 +579,17 @@ export default function JoinWaitlist() {
             {/* Previous Arrow */}
             <button
               onClick={() => setCurrentSlide((prev) => (prev - 1 + 4) % 4)}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors"
+              className="absolute left-1 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 sm:w-10 sm:h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors touch-manipulation"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
 
             {/* Next Arrow */}
             <button
               onClick={() => setCurrentSlide((prev) => (prev + 1) % 4)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors"
+              className="absolute right-1 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 sm:w-10 sm:h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors touch-manipulation"
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
 
             {/* Screenshot Carousel Container */}
@@ -600,51 +600,51 @@ export default function JoinWaitlist() {
               >
                 {/* Screenshot 1: Agent Creator Chat */}
                 <div className="w-full flex-shrink-0">
-                  <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl p-8 border border-gray-700">
-                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                  <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl p-4 sm:p-8 border border-gray-700 mx-2 sm:mx-0">
+                    <div className="grid md:grid-cols-2 gap-4 sm:gap-8 items-center">
                       <div>
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center">
-                            <Bot className="w-5 h-5 text-emerald-400" />
+                        <div className="flex items-start gap-3 mb-3 sm:mb-4">
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <Bot className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
                           </div>
                           <div>
-                            <h4 className="text-lg font-semibold text-white">
+                            <h4 className="text-base sm:text-lg font-semibold text-white">
                               Simple Chat to Create Agents
                             </h4>
-                            <p className="text-sm text-emerald-400">
+                            <p className="text-xs sm:text-sm text-emerald-400">
                               No coding required • Just describe what you want
                             </p>
                           </div>
                         </div>
-                        <p className="text-gray-300 mb-4">
+                        <p className="text-sm sm:text-base text-gray-300 mb-3 sm:mb-4">
                           Creating agents is as simple as having a conversation.
                           Just tell AI Nomads what you want your agent to do,
                           add integrations like Gmail, Slack, or Notion, and
                           click send. The platform handles all the technical
                           complexity.
                         </p>
-                        <div className="space-y-2">
+                        <div className="space-y-1 sm:space-y-2">
                           <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                            <span className="text-sm text-gray-300">
+                            <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-400 flex-shrink-0" />
+                            <span className="text-xs sm:text-sm text-gray-300">
                               Natural language agent creation
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                            <span className="text-sm text-gray-300">
+                            <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-400 flex-shrink-0" />
+                            <span className="text-xs sm:text-sm text-gray-300">
                               Pre-built integration options
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                            <span className="text-sm text-gray-300">
+                            <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-400 flex-shrink-0" />
+                            <span className="text-xs sm:text-sm text-gray-300">
                               Quick starter templates
                             </span>
                           </div>
                         </div>
                       </div>
-                      <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-600">
+                      <div className="bg-gray-800/50 rounded-lg p-2 sm:p-4 border border-gray-600 order-first md:order-last">
                         <img
                           src={agentCreatorImg}
                           alt="AI Agent Creator Interface"
@@ -657,8 +657,8 @@ export default function JoinWaitlist() {
 
                 {/* Screenshot 2: Fleet Builder */}
                 <div className="w-full flex-shrink-0">
-                  <div className="bg-gradient-to-br from-blue-900/20 to-blue-800/10 rounded-xl p-8 border border-blue-500/20">
-                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                  <div className="bg-gradient-to-br from-blue-900/20 to-blue-800/10 rounded-xl p-4 sm:p-8 border border-blue-500/20 mx-2 sm:mx-0">
+                    <div className="grid md:grid-cols-2 gap-4 sm:gap-8 items-center">
                       <div>
                         <div className="flex items-center gap-3 mb-4">
                           <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
@@ -847,13 +847,13 @@ export default function JoinWaitlist() {
       </div>
 
       {/* Example Fleets & Agents Carousel */}
-      <div className="py-20 bg-black">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-white mb-4">
+      <div className="py-12 sm:py-20 bg-black">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-8 sm:mb-12">
+            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3 sm:mb-4 px-2">
               See Real Fleets & Agents in Action
             </h3>
-            <p className="text-gray-400 text-lg">
+            <p className="text-gray-400 text-base sm:text-lg px-2">
               From simple email agents to complete company automation
             </p>
           </div>
@@ -862,17 +862,17 @@ export default function JoinWaitlist() {
             {/* Previous Arrow */}
             <button
               onClick={prevSlide}
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors"
+              className="absolute left-1 sm:left-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 sm:w-10 sm:h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors touch-manipulation"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
 
             {/* Next Arrow */}
             <button
               onClick={nextSlide}
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors"
+              className="absolute right-1 sm:right-4 top-1/2 -translate-y-1/2 z-10 w-8 h-8 sm:w-10 sm:h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors touch-manipulation"
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
 
             {/* Carousel Container */}
@@ -883,8 +883,8 @@ export default function JoinWaitlist() {
               >
                 {/* Example 1: Sales Email Agent */}
                 <div className="w-full flex-shrink-0">
-                  <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl p-8 border border-gray-700">
-                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                  <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl p-4 sm:p-8 border border-gray-700 mx-2 sm:mx-0">
+                    <div className="grid md:grid-cols-2 gap-4 sm:gap-8 items-center">
                       <div>
                         <div className="flex items-center gap-3 mb-4">
                           <div className="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center">
@@ -947,8 +947,8 @@ export default function JoinWaitlist() {
 
                 {/* Example 2: Sales Department Fleet */}
                 <div className="w-full flex-shrink-0">
-                  <div className="bg-gradient-to-br from-blue-900/20 to-blue-800/10 rounded-xl p-8 border border-blue-500/20">
-                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                  <div className="bg-gradient-to-br from-blue-900/20 to-blue-800/10 rounded-xl p-4 sm:p-8 border border-blue-500/20 mx-2 sm:mx-0">
+                    <div className="grid md:grid-cols-2 gap-4 sm:gap-8 items-center">
                       <div>
                         <div className="flex items-center gap-3 mb-4">
                           <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
@@ -1034,8 +1034,8 @@ export default function JoinWaitlist() {
 
                 {/* Example 3: Social Media Creator Fleet */}
                 <div className="w-full flex-shrink-0">
-                  <div className="bg-gradient-to-br from-purple-900/20 to-purple-800/10 rounded-xl p-8 border border-purple-500/20">
-                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                  <div className="bg-gradient-to-br from-purple-900/20 to-purple-800/10 rounded-xl p-4 sm:p-8 border border-purple-500/20 mx-2 sm:mx-0">
+                    <div className="grid md:grid-cols-2 gap-4 sm:gap-8 items-center">
                       <div>
                         <div className="flex items-center gap-3 mb-4">
                           <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
@@ -1128,8 +1128,8 @@ export default function JoinWaitlist() {
 
                 {/* Example 4: Enterprise Development Company Fleet */}
                 <div className="w-full flex-shrink-0">
-                  <div className="bg-gradient-to-br from-orange-900/20 to-red-800/10 rounded-xl p-8 border border-orange-500/20">
-                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                  <div className="bg-gradient-to-br from-orange-900/20 to-red-800/10 rounded-xl p-4 sm:p-8 border border-orange-500/20 mx-2 sm:mx-0">
+                    <div className="grid md:grid-cols-2 gap-4 sm:gap-8 items-center">
                       <div>
                         <div className="flex items-center gap-3 mb-4">
                           <div className="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center">
@@ -1244,54 +1244,54 @@ export default function JoinWaitlist() {
       </div>
 
       {/* Creator Economy & Use Cases Section */}
-      <div className="py-20 bg-gray-900/50">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-white mb-4">
+      <div className="py-12 sm:py-20 bg-gray-900/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-8 sm:mb-12">
+            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3 sm:mb-4 px-2">
               From Single Agents to Complete Company Automation
             </h3>
-            <p className="text-gray-400 text-lg">
+            <p className="text-gray-400 text-base sm:text-lg px-2">
               Create individual AI agents or build entire Fleets that can mimic
               whole companies and departments
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
             <div className="text-center">
-              <div className="text-4xl font-bold text-emerald-400 mb-2">
+              <div className="text-2xl sm:text-4xl font-bold text-emerald-400 mb-1 sm:mb-2">
                 2.5K+
               </div>
-              <div className="text-gray-400">Agents Deployed</div>
-              <div className="text-sm text-gray-500">Across all Fleets</div>
+              <div className="text-gray-400 text-sm sm:text-base">Agents Deployed</div>
+              <div className="text-xs sm:text-sm text-gray-500">Across all Fleets</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-blue-400 mb-2">100+</div>
-              <div className="text-gray-400">Creators</div>
-              <div className="text-sm text-gray-500">Earning monthly</div>
+              <div className="text-2xl sm:text-4xl font-bold text-blue-400 mb-1 sm:mb-2">100+</div>
+              <div className="text-gray-400 text-sm sm:text-base">Creators</div>
+              <div className="text-xs sm:text-sm text-gray-500">Earning monthly</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-purple-400 mb-2">
+              <div className="text-2xl sm:text-4xl font-bold text-purple-400 mb-1 sm:mb-2">
                 $500K+
               </div>
-              <div className="text-gray-400">Creator Revenue</div>
-              <div className="text-sm text-gray-500">Per month</div>
+              <div className="text-gray-400 text-sm sm:text-base">Creator Revenue</div>
+              <div className="text-xs sm:text-sm text-gray-500">Per month</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-yellow-400 mb-2">
+              <div className="text-2xl sm:text-4xl font-bold text-yellow-400 mb-1 sm:mb-2">
                 100+
               </div>
-              <div className="text-gray-400">Enterprise Fleets</div>
-              <div className="text-sm text-gray-500">In production</div>
+              <div className="text-gray-400 text-sm sm:text-base">Enterprise Fleets</div>
+              <div className="text-xs sm:text-sm text-gray-500">In production</div>
             </div>
           </div>
 
           {/* Use Cases & Monetization */}
           <div className="mt-16">
-            <h4 className="text-xl font-semibold text-white mb-8 text-center">
+            <h4 className="text-lg sm:text-xl font-semibold text-white mb-6 sm:mb-8 text-center px-2">
               Start with Single Agents, Scale to Complete Company Fleets
             </h4>
 
-            <div className="grid md:grid-cols-2 gap-8 mb-12">
+            <div className="grid md:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-12">
               {/* Single Agents */}
               <div className="bg-gradient-to-br from-emerald-900/20 to-emerald-800/10 rounded-xl p-6 border border-emerald-500/20">
                 <h5 className="text-lg font-semibold text-emerald-400 mb-4">
@@ -1384,16 +1384,16 @@ export default function JoinWaitlist() {
             </div>
 
             {/* Revenue Model */}
-            <div className="bg-gradient-to-r from-purple-900/20 to-pink-900/20 rounded-xl p-6 border border-purple-500/20">
-              <h5 className="text-lg font-semibold text-purple-400 mb-4 text-center">
+            <div className="bg-gradient-to-r from-purple-900/20 to-pink-900/20 rounded-xl p-4 sm:p-6 border border-purple-500/20">
+              <h5 className="text-base sm:text-lg font-semibold text-purple-400 mb-3 sm:mb-4 text-center">
                 Scale Your Revenue: From $50 Agents to $50K Company Fleets
               </h5>
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid sm:grid-cols-3 gap-4 sm:gap-6">
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Bot className="w-6 h-6 text-purple-400" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                    <Bot className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
                   </div>
-                  <div className="text-sm font-medium text-white mb-1">
+                  <div className="text-xs sm:text-sm font-medium text-white mb-1">
                     Single Agent Sales
                   </div>
                   <div className="text-xs text-gray-400">
@@ -1401,10 +1401,10 @@ export default function JoinWaitlist() {
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Users className="w-6 h-6 text-purple-400" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                    <Users className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
                   </div>
-                  <div className="text-sm font-medium text-white mb-1">
+                  <div className="text-xs sm:text-sm font-medium text-white mb-1">
                     Department Fleets
                   </div>
                   <div className="text-xs text-gray-400">
@@ -1412,10 +1412,10 @@ export default function JoinWaitlist() {
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Trophy className="w-6 h-6 text-purple-400" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                    <Trophy className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
                   </div>
-                  <div className="text-sm font-medium text-white mb-1">
+                  <div className="text-xs sm:text-sm font-medium text-white mb-1">
                     Company-Wide Fleets
                   </div>
                   <div className="text-xs text-gray-400">
@@ -1429,24 +1429,24 @@ export default function JoinWaitlist() {
       </div>
 
       {/* Developer Contributor Section */}
-      <div className="py-20 bg-gradient-to-b from-black to-gray-900">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h3 className="text-4xl font-bold text-white mb-4">
+      <div className="py-12 sm:py-20 bg-gradient-to-b from-black to-gray-900">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-8 sm:mb-12">
+            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4 px-2">
               Want to Contribute?
             </h3>
-            <p className="text-gray-400 text-lg">
+            <p className="text-gray-400 text-base sm:text-lg px-2">
               Join our team of developers building the future of AI agent
               platforms
             </p>
           </div>
 
           <Card className="bg-gray-900/50 border-gray-700">
-            <CardHeader className="text-center">
-              <CardTitle className="text-2xl text-white">
+            <CardHeader className="text-center pb-4">
+              <CardTitle className="text-xl sm:text-2xl text-white">
                 Developer Application
               </CardTitle>
-              <CardDescription className="text-gray-400">
+              <CardDescription className="text-gray-400 text-sm sm:text-base">
                 Help us build the most advanced AI agent platform. Submit your
                 application and we'll be in touch.
               </CardDescription>
@@ -1454,7 +1454,7 @@ export default function JoinWaitlist() {
             <CardContent>
               <form
                 onSubmit={handleContributorApplication}
-                className="space-y-6"
+                className="space-y-4 sm:space-y-6"
               >
                 <div>
                   <label
@@ -1520,11 +1520,11 @@ export default function JoinWaitlist() {
                 </Button>
               </form>
 
-              <div className="mt-6 p-4 bg-gray-800/50 rounded-lg">
-                <h4 className="font-semibold text-emerald-400 mb-2">
+              <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-gray-800/50 rounded-lg">
+                <h4 className="font-semibold text-emerald-400 mb-2 text-sm sm:text-base">
                   What we're looking for:
                 </h4>
-                <div className="space-y-1 text-sm text-gray-300">
+                <div className="space-y-1 text-xs sm:text-sm text-gray-300">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-red-400 flex-shrink-0" />
                     <span className="font-semibold text-red-400">
