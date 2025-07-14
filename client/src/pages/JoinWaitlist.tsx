@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { Zap, Users, Clock, Shield, Sparkles, Bot, Rocket, Trophy, Calendar, CheckCircle2, Star } from "lucide-react";
+import { Zap, Users, Clock, Shield, Sparkles, Bot, Rocket, Trophy, Calendar, CheckCircle2, Star, ChevronLeft, ChevronRight, Play } from "lucide-react";
 import logoImage from "@assets/logo_dark_mode_1750270383392.png";
 
 // Initialize Stripe
@@ -385,6 +385,211 @@ export default function JoinWaitlist() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Example Fleets & Agents Carousel */}
+      <div className="py-20 bg-black">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h3 className="text-3xl font-bold text-white mb-4">See Real Fleets & Agents in Action</h3>
+            <p className="text-gray-400 text-lg">From simple email agents to complete company automation</p>
+          </div>
+
+          <div className="relative">
+            {/* Carousel Container */}
+            <div className="overflow-hidden rounded-xl">
+              <div className="flex transition-transform duration-300 ease-in-out">
+                
+                {/* Example 1: Email Management Agent */}
+                <div className="w-full flex-shrink-0">
+                  <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl p-8 border border-gray-700">
+                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                      <div>
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center">
+                            <Bot className="w-5 h-5 text-emerald-400" />
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-semibold text-white">Email Management Agent</h4>
+                            <p className="text-sm text-emerald-400">Single Agent • $150 price point</p>
+                          </div>
+                        </div>
+                        <p className="text-gray-300 mb-4">
+                          This agent automatically sorts emails by priority, drafts responses for common inquiries, 
+                          and schedules follow-ups. Built by Sarah K., earning $2,400/month from 16 clients.
+                        </p>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                            <span className="text-sm text-gray-300">Processes 500+ emails daily</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                            <span className="text-sm text-gray-300">95% accuracy in categorization</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                            <span className="text-sm text-gray-300">Saves 3 hours per day per user</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-gray-800/50 rounded-lg p-6 border border-gray-600">
+                        <div className="text-center text-gray-400 mb-4">
+                          <Play className="w-8 h-8 mx-auto mb-2" />
+                          <p className="text-sm">Agent Demo Screenshot</p>
+                        </div>
+                        <div className="bg-gray-900 rounded p-4 text-xs font-mono text-green-400">
+                          <div>📧 Incoming: 47 emails</div>
+                          <div>🔥 High Priority: 3 flagged</div>
+                          <div>📝 Auto-drafted: 12 responses</div>
+                          <div>⏰ Scheduled: 8 follow-ups</div>
+                          <div className="text-emerald-400 mt-2">✅ Processing complete in 2.3s</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Example 2: Sales Department Fleet */}
+                <div className="w-full flex-shrink-0">
+                  <div className="bg-gradient-to-br from-blue-900/20 to-blue-800/10 rounded-xl p-8 border border-blue-500/20">
+                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                      <div>
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                            <Users className="w-5 h-5 text-blue-400" />
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-semibold text-white">Complete Sales Department Fleet</h4>
+                            <p className="text-sm text-blue-400">28 Agents • $12,000 licensing</p>
+                          </div>
+                        </div>
+                        <p className="text-gray-300 mb-4">
+                          A full sales organization with 28 specialized agents handling everything from lead generation 
+                          to deal closing. Built by Marcus R., licensed to 4 companies for $48K/year.
+                        </p>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                            <span className="text-sm text-gray-300">Lead Qualification Fleet (8 agents)</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                            <span className="text-sm text-gray-300">Follow-up & Nurture Fleet (12 agents)</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                            <span className="text-sm text-gray-300">Closing & CRM Fleet (8 agents)</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-gray-800/50 rounded-lg p-6 border border-gray-600">
+                        <div className="text-center text-gray-400 mb-4">
+                          <Users className="w-8 h-8 mx-auto mb-2" />
+                          <p className="text-sm">Fleet Dashboard</p>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4 text-xs">
+                          <div className="bg-blue-900/30 rounded p-3">
+                            <div className="text-blue-400 font-semibold">Lead Gen</div>
+                            <div className="text-white">847 leads today</div>
+                            <div className="text-gray-400">8 agents active</div>
+                          </div>
+                          <div className="bg-purple-900/30 rounded p-3">
+                            <div className="text-purple-400 font-semibold">Qualification</div>
+                            <div className="text-white">203 qualified</div>
+                            <div className="text-gray-400">12 agents active</div>
+                          </div>
+                          <div className="bg-green-900/30 rounded p-3">
+                            <div className="text-green-400 font-semibold">Follow-ups</div>
+                            <div className="text-white">156 sent</div>
+                            <div className="text-gray-400">Auto-scheduled</div>
+                          </div>
+                          <div className="bg-yellow-900/30 rounded p-3">
+                            <div className="text-yellow-400 font-semibold">Closing</div>
+                            <div className="text-white">$47K pipeline</div>
+                            <div className="text-gray-400">8 deals active</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Example 3: Enterprise Development Company Fleet */}
+                <div className="w-full flex-shrink-0">
+                  <div className="bg-gradient-to-br from-purple-900/20 to-purple-800/10 rounded-xl p-8 border border-purple-500/20">
+                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                      <div>
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                            <Rocket className="w-5 h-5 text-purple-400" />
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-semibold text-white">Software Company Fleet</h4>
+                            <p className="text-sm text-purple-400">52 Agents • $85,000 enterprise license</p>
+                          </div>
+                        </div>
+                        <p className="text-gray-300 mb-4">
+                          A complete software development company with 52 agents handling everything from requirements 
+                          to deployment. Built by Dev Team Alpha, licensed to Fortune 500 for $340K/year.
+                        </p>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-purple-400" />
+                            <span className="text-sm text-gray-300">Frontend Development Fleet (18 agents)</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-purple-400" />
+                            <span className="text-sm text-gray-300">Backend & DevOps Fleet (20 agents)</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-purple-400" />
+                            <span className="text-sm text-gray-300">QA & Testing Fleet (14 agents)</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-gray-800/50 rounded-lg p-6 border border-gray-600">
+                        <div className="text-center text-gray-400 mb-4">
+                          <Rocket className="w-8 h-8 mx-auto mb-2" />
+                          <p className="text-sm">Development Pipeline</p>
+                        </div>
+                        <div className="space-y-3 text-xs">
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-300">Code Reviews</span>
+                            <span className="text-green-400">47 completed</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-300">Tests Written</span>
+                            <span className="text-blue-400">156 automated</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-300">Deployments</span>
+                            <span className="text-purple-400">12 successful</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-300">Bug Reports</span>
+                            <span className="text-yellow-400">3 auto-fixed</span>
+                          </div>
+                          <div className="bg-gray-700 rounded p-2 mt-3">
+                            <div className="text-emerald-400 font-semibold">24/7 Active Development</div>
+                            <div className="text-gray-300">Never sleeps, always shipping</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Carousel Navigation */}
+            <div className="flex justify-center gap-2 mt-8">
+              <button className="w-3 h-3 rounded-full bg-emerald-500"></button>
+              <button className="w-3 h-3 rounded-full bg-gray-600"></button>
+              <button className="w-3 h-3 rounded-full bg-gray-600"></button>
             </div>
           </div>
         </div>
