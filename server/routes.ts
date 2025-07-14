@@ -1823,9 +1823,11 @@ This agent should be production-ready with proper authentication, rate limiting,
         return res.status(400).json({ message: "Email already registered on waitlist" });
       }
 
-      // Get current position (count of all users + 1)
+      // Get current position (count of all users + 150 for starting at 150)
       const currentCount = await storage.getWaitlistCount();
-      const position = currentCount + 1;
+      console.log(`Current waitlist count: ${currentCount}`);
+      const position = currentCount + 150;
+      console.log(`Calculated position: ${position}`);
       
       // Calculate effective position (rush users get 50% reduction)
       const effectivePosition = isEngineer ? Math.ceil(position * 0.5) : position;

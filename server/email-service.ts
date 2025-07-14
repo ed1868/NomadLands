@@ -100,212 +100,138 @@ export class EmailService {
   }
 
   private generateWaitlistEmail(email: string, position: number, isRushUser: boolean): string {
-    const rushSection = !isRushUser ? `
-      <div style="background: linear-gradient(135deg, #001133 0%, #000022 100%); 
-                  border: 2px solid #ff6600; padding: 24px; margin: 24px 0; position: relative;
-                  box-shadow: 0 0 20px rgba(255, 102, 0, 0.3);" class="circuit-border">
-        <div style="position: absolute; top: -2px; left: -2px; right: -2px; height: 4px; 
-                    background: linear-gradient(90deg, #ff6600, #ffaa00, #ff6600); opacity: 0.8;"></div>
-        <h3 style="color: #ff6600; margin: 0 0 16px 0; font-size: 18px; font-weight: 900;
-                   letter-spacing: 1px; text-transform: uppercase;" class="neon-text">
-          >>> PRIORITY ACCESS AVAILABLE <<<
-        </h3>
-        <p style="color: #ffcc66; margin: 0 0 16px 0; line-height: 1.6; font-family: 'Courier New', monospace;">
-          <span style="color: #ff6600;">[PROTOCOL]</span> Engineers and technical users can activate 
-          <strong style="color: #ffaa00;">RUSH MODE</strong> for 50% faster matrix access.
-        </p>
-        <div style="background: linear-gradient(135deg, #000000 0%, #221100 100%); 
-                    border: 1px solid #ff6600; padding: 16px; margin: 16px 0;
-                    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));">
-          <div style="color: #ff6600; font-weight: 900; font-size: 24px; font-family: 'Courier New', monospace;">
-            $20.00 RUSH PROTOCOL
-          </div>
-          <div style="color: #ffcc66; font-size: 14px; letter-spacing: 1px; text-transform: uppercase;">
-            >>> ACTIVATE PRIORITY QUEUE <<<
-          </div>
-        </div>
-        <a href="https://buy.stripe.com/your-payment-link" 
-           style="display: inline-block; background: linear-gradient(135deg, #ff6600 0%, #cc4400 100%); 
-                  color: #ffffff; text-decoration: none; padding: 14px 28px; 
-                  font-weight: 900; margin-top: 8px; border: 2px solid #ff6600;
-                  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
-                  font-family: 'Courier New', monospace; letter-spacing: 1px; text-transform: uppercase;">
-          >>> ACTIVATE RUSH MODE <<<
-        </a>
-      </div>
-    ` : `
-      <div style="background: linear-gradient(135deg, #003300 0%, #006600 100%); 
-                  border: 2px solid #00ff00; padding: 24px; margin: 24px 0;
-                  box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);">
-        <h3 style="color: #00ff00; margin: 0 0 16px 0; font-size: 18px; font-weight: 900;
-                   letter-spacing: 1px; text-transform: uppercase;" class="neon-text">
-          >>> RUSH ACCESS CONFIRMED <<<
-        </h3>
-        <p style="color: #66ff66; margin: 0; line-height: 1.6; font-family: 'Courier New', monospace;">
-          <span style="color: #00ff00;">[PAYMENT]</span> PROCESSED SUCCESSFULLY. 
-          <br><span style="color: #00ff00;">[STATUS]</span> Priority access granted with 50% reduced wait time.
-        </p>
-      </div>
-    `;
-
     return `
       <!DOCTYPE html>
       <html>
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>AI Nomads Waitlist</title>
+        <title>Welcome to AI Nomads!</title>
       </head>
-      <body style="margin: 0; padding: 0; font-family: 'Courier New', monospace; background: linear-gradient(45deg, #000000, #001122, #000033); background-size: 400% 400%; animation: gradientShift 15s ease infinite; color: #ffffff;">
-        <style>
-          @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
+      <body style="margin: 0; padding: 0; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        
+        <!-- Main Container -->
+        <div style="max-width: 600px; margin: 40px auto; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);">
           
-          @keyframes neonGlow {
-            0%, 100% { text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 15px #00ffff; }
-            50% { text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff; }
-          }
-          
-          @keyframes circuitPulse {
-            0%, 100% { box-shadow: 0 0 5px #00ffff, inset 0 0 10px rgba(0, 255, 255, 0.1); }
-            50% { box-shadow: 0 0 20px #00ffff, inset 0 0 20px rgba(0, 255, 255, 0.2); }
-          }
-          
-          .neon-text {
-            animation: neonGlow 2s ease-in-out infinite alternate;
-          }
-          
-          .circuit-border {
-            animation: circuitPulse 3s ease-in-out infinite;
-          }
-        </style>
-        <div style="max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #000011 0%, #001122 50%, #000033 100%); 
-                    border: 2px solid #00ffff; box-shadow: 0 0 30px rgba(0, 255, 255, 0.3), inset 0 0 30px rgba(0, 255, 255, 0.1);"
-             class="circuit-border">
-          
-          <!-- Header -->
-          <div style="background: linear-gradient(135deg, #000011 0%, #001133 100%); padding: 32px 24px; text-align: center; 
-                      border-bottom: 2px solid #00ffff; position: relative;">
-            <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; 
-                        background: linear-gradient(90deg, transparent, #00ffff, #0088ff, #00ffff, transparent);
-                        animation: circuitPulse 2s ease-in-out infinite;"></div>
-            <div style="background: radial-gradient(circle, #00ffff 0%, #0066cc 50%, #003366 100%); 
-                        width: 80px; height: 80px; margin: 0 auto 20px; 
-                        border: 2px solid #00ffff; box-shadow: 0 0 20px #00ffff;
-                        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-                        display: flex; align-items: center; justify-content: center;" class="circuit-border">
-              <span style="color: #ffffff; font-weight: 900; font-size: 20px; text-shadow: 0 0 10px #00ffff;" class="neon-text">AN</span>
+          <!-- Header with Trophy Icon -->
+          <div style="text-align: center; padding: 48px 32px; background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%); position: relative;">
+            <div style="position: absolute; top: 20px; left: 20px; width: 72px; height: 72px; background: rgba(72, 187, 120, 0.2); border-radius: 50%; filter: blur(20px);"></div>
+            <div style="position: absolute; bottom: 20px; right: 20px; width: 96px; height: 96px; background: rgba(59, 130, 246, 0.2); border-radius: 50%; filter: blur(30px);"></div>
+            
+            <!-- Trophy Icon -->
+            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1;">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                <path d="M4 22h16"></path>
+                <path d="M10 14.66V17c0 .55.47.98.97 1.21C11.56 18.75 12.23 19 13 19s1.44-.25 2.03-.79c.5-.23.97-.66.97-1.21v-2.34"></path>
+                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+              </svg>
             </div>
-            <h1 style="color: #00ffff; margin: 0; font-size: 32px; font-weight: 900; letter-spacing: 3px;
-                       text-transform: uppercase;" class="neon-text">AI NOMADS</h1>
-            <p style="color: #66ccff; margin: 12px 0 0 0; font-size: 14px; letter-spacing: 2px; 
-                      text-transform: uppercase; font-weight: 600;">>>> SYSTEM ACTIVATED <<<</p>
-            <div style="margin-top: 16px; height: 1px; background: linear-gradient(90deg, transparent, #00ffff, transparent);"></div>
-          </div>
 
-          <!-- Main Content -->
-          <div style="padding: 32px 24px; background: linear-gradient(180deg, #000011 0%, #001122 100%); position: relative;">
-            <div style="position: absolute; top: 0; left: 24px; right: 24px; height: 1px; 
-                        background: linear-gradient(90deg, transparent, #00ffff, transparent);"></div>
-            
-            <h2 style="color: #00ffff; margin: 0 0 24px 0; font-size: 24px; font-weight: 900; 
-                       letter-spacing: 2px; text-transform: uppercase;" class="neon-text">
-              >>> ACCESS GRANTED <<<
-            </h2>
-            
-            <p style="color: #66ccff; margin: 0 0 24px 0; line-height: 1.8; font-size: 16px; font-family: 'Courier New', monospace;">
-              INITIALIZATION COMPLETE. You are now in the AI Nomads matrix. 
-              <br><span style="color: #00ffff;">[SYSTEM]</span> Building the most advanced AI agent marketplace.
-              <br><span style="color: #00ffff;">[STATUS]</span> Legendary agents being forged in the digital realm.
+            <h1 style="color: #10b981; margin: 0 0 16px 0; font-size: 48px; font-weight: 700; letter-spacing: -1px;">
+              Welcome to AI Nomads!
+            </h1>
+
+            <p style="color: #9ca3af; margin: 0; font-size: 20px; line-height: 1.5;">
+              You're now in the queue to build and deploy AI Agent Fleets. Position #${position}.
             </p>
+          </div>
 
-            <!-- Position Info -->
-            <div style="background: linear-gradient(135deg, #000022 0%, #001144 100%); 
-                        border: 2px solid #00ffff; padding: 24px; margin: 24px 0; 
-                        position: relative; box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);" class="circuit-border">
-              <div style="position: absolute; top: -1px; left: -1px; right: -1px; height: 2px; 
-                          background: linear-gradient(90deg, #00ffff, #0088ff, #00ffff); opacity: 0.8;"></div>
-              <div style="position: absolute; bottom: -1px; left: -1px; right: -1px; height: 2px; 
-                          background: linear-gradient(90deg, #00ffff, #0088ff, #00ffff); opacity: 0.8;"></div>
-              
-              <h3 style="color: #00ffff; margin: 0 0 20px 0; font-size: 18px; font-weight: 900; 
-                         letter-spacing: 1px; text-transform: uppercase;" class="neon-text">
-                >>> QUEUE POSITION <<<
-              </h3>
-              
-              <div style="display: flex; align-items: center; gap: 20px;">
-                <div style="background: radial-gradient(circle, #00ffff 0%, #0066cc 70%, #003366 100%); 
-                           color: #000000; padding: 20px; font-weight: 900; font-size: 28px; 
-                           min-width: 80px; text-align: center; border: 2px solid #00ffff;
-                           box-shadow: 0 0 15px #00ffff; clip-path: polygon(15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%, 0% 50%);">
-                  #${position}
+          <!-- What Happens Next Section -->
+          <div style="padding: 40px 32px; background: linear-gradient(135deg, #374151 0%, #1f2937 100%); border-radius: 16px; margin: 32px; position: relative;">
+            <h3 style="color: #10b981; margin: 0 0 24px 0; font-size: 24px; font-weight: 600;">
+              What happens next?
+            </h3>
+            
+            <div style="space-y: 20px;">
+              <!-- Feature 1 -->
+              <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                <div style="width: 24px; height: 24px; margin-right: 16px; flex-shrink: 0;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+                    <path d="M20 6L9 17l-5-5"></path>
+                  </svg>
                 </div>
-                <div>
-                  <div style="color: #ffffff; font-weight: 700; font-size: 20px; font-family: 'Courier New', monospace;">
-                    POSITION: ${position}
-                  </div>
-                  <div style="color: #66ccff; font-size: 14px; letter-spacing: 1px; text-transform: uppercase;">
-                    >>> IN QUEUE MATRIX <<<
-                  </div>
-                </div>
+                <span style="color: #d1d5db; font-size: 16px; line-height: 1.5;">
+                  Early access to build custom Agent Fleets for any use case
+                </span>
               </div>
-            </div>
 
-            ${rushSection}
-
-            <!-- What's Coming -->
-            <div style="background: linear-gradient(135deg, #000033 0%, #001155 100%); 
-                        border: 2px solid #0088ff; padding: 24px; margin: 24px 0; position: relative;
-                        box-shadow: 0 0 20px rgba(0, 136, 255, 0.2);" class="circuit-border">
-              <div style="position: absolute; top: -2px; left: -2px; right: -2px; height: 4px; 
-                          background: linear-gradient(90deg, #0088ff, #00ccff, #0088ff); opacity: 0.8;"></div>
-              <h3 style="color: #00ccff; margin: 0 0 20px 0; font-size: 18px; font-weight: 900;
-                         letter-spacing: 1px; text-transform: uppercase;" class="neon-text">
-                >>> MATRIX FEATURES LOADING <<<
-              </h3>
-              <div style="color: #66ccff; line-height: 2.2; margin: 0; font-family: 'Courier New', monospace;">
-                <div style="margin-bottom: 12px;">
-                  <span style="color: #0088ff;">[MODULE_01]</span> <strong style="color: #ffffff;">LEGENDARY AI AGENTS</strong>
-                  <br><span style="color: #66ccff; margin-left: 80px;">→ Built like digital warriors, deployed as silent executors</span>
+              <!-- Feature 2 -->
+              <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                <div style="width: 24px; height: 24px; margin-right: 16px; flex-shrink: 0;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="m22 21-3-3m1 0a6 6 0 1 1-6-6 6 6 0 0 1 6 6z"></path>
+                  </svg>
                 </div>
-                <div style="margin-bottom: 12px;">
-                  <span style="color: #0088ff;">[MODULE_02]</span> <strong style="color: #ffffff;">QUANTUM DEPLOYMENT</strong>
-                  <br><span style="color: #66ccff; margin-left: 80px;">→ Idea to production matrix transfer in nanoseconds</span>
-                </div>
-                <div style="margin-bottom: 12px;">
-                  <span style="color: #0088ff;">[MODULE_03]</span> <strong style="color: #ffffff;">ENTERPRISE NEURAL NET</strong>
-                  <br><span style="color: #66ccff; margin-left: 80px;">→ n8n workflows + Python cores + custom architectures</span>
-                </div>
-                <div style="margin-bottom: 12px;">
-                  <span style="color: #0088ff;">[MODULE_04]</span> <strong style="color: #ffffff;">CREATOR ECONOMY MATRIX</strong>
-                  <br><span style="color: #66ccff; margin-left: 80px;">→ Build once, earn perpetually through the network</span>
-                </div>
-                <div>
-                  <span style="color: #0088ff;">[MODULE_05]</span> <strong style="color: #ffffff;">ZERO-CODE INTERFACE</strong>
-                  <br><span style="color: #66ccff; margin-left: 80px;">→ Anyone can deploy AI powerhouses without code</span>
-                </div>
+                <span style="color: #d1d5db; font-size: 16px; line-height: 1.5;">
+                  Join the creator economy and monetize your automation expertise
+                </span>
               </div>
-            </div>
 
-            <!-- Footer -->
-            <div style="text-align: center; padding-top: 24px; margin-top: 32px; position: relative;">
-              <div style="height: 2px; background: linear-gradient(90deg, transparent, #00ffff, transparent); margin-bottom: 24px;"></div>
-              
-              <p style="color: #66ccff; margin: 0 0 16px 0; font-size: 14px; font-family: 'Courier New', monospace;
-                        letter-spacing: 1px; text-transform: uppercase;">
-                <span style="color: #00ffff;">[STATUS]</span> Monitoring queue. Updates incoming.
-              </p>
-              <p style="color: #0088ff; margin: 0; font-size: 12px; font-family: 'Courier New', monospace;
-                        letter-spacing: 2px; text-transform: uppercase;">
-                >>> FORGED BY AI NOMADS MATRIX <<<
-              </p>
-              
-              <div style="height: 1px; background: linear-gradient(90deg, transparent, #00ffff, transparent); margin-top: 24px;"></div>
+              <!-- Feature 3 -->
+              <div style="display: flex; align-items: center;">
+                <div style="width: 24px; height: 24px; margin-right: 16px; flex-shrink: 0;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                  </svg>
+                </div>
+                <span style="color: #d1d5db; font-size: 16px; line-height: 1.5;">
+                  Deploy agents for enterprises and earn recurring revenue
+                </span>
+              </div>
             </div>
           </div>
+
+          ${!isRushUser ? `
+          <!-- Rush Payment Section -->
+          <div style="padding: 32px; background: linear-gradient(135deg, #1f2937 0%, #111827 100%); margin: 0 32px 32px; border-radius: 16px; border: 2px solid #f59e0b; position: relative;">
+            <div style="position: absolute; top: -2px; left: -2px; right: -2px; height: 4px; background: linear-gradient(90deg, #f59e0b, #fbbf24, #f59e0b); border-radius: 8px 8px 0 0;"></div>
+            
+            <h3 style="color: #f59e0b; margin: 0 0 16px 0; font-size: 20px; font-weight: 600;">
+              Want to skip the line?
+            </h3>
+            
+            <p style="color: #d1d5db; margin: 0 0 24px 0; font-size: 16px; line-height: 1.5;">
+              Get priority access and jump to the front 50% faster for just $20.
+            </p>
+            
+            <div style="background: linear-gradient(135deg, #111827 0%, #0f172a 100%); border: 1px solid #f59e0b; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+              <div style="color: #f59e0b; font-size: 28px; font-weight: 700; margin-bottom: 8px;">
+                $20 Priority Access
+              </div>
+              <div style="color: #fbbf24; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">
+                Skip the Wait • Get Early Access
+              </div>
+            </div>
+            
+            <a href="https://ainomads-waitlist.replit.app" 
+               style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; text-decoration: none; padding: 16px 32px; border-radius: 12px; font-weight: 600; font-size: 16px; text-align: center; width: 100%; box-sizing: border-box;">
+              Get Priority Access Now
+            </a>
+          </div>
+          ` : `
+          <!-- Rush Confirmed Section -->
+          <div style="padding: 32px; background: linear-gradient(135deg, #065f46 0%, #064e3b 100%); margin: 0 32px 32px; border-radius: 16px; border: 2px solid #10b981;">
+            <h3 style="color: #10b981; margin: 0 0 16px 0; font-size: 20px; font-weight: 600;">
+              Priority Access Confirmed! ⚡
+            </h3>
+            <p style="color: #a7f3d0; margin: 0; font-size: 16px; line-height: 1.5;">
+              Your payment was processed successfully. You now have 50% faster access to the AI Nomads platform!
+            </p>
+          </div>
+          `}
+
+          <!-- Footer -->
+          <div style="text-align: center; padding: 32px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
+            <a href="https://ainomads-waitlist.replit.app" 
+               style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-weight: 600; font-size: 16px;">
+              Return to Waitlist
+            </a>
+          </div>
+
         </div>
       </body>
       </html>

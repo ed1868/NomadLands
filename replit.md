@@ -118,6 +118,13 @@ The application follows a full-stack architecture with clear separation between 
 
 ```
 Changelog:
+- July 14, 2025. Fixed Waitlist Position Calculation and Beautiful Email Template
+  * Fixed waitlist position calculation to start at #150 instead of #1 as requested
+  * Completely redesigned email template with beautiful dark theme, gradients, modern styling
+  * Enhanced email template with trophy icons, gradient backgrounds, and premium design
+  * Added proper HTML structure with responsive design and visual hierarchy
+  * Fixed database position logic: currentCount + 150 for proper queue numbering
+  * Verified email delivery system working correctly with enhanced styling
 - July 14, 2025. OpenSea-Style Waitlist Marketplace with MVP Timeline
   * Redesigned waitlist page with OpenSea-inspired marketplace aesthetic
   * Integrated authentic AI Nomads circuit logo replacing generic branding
@@ -391,4 +398,6 @@ Color scheme: Pure black, charcoal grey, emerald accents, marketplace-style layo
 Reference inspiration: OpenSea marketplace design with professional enterprise features
 Key features: Multi-page marketplace, fleet management, API docs, waitlist system with MVP timeline
 Branding: Use real AI Nomads circuit logo, avoid "built in the shadows" messaging
+Email design: Beautiful dark-themed HTML emails matching waitlist success page design with trophy icons and gradient backgrounds
+Waitlist numbering: Start at position 150 and increment from there
 ```
