@@ -456,6 +456,9 @@ export default function JoinWaitlist() {
             </div>
           </div>
         </div>
+        
+        {/* Extra spacing at bottom of timeline */}
+        <div className="pb-20"></div>
       </div>
 
       {/* Platform Screenshots Carousel */}
@@ -1177,12 +1180,28 @@ export default function JoinWaitlist() {
                 <h4 className="font-semibold text-emerald-400 mb-2">What we're looking for:</h4>
                 <div className="space-y-1 text-sm text-gray-300">
                   <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-red-400 flex-shrink-0" />
+                    <span className="font-semibold text-red-400">Most important: Resilience - people who don't give up</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-red-400 flex-shrink-0" />
+                    <span className="font-semibold text-red-400">We don't care how you get the job done, as long as you get it done</span>
+                  </div>
+                  <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                     <span>Full-stack developers (React, Node.js, TypeScript)</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                     <span>AI/ML engineers with LLM experience</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                    <span>Vibe coding enthusiasts who ship fast and iterate</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                    <span>Prompt engineering specialists for AI agent optimization</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
