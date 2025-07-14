@@ -458,7 +458,7 @@ export default function JoinWaitlist() {
         </div>
         
         {/* Extra spacing at bottom of timeline */}
-        <div className="pb-20"></div>
+        <div className="pb-32"></div>
       </div>
 
       {/* Platform Screenshots Carousel */}
