@@ -907,51 +907,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // WAITLIST SYSTEM ROUTES
-  
-  // Join waitlist
-  app.post("/api/waitlist/join", async (req, res) => {
-    try {
-      const { email, isEngineer } = req.body;
-      
-      if (!email || !email.includes('@')) {
-        return res.status(400).json({ message: "Valid email address required" });
-      }
 
-      // Check if user already exists in waitlist
-      const existingUser = await storage.getWaitlistUserByEmail(email);
-      if (existingUser) {
-        return res.status(409).json({ 
-          message: "Email already on waitlist",
-          position: existingUser.position 
-        });
-      }
-
-      // Get current waitlist count for position (starting at 150)
-      const waitlistCount = await storage.getWaitlistCount();
-      const position = waitlistCount + 150;
-
-      // Create waitlist user
-      const waitlistUser = await storage.createWaitlistUser({
-        email,
-        isEngineer: !!isEngineer,
-        position,
-        effectivePosition: position
-      });
-
-      // Send confirmation email
-      await emailService.sendWaitlistConfirmation(email, position, false);
-
-      res.json({ 
-        position,
-        message: "Successfully joined waitlist",
-        showRushOption: !isEngineer
-      });
-    } catch (error: any) {
-      console.error("Error joining waitlist:", error);
-      res.status(500).json({ message: "Failed to join waitlist" });
-    }
-  });
 
   // Create rush payment intent
   app.post("/api/waitlist/rush-payment", async (req, res) => {
@@ -1883,11 +1839,16 @@ This agent should be production-ready with proper authentication, rate limiting,
       });
 
       // Send confirmation email
-      const { emailService } = await import('./email-service');
       try {
-        await emailService.sendWaitlistConfirmation(email, position, false);
+        console.log(`Attempting to send waitlist confirmation email to: ${email}, position: ${position}`);
+        const emailResult = await emailService.sendWaitlistConfirmation(email, position, false);
+        console.log(`Email send result: ${emailResult}`);
+        if (!emailResult) {
+          console.error('Email service returned false - email failed to send');
+        }
       } catch (emailError) {
         console.error('Failed to send confirmation email:', emailError);
+        console.error('Email error details:', emailError);
         // Continue even if email fails
       }
 
