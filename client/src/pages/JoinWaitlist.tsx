@@ -9,6 +9,10 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { Zap, Users, Clock, Shield, Sparkles, Bot, Rocket, Trophy, Calendar, CheckCircle2, Star, ChevronLeft, ChevronRight, Play } from "lucide-react";
 import logoImage from "@assets/logo_dark_mode_1750270383392.png";
+import agentCreatorImg from "@assets/Screenshot 2025-07-14 at 15.54.39_1752523775495.png";
+import fleetTemplatesImg from "@assets/Screenshot 2025-07-14 at 15.54.55_1752523775495.png";
+import userDashboardImg from "@assets/Screenshot 2025-07-14 at 15.58.58_1752523775495.png";
+import n8nExportImg from "@assets/Screenshot 2025-07-14 at 15.59.12_1752523775495.png";
 
 // Initialize Stripe
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || '');
@@ -405,6 +409,232 @@ export default function JoinWaitlist() {
         </div>
       </div>
 
+      {/* Platform Screenshots Carousel */}
+      <div className="py-20 bg-gradient-to-b from-gray-900 to-black">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h3 className="text-3xl font-bold text-white mb-4">See the Platform in Action</h3>
+            <p className="text-gray-400 text-lg">Every agent created gets both n8n workflows AND Python code for enterprise deployment</p>
+          </div>
+
+          <div className="relative">
+            {/* Previous Arrow */}
+            <button 
+              onClick={() => setCurrentSlide((prev) => (prev - 1 + 4) % 4)}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+
+            {/* Next Arrow */}
+            <button 
+              onClick={() => setCurrentSlide((prev) => (prev + 1) % 4)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center text-white transition-colors"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+
+            {/* Screenshot Carousel Container */}
+            <div className="overflow-hidden rounded-xl">
+              <div 
+                className="flex transition-transform duration-300 ease-in-out"
+                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              >
+                
+                {/* Screenshot 1: Agent Creator Chat */}
+                <div className="w-full flex-shrink-0">
+                  <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl p-8 border border-gray-700">
+                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                      <div>
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center">
+                            <Bot className="w-5 h-5 text-emerald-400" />
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-semibold text-white">Simple Chat to Create Agents</h4>
+                            <p className="text-sm text-emerald-400">No coding required • Just describe what you want</p>
+                          </div>
+                        </div>
+                        <p className="text-gray-300 mb-4">
+                          Creating agents is as simple as having a conversation. Just tell AI Nomads what you want your agent to do, 
+                          add integrations like Gmail, Slack, or Notion, and click send. The platform handles all the technical complexity.
+                        </p>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                            <span className="text-sm text-gray-300">Natural language agent creation</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                            <span className="text-sm text-gray-300">Pre-built integration options</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                            <span className="text-sm text-gray-300">Quick starter templates</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-600">
+                        <img 
+                          src={agentCreatorImg} 
+                          alt="AI Agent Creator Interface"
+                          className="w-full rounded-lg"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Screenshot 2: Fleet Builder */}
+                <div className="w-full flex-shrink-0">
+                  <div className="bg-gradient-to-br from-blue-900/20 to-blue-800/10 rounded-xl p-8 border border-blue-500/20">
+                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                      <div>
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                            <Users className="w-5 h-5 text-blue-400" />
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-semibold text-white">Enterprise Fleet Templates</h4>
+                            <p className="text-sm text-blue-400">Complete department automation • Ready to deploy</p>
+                          </div>
+                        </div>
+                        <p className="text-gray-300 mb-4">
+                          Choose from pre-built Fleet templates like Sales Domination, Customer Success, or Enterprise SaaS Company. 
+                          Each Fleet contains dozens of specialized agents that work together to automate entire business functions.
+                        </p>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                            <span className="text-sm text-gray-300">Sales Fleet: 28 agents, 247 tools</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                            <span className="text-sm text-gray-300">Customer Success: 16 agents, 312 tools</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                            <span className="text-sm text-gray-300">Enterprise SaaS: 85 agents, 487 tools</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-600">
+                        <img 
+                          src={fleetTemplatesImg} 
+                          alt="Fleet Templates Dashboard"
+                          className="w-full rounded-lg"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Screenshot 3: User Dashboard */}
+                <div className="w-full flex-shrink-0">
+                  <div className="bg-gradient-to-br from-purple-900/20 to-purple-800/10 rounded-xl p-8 border border-purple-500/20">
+                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                      <div>
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                            <Sparkles className="w-5 h-5 text-purple-400" />
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-semibold text-white">Your Agent Dashboard</h4>
+                            <p className="text-sm text-purple-400">Performance tracking • Revenue analytics • Fleet management</p>
+                          </div>
+                        </div>
+                        <p className="text-gray-300 mb-4">
+                          Monitor your agents' performance, track revenue, and manage your entire fleet from one dashboard. 
+                          See real-time metrics, success rates, and earnings. Download n8n workflows or Python code anytime.
+                        </p>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-purple-400" />
+                            <span className="text-sm text-gray-300">Real-time performance monitoring</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-purple-400" />
+                            <span className="text-sm text-gray-300">Revenue and success tracking</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-purple-400" />
+                            <span className="text-sm text-gray-300">One-click workflow export</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-600">
+                        <img 
+                          src={userDashboardImg} 
+                          alt="Agent Performance Dashboard"
+                          className="w-full rounded-lg"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Screenshot 4: n8n JSON Export */}
+                <div className="w-full flex-shrink-0">
+                  <div className="bg-gradient-to-br from-orange-900/20 to-red-800/10 rounded-xl p-8 border border-orange-500/20">
+                    <div className="grid md:grid-cols-2 gap-8 items-center">
+                      <div>
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center">
+                            <Rocket className="w-5 h-5 text-orange-400" />
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-semibold text-white">Developer-Ready Export</h4>
+                            <p className="text-sm text-orange-400">n8n JSON workflows • Python enterprise code • Full flexibility</p>
+                          </div>
+                        </div>
+                        <p className="text-gray-300 mb-4">
+                          Every agent automatically generates both n8n workflow JSON and Python code. Import directly into n8n for MVP testing, 
+                          or use the Python code for enterprise-grade deployment. You own the code completely.
+                        </p>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-orange-400" />
+                            <span className="text-sm text-gray-300">n8n workflow JSON for quick deployment</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-orange-400" />
+                            <span className="text-sm text-gray-300">Production Python code with tests</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-orange-400" />
+                            <span className="text-sm text-gray-300">Enterprise deployment documentation</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-600">
+                        <img 
+                          src={n8nExportImg} 
+                          alt="n8n JSON Workflow Export"
+                          className="w-full rounded-lg"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Screenshot Carousel Navigation */}
+            <div className="flex justify-center gap-2 mt-8">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  className={`w-3 h-3 rounded-full transition-colors ${
+                    currentSlide === index ? 'bg-emerald-500' : 'bg-gray-600 hover:bg-gray-500'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Example Fleets & Agents Carousel */}
       <div className="py-20 bg-black">
         <div className="max-w-6xl mx-auto px-6">
@@ -710,24 +940,24 @@ export default function JoinWaitlist() {
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="text-4xl font-bold text-emerald-400 mb-2">15,000+</div>
-              <div className="text-gray-400">Deployed Agents</div>
+              <div className="text-4xl font-bold text-emerald-400 mb-2">2.5K+</div>
+              <div className="text-gray-400">Agents Deployed</div>
               <div className="text-sm text-gray-500">Across all Fleets</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-blue-400 mb-2">2,500+</div>
-              <div className="text-gray-400">Active Creators</div>
+              <div className="text-4xl font-bold text-blue-400 mb-2">100+</div>
+              <div className="text-gray-400">Creators</div>
               <div className="text-sm text-gray-500">Earning monthly</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-purple-400 mb-2">$2.4M+</div>
+              <div className="text-4xl font-bold text-purple-400 mb-2">$500K+</div>
               <div className="text-gray-400">Creator Revenue</div>
               <div className="text-sm text-gray-500">Per month</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-yellow-400 mb-2">850+</div>
+              <div className="text-4xl font-bold text-yellow-400 mb-2">100+</div>
               <div className="text-gray-400">Enterprise Fleets</div>
-              <div className="text-sm text-gray-500">Fortune 500 companies</div>
+              <div className="text-sm text-gray-500">In production</div>
             </div>
           </div>
 
