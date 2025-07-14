@@ -12,6 +12,7 @@ import { N8nWorkflowGenerator } from "./n8n-generator";
 import { n8nService, N8nAgentRequest } from "./n8n-service";
 import { claudeAgentGenerator, type AgentGenerationRequest } from "./claude-agent-generator";
 import { createPaypalOrder, capturePaypalOrder, loadPaypalDefault } from "./paypal";
+import { emailService } from "./email-service";
 import Stripe from "stripe";
 
 // JWT Authentication Middleware
@@ -906,6 +907,133 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // WAITLIST SYSTEM ROUTES
+  
+  // Join waitlist
+  app.post("/api/waitlist/join", async (req, res) => {
+    try {
+      const { email, isEngineer } = req.body;
+      
+      if (!email || !email.includes('@')) {
+        return res.status(400).json({ message: "Valid email address required" });
+      }
+
+      // Check if user already exists in waitlist
+      const existingUser = await storage.getWaitlistUserByEmail(email);
+      if (existingUser) {
+        return res.status(409).json({ 
+          message: "Email already on waitlist",
+          position: existingUser.position 
+        });
+      }
+
+      // Get current waitlist count for position
+      const waitlistCount = await storage.getWaitlistCount();
+      const position = waitlistCount + 1;
+
+      // Create waitlist user
+      const waitlistUser = await storage.createWaitlistUser({
+        email,
+        isEngineer: !!isEngineer,
+        position,
+        effectivePosition: position
+      });
+
+      // Send confirmation email
+      await emailService.sendWaitlistConfirmation(email, position, false);
+
+      res.json({ 
+        position,
+        message: "Successfully joined waitlist",
+        showRushOption: !isEngineer
+      });
+    } catch (error: any) {
+      console.error("Error joining waitlist:", error);
+      res.status(500).json({ message: "Failed to join waitlist" });
+    }
+  });
+
+  // Create rush payment intent
+  app.post("/api/waitlist/rush-payment", async (req, res) => {
+    try {
+      if (!stripe) {
+        return res.status(500).json({ message: "Stripe not configured" });
+      }
+
+      const { email } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ message: "Email required" });
+      }
+
+      // Verify user is on waitlist
+      const waitlistUser = await storage.getWaitlistUserByEmail(email);
+      if (!waitlistUser) {
+        return res.status(404).json({ message: "Email not found on waitlist" });
+      }
+
+      if (waitlistUser.hasPaidRush) {
+        return res.status(409).json({ message: "Rush payment already processed" });
+      }
+
+      // Create payment intent for $20
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: 2000, // $20 in cents
+        currency: 'usd',
+        payment_method_types: ['card'],
+        metadata: {
+          email,
+          type: 'waitlist_rush'
+        }
+      });
+
+      res.json({ 
+        clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id
+      });
+    } catch (error: any) {
+      console.error("Error creating rush payment intent:", error);
+      res.status(500).json({ message: "Failed to create payment intent" });
+    }
+  });
+
+  // Confirm rush payment
+  app.post("/api/waitlist/confirm-rush", async (req, res) => {
+    try {
+      const { email, paymentIntentId } = req.body;
+      
+      if (!email || !paymentIntentId) {
+        return res.status(400).json({ message: "Email and payment intent ID required" });
+      }
+
+      // Verify payment with Stripe
+      if (stripe) {
+        const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+        if (paymentIntent.status !== 'succeeded') {
+          return res.status(400).json({ message: "Payment not confirmed" });
+        }
+      }
+
+      // Update waitlist user with rush payment
+      const updatedUser = await storage.updateWaitlistUserRush(email, paymentIntentId, 2000);
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found on waitlist" });
+      }
+
+      // Send rush confirmation email
+      await emailService.sendWaitlistConfirmation(email, updatedUser.effectivePosition, true);
+
+      res.json({ 
+        message: "Rush payment confirmed",
+        newPosition: updatedUser.effectivePosition
+      });
+    } catch (error: any) {
+      console.error("Error confirming rush payment:", error);
+      res.status(500).json({ message: "Failed to confirm rush payment" });
+    }
+  });
+
   // Agent Deployment endpoints
   app.post("/api/deployments", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
@@ -1696,6 +1824,155 @@ This agent should be production-ready with proper authentication, rate limiting,
     } catch (error) {
       console.error("Error deleting agent:", error);
       res.status(500).json({ message: "Failed to delete agent" });
+    }
+  });
+
+  // WAITLIST ENDPOINTS
+  
+  // Join waitlist
+  app.post("/api/waitlist/join", async (req, res) => {
+    try {
+      const { email, isEngineer } = req.body;
+      
+      if (!email || !email.includes('@')) {
+        return res.status(400).json({ message: "Valid email address required" });
+      }
+
+      // Check if email already exists
+      const existingUser = await storage.getWaitlistUserByEmail(email);
+      if (existingUser) {
+        return res.status(400).json({ message: "Email already registered on waitlist" });
+      }
+
+      // Get current position (count of all users + 1)
+      const currentCount = await storage.getWaitlistCount();
+      const position = currentCount + 1;
+      
+      // Calculate effective position (rush users get 50% reduction)
+      const effectivePosition = isEngineer ? Math.ceil(position * 0.5) : position;
+
+      // Create waitlist user
+      const waitlistUser = await storage.createWaitlistUser({
+        email,
+        isEngineer: isEngineer || false,
+        position,
+        effectivePosition
+      });
+
+      // Send confirmation email
+      const { emailService } = await import('./email-service');
+      try {
+        await emailService.sendWaitlistConfirmation(email, position, false);
+      } catch (emailError) {
+        console.error('Failed to send confirmation email:', emailError);
+        // Continue even if email fails
+      }
+
+      res.json({
+        success: true,
+        position,
+        effectivePosition,
+        message: "Successfully joined waitlist!"
+      });
+    } catch (error: any) {
+      console.error("Error joining waitlist:", error);
+      res.status(500).json({ message: "Failed to join waitlist", error: error.message });
+    }
+  });
+
+  // Rush payment endpoint
+  app.post("/api/waitlist/rush-payment", async (req, res) => {
+    try {
+      if (!stripe) {
+        return res.status(500).json({ message: "Stripe not configured" });
+      }
+
+      const { email } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ message: "Email required" });
+      }
+
+      const waitlistUser = await storage.getWaitlistUserByEmail(email);
+      if (!waitlistUser) {
+        return res.status(404).json({ message: "Email not found on waitlist" });
+      }
+
+      if (waitlistUser.hasPaidRush) {
+        return res.status(400).json({ message: "Rush payment already processed" });
+      }
+
+      // Create payment intent
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: 2000, // $20.00 in cents
+        currency: "usd",
+        payment_method_types: ["card"],
+        metadata: {
+          type: "waitlist_rush",
+          email: email,
+          waitlist_user_id: waitlistUser.id.toString()
+        }
+      });
+
+      res.json({
+        clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id
+      });
+    } catch (error: any) {
+      console.error("Error creating rush payment:", error);
+      res.status(500).json({ message: "Failed to create payment", error: error.message });
+    }
+  });
+
+  // Confirm rush payment
+  app.post("/api/waitlist/confirm-rush", async (req, res) => {
+    try {
+      const { email, paymentIntentId } = req.body;
+      
+      if (!email || !paymentIntentId) {
+        return res.status(400).json({ message: "Email and payment intent ID required" });
+      }
+
+      const waitlistUser = await storage.getWaitlistUserByEmail(email);
+      if (!waitlistUser) {
+        return res.status(404).json({ message: "Email not found on waitlist" });
+      }
+
+      // Update user with rush payment
+      const updatedUser = await storage.updateWaitlistUserRush(waitlistUser.id, {
+        hasPaidRush: true,
+        stripePaymentIntentId: paymentIntentId,
+        rushPaymentAmount: 2000,
+        effectivePosition: Math.ceil(waitlistUser.position * 0.5)
+      });
+
+      // Send rush confirmation email
+      const { emailService } = await import('./email-service');
+      try {
+        await emailService.sendWaitlistConfirmation(email, waitlistUser.position, true);
+      } catch (emailError) {
+        console.error('Failed to send rush confirmation email:', emailError);
+      }
+
+      res.json({
+        success: true,
+        newEffectivePosition: updatedUser.effectivePosition,
+        message: "Rush payment confirmed! Your wait time has been reduced by 50%."
+      });
+    } catch (error: any) {
+      console.error("Error confirming rush payment:", error);
+      res.status(500).json({ message: "Failed to confirm payment", error: error.message });
+    }
+  });
+
+  // Get waitlist stats (for admin/public display)
+  app.get("/api/waitlist/stats", async (req, res) => {
+    try {
+      const stats = await storage.getWaitlistStats();
+      res.json(stats);
+    } catch (error: any) {
+      console.error("Error fetching waitlist stats:", error);
+      res.status(500).json({ message: "Failed to fetch stats", error: error.message });
     }
   });
 

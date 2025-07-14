@@ -150,6 +150,19 @@ export const agentTagRelations = pgTable("agent_tag_relations", {
   index("idx_agent_tag_tag").on(table.tagId),
 ]);
 
+export const waitlistUsers = pgTable("waitlist_users", {
+  id: serial("id").primaryKey(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  isEngineer: boolean("is_engineer").default(false),
+  hasPaidRush: boolean("has_paid_rush").default(false),
+  stripePaymentIntentId: varchar("stripe_payment_intent_id", { length: 255 }),
+  rushPaymentAmount: integer("rush_payment_amount").default(0),
+  position: integer("position"),
+  effectivePosition: integer("effective_position"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   purchases: many(userPurchases),
@@ -269,10 +282,19 @@ export const insertTransactionSchema = createInsertSchema(transactions).omit({
   createdAt: true,
 });
 
+export const insertWaitlistUserSchema = createInsertSchema(waitlistUsers).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type UpsertUser = typeof users.$inferInsert;
+
+export type WaitlistUser = typeof waitlistUsers.$inferSelect;
+export type InsertWaitlistUser = z.infer<typeof insertWaitlistUserSchema>;
 
 export type Agent = typeof agents.$inferSelect;
 export type InsertAgent = z.infer<typeof insertAgentSchema>;

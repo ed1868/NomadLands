@@ -15,6 +15,7 @@ import SimpleLogin from "@/pages/SimpleLogin";
 import Dashboard from "@/pages/dashboard";
 import Deploy from "@/pages/deploy";
 import MyAgents from "@/pages/MyAgents";
+import JoinWaitlist from "@/pages/JoinWaitlist";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -32,6 +33,7 @@ function Router() {
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/deploy" component={Deploy} />
       <Route path="/agents" component={MyAgents} />
+      <Route path="/join-waitlist" component={JoinWaitlist} />
       <Route path="/test-login" component={() => <div dangerouslySetInnerHTML={{__html: `
         <!DOCTYPE html>
         <html>

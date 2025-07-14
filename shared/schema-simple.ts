@@ -66,6 +66,20 @@ export const agents = pgTable("agents", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// Waitlist users table
+export const waitlistUsers = pgTable("waitlist_users", {
+  id: serial("id").primaryKey(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  isEngineer: boolean("is_engineer").default(false),
+  hasPaidRush: boolean("has_paid_rush").default(false),
+  stripePaymentIntentId: varchar("stripe_payment_intent_id", { length: 255 }),
+  rushPaymentAmount: integer("rush_payment_amount").default(0),
+  position: integer("position"),
+  effectivePosition: integer("effective_position"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   agents: many(agents),
@@ -85,6 +99,12 @@ export const insertUserSchema = createInsertSchema(users).omit({
 });
 
 export const insertAgentSchema = createInsertSchema(agents).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertWaitlistUserSchema = createInsertSchema(waitlistUsers).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
@@ -113,3 +133,6 @@ export type UpsertUser = typeof users.$inferInsert;
 
 export type Agent = typeof agents.$inferSelect;
 export type InsertAgent = z.infer<typeof insertAgentSchema>;
+
+export type WaitlistUser = typeof waitlistUsers.$inferSelect;
+export type InsertWaitlistUser = z.infer<typeof insertWaitlistUserSchema>;

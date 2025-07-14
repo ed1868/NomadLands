@@ -3,10 +3,13 @@ import { eq } from "drizzle-orm";
 import {
   users,
   agents,
+  waitlistUsers,
   type User,
   type UpsertUser,
   type Agent,
   type InsertAgent,
+  type WaitlistUser,
+  type InsertWaitlistUser,
 } from "@shared/schema-simple";
 
 export interface IStorage {
@@ -29,6 +32,13 @@ export interface IStorage {
   
   // Tags operations (placeholder)
   getAllTags?(): Promise<string[]>;
+  
+  // Waitlist operations
+  getWaitlistUserByEmail(email: string): Promise<WaitlistUser | undefined>;
+  createWaitlistUser(user: InsertWaitlistUser): Promise<WaitlistUser>;
+  updateWaitlistUserRush(email: string, paymentIntentId: string, amount: number): Promise<WaitlistUser>;
+  getWaitlistCount(): Promise<number>;
+  getWaitlistStats(): Promise<{ totalUsers: number; engineerUsers: number; rushUsers: number; }>;
   
   // Seeding
   seedAgents(): Promise<void>;
@@ -199,6 +209,72 @@ export class DatabaseStorage implements IStorage {
       await db.insert(agents).values(seedAgents);
     } catch (error) {
       console.error("Error seeding agents:", error);
+    }
+  }
+
+  // Waitlist operations
+  async getWaitlistUserByEmail(email: string): Promise<WaitlistUser | undefined> {
+    try {
+      const [user] = await db.select().from(waitlistUsers).where(eq(waitlistUsers.email, email));
+      return user;
+    } catch (error) {
+      console.error('Error fetching waitlist user by email:', error);
+      return undefined;
+    }
+  }
+
+  async createWaitlistUser(user: InsertWaitlistUser): Promise<WaitlistUser> {
+    const [newUser] = await db.insert(waitlistUsers).values(user).returning();
+    return newUser;
+  }
+
+  async updateWaitlistUserRush(email: string, paymentIntentId: string, amount: number): Promise<WaitlistUser> {
+    // Calculate effective position (50% reduction for rush users)
+    const currentUser = await this.getWaitlistUserByEmail(email);
+    if (!currentUser) {
+      throw new Error('User not found');
+    }
+    
+    const effectivePosition = Math.ceil(currentUser.position / 2);
+    
+    const [updatedUser] = await db
+      .update(waitlistUsers)
+      .set({ 
+        hasPaidRush: true,
+        stripePaymentIntentId: paymentIntentId,
+        rushPaymentAmount: amount,
+        effectivePosition,
+        updatedAt: new Date()
+      })
+      .where(eq(waitlistUsers.email, email))
+      .returning();
+    return updatedUser;
+  }
+
+  async getWaitlistCount(): Promise<number> {
+    try {
+      const result = await db.execute(`SELECT COUNT(*) as count FROM waitlist_users`);
+      return parseInt(result.rows[0]?.count as string) || 0;
+    } catch (error) {
+      console.error('Error getting waitlist count:', error);
+      return 0;
+    }
+  }
+
+  async getWaitlistStats(): Promise<{ totalUsers: number; engineerUsers: number; rushUsers: number; }> {
+    try {
+      const totalResult = await db.execute(`SELECT COUNT(*) as count FROM waitlist_users`);
+      const engineerResult = await db.execute(`SELECT COUNT(*) as count FROM waitlist_users WHERE is_engineer = true`);
+      const rushResult = await db.execute(`SELECT COUNT(*) as count FROM waitlist_users WHERE has_paid_rush = true`);
+      
+      return {
+        totalUsers: parseInt(totalResult.rows[0]?.count as string) || 0,
+        engineerUsers: parseInt(engineerResult.rows[0]?.count as string) || 0,
+        rushUsers: parseInt(rushResult.rows[0]?.count as string) || 0,
+      };
+    } catch (error) {
+      console.error('Error getting waitlist stats:', error);
+      return { totalUsers: 0, engineerUsers: 0, rushUsers: 0 };
     }
   }
 }
