@@ -35,7 +35,7 @@ import {
   ChevronRight,
   Play,
 } from "lucide-react";
-import logoImage from "@assets/logo_dark_mode_1750270383392.png";
+import logoImage from "@assets/logo_dark_mode-removebg-preview_1752545790260.png";
 import agentCreatorImg from "@assets/Screenshot 2025-07-14 at 15.54.39_1752523775495.png";
 import fleetTemplatesImg from "@assets/Screenshot 2025-07-14 at 15.54.55_1752523775495.png";
 import userDashboardImg from "@assets/Screenshot 2025-07-14 at 15.58.58_1752523775495.png";
@@ -154,6 +154,7 @@ export default function JoinWaitlist() {
   // Contributor application state
   const [contributorEmail, setContributorEmail] = useState("");
   const [githubUsername, setGithubUsername] = useState("");
+  const [huggingFaceUrl, setHuggingFaceUrl] = useState("");
   const [motivation, setMotivation] = useState("");
   const [isSubmittingApplication, setIsSubmittingApplication] = useState(false);
 
@@ -242,6 +243,7 @@ export default function JoinWaitlist() {
       await apiRequest("POST", "/api/contributors/apply", {
         email: contributorEmail,
         githubUsername: githubUsername.replace("@", ""),
+        huggingFaceUrl: huggingFaceUrl.trim(),
         motivation: motivation.trim(),
       });
 
@@ -254,6 +256,7 @@ export default function JoinWaitlist() {
       // Clear form
       setContributorEmail("");
       setGithubUsername("");
+      setHuggingFaceUrl("");
       setMotivation("");
     } catch (error: any) {
       toast({
@@ -658,9 +661,9 @@ export default function JoinWaitlist() {
                 {/* Screenshot 2: Fleet Builder */}
                 <div className="w-full flex-shrink-0">
                   <div className="bg-gradient-to-br from-blue-900/20 to-blue-800/10 rounded-xl p-4 sm:p-8 border border-blue-500/20 mx-2 sm:mx-0">
-                    <div className="grid md:grid-cols-2 gap-4 sm:gap-8 items-center">
-                      <div>
-                        <div className="flex items-center gap-3 mb-4">
+                    <div className="space-y-6">
+                      <div className="text-center">
+                        <div className="flex items-center justify-center gap-3 mb-4">
                           <div className="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
                             <Users className="w-5 h-5 text-blue-400" />
                           </div>
@@ -680,22 +683,22 @@ export default function JoinWaitlist() {
                           agents that work together to automate entire business
                           functions.
                         </p>
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-blue-400" />
-                            <span className="text-sm text-gray-300">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 mb-6">
+                          <div className="flex items-center justify-center gap-2 bg-blue-900/30 rounded-lg p-2">
+                            <CheckCircle2 className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                            <span className="text-xs sm:text-sm text-gray-300">
                               Sales Fleet: 28 agents, 247 tools
                             </span>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-blue-400" />
-                            <span className="text-sm text-gray-300">
+                          <div className="flex items-center justify-center gap-2 bg-blue-900/30 rounded-lg p-2">
+                            <CheckCircle2 className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                            <span className="text-xs sm:text-sm text-gray-300">
                               Customer Success: 16 agents, 312 tools
                             </span>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-blue-400" />
-                            <span className="text-sm text-gray-300">
+                          <div className="flex items-center justify-center gap-2 bg-blue-900/30 rounded-lg p-2">
+                            <CheckCircle2 className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                            <span className="text-xs sm:text-sm text-gray-300">
                               Enterprise SaaS: 85 agents, 487 tools
                             </span>
                           </div>
@@ -714,10 +717,10 @@ export default function JoinWaitlist() {
 
                 {/* Screenshot 3: User Dashboard */}
                 <div className="w-full flex-shrink-0">
-                  <div className="bg-gradient-to-br from-purple-900/20 to-purple-800/10 rounded-xl p-8 border border-purple-500/20">
-                    <div className="grid md:grid-cols-2 gap-8 items-center">
-                      <div>
-                        <div className="flex items-center gap-3 mb-4">
+                  <div className="bg-gradient-to-br from-purple-900/20 to-purple-800/10 rounded-xl p-4 sm:p-8 border border-purple-500/20 mx-2 sm:mx-0">
+                    <div className="space-y-6">
+                      <div className="text-center">
+                        <div className="flex items-center justify-center gap-3 mb-4">
                           <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
                             <Sparkles className="w-5 h-5 text-purple-400" />
                           </div>
@@ -737,22 +740,22 @@ export default function JoinWaitlist() {
                           real-time metrics, success rates, and earnings.
                           Download n8n workflows or Python code anytime.
                         </p>
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-purple-400" />
-                            <span className="text-sm text-gray-300">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 mb-6">
+                          <div className="flex items-center justify-center gap-2 bg-purple-900/30 rounded-lg p-2">
+                            <CheckCircle2 className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                            <span className="text-xs sm:text-sm text-gray-300">
                               Real-time performance monitoring
                             </span>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-purple-400" />
-                            <span className="text-sm text-gray-300">
+                          <div className="flex items-center justify-center gap-2 bg-purple-900/30 rounded-lg p-2">
+                            <CheckCircle2 className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                            <span className="text-xs sm:text-sm text-gray-300">
                               Revenue and success tracking
                             </span>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-purple-400" />
-                            <span className="text-sm text-gray-300">
+                          <div className="flex items-center justify-center gap-2 bg-purple-900/30 rounded-lg p-2">
+                            <CheckCircle2 className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                            <span className="text-xs sm:text-sm text-gray-300">
                               One-click workflow export
                             </span>
                           </div>
@@ -771,10 +774,10 @@ export default function JoinWaitlist() {
 
                 {/* Screenshot 4: n8n JSON Export */}
                 <div className="w-full flex-shrink-0">
-                  <div className="bg-gradient-to-br from-orange-900/20 to-red-800/10 rounded-xl p-8 border border-orange-500/20">
-                    <div className="grid md:grid-cols-2 gap-8 items-center">
-                      <div>
-                        <div className="flex items-center gap-3 mb-4">
+                  <div className="bg-gradient-to-br from-orange-900/20 to-red-800/10 rounded-xl p-4 sm:p-8 border border-orange-500/20 mx-2 sm:mx-0">
+                    <div className="space-y-6">
+                      <div className="text-center">
+                        <div className="flex items-center justify-center gap-3 mb-4">
                           <div className="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center">
                             <Rocket className="w-5 h-5 text-orange-400" />
                           </div>
@@ -794,22 +797,22 @@ export default function JoinWaitlist() {
                           testing, or use the Python code for enterprise-grade
                           deployment. You own the code completely.
                         </p>
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-orange-400" />
-                            <span className="text-sm text-gray-300">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 mb-6">
+                          <div className="flex items-center justify-center gap-2 bg-orange-900/30 rounded-lg p-2">
+                            <CheckCircle2 className="w-4 h-4 text-orange-400 flex-shrink-0" />
+                            <span className="text-xs sm:text-sm text-gray-300">
                               n8n workflow JSON for quick deployment
                             </span>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-orange-400" />
-                            <span className="text-sm text-gray-300">
+                          <div className="flex items-center justify-center gap-2 bg-orange-900/30 rounded-lg p-2">
+                            <CheckCircle2 className="w-4 h-4 text-orange-400 flex-shrink-0" />
+                            <span className="text-xs sm:text-sm text-gray-300">
                               Production Python code with tests
                             </span>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-orange-400" />
-                            <span className="text-sm text-gray-300">
+                          <div className="flex items-center justify-center gap-2 bg-orange-900/30 rounded-lg p-2">
+                            <CheckCircle2 className="w-4 h-4 text-orange-400 flex-shrink-0" />
+                            <span className="text-xs sm:text-sm text-gray-300">
                               Enterprise deployment documentation
                             </span>
                           </div>
@@ -1542,6 +1545,23 @@ export default function JoinWaitlist() {
                     onChange={(e) => setGithubUsername(e.target.value)}
                     className="bg-gray-800 border-gray-600 text-white placeholder:text-gray-400"
                     required
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="huggingface"
+                    className="block text-sm font-medium text-gray-300 mb-2"
+                  >
+                    Hugging Face URL (Optional)
+                  </label>
+                  <Input
+                    id="huggingface"
+                    type="url"
+                    placeholder="https://huggingface.co/your-username"
+                    value={huggingFaceUrl}
+                    onChange={(e) => setHuggingFaceUrl(e.target.value)}
+                    className="bg-gray-800 border-gray-600 text-white placeholder:text-gray-400"
                   />
                 </div>
 

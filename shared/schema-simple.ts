@@ -85,6 +85,7 @@ export const contributorApplications = pgTable("contributor_applications", {
   id: serial("id").primaryKey(),
   email: varchar("email", { length: 255 }).notNull(),
   githubUsername: varchar("github_username", { length: 255 }).notNull(),
+  huggingFaceUrl: varchar("hugging_face_url", { length: 500 }),
   motivation: text("motivation").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
