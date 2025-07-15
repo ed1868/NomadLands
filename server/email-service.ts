@@ -64,6 +64,14 @@ export class EmailService {
               <br><span style="color: #00ffff; margin-left: 60px;">→ https://github.com/${application.githubUsername}</span>
             </div>
             
+            ${application.huggingFaceUrl ? `
+            <div style="margin-bottom: 16px;">
+              <span style="color: #66ccff;">[HUGGING FACE]</span> 
+              <strong style="color: #ffffff;">${application.huggingFaceUrl}</strong>
+              <br><span style="color: #00ffff; margin-left: 60px;">→ ${application.huggingFaceUrl}</span>
+            </div>
+            ` : ''}
+            
             <div style="margin-bottom: 16px;">
               <span style="color: #66ccff;">[MOTIVATION]</span>
               <br><span style="color: #ffffff; margin-left: 60px; line-height: 1.6;">${application.motivation}</span>
