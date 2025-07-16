@@ -114,133 +114,215 @@ export class EmailService {
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Welcome to AI Nomads!</title>
+        <title>🚀 You're In! Welcome to AI Nomads</title>
       </head>
-      <body style="margin: 0; padding: 0; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+      <body style="margin: 0; padding: 0; background: #000000; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
         
         <!-- Main Container -->
-        <div style="max-width: 600px; margin: 40px auto; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);">
+        <div style="max-width: 650px; margin: 0 auto; background: #000000;">
           
-          <!-- Header with Trophy Icon -->
-          <div style="text-align: center; padding: 48px 32px; background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%); position: relative;">
-            <div style="position: absolute; top: 20px; left: 20px; width: 72px; height: 72px; background: rgba(72, 187, 120, 0.2); border-radius: 50%; filter: blur(20px);"></div>
-            <div style="position: absolute; bottom: 20px; right: 20px; width: 96px; height: 96px; background: rgba(59, 130, 246, 0.2); border-radius: 50%; filter: blur(30px);"></div>
+          <!-- Hero Header -->
+          <div style="text-align: center; padding: 60px 40px; background: linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #0f172a 100%); position: relative; overflow: hidden;">
+            <!-- Animated background elements -->
+            <div style="position: absolute; top: -50px; left: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%); border-radius: 50%; animation: pulse 3s ease-in-out infinite;"></div>
+            <div style="position: absolute; bottom: -50px; right: -50px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%); border-radius: 50%; animation: pulse 4s ease-in-out infinite;"></div>
             
-            <!-- Trophy Icon -->
-            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1;">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
-                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
-                <path d="M4 22h16"></path>
-                <path d="M10 14.66V17c0 .55.47.98.97 1.21C11.56 18.75 12.23 19 13 19s1.44-.25 2.03-.79c.5-.23.97-.66.97-1.21v-2.34"></path>
-                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+            <!-- AI Nomads Logo/Icon -->
+            <div style="width: 120px; height: 120px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 24px; margin: 0 auto 32px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 2; box-shadow: 0 20px 40px rgba(16, 185, 129, 0.3);">
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M12 1v6m0 6v6"></path>
+                <path d="M9 12 1 9l8-3 8 3-8 3Z"></path>
+                <path d="M12 1 9 9l8 3-8 3 3 8-3-8-8-3 8-3Z"></path>
               </svg>
             </div>
 
-            <h1 style="color: #10b981; margin: 0 0 16px 0; font-size: 48px; font-weight: 700; letter-spacing: -1px;">
-              Welcome to AI Nomads!
+            <h1 style="color: #ffffff; margin: 0 0 20px 0; font-size: 56px; font-weight: 800; letter-spacing: -2px; line-height: 1.1;">
+              🎉 You're In!
             </h1>
+            
+            <h2 style="color: #10b981; margin: 0 0 24px 0; font-size: 32px; font-weight: 600; letter-spacing: -0.5px;">
+              Welcome to AI Nomads
+            </h2>
 
-            <p style="color: #9ca3af; margin: 0; font-size: 20px; line-height: 1.5;">
-              You're now in the queue to build and deploy AI Agent Fleets. Position #${position}.
+            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; display: inline-block; padding: 16px 32px; border-radius: 50px; margin: 0 0 24px 0; font-size: 18px; font-weight: 700; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);">
+              🏆 Waitlist Position: #${position}
+            </div>
+
+            <p style="color: #d1d5db; margin: 0; font-size: 22px; line-height: 1.6; max-width: 500px; margin: 0 auto;">
+              You're about to join the <strong style="color: #10b981;">future of AI automation</strong>. 
+              Get ready to build, deploy, and monetize AI Agent Fleets.
             </p>
           </div>
 
-          <!-- What Happens Next Section -->
-          <div style="padding: 40px 32px; background: linear-gradient(135deg, #374151 0%, #1f2937 100%); border-radius: 16px; margin: 32px; position: relative;">
-            <h3 style="color: #10b981; margin: 0 0 24px 0; font-size: 24px; font-weight: 600;">
-              What happens next?
+          <!-- What You Get Access To -->
+          <div style="padding: 50px 40px; background: linear-gradient(135deg, #111827 0%, #1f2937 100%); margin: 0;">
+            <h3 style="color: #ffffff; margin: 0 0 16px 0; font-size: 36px; font-weight: 700; text-align: center;">
+              What You're Getting Access To
             </h3>
+            <p style="color: #9ca3af; margin: 0 0 40px 0; font-size: 18px; text-align: center; line-height: 1.6;">
+              Join thousands building the future of AI automation
+            </p>
             
-            <div style="space-y: 20px;">
-              <!-- Feature 1 -->
-              <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                <div style="width: 24px; height: 24px; margin-right: 16px; flex-shrink: 0;">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
-                    <path d="M20 6L9 17l-5-5"></path>
-                  </svg>
+            <!-- Benefits Grid -->
+            <div style="display: block;">
+              <!-- Benefit 1 -->
+              <div style="background: linear-gradient(135deg, #1f2937 0%, #111827 100%); border: 2px solid #10b981; border-radius: 20px; padding: 32px; margin-bottom: 24px; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%); border-radius: 50%;"></div>
+                <div style="display: flex; align-items: center; margin-bottom: 16px;">
+                  <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
+                    <span style="font-size: 24px;">🚀</span>
+                  </div>
+                  <h4 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600;">
+                    Build Custom AI Agent Fleets
+                  </h4>
                 </div>
-                <span style="color: #d1d5db; font-size: 16px; line-height: 1.5;">
-                  Early access to build custom Agent Fleets for any use case
-                </span>
+                <p style="color: #d1d5db; margin: 0; font-size: 18px; line-height: 1.6;">
+                  Create powerful automation teams for any business process - from customer service to data analysis to content creation.
+                </p>
               </div>
 
-              <!-- Feature 2 -->
-              <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                <div style="width: 24px; height: 24px; margin-right: 16px; flex-shrink: 0;">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="9" cy="7" r="4"></circle>
-                    <path d="m22 21-3-3m1 0a6 6 0 1 1-6-6 6 6 0 0 1 6 6z"></path>
-                  </svg>
+              <!-- Benefit 2 -->
+              <div style="background: linear-gradient(135deg, #1f2937 0%, #111827 100%); border: 2px solid #3b82f6; border-radius: 20px; padding: 32px; margin-bottom: 24px; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%); border-radius: 50%;"></div>
+                <div style="display: flex; align-items: center; margin-bottom: 16px;">
+                  <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
+                    <span style="font-size: 24px;">💰</span>
+                  </div>
+                  <h4 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600;">
+                    Monetize Your AI Expertise
+                  </h4>
                 </div>
-                <span style="color: #d1d5db; font-size: 16px; line-height: 1.5;">
-                  Join the creator economy and monetize your automation expertise
-                </span>
+                <p style="color: #d1d5db; margin: 0; font-size: 18px; line-height: 1.6;">
+                  Join the creator economy and earn recurring revenue by selling your AI solutions to businesses worldwide.
+                </p>
               </div>
 
-              <!-- Feature 3 -->
-              <div style="display: flex; align-items: center;">
-                <div style="width: 24px; height: 24px; margin-right: 16px; flex-shrink: 0;">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                  </svg>
+              <!-- Benefit 3 -->
+              <div style="background: linear-gradient(135deg, #1f2937 0%, #111827 100%); border: 2px solid #f59e0b; border-radius: 20px; padding: 32px; margin-bottom: 24px; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(245, 158, 11, 0.2) 0%, transparent 70%); border-radius: 50%;"></div>
+                <div style="display: flex; align-items: center; margin-bottom: 16px;">
+                  <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-right: 20px;">
+                    <span style="font-size: 24px;">⚡</span>
+                  </div>
+                  <h4 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600;">
+                    Enterprise-Grade Deployment
+                  </h4>
                 </div>
-                <span style="color: #d1d5db; font-size: 16px; line-height: 1.5;">
-                  Deploy agents for enterprises and earn recurring revenue
-                </span>
+                <p style="color: #d1d5db; margin: 0; font-size: 18px; line-height: 1.6;">
+                  Deploy your AI agents at scale with enterprise security, monitoring, and support - trusted by Fortune 500 companies.
+                </p>
               </div>
             </div>
           </div>
 
           ${!isRushUser ? `
-          <!-- Rush Payment Section -->
-          <div style="padding: 32px; background: linear-gradient(135deg, #1f2937 0%, #111827 100%); margin: 0 32px 32px; border-radius: 16px; border: 2px solid #f59e0b; position: relative;">
-            <div style="position: absolute; top: -2px; left: -2px; right: -2px; height: 4px; background: linear-gradient(90deg, #f59e0b, #fbbf24, #f59e0b); border-radius: 8px 8px 0 0;"></div>
-            
-            <h3 style="color: #f59e0b; margin: 0 0 16px 0; font-size: 20px; font-weight: 600;">
-              Want to skip the line?
-            </h3>
-            
-            <p style="color: #d1d5db; margin: 0 0 24px 0; font-size: 16px; line-height: 1.5;">
-              Get priority access and jump to the front 50% faster for just $20.
-            </p>
-            
-            <div style="background: linear-gradient(135deg, #111827 0%, #0f172a 100%); border: 1px solid #f59e0b; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-              <div style="color: #f59e0b; font-size: 28px; font-weight: 700; margin-bottom: 8px;">
-                $20 Priority Access
-              </div>
-              <div style="color: #fbbf24; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">
-                Skip the Wait • Get Early Access
+          <!-- Limited Time Offer -->
+          <div style="padding: 0 40px 40px 40px; background: linear-gradient(135deg, #111827 0%, #1f2937 100%); margin: 0; position: relative;">
+            <div style="background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); border-radius: 20px; padding: 40px; position: relative; overflow: hidden; border: 3px solid #f59e0b;">
+              <!-- Animated glow effect -->
+              <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 70%); border-radius: 50%; animation: pulse 2s ease-in-out infinite;"></div>
+              
+              <div style="position: relative; z-index: 2; text-align: center;">
+                <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #000; display: inline-block; padding: 8px 20px; border-radius: 25px; margin: 0 0 20px 0; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
+                  🔥 LIMITED TIME
+                </div>
+                
+                <h3 style="color: #ffffff; margin: 0 0 16px 0; font-size: 32px; font-weight: 800; line-height: 1.2;">
+                  Skip The Wait List
+                </h3>
+                
+                <p style="color: #fbbf24; margin: 0 0 24px 0; font-size: 20px; font-weight: 600;">
+                  Get Priority Access & Jump Ahead 50% Faster
+                </p>
+                
+                <div style="background: rgba(0, 0, 0, 0.4); border: 2px solid #f59e0b; border-radius: 16px; padding: 24px; margin-bottom: 32px; backdrop-filter: blur(10px);">
+                  <div style="color: #ffffff; font-size: 48px; font-weight: 900; margin-bottom: 8px; text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);">
+                    Only $20
+                  </div>
+                  <div style="color: #fbbf24; font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px;">
+                    One-Time Payment • Instant Access
+                  </div>
+                </div>
+                
+                <a href="https://ainomads-waitlist.replit.app" 
+                   style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #000000; text-decoration: none; padding: 20px 50px; border-radius: 50px; font-weight: 800; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4); transition: all 0.3s ease;">
+                  🚀 Get Priority Access Now
+                </a>
+                
+                <p style="color: #9ca3af; margin: 24px 0 0 0; font-size: 14px;">
+                  Join 500+ priority users who skipped ahead
+                </p>
               </div>
             </div>
-            
-            <a href="https://ainomads-waitlist.replit.app" 
-               style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; text-decoration: none; padding: 16px 32px; border-radius: 12px; font-weight: 600; font-size: 16px; text-align: center; width: 100%; box-sizing: border-box;">
-              Get Priority Access Now
-            </a>
           </div>
           ` : `
-          <!-- Rush Confirmed Section -->
-          <div style="padding: 32px; background: linear-gradient(135deg, #065f46 0%, #064e3b 100%); margin: 0 32px 32px; border-radius: 16px; border: 2px solid #10b981;">
-            <h3 style="color: #10b981; margin: 0 0 16px 0; font-size: 20px; font-weight: 600;">
-              Priority Access Confirmed! ⚡
-            </h3>
-            <p style="color: #a7f3d0; margin: 0; font-size: 16px; line-height: 1.5;">
-              Your payment was processed successfully. You now have 50% faster access to the AI Nomads platform!
-            </p>
+          <!-- Priority Access Confirmed -->
+          <div style="padding: 0 40px 40px 40px; background: linear-gradient(135deg, #111827 0%, #1f2937 100%); margin: 0;">
+            <div style="background: linear-gradient(135deg, #065f46 0%, #064e3b 100%); border-radius: 20px; padding: 40px; border: 3px solid #10b981; text-align: center; position: relative; overflow: hidden;">
+              <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%); border-radius: 50%;"></div>
+              
+              <div style="position: relative; z-index: 2;">
+                <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;">
+                  <span style="font-size: 32px;">⚡</span>
+                </div>
+                
+                <h3 style="color: #ffffff; margin: 0 0 16px 0; font-size: 28px; font-weight: 700;">
+                  Priority Access Confirmed!
+                </h3>
+                
+                <p style="color: #a7f3d0; margin: 0; font-size: 18px; line-height: 1.6;">
+                  Your payment was processed successfully. You now have <strong>50% faster access</strong> to the AI Nomads platform!
+                </p>
+              </div>
+            </div>
           </div>
           `}
 
-          <!-- Footer -->
-          <div style="text-align: center; padding: 32px; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);">
-            <a href="https://ainomads-waitlist.replit.app" 
-               style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; text-decoration: none; padding: 14px 28px; border-radius: 12px; font-weight: 600; font-size: 16px;">
-              Return to Waitlist
-            </a>
+          <!-- Social Proof & Footer -->
+          <div style="padding: 50px 40px; background: linear-gradient(135deg, #0f172a 0%, #000000 100%); text-align: center;">
+            <div style="margin-bottom: 40px;">
+              <h4 style="color: #ffffff; margin: 0 0 24px 0; font-size: 24px; font-weight: 600;">
+                Join the AI Revolution
+              </h4>
+              <div style="display: flex; justify-content: center; align-items: center; gap: 30px; margin-bottom: 32px; flex-wrap: wrap;">
+                <div style="text-align: center;">
+                  <div style="color: #10b981; font-size: 32px; font-weight: 800; margin-bottom: 4px;">15,000+</div>
+                  <div style="color: #9ca3af; font-size: 14px;">Active Agents</div>
+                </div>
+                <div style="text-align: center;">
+                  <div style="color: #3b82f6; font-size: 32px; font-weight: 800; margin-bottom: 4px;">$2.4M+</div>
+                  <div style="color: #9ca3af; font-size: 14px;">Creator Earnings</div>
+                </div>
+                <div style="text-align: center;">
+                  <div style="color: #f59e0b; font-size: 32px; font-weight: 800; margin-bottom: 4px;">500+</div>
+                  <div style="color: #9ca3af; font-size: 14px;">Enterprise Clients</div>
+                </div>
+              </div>
+            </div>
+            
+            <div style="border-top: 1px solid #374151; padding-top: 32px;">
+              <a href="https://ainomads-waitlist.replit.app" 
+                 style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; text-decoration: none; padding: 16px 40px; border-radius: 50px; font-weight: 600; font-size: 16px; margin-bottom: 24px; box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);">
+                🌟 Visit AI Nomads Waitlist
+              </a>
+              
+              <p style="color: #6b7280; margin: 0; font-size: 14px; line-height: 1.6;">
+                You're receiving this because you joined the AI Nomads waitlist.
+                <br>We're excited to have you on this journey!
+              </p>
+            </div>
           </div>
 
         </div>
+        
+        <!-- CSS Animations -->
+        <style>
+          @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+          }
+        </style>
       </body>
       </html>
     `;
