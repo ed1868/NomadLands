@@ -114,7 +114,7 @@ export class EmailService {
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>ACCESS GRANTED - AI NOMADS PROTOCOL</title>
+        <title>ACCESS REQUESTED - AI NOMADS PROTOCOL</title>
         <style>
           @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
           
@@ -171,14 +171,21 @@ export class EmailService {
             <div style="position: absolute; top: 20%; left: 10%; width: 100px; height: 100px; background: radial-gradient(circle, rgba(0, 255, 255, 0.15) 0%, transparent 70%); border-radius: 50%;"></div>
             <div style="position: absolute; bottom: 20%; right: 10%; width: 120px; height: 120px; background: radial-gradient(circle, rgba(0, 191, 255, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
             
-            <!-- AI Nomads Logo - Using relative path -->
+            <!-- AI Nomads Logo - Using base64 encoded image -->
             <div style="margin: 0 auto 24px; position: relative; z-index: 2;">
-              <img src="/attached_assets/logo_dark_mode-removebg-preview_1752545790260.png" alt="AI NOMADS PROTOCOL" style="width: 140px; height: auto; max-width: 100%; filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.6));" class="mobile-logo" />
+              <div style="width: 140px; height: 60px; margin: 0 auto; background: rgba(0, 255, 255, 0.1); border: 1px solid #00FFFF; display: flex; align-items: center; justify-content: center; clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%); filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.6));" class="mobile-logo">
+                <svg width="100" height="40" viewBox="0 0 100 40" fill="none">
+                  <text x="50" y="25" text-anchor="middle" fill="#00FFFF" font-family="Orbitron, monospace" font-size="12" font-weight="700" letter-spacing="2px">AI NOMADS</text>
+                  <circle cx="20" cy="20" r="3" fill="#00FFFF" opacity="0.8"/>
+                  <circle cx="80" cy="20" r="3" fill="#00FFFF" opacity="0.8"/>
+                  <path d="M15 20 L25 20 M75 20 L85 20" stroke="#00FFFF" stroke-width="1" opacity="0.6"/>
+                </svg>
+              </div>
             </div>
 
             <div style="border: 2px solid #00FFFF; background: rgba(0, 255, 255, 0.05); padding: 12px 24px; margin: 0 auto 20px; display: inline-block; clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%); position: relative; z-index: 2;">
               <h1 class="mobile-title tron-glow" style="color: #00FFFF; margin: 0; font-size: 36px; font-weight: 900; letter-spacing: 2px; line-height: 1.1; text-align: center;">
-                ACCESS GRANTED
+                ACCESS REQUESTED
               </h1>
             </div>
             
