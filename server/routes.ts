@@ -537,7 +537,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         lastName: validatedData.lastName,
         phoneNumber: validatedData.phoneNumber,
         dateOfBirth: validatedData.dateOfBirth,
-        password: hashedPassword,
+        passwordHash: hashedPassword,
         walletAddress: validatedData.walletAddress || null,
         subscriptionPlan: req.body.selectedPlan || "pioneer",
         subscriptionStatus: "trial",
@@ -566,11 +566,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = loginUserSchema.parse(req.body);
       
       const user = await storage.getUserByEmail(validatedData.email);
-      if (!user || !user.password) {
+      if (!user || !user.passwordHash) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
       
-      const isValidPassword = await bcrypt.compare(validatedData.password, user.password);
+      const isValidPassword = await bcrypt.compare(validatedData.password, user.passwordHash);
       if (!isValidPassword) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
@@ -605,11 +605,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const user = await storage.getUserByUsername(username);
-      if (!user || !user.password) {
+      if (!user || !user.passwordHash) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
       
-      const isValidPassword = await bcrypt.compare(password, user.password);
+      const isValidPassword = await bcrypt.compare(password, user.passwordHash);
       if (!isValidPassword) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
