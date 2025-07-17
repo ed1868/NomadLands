@@ -171,15 +171,10 @@ export class EmailService {
             <div style="position: absolute; top: 20%; left: 10%; width: 100px; height: 100px; background: radial-gradient(circle, rgba(0, 255, 255, 0.15) 0%, transparent 70%); border-radius: 50%;"></div>
             <div style="position: absolute; bottom: 20%; right: 10%; width: 120px; height: 120px; background: radial-gradient(circle, rgba(0, 191, 255, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
             
-            <!-- AI Nomads Logo - Using base64 encoded image -->
+            <!-- AI Nomads Logo - Text Based -->
             <div style="margin: 0 auto 24px; position: relative; z-index: 2;">
-              <div style="width: 140px; height: 60px; margin: 0 auto; background: rgba(0, 255, 255, 0.1); border: 1px solid #00FFFF; display: flex; align-items: center; justify-content: center; clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%); filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.6));" class="mobile-logo">
-                <svg width="100" height="40" viewBox="0 0 100 40" fill="none">
-                  <text x="50" y="25" text-anchor="middle" fill="#00FFFF" font-family="Orbitron, monospace" font-size="12" font-weight="700" letter-spacing="2px">AI NOMADS</text>
-                  <circle cx="20" cy="20" r="3" fill="#00FFFF" opacity="0.8"/>
-                  <circle cx="80" cy="20" r="3" fill="#00FFFF" opacity="0.8"/>
-                  <path d="M15 20 L25 20 M75 20 L85 20" stroke="#00FFFF" stroke-width="1" opacity="0.6"/>
-                </svg>
+              <div style="width: 140px; height: 60px; margin: 0 auto; background: rgba(0, 255, 255, 0.1); border: 1px solid #00FFFF; display: flex; align-items: center; justify-content: center; color: #00FFFF; font-family: Orbitron, monospace; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);" class="mobile-logo">
+                AI NOMADS
               </div>
             </div>
 
@@ -224,12 +219,8 @@ export class EmailService {
                   background-size: 15px 15px;"></div>
                 
                 <div style="position: relative; z-index: 2; margin-bottom: 12px;">
-                  <div style="width: 40px; height: 40px; background: rgba(0, 255, 255, 0.1); border: 1px solid #00FFFF; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00FFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                      <path d="M2 17l10 5 10-5"/>
-                      <path d="M2 12l10 5 10-5"/>
-                    </svg>
+                  <div style="width: 40px; height: 40px; background: rgba(0, 255, 255, 0.1); border: 1px solid #00FFFF; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: #00FFFF; font-size: 20px; font-weight: 700;">
+                    ▲
                   </div>
                   <h4 class="mobile-benefit-title" style="color: #00FFFF; margin: 0; font-size: 16px; font-weight: 700; line-height: 1.3; letter-spacing: 1px;">
                     FLEET DEPLOYMENT
@@ -248,10 +239,8 @@ export class EmailService {
                   background-size: 15px 15px;"></div>
                 
                 <div style="position: relative; z-index: 2; margin-bottom: 12px;">
-                  <div style="width: 40px; height: 40px; background: rgba(0, 255, 255, 0.1); border: 1px solid #00FFFF; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00FFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M12 1v22m5-18H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                    </svg>
+                  <div style="width: 40px; height: 40px; background: rgba(0, 255, 255, 0.1); border: 1px solid #00FFFF; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: #00FFFF; font-size: 20px; font-weight: 700;">
+                    $
                   </div>
                   <h4 class="mobile-benefit-title" style="color: #00FFFF; margin: 0; font-size: 16px; font-weight: 700; line-height: 1.3; letter-spacing: 1px;">
                     REVENUE STREAM
@@ -270,12 +259,8 @@ export class EmailService {
                   background-size: 15px 15px;"></div>
                 
                 <div style="position: relative; z-index: 2; margin-bottom: 12px;">
-                  <div style="width: 40px; height: 40px; background: rgba(0, 255, 255, 0.1); border: 1px solid #00FFFF; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00FFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/>
-                      <line x1="12" y1="22" x2="12" y2="15.5"/>
-                      <polyline points="22,8.5 12,15.5 2,8.5"/>
-                    </svg>
+                  <div style="width: 40px; height: 40px; background: rgba(0, 255, 255, 0.1); border: 1px solid #00FFFF; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: #00FFFF; font-size: 20px; font-weight: 700;">
+                    ⬡
                   </div>
                   <h4 class="mobile-benefit-title" style="color: #00FFFF; margin: 0; font-size: 16px; font-weight: 700; line-height: 1.3; letter-spacing: 1px;">
                     NEURAL SECURITY
@@ -300,12 +285,8 @@ export class EmailService {
               
               <div style="background: linear-gradient(135deg, #1f2937 0%, #111827 100%); border: 1px solid #374151; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
                 <div style="margin-bottom: 16px;">
-                  <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="12" cy="12" r="3"/>
-                      <path d="M12 1v6m0 6v6"/>
-                      <path d="M21 12h-6m-6 0H3"/>
-                    </svg>
+                  <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: white; font-size: 20px; font-weight: 700;">
+                    ⚡
                   </div>
                   <h4 style="color: #10b981; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">AI Training & Development</h4>
                   <p style="color: #9ca3af; margin: 0; font-size: 14px; line-height: 1.5;">
@@ -314,12 +295,8 @@ export class EmailService {
                 </div>
                 
                 <div style="margin-bottom: 16px;">
-                  <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                      <line x1="8" y1="21" x2="16" y2="21"/>
-                      <line x1="12" y1="17" x2="12" y2="21"/>
-                    </svg>
+                  <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: white; font-size: 20px; font-weight: 700;">
+                    ⚙
                   </div>
                   <h4 style="color: #3b82f6; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">Platform Infrastructure</h4>
                   <p style="color: #9ca3af; margin: 0; font-size: 14px; line-height: 1.5;">
@@ -328,13 +305,8 @@ export class EmailService {
                 </div>
                 
                 <div>
-                  <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                      <circle cx="9" cy="7" r="4"/>
-                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                    </svg>
+                  <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; color: white; font-size: 20px; font-weight: 700;">
+                    ◉
                   </div>
                   <h4 style="color: #f59e0b; margin: 0 0 8px 0; font-size: 18px; font-weight: 600;">Creator Tools & Support</h4>
                   <p style="color: #9ca3af; margin: 0; font-size: 14px; line-height: 1.5;">
@@ -399,10 +371,8 @@ export class EmailService {
               <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%); border-radius: 50%;"></div>
               
               <div style="position: relative; z-index: 2;">
-                <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                  </svg>
+                <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; color: white; font-size: 32px; font-weight: 700;">
+                  ⚡
                 </div>
                 
                 <h3 style="color: #ffffff; margin: 0 0 16px 0; font-size: 28px; font-weight: 700;">
