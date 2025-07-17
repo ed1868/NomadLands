@@ -16,8 +16,8 @@ export class EmailService {
 
   async sendWaitlistConfirmation(email: string, position: number, isRushUser = false) {
     const subject = isRushUser 
-      ? '⚡ AI Nomads Waitlist - Rush Access Confirmed!'
-      : '🚀 Welcome to AI Nomads Waitlist!';
+      ? 'AI Nomads Waitlist - Rush Access Confirmed!'
+      : 'Welcome to AI Nomads Waitlist!';
 
     const htmlContent = this.generateWaitlistEmail(email, position, isRushUser);
 
@@ -369,7 +369,7 @@ export class EmailService {
                 </h3>
                 
                 <p class="mobile-text" style="color: #FFE0D6; margin: 0 0 20px 0; font-size: 14px; font-weight: 600; letter-spacing: 0.5px;">
-                  ACCELERATED ACCESS • 50% FASTER DEPLOYMENT
+                  ACCELERATED ACCESS - 50% FASTER DEPLOYMENT
                 </p>
                 
                 <div style="background: rgba(0, 0, 0, 0.5); border: 2px solid #FF6B35; padding: 16px; margin-bottom: 20px; backdrop-filter: blur(10px); clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);">
@@ -400,7 +400,9 @@ export class EmailService {
               
               <div style="position: relative; z-index: 2;">
                 <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;">
-                  <span style="font-size: 32px;">⚡</span>
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  </svg>
                 </div>
                 
                 <h3 style="color: #ffffff; margin: 0 0 16px 0; font-size: 28px; font-weight: 700;">
