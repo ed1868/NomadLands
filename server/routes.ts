@@ -1962,39 +1962,20 @@ This agent should be production-ready with proper authentication, rate limiting,
     }
   });
 
-  // API endpoint to get user's n8n workflows
-  app.get("/api/n8n/workflows", authenticateToken, async (req: Request, res: Response) => {
+  // Toggle n8n workflow status
+  app.patch("/api/n8n/workflows/:id/toggle", authenticateToken, async (req: AuthenticatedRequest, res) => {
     try {
-      const userId = (req as any).user?.id;
-      if (!userId) {
-        return res.status(401).json({ error: "User not authenticated" });
-      }
-
-      const workflows = await storage.getN8nWorkflows(userId);
-      res.json({ workflows });
-    } catch (error: any) {
-      console.error("Error fetching n8n workflows:", error);
-      res.status(500).json({ 
-        message: "Failed to fetch workflows", 
-        error: error.message 
-      });
-    }
-  });
-
-  // API endpoint to activate/deactivate n8n workflow
-  app.patch("/api/n8n/workflows/:id/toggle", authenticateToken, async (req: Request, res: Response) => {
-    try {
-      const userId = (req as any).user?.id;
-      const workflowId = parseInt(req.params.id);
+      const { id } = req.params;
+      const workflowId = parseInt(id);
       
-      if (!userId) {
-        return res.status(401).json({ error: "User not authenticated" });
+      if (!req.user?.userId) {
+        return res.status(401).json({ message: "User not authenticated" });
       }
 
       // Get the workflow to verify ownership
       const workflow = await storage.getN8nWorkflow(workflowId);
-      if (!workflow || workflow.userId !== userId) {
-        return res.status(404).json({ error: "Workflow not found or access denied" });
+      if (!workflow || workflow.userId !== req.user.userId) {
+        return res.status(404).json({ message: "Workflow not found or access denied" });
       }
 
       // Toggle the active status
@@ -2002,7 +1983,7 @@ This agent should be production-ready with proper authentication, rate limiting,
         isActive: !workflow.isActive
       });
 
-      res.json({ workflow: updatedWorkflow });
+      res.json(updatedWorkflow);
     } catch (error: any) {
       console.error("Error toggling n8n workflow:", error);
       res.status(500).json({ 

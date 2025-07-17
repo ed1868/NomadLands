@@ -28,7 +28,7 @@ import {
   type InsertN8nWorkflow,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, and } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import { ethers } from "ethers";
 
 export interface IStorage {
@@ -832,7 +832,7 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(n8nWorkflows)
       .where(eq(n8nWorkflows.userId, userId))
-      .orderBy(n8nWorkflows.createdAt.desc);
+      .orderBy(desc(n8nWorkflows.createdAt));
   }
 
   async getN8nWorkflow(id: number): Promise<N8nWorkflow | undefined> {
