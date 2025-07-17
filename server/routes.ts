@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage-simple";
+import { storage } from "./storage";
 import { ethers } from "ethers";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -1959,6 +1959,217 @@ This agent should be production-ready with proper authentication, rate limiting,
     } catch (error: any) {
       console.error("Error fetching waitlist stats:", error);
       res.status(500).json({ message: "Failed to fetch stats", error: error.message });
+    }
+  });
+
+  // API endpoint to get user's n8n workflows
+  app.get("/api/n8n/workflows", authenticateToken, async (req: Request, res: Response) => {
+    try {
+      const userId = (req as any).user?.id;
+      if (!userId) {
+        return res.status(401).json({ error: "User not authenticated" });
+      }
+
+      const workflows = await storage.getN8nWorkflows(userId);
+      res.json({ workflows });
+    } catch (error: any) {
+      console.error("Error fetching n8n workflows:", error);
+      res.status(500).json({ 
+        message: "Failed to fetch workflows", 
+        error: error.message 
+      });
+    }
+  });
+
+  // API endpoint to activate/deactivate n8n workflow
+  app.patch("/api/n8n/workflows/:id/toggle", authenticateToken, async (req: Request, res: Response) => {
+    try {
+      const userId = (req as any).user?.id;
+      const workflowId = parseInt(req.params.id);
+      
+      if (!userId) {
+        return res.status(401).json({ error: "User not authenticated" });
+      }
+
+      // Get the workflow to verify ownership
+      const workflow = await storage.getN8nWorkflow(workflowId);
+      if (!workflow || workflow.userId !== userId) {
+        return res.status(404).json({ error: "Workflow not found or access denied" });
+      }
+
+      // Toggle the active status
+      const updatedWorkflow = await storage.updateN8nWorkflow(workflowId, {
+        isActive: !workflow.isActive
+      });
+
+      res.json({ workflow: updatedWorkflow });
+    } catch (error: any) {
+      console.error("Error toggling n8n workflow:", error);
+      res.status(500).json({ 
+        message: "Failed to toggle workflow", 
+        error: error.message 
+      });
+    }
+  });
+
+  // N8N Workflow webhook endpoint to receive workflow data
+  app.post("/api/n8n/workflow-created", async (req, res) => {
+    try {
+      const payload = req.body;
+      console.log("Received n8n workflow payload:", JSON.stringify(payload, null, 2));
+
+      // Handle array payload format
+      const payloadData = Array.isArray(payload) ? payload[0] : payload;
+      
+      // Extract workflow data from the payload
+      const allNodes = payloadData.allNodes?.[0]?.json;
+      const codeNode = payloadData.codeNode?.[0]?.json;
+      const userId = payloadData.userId || codeNode?.userId || codeNode?.user?.id;
+
+      // Debug info for development
+      console.log("Webhook received for userId:", userId, "workflow:", allNodes?.name);
+
+      if (!allNodes || !userId) {
+        return res.status(400).json({ 
+          message: "Invalid payload: missing required workflow data or userId"
+        });
+      }
+
+      // Extract workflow details
+      const workflowName = allNodes.name;
+      const n8nWorkflowId = allNodes.id;
+      const nodes = allNodes.nodes || [];
+      const connections = allNodes.connections || {};
+      const settings = allNodes.settings || {};
+      const versionId = allNodes.versionId;
+      const isActive = allNodes.active || false;
+      const isArchived = allNodes.isArchived || false;
+
+      // Find webhook node to extract webhook URL/path
+      const webhookNode = nodes.find((node: any) => 
+        node.type === "n8n-nodes-base.webhook" || 
+        node.parameters?.path
+      );
+      
+      const webhookPath = webhookNode?.parameters?.path;
+      const webhookUrl = webhookPath ? `https://ainomads.app.n8n.cloud/webhook/${webhookPath}` : null;
+
+      // Create n8n workflow record
+      const workflowData = {
+        userId,
+        agentId: null, // Will be linked later if needed
+        n8nWorkflowId,
+        workflowName,
+        webhookUrl,
+        webhookPath,
+        nodes,
+        connections,
+        settings,
+        isActive,
+        isArchived,
+        versionId,
+        triggerCount: allNodes.triggerCount || 0,
+      };
+
+      // Check if workflow already exists and update or create
+      let savedWorkflow;
+      const existingWorkflow = await storage.getN8nWorkflowByN8nId(n8nWorkflowId);
+      
+      if (existingWorkflow) {
+        // Update existing workflow
+        savedWorkflow = await storage.updateN8nWorkflow(existingWorkflow.id, {
+          workflowName,
+          webhookUrl,
+          webhookPath,
+          nodes,
+          connections,
+          settings,
+          isActive,
+          isArchived,
+          versionId,
+          triggerCount: allNodes.triggerCount || 0,
+        });
+        console.log(`Updated existing n8n workflow: ${workflowName} (ID: ${savedWorkflow.id})`);
+      } else {
+        // Create new workflow
+        savedWorkflow = await storage.createN8nWorkflow(workflowData);
+        console.log(`Created new n8n workflow: ${workflowName} (ID: ${savedWorkflow.id})`);
+      }
+
+      res.json({
+        success: true,
+        workflowId: savedWorkflow.id,
+        n8nWorkflowId: savedWorkflow.n8nWorkflowId,
+        message: existingWorkflow ? "Workflow updated successfully" : "Workflow saved successfully to database",
+      });
+
+    } catch (error: any) {
+      console.error("Error saving n8n workflow:", error);
+      res.status(500).json({ 
+        message: "Failed to save workflow", 
+        error: error.message 
+      });
+    }
+  });
+
+  // Get user's n8n workflows
+  app.get("/api/n8n/workflows", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      if (!req.user?.userId) {
+        return res.status(401).json({ message: "User not authenticated" });
+      }
+
+      const workflows = await storage.getUserN8nWorkflows(req.user.userId);
+      res.json(workflows);
+    } catch (error: any) {
+      console.error("Error fetching user n8n workflows:", error);
+      res.status(500).json({ message: "Failed to fetch workflows", error: error.message });
+    }
+  });
+
+  // Get specific n8n workflow
+  app.get("/api/n8n/workflows/:id", authenticateToken, async (req: AuthenticatedRequest, res) => {
+    try {
+      const { id } = req.params;
+      const workflow = await storage.getN8nWorkflow(parseInt(id));
+      
+      if (!workflow) {
+        return res.status(404).json({ message: "Workflow not found" });
+      }
+
+      // Check if user owns this workflow
+      if (workflow.userId !== req.user?.userId) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      res.json(workflow);
+    } catch (error: any) {
+      console.error("Error fetching n8n workflow:", error);
+      res.status(500).json({ message: "Failed to fetch workflow", error: error.message });
+    }
+  });
+
+  // Update n8n workflow stats (called from n8n webhooks)
+  app.post("/api/n8n/workflow-stats", async (req, res) => {
+    try {
+      const { n8nWorkflowId, runs, successRate, avgRunTime, revenue } = req.body;
+
+      if (!n8nWorkflowId) {
+        return res.status(400).json({ message: "n8nWorkflowId is required" });
+      }
+
+      await storage.updateN8nWorkflowStats(
+        n8nWorkflowId,
+        runs || 0,
+        successRate || 0,
+        avgRunTime || 0,
+        revenue || 0
+      );
+
+      res.json({ success: true, message: "Workflow stats updated" });
+    } catch (error: any) {
+      console.error("Error updating n8n workflow stats:", error);
+      res.status(500).json({ message: "Failed to update stats", error: error.message });
     }
   });
 

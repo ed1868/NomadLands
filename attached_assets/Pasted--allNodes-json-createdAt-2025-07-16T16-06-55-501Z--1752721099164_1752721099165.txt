@@ -1,0 +1,674 @@
+[
+  {
+    "allNodes": [
+      {
+        "json": {
+          "createdAt": "2025-07-16T16:06:55.501Z",
+          "updatedAt": "2025-07-16T16:06:55.650Z",
+          "id": "WkJZNfito1pSxrQU",
+          "name": "1750224705337jelcldqfm_WkJZNfito1pSxrQU_Eddie - Voice Cloning AI Agent",
+          "active": false,
+          "isArchived": false,
+          "nodes": [
+            {
+              "parameters": {
+                "path": "eddie-chat",
+                "options": {}
+              },
+              "type": "n8n-nodes-base.webhook",
+              "typeVersion": 2,
+              "position": [
+                -200,
+                300
+              ],
+              "id": "webhook-trigger-001",
+              "name": "Webhook Trigger",
+              "webhookId": "eddie-chat-webhook-001"
+            },
+            {
+              "parameters": {
+                "promptType": "define",
+                "text": "={{ $json.message || 'Hello' }}",
+                "hasOutputParser": false,
+                "options": {
+                  "systemMessage": "You are Eddie, a helpful AI assistant with a cloned voice. You are friendly, conversational, and engage naturally with users. Keep responses conversational and engaging, as they will be converted to speech. Avoid overly long responses to maintain natural conversation flow."
+                }
+              },
+              "type": "@n8n/n8n-nodes-langchain.agent",
+              "typeVersion": 2,
+              "position": [
+                200,
+                300
+              ],
+              "id": "ai-agent-eddie-001",
+              "name": "Eddie AI Agent"
+            },
+            {
+              "parameters": {
+                "model": "gpt-4o",
+                "options": {
+                  "temperature": 0.7,
+                  "maxTokens": 300
+                }
+              },
+              "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+              "typeVersion": 1,
+              "position": [
+                50,
+                500
+              ],
+              "id": "openai-gpt4o-001",
+              "name": "GPT-4o Model",
+              "credentials": {
+                "openAiApi": {
+                  "id": "openai-creds-001",
+                  "name": "OpenAI API"
+                }
+              }
+            },
+            {
+              "parameters": {
+                "sessionKey": "={{ $json.user_id || 'default_user' }}",
+                "maxWindowSize": 10
+              },
+              "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+              "typeVersion": 1.3,
+              "position": [
+                50,
+                400
+              ],
+              "id": "conversation-memory-001",
+              "name": "Conversation Memory"
+            },
+            {
+              "parameters": {
+                "method": "POST",
+                "url": "https://api.elevenlabs.io/v1/text-to-speech/{{ $json.voice_id || 'default_voice' }}",
+                "sendHeaders": true,
+                "headerParameters": {
+                  "parameters": [
+                    {
+                      "name": "xi-api-key",
+                      "value": "={{ $credentials.elevenLabsApi.apiKey }}"
+                    },
+                    {
+                      "name": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ]
+                },
+                "sendBody": true,
+                "bodyParameters": {
+                  "parameters": [
+                    {
+                      "name": "text",
+                      "value": "={{ $('Eddie AI Agent').item.json.output }}"
+                    },
+                    {
+                      "name": "voice_settings",
+                      "value": {
+                        "stability": 0.5,
+                        "similarity_boost": 0.8
+                      }
+                    }
+                  ]
+                },
+                "options": {
+                  "response": {
+                    "response": {
+                      "responseFormat": "file"
+                    }
+                  }
+                }
+              },
+              "type": "n8n-nodes-base.httpRequest",
+              "typeVersion": 4.2,
+              "position": [
+                600,
+                300
+              ],
+              "id": "elevenlabs-tts-001",
+              "name": "ElevenLabs Voice Synthesis",
+              "credentials": {
+                "elevenLabsApi": {
+                  "id": "elevenlabs-creds-001",
+                  "name": "ElevenLabs API"
+                }
+              }
+            },
+            {
+              "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ {\n  \"text_response\": $('Eddie AI Agent').item.json.output,\n  \"voice_url\": $json.voice_url || null,\n  \"timestamp\": new Date().toISOString(),\n  \"session_id\": $json.user_id || 'default_user'\n} }}"
+              },
+              "type": "n8n-nodes-base.respondToWebhook",
+              "typeVersion": 1.1,
+              "position": [
+                1000,
+                300
+              ],
+              "id": "webhook-response-001",
+              "name": "Send Response"
+            },
+            {
+              "parameters": {
+                "assignments": {
+                  "assignments": [
+                    {
+                      "id": "voice-url-assignment",
+                      "name": "voice_url",
+                      "value": "={{ $json.binary && $json.binary.data ? 'data:audio/mpeg;base64,' + $json.binary.data.data : null }}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "options": {}
+              },
+              "type": "n8n-nodes-base.set",
+              "typeVersion": 3.4,
+              "position": [
+                800,
+                300
+              ],
+              "id": "format-response-001",
+              "name": "Format Response"
+            },
+            {
+              "parameters": {
+                "content": "## 🎙️ Eddie Voice Cloning Setup\n\n**Required Credentials:**\n- OpenAI API Key for GPT-4o\n- ElevenLabs API Key for voice synthesis\n\n**Webhook URL:** \n`https://your-n8n-domain.com/webhook/eddie-chat`\n\n**Request Format:**\n\n{\n  \"message\": \"Hello Eddie!\",\n  \"user_id\": \"user123\",\n  \"voice_id\": \"your-cloned-voice-id\"\n}\n",
+                "height": 280,
+                "width": 400,
+                "color": 4
+              },
+              "type": "n8n-nodes-base.stickyNote",
+              "typeVersion": 1,
+              "position": [
+                -400,
+                100
+              ],
+              "id": "setup-instructions-001",
+              "name": "Setup Instructions"
+            },
+            {
+              "parameters": {
+                "content": "## 🤖 Eddie AI Agent Features\n\n- **Voice Cloning**: Uses ElevenLabs to synthesize speech\n- **Memory**: Maintains conversation context per user\n- **GPT-4o**: Advanced language model for natural responses\n- **Webhook Integration**: Easy integration with external apps\n\n**Response includes:**\n- Text response\n- Base64 encoded audio\n- Timestamp\n- Session ID",
+                "height": 280,
+                "width": 400,
+                "color": 5
+              },
+              "type": "n8n-nodes-base.stickyNote",
+              "typeVersion": 1,
+              "position": [
+                400,
+                50
+              ],
+              "id": "agent-features-001",
+              "name": "Agent Features"
+            },
+            {
+              "parameters": {
+                "content": "## 🔧 ElevenLabs Configuration\n\n**Voice Cloning Steps:**\n1. Upload voice samples to ElevenLabs\n2. Train your voice model\n3. Get your voice_id\n4. Add ElevenLabs API key to credentials\n\n**Voice Settings:**\n- Stability: 0.5 (balanced)\n- Similarity Boost: 0.8 (high similarity)\n\n**Note:** Replace 'default_voice' with your actual voice ID",
+                "height": 280,
+                "width": 400,
+                "color": 6
+              },
+              "type": "n8n-nodes-base.stickyNote",
+              "typeVersion": 1,
+              "position": [
+                800,
+                50
+              ],
+              "id": "elevenlabs-config-001",
+              "name": "ElevenLabs Configuration"
+            },
+            {
+              "parameters": {
+                "content": "## 📝 Usage Examples\n\n**Basic Chat:**\nbash\ncurl -X POST https://your-domain.com/webhook/eddie-chat \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"message\": \"Hey Eddie, how are you?\",\n    \"user_id\": \"john_doe\",\n    \"voice_id\": \"your_voice_id\"\n  }'\n\n\n**Response Format:**\n\n{\n  \"text_response\": \"Hi! I'm doing great, thanks for asking!\",\n  \"voice_url\": \"data:audio/mpeg;base64,//uQx...\",\n  \"timestamp\": \"2024-01-15T10:30:00Z\",\n  \"session_id\": \"john_doe\"\n}\n",
+                "height": 320,
+                "width": 500,
+                "color": 3
+              },
+              "type": "n8n-nodes-base.stickyNote",
+              "typeVersion": 1,
+              "position": [
+                1200,
+                50
+              ],
+              "id": "usage-examples-001",
+              "name": "Usage Examples"
+            }
+          ],
+          "connections": {
+            "Webhook Trigger": {
+              "main": [
+                [
+                  {
+                    "node": "Eddie AI Agent",
+                    "type": "main",
+                    "index": 0
+                  }
+                ]
+              ]
+            },
+            "Eddie AI Agent": {
+              "main": [
+                [
+                  {
+                    "node": "ElevenLabs Voice Synthesis",
+                    "type": "main",
+                    "index": 0
+                  }
+                ]
+              ]
+            },
+            "GPT-4o Model": {
+              "ai_languageModel": [
+                [
+                  {
+                    "node": "Eddie AI Agent",
+                    "type": "ai_languageModel",
+                    "index": 0
+                  }
+                ]
+              ]
+            },
+            "Conversation Memory": {
+              "ai_memory": [
+                [
+                  {
+                    "node": "Eddie AI Agent",
+                    "type": "ai_memory",
+                    "index": 0
+                  }
+                ]
+              ]
+            },
+            "ElevenLabs Voice Synthesis": {
+              "main": [
+                [
+                  {
+                    "node": "Format Response",
+                    "type": "main",
+                    "index": 0
+                  }
+                ]
+              ]
+            },
+            "Format Response": {
+              "main": [
+                [
+                  {
+                    "node": "Send Response",
+                    "type": "main",
+                    "index": 0
+                  }
+                ]
+              ]
+            }
+          },
+          "settings": {
+            "executionOrder": "v1",
+            "saveManualExecutions": true,
+            "saveDataSuccessExecution": "all",
+            "saveExecutionProgress": true,
+            "saveDataErrorExecution": "all",
+            "errorWorkflow": "",
+            "timezone": "America/New_York"
+          },
+          "staticData": null,
+          "meta": null,
+          "pinData": null,
+          "versionId": "a6ab9d3e-1e97-4962-a74f-5effffa54120",
+          "triggerCount": 0
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "codeNode": [
+      {
+        "json": {
+          "recreationPrompt": "Create an AI agent with the following specifications:\n\n**Agent Name:** general Agent\n**Description:** An AI agent that clone my voice and then it chats with me via webhooks and calit eddie\n**Category:** general\n**AI Model:** gpt-4o\n\n**System Prompt:**\nYou are a helpful AI assistant.\n\n**Tools & Integrations:**\n\n\n**User Requirements (from conversation):**\ncreate an agent that uses 11 labs to clone my voice and then it chats with me via webhooks and calit eddie...\n\n**Implementation Notes:**\n- Generate both n8n workflow and Python implementation\n- Include comprehensive error handling and logging\n- Provide complete documentation and setup instructions\n- Add unit tests for the Python implementation\n- Configure with environment variables for API keys\n\nThis agent should be production-ready with proper authentication, rate limiting, and monitoring capabilities.",
+          "user": {
+            "id": "1750224705337jelcldqfm",
+            "username": "test"
+          },
+          "userId": "1750224705337jelcldqfm"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "userId": "1750224705337jelcldqfm",
+    "workflowNode": [
+      {
+        "json": {
+          "name": "Eddie - Voice Cloning AI Agent",
+          "nodes": [
+            {
+              "parameters": {
+                "path": "eddie-chat",
+                "options": {}
+              },
+              "type": "n8n-nodes-base.webhook",
+              "typeVersion": 2,
+              "position": [
+                -200,
+                300
+              ],
+              "id": "webhook-trigger-001",
+              "name": "Webhook Trigger",
+              "webhookId": "eddie-chat-webhook-001"
+            },
+            {
+              "parameters": {
+                "promptType": "define",
+                "text": "={{ $json.message || 'Hello' }}",
+                "hasOutputParser": false,
+                "options": {
+                  "systemMessage": "You are Eddie, a helpful AI assistant with a cloned voice. You are friendly, conversational, and engage naturally with users. Keep responses conversational and engaging, as they will be converted to speech. Avoid overly long responses to maintain natural conversation flow."
+                }
+              },
+              "type": "@n8n/n8n-nodes-langchain.agent",
+              "typeVersion": 2,
+              "position": [
+                200,
+                300
+              ],
+              "id": "ai-agent-eddie-001",
+              "name": "Eddie AI Agent"
+            },
+            {
+              "parameters": {
+                "model": "gpt-4o",
+                "options": {
+                  "temperature": 0.7,
+                  "maxTokens": 300
+                }
+              },
+              "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+              "typeVersion": 1,
+              "position": [
+                50,
+                500
+              ],
+              "id": "openai-gpt4o-001",
+              "name": "GPT-4o Model",
+              "credentials": {
+                "openAiApi": {
+                  "id": "openai-creds-001",
+                  "name": "OpenAI API"
+                }
+              }
+            },
+            {
+              "parameters": {
+                "sessionKey": "={{ $json.user_id || 'default_user' }}",
+                "maxWindowSize": 10
+              },
+              "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+              "typeVersion": 1.3,
+              "position": [
+                50,
+                400
+              ],
+              "id": "conversation-memory-001",
+              "name": "Conversation Memory"
+            },
+            {
+              "parameters": {
+                "method": "POST",
+                "url": "https://api.elevenlabs.io/v1/text-to-speech/{{ $json.voice_id || 'default_voice' }}",
+                "sendHeaders": true,
+                "headerParameters": {
+                  "parameters": [
+                    {
+                      "name": "xi-api-key",
+                      "value": "={{ $credentials.elevenLabsApi.apiKey }}"
+                    },
+                    {
+                      "name": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ]
+                },
+                "sendBody": true,
+                "bodyParameters": {
+                  "parameters": [
+                    {
+                      "name": "text",
+                      "value": "={{ $('Eddie AI Agent').item.json.output }}"
+                    },
+                    {
+                      "name": "voice_settings",
+                      "value": {
+                        "stability": 0.5,
+                        "similarity_boost": 0.8
+                      }
+                    }
+                  ]
+                },
+                "options": {
+                  "response": {
+                    "response": {
+                      "responseFormat": "file"
+                    }
+                  }
+                }
+              },
+              "type": "n8n-nodes-base.httpRequest",
+              "typeVersion": 4.2,
+              "position": [
+                600,
+                300
+              ],
+              "id": "elevenlabs-tts-001",
+              "name": "ElevenLabs Voice Synthesis",
+              "credentials": {
+                "elevenLabsApi": {
+                  "id": "elevenlabs-creds-001",
+                  "name": "ElevenLabs API"
+                }
+              }
+            },
+            {
+              "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ {\n  \"text_response\": $('Eddie AI Agent').item.json.output,\n  \"voice_url\": $json.voice_url || null,\n  \"timestamp\": new Date().toISOString(),\n  \"session_id\": $json.user_id || 'default_user'\n} }}"
+              },
+              "type": "n8n-nodes-base.respondToWebhook",
+              "typeVersion": 1.1,
+              "position": [
+                1000,
+                300
+              ],
+              "id": "webhook-response-001",
+              "name": "Send Response"
+            },
+            {
+              "parameters": {
+                "assignments": {
+                  "assignments": [
+                    {
+                      "id": "voice-url-assignment",
+                      "name": "voice_url",
+                      "value": "={{ $json.binary && $json.binary.data ? 'data:audio/mpeg;base64,' + $json.binary.data.data : null }}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "options": {}
+              },
+              "type": "n8n-nodes-base.set",
+              "typeVersion": 3.4,
+              "position": [
+                800,
+                300
+              ],
+              "id": "format-response-001",
+              "name": "Format Response"
+            },
+            {
+              "parameters": {
+                "content": "## 🎙️ Eddie Voice Cloning Setup\n\n**Required Credentials:**\n- OpenAI API Key for GPT-4o\n- ElevenLabs API Key for voice synthesis\n\n**Webhook URL:** \n`https://your-n8n-domain.com/webhook/eddie-chat`\n\n**Request Format:**\n\n{\n  \"message\": \"Hello Eddie!\",\n  \"user_id\": \"user123\",\n  \"voice_id\": \"your-cloned-voice-id\"\n}\n",
+                "height": 280,
+                "width": 400,
+                "color": 4
+              },
+              "type": "n8n-nodes-base.stickyNote",
+              "typeVersion": 1,
+              "position": [
+                -400,
+                100
+              ],
+              "id": "setup-instructions-001",
+              "name": "Setup Instructions"
+            },
+            {
+              "parameters": {
+                "content": "## 🤖 Eddie AI Agent Features\n\n- **Voice Cloning**: Uses ElevenLabs to synthesize speech\n- **Memory**: Maintains conversation context per user\n- **GPT-4o**: Advanced language model for natural responses\n- **Webhook Integration**: Easy integration with external apps\n\n**Response includes:**\n- Text response\n- Base64 encoded audio\n- Timestamp\n- Session ID",
+                "height": 280,
+                "width": 400,
+                "color": 5
+              },
+              "type": "n8n-nodes-base.stickyNote",
+              "typeVersion": 1,
+              "position": [
+                400,
+                50
+              ],
+              "id": "agent-features-001",
+              "name": "Agent Features"
+            },
+            {
+              "parameters": {
+                "content": "## 🔧 ElevenLabs Configuration\n\n**Voice Cloning Steps:**\n1. Upload voice samples to ElevenLabs\n2. Train your voice model\n3. Get your voice_id\n4. Add ElevenLabs API key to credentials\n\n**Voice Settings:**\n- Stability: 0.5 (balanced)\n- Similarity Boost: 0.8 (high similarity)\n\n**Note:** Replace 'default_voice' with your actual voice ID",
+                "height": 280,
+                "width": 400,
+                "color": 6
+              },
+              "type": "n8n-nodes-base.stickyNote",
+              "typeVersion": 1,
+              "position": [
+                800,
+                50
+              ],
+              "id": "elevenlabs-config-001",
+              "name": "ElevenLabs Configuration"
+            },
+            {
+              "parameters": {
+                "content": "## 📝 Usage Examples\n\n**Basic Chat:**\nbash\ncurl -X POST https://your-domain.com/webhook/eddie-chat \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n    \"message\": \"Hey Eddie, how are you?\",\n    \"user_id\": \"john_doe\",\n    \"voice_id\": \"your_voice_id\"\n  }'\n\n\n**Response Format:**\n\n{\n  \"text_response\": \"Hi! I'm doing great, thanks for asking!\",\n  \"voice_url\": \"data:audio/mpeg;base64,//uQx...\",\n  \"timestamp\": \"2024-01-15T10:30:00Z\",\n  \"session_id\": \"john_doe\"\n}\n",
+                "height": 320,
+                "width": 500,
+                "color": 3
+              },
+              "type": "n8n-nodes-base.stickyNote",
+              "typeVersion": 1,
+              "position": [
+                1200,
+                50
+              ],
+              "id": "usage-examples-001",
+              "name": "Usage Examples"
+            }
+          ],
+          "settings": {
+            "executionOrder": "v1",
+            "saveManualExecutions": true,
+            "saveDataSuccessExecution": "all",
+            "saveExecutionProgress": true,
+            "saveDataErrorExecution": "all",
+            "errorWorkflow": "",
+            "timezone": "America/New_York"
+          },
+          "connections": {
+            "Webhook Trigger": {
+              "main": [
+                [
+                  {
+                    "node": "Eddie AI Agent",
+                    "type": "main",
+                    "index": 0
+                  }
+                ]
+              ]
+            },
+            "Eddie AI Agent": {
+              "main": [
+                [
+                  {
+                    "node": "ElevenLabs Voice Synthesis",
+                    "type": "main",
+                    "index": 0
+                  }
+                ]
+              ]
+            },
+            "GPT-4o Model": {
+              "ai_languageModel": [
+                [
+                  {
+                    "node": "Eddie AI Agent",
+                    "type": "ai_languageModel",
+                    "index": 0
+                  }
+                ]
+              ]
+            },
+            "Conversation Memory": {
+              "ai_memory": [
+                [
+                  {
+                    "node": "Eddie AI Agent",
+                    "type": "ai_memory",
+                    "index": 0
+                  }
+                ]
+              ]
+            },
+            "ElevenLabs Voice Synthesis": {
+              "main": [
+                [
+                  {
+                    "node": "Format Response",
+                    "type": "main",
+                    "index": 0
+                  }
+                ]
+              ]
+            },
+            "Format Response": {
+              "main": [
+                [
+                  {
+                    "node": "Send Response",
+                    "type": "main",
+                    "index": 0
+                  }
+                ]
+              ]
+            }
+          },
+          "staticData": null,
+          "active": false,
+          "versionId": "79e2d3a1-4b27-49e9-b2c0-7dc0bd8b7415",
+          "id": "WkJZNfito1pSxrQU",
+          "meta": null,
+          "pinData": null,
+          "createdAt": "2025-07-16T16:06:55.501Z",
+          "updatedAt": "2025-07-16T16:06:55.501Z",
+          "isArchived": false,
+          "triggerCount": 0
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ],
+    "workFlowId": "WkJZNfito1pSxrQU",
+    "workflowUrl": "https://ainomads.app.n8n.cloud/workflow/WkJZNfito1pSxrQU"
+  }
+]

@@ -7,6 +7,7 @@ import {
   agentTagRelations,
   agentDeployments,
   agentUsage,
+  n8nWorkflows,
   type User,
   type Agent,
   type UpsertUser,
@@ -23,6 +24,8 @@ import {
   type InsertAgentDeployment,
   type AgentUsage,
   type InsertAgentUsage,
+  type N8nWorkflow,
+  type InsertN8nWorkflow,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and } from "drizzle-orm";
@@ -92,6 +95,15 @@ export interface IStorage {
     lastUsed?: Date;
     healthStatus?: string;
   }): Promise<void>;
+
+  // N8N Workflow operations
+  createN8nWorkflow(workflow: InsertN8nWorkflow): Promise<N8nWorkflow>;
+  getUserN8nWorkflows(userId: string): Promise<N8nWorkflow[]>;
+  getN8nWorkflow(id: number): Promise<N8nWorkflow | undefined>;
+  getN8nWorkflowByN8nId(n8nWorkflowId: string): Promise<N8nWorkflow | undefined>;
+  updateN8nWorkflow(id: number, updates: Partial<N8nWorkflow>): Promise<N8nWorkflow>;
+  deleteN8nWorkflow(id: number): Promise<void>;
+  updateN8nWorkflowStats(n8nWorkflowId: string, runs: number, successRate: number, avgRunTime: number, revenue: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -804,6 +816,77 @@ export class DatabaseStorage implements IStorage {
         lastHealthCheck: new Date(),
       })
       .where(eq(agentDeployments.id, deploymentId));
+  }
+
+  // N8N Workflow operations
+  async createN8nWorkflow(workflow: InsertN8nWorkflow): Promise<N8nWorkflow> {
+    const [result] = await db
+      .insert(n8nWorkflows)
+      .values(workflow)
+      .returning();
+    return result;
+  }
+
+  async getUserN8nWorkflows(userId: string): Promise<N8nWorkflow[]> {
+    return await db
+      .select()
+      .from(n8nWorkflows)
+      .where(eq(n8nWorkflows.userId, userId))
+      .orderBy(n8nWorkflows.createdAt.desc);
+  }
+
+  async getN8nWorkflow(id: number): Promise<N8nWorkflow | undefined> {
+    const [workflow] = await db
+      .select()
+      .from(n8nWorkflows)
+      .where(eq(n8nWorkflows.id, id));
+    return workflow;
+  }
+
+  async getN8nWorkflowByN8nId(n8nWorkflowId: string): Promise<N8nWorkflow | undefined> {
+    const [workflow] = await db
+      .select()
+      .from(n8nWorkflows)
+      .where(eq(n8nWorkflows.n8nWorkflowId, n8nWorkflowId));
+    return workflow;
+  }
+
+  async updateN8nWorkflow(id: number, updates: Partial<N8nWorkflow>): Promise<N8nWorkflow> {
+    const [result] = await db
+      .update(n8nWorkflows)
+      .set({
+        ...updates,
+        updatedAt: new Date(),
+      })
+      .where(eq(n8nWorkflows.id, id))
+      .returning();
+    return result;
+  }
+
+  async deleteN8nWorkflow(id: number): Promise<void> {
+    await db
+      .delete(n8nWorkflows)
+      .where(eq(n8nWorkflows.id, id));
+  }
+
+  async updateN8nWorkflowStats(
+    n8nWorkflowId: string, 
+    runs: number, 
+    successRate: number, 
+    avgRunTime: number, 
+    revenue: number
+  ): Promise<void> {
+    await db
+      .update(n8nWorkflows)
+      .set({
+        totalRuns: runs,
+        successRate: successRate.toString(),
+        averageRunTime: avgRunTime,
+        totalRevenue: revenue.toString(),
+        lastRunAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(n8nWorkflows.n8nWorkflowId, n8nWorkflowId));
   }
 }
 

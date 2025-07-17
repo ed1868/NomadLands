@@ -163,6 +163,47 @@ export const waitlistUsers = pgTable("waitlist_users", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// N8N Workflow Deployments table
+export const n8nWorkflows = pgTable("n8n_workflows", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  agentId: integer("agent_id").references(() => agents.id),
+  
+  // N8N specific data
+  n8nWorkflowId: varchar("n8n_workflow_id").notNull(), // WkJZNfito1pSxrQU
+  workflowName: varchar("workflow_name").notNull(),
+  webhookUrl: varchar("webhook_url"),
+  webhookPath: varchar("webhook_path"),
+  
+  // Workflow configuration
+  nodes: jsonb("nodes").notNull(), // Full nodes array
+  connections: jsonb("connections").notNull(), // Node connections
+  settings: jsonb("settings"), // Workflow settings
+  
+  // Status and metadata
+  isActive: boolean("is_active").default(false),
+  isArchived: boolean("is_archived").default(false),
+  versionId: varchar("version_id"),
+  triggerCount: integer("trigger_count").default(0),
+  
+  // Performance metrics
+  totalRuns: integer("total_runs").default(0),
+  successRate: decimal("success_rate", { precision: 5, scale: 2 }).default("0.00"),
+  averageRunTime: integer("average_run_time"), // milliseconds
+  lastRunAt: timestamp("last_run_at"),
+  
+  // Revenue tracking
+  totalRevenue: decimal("total_revenue", { precision: 10, scale: 2 }).default("0.00"),
+  
+  // Timestamps
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => [
+  uniqueIndex("unique_n8n_workflow_id").on(table.n8nWorkflowId),
+  index("idx_n8n_workflows_user_id").on(table.userId),
+  index("idx_n8n_workflows_agent_id").on(table.agentId),
+]);
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   purchases: many(userPurchases),
@@ -170,6 +211,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   createdAgents: many(agents),
   deployments: many(agentDeployments),
   usageRecords: many(agentUsage),
+  n8nWorkflows: many(n8nWorkflows),
 }));
 
 export const agentsRelations = relations(agents, ({ one, many }) => ({
@@ -180,6 +222,7 @@ export const agentsRelations = relations(agents, ({ one, many }) => ({
   purchases: many(userPurchases),
   tagRelations: many(agentTagRelations),
   deployments: many(agentDeployments),
+  n8nWorkflows: many(n8nWorkflows),
 }));
 
 export const agentDeploymentsRelations = relations(agentDeployments, ({ one, many }) => ({
@@ -242,6 +285,17 @@ export const transactionsRelations = relations(transactions, ({ one }) => ({
   }),
 }));
 
+export const n8nWorkflowsRelations = relations(n8nWorkflows, ({ one }) => ({
+  user: one(users, {
+    fields: [n8nWorkflows.userId],
+    references: [users.id],
+  }),
+  agent: one(agents, {
+    fields: [n8nWorkflows.agentId],
+    references: [agents.id],
+  }),
+}));
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -288,6 +342,12 @@ export const insertWaitlistUserSchema = createInsertSchema(waitlistUsers).omit({
   updatedAt: true,
 });
 
+export const insertN8nWorkflowSchema = createInsertSchema(n8nWorkflows).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -315,3 +375,6 @@ export type InsertPurchase = z.infer<typeof insertPurchaseSchema>;
 
 export type Transaction = typeof transactions.$inferSelect;
 export type InsertTransaction = z.infer<typeof insertTransactionSchema>;
+
+export type N8nWorkflow = typeof n8nWorkflows.$inferSelect;
+export type InsertN8nWorkflow = z.infer<typeof insertN8nWorkflowSchema>;
